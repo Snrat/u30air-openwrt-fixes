@@ -2371,3 +2371,68 @@ Air, ten `ifdown wan; ifup wan` gave the WAN back in
 * **LEDs (K38, K39, K68)**: not ported here. The F50's lamp states were measured with someone watching and are
   implemented by the f50-leds-fixes work (FINDINGS 34); the fork's boot chase, lamp switches and LED page
   follow that branch.
+
+### 36. Power profiles: idle radios, the charging boot, the charge guard
+
+The U30 Air ran flat in a day or two of hotspot use. Two causes, both seen before: the charger IC charged on its
+power-on defaults and was never told anything (33d; the bq256xx driver of PR #55 now drives it, so the guard below has
+a node to write), and a boot that Android's LK started because a charger was plugged in ("charger mode") came up as a
+full hotspot with the modem dialling, in a pocket. `mu300-power` (one `/bin/sh` script, `mu300-power.service` or
+`/etc/init.d/mu300-power`) answers both. Design: `docs/superpowers/specs/2026-10-06-power-profiles-design.md`.
+
+What was built:
+
+* **Profiles** `plugged`, `battery`, `saver`, picked automatically (saver below `SAVER_BELOW` % on battery, by the
+  fuel gauge's `capacity` only) or forced with `mu300-power profile NAME`. Each has four knobs: `WIFI_IDLE` (minutes
+  without a client, 0 never), `RADIO_IDLE` `keep|lte|off`, `LEDS_IDLE` `on|off`, `CPU` `full|eco`. Defaults: plugged
+  `0 keep on full`, battery `10 off off full`, saver `5 off off eco`. A bad value in `/etc/mu300/power.conf` counts as
+  the default and `status` names it.
+* **Idle** is "no Wi-Fi station, no USB host, no key press" for `WIFI_IDLE` minutes. Then the hotspot goes down, the
+  LEDs follow `LEDS_IDLE`, and the modem follows `RADIO_IDLE`: `mobile-data suspend lte` only switches EN-DC off with
+  `AT+SPENDC=2` (the lock adapter's measured "off" value; no stack restart, the data connection is untouched) and
+  `resume` restores `AT+SPENDC=1` only if EN-DC was on before; `suspend off` is the radio off (`AT+SFUN=5`) with data
+  down, and `resume` runs `radio_on` and redials itself. The Wi-Fi key (`mu300-power wake`) is the way out.
+* **State** is kept across daemon restarts within a boot. The daemon's TERM trap wakes the radios (hotspot first),
+  so the units have a 150 s stop timeout (`TimeoutStopSec=150`, procd `term_timeout 150`). A failed action is
+  logged and retried by the following loops.
+* **Charging boot**: `init` writes `/run/mu300/boot-mode` and, in a charger boot, `/run/mu300/charging-boot`. The
+  Ubuntu hotspot and mobile-data units skip on that file; the daemon enters the charging boot only on its first start
+  of a boot, and leaves it only by the Wi-Fi key (a computer on USB does not). It powers the device off only
+  unplugged, below 5 % for three loops in a row, never on one sample.
+* **Charge guard**: charging off at battery `temp` above 45.0 C or below 0 C, on again below 40.0 C and above 3.0 C;
+  with `CHARGE_TO=80` off at 80 % and on below 75 %. It writes the charger's `charge_type` (`N/A` off, `Fast` on) and
+  compares it with the node, so the node wins over the state file. No reading means no change.
+* **Panel**: System -> Power on `openwrt-luci` (state, profile, knobs, charge limit), catalogs in all 31 languages.
+
+Method for the numbers: `mu300-power log 5 /tmp/power.csv` writes `time,V,mA,W,%,temp,state,profile` every 5 s.
+Each row is a 3-minute run unplugged, the hotspot idle (a client associated, no traffic) unless the row says
+otherwise, `mu300-power set` or the verbs between runs. The fuel gauge's `current_now` is negative when
+discharging; the draw is the mean of the run's mA (and W) after the first 30 s. Android's own idle figure comes from
+`dumpsys battery` / the same gauge on the Android side for the target line.
+
+| Row | What is on | Measured (mean W) | Measured on |
+|---|---|---|---|
+| baseline | everything, as before the profiles | pending | pending |
+| LEDs off | baseline with the LEDs dark (`mu300-led idle`) | pending | pending |
+| hotspot off | modem on, Wi-Fi off | pending | pending |
+| LTE only | EN-DC off (`mobile-data suspend lte`), hotspot on | pending | pending |
+| modem off | `AT+SFUN=5`, hotspot on | pending | pending |
+| all off | idle: hotspot, modem and LEDs off, the floor | pending | pending |
+| eco | `CPU=eco` on the baseline | pending | pending |
+| Android idle | the stock firmware at rest (the target) | pending | pending |
+
+What the defaults rest on: not on these numbers (there are none yet) but on the design. Radios are what drains a
+hotspot with nobody connected, so `battery` and `saver` switch them off after a few minutes; `plugged` keeps
+everything because the supply covers it; saver is the profile with the CPU in `eco`. The thresholds (45/40 C, 0/3 C,
+5 % for three loops) follow the spec; the fuel gauge reports `capacity=100` at 3.88 V today (33d), which is why
+nothing acts on the voltage. The table is filled in by the device series, with the date of each run.
+
+Open questions for the device:
+
+* Does `AT+SPENDC=2` without a stack restart really drop the NR leg (check `AT+SPENDC?` and the band readings), or
+  only after the next attach?
+* Does procd's `term_timeout` apply on this OpenWrt build (that `/etc/init.d/mu300-power stop` waits for the wake
+  rather than being killed at the default timeout)?
+* What the bq256xx `charge_type` node does on writes: `N/A` stops charging, `Fast` resumes it, or the driver
+  rewrites it from its own state.
+* The unit tests ran under dash and bash on the dev host; busybox ash (the shell on OpenWrt) has not run them there.
