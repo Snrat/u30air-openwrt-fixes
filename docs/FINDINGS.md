@@ -2087,7 +2087,7 @@ Two more things that only show with two devices on one computer: every gadget ha
 
 Under 6.18 and 7.2 the U30 Air has USB, mobile data, the VPN, the hotspot, Bluetooth and its LEDs
 (`CONFIG_LEDS_GPIO`). The battery is not reported: its charger and fuel gauge (the SQC stack and `sc27xx-fgu` on
-the UMP9620) have no mainline drivers; the charger IC keeps charging on its own defaults. Kernel bundles now name
+the UMP9620) have no mainline drivers (for the charger IC see 33d: it does not charge without one). Kernel bundles now name
 the devices they run on (`./devices`): mu300-update and the installers do not put a bundle from before this onto a
 U30 Air.
 
@@ -2103,15 +2103,69 @@ values in Unisoc's 5.4 drivers:
   conversion
 - fuel gauge: enable bits at 0x2008/0x2010, the 4200 mV calibration in bits 15:7. `bat-temp` is the NTC's voltage
   on this board, not a temperature (71.2 "degrees" at first): the battery node's `voltage-temp-table` converts it.
-  The charger IC has no driver, so the status comes from the battery current. Mainline read a discharge current
+  Without a charger driver the status came from the battery current (patch 0010 now takes it from the charger, see
+  below). Mainline read a discharge current
   as ~2 billion: `u32 cur - 8192` wraps below zero; the vendor driver casts to s64 first.
 
 The first status fallback asked for the capacity, whose calibration asks for the status: a stack overflow in the
 first second of every boot. Five of them in a row put the device back into Android by itself - the fallback did
 its job - and the panic was in pstore.
 
-The charger (SGM41511, `ti,bq2560x_chg` on I2C) still has no driver under mainline: it charges on its power-on
-defaults and reports nothing; I2C is not even enabled there. Under 5.4 the vendor SQC stack drives it.
+The charger is an SGM41511 (part 0010 in REG0B, a bq25601), I2C bus 6 at 0x6b, DT node `charger@6b` with
+`ti,bq2560x_chg`, `monitored-battery`, `extcon`, an `otg-vbus` regulator and the vendor `vindpm-value` (4270 mV), and
+no interrupt. Under 5.4 the vendor SQC stack drives it. An earlier version of this section said that under mainline
+it "charges on its power-on defaults"; that was wrong. The chip runs on the battery and keeps its registers across a
+reboot, so mainline found it as Android had left it. Read on the U30 Air under 7.2.9 (2026-10-06):
+
+```
+00:04 01:8a 02:8b 03:6f 04:58 05:87 06:67 07:40 08:24 09:00 0a:80 0b:14
+```
+
+REG01 has CHG_CONFIG (bit 4) at 0: charging off. REG00 has the input current at 500 mA, REG02 the charge current at
+660 mA, REG04 VREG at 4.208 V, and REG05 the watchdog off. REG08 reports a USB host (SDP) with power good and no
+charging. Under 6.18 and 7.2 the battery never charged, and drained while the device was plugged in. The fuel gauge
+still said Full, 100 % at 3.88 V, because its status came from the current.
+
+Mainline's `bq256xx` driver now handles the node. `port/install.py` adds the compatible to its OF and I2C tables with
+the bq25601's data, and patch 0009 changes the following for that node only:
+
+- No register cache. The driver's cache starts from the power-on defaults, so every read-modify-write would have
+  written them back over Android's values (and over `mu300-usb`'s OTG bit in REG01).
+- The charge current is at most 1.98 A, Android's value. The battery node says 3 A, which is too much for this
+  4050 mAh cell. VREG is at most 4.208 V: Android's REG04 has that, while the node says 4.3 V. Termination is on and
+  the watchdog off. VINDPM comes from `vindpm-value`, rounded up to the chip's 100 mV steps.
+- The node has no `input-current-limit-microamp`, and the driver's default of 2.4 A is too much for a 500 mA USB
+  port. The input current is 500 mA until a charger type is known. The type comes from the UMP9620's own charger
+  detection (`sprd_pmic_detect_charger_type()`, as `sc2731_charger` and the Unisoc kernel use it): SDP 500 mA,
+  CDP 1.5 A, DCP 2 A, and `usb_type` from the same result. The charger's own input detection (IINDET_EN in REG07,
+  then VBUS_STAT in REG08) drives D+/D-, which on this board are the USB gadget's lines to the computer. It runs
+  only when the PMIC device or its result is missing, and the driver says so once. With it, SDP or unknown is
+  500 mA, CDP 1.5 A, DCP 2 A and non-standard 1 A. The type is read at probe and again on every VBUS change. With no interrupt, those changes come from the extcon. If the node's
+  extcon is not the `extcon-usb-gpio` device (on the U30 Air the PHY's points at the PMIC's Type-C block, which has
+  no driver, 33c), the driver uses that device, as the USB PHY does. Each run also switches charging on.
+- `charge_type` on `/sys/class/power_supply/bq256xx-charger` is the userspace switch: `N/A` stops charging, also
+  across plugs, and `Fast` starts it again. `status`, `online`, `usb_type`, `input_current_limit` and
+  `constant_charge_current` are there as well. There is no second `bq256xx-battery` supply.
+- The fuel gauge is in the charger's `supplied_to`, and patch 0010 makes it take its status from
+  `bq256xx-charger`, as it does from the SC27xx chargers.
+
+The driver owns 6-006b now, so `mu300-usb` reaches the chip with `i2cget/i2cset -f` and leaves its watchdog off.
+On expiry, the watchdog would drop the driver's settings. Nothing answers at 0x6b on the F50 (24). If its DT has
+the node, the probe stops at the first read.
+
+On the U30 Air under 7.2.9 (2026-10-06) the driver binds (`part 2, rev 0`), switches charging on (Android had left
+CHG_CONFIG at 0), and the fuel gauge reads +219 mA at 3.888 V, status Charging. Two things were wrong in that
+first build:
+
+- `sc27xx-pmic spi4.0: failed to detect charger type`, so the driver fell back to IINDET_EN. On that Mac CDP port
+  the result was usb_type 0 and 500 mA; Android uses 1.5 A there. `port/install.py` had given the UMP9620 the
+  SC2730's detection register, 0x1b9c. The UMP9620's BC1.2 status register is 0x239c (`UMP9620_CHARGE_STATUS` in
+  Unisoc's `sprd-bc1p2.h`), with the bits mainline expects: DONE 11, SDP 7, DCP 6, CDP 5. The edit now uses it,
+  and input detection has to be tested again.
+- `sc27xx-fgu/capacity` read 575. The FGU's always-on user area keeps the last capacity across a reboot, and
+  Android keeps it in 0.1 %. Until then the status had been Full, and the calibration that runs whenever the
+  battery is not charging forced anything above 100 back to 100. Patch 0011 reads and saves that value in 0.1 % on
+  the UMP9620, and clamps the reported capacity to 0-100.
 
 ### 33e. USB host on the U30 Air, and a trial guard that outlived its trial
 
