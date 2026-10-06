@@ -336,8 +336,8 @@ msgstr "Hukommelse"
 msgid "Storage"
 msgstr "Lager"
 
-msgid "Power"
-msgstr "Strøm"
+msgid "Battery"
+msgstr "Batteri"
 
 msgid "Channel"
 msgstr "Kanal"
@@ -581,6 +581,27 @@ msgstr "Klynge %d"
 
 msgid "Total %s · free %s"
 msgstr "I alt %s · ledigt %s"
+
+msgid "charging %s W"
+msgstr "oplader med %s W"
+
+msgid "charging"
+msgstr "oplader"
+
+msgid "drawing %s W"
+msgstr "bruger %s W"
+
+msgid "not charging"
+msgstr "oplader ikke"
+
+msgid "on battery"
+msgstr "kører på batteri"
+
+msgid "full"
+msgstr "fuld"
+
+msgid "USB in %s W"
+msgstr "USB-indgang %s W"
 
 msgid "Online"
 msgstr "Online"

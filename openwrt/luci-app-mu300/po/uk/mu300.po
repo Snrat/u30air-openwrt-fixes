@@ -336,8 +336,8 @@ msgstr "Пам'ять"
 msgid "Storage"
 msgstr "Сховище"
 
-msgid "Power"
-msgstr "Живлення"
+msgid "Battery"
+msgstr "Батарея"
 
 msgid "Channel"
 msgstr "Канал"
@@ -581,6 +581,27 @@ msgstr "Кластер %d"
 
 msgid "Total %s · free %s"
 msgstr "Усього %s · вільно %s"
+
+msgid "charging %s W"
+msgstr "заряджається, %s Вт"
+
+msgid "charging"
+msgstr "заряджається"
+
+msgid "drawing %s W"
+msgstr "споживає %s Вт"
+
+msgid "not charging"
+msgstr "не заряджається"
+
+msgid "on battery"
+msgstr "від батареї"
+
+msgid "full"
+msgstr "заряджена"
+
+msgid "USB in %s W"
+msgstr "вхід USB %s Вт"
 
 msgid "Online"
 msgstr "У мережі"

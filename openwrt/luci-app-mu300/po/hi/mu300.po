@@ -336,8 +336,8 @@ msgstr "मेमोरी"
 msgid "Storage"
 msgstr "स्टोरेज"
 
-msgid "Power"
-msgstr "पावर"
+msgid "Battery"
+msgstr "बैटरी"
 
 msgid "Channel"
 msgstr "चैनल"
@@ -581,6 +581,27 @@ msgstr "क्लस्टर %d"
 
 msgid "Total %s · free %s"
 msgstr "कुल %s · खाली %s"
+
+msgid "charging %s W"
+msgstr "%s W पर चार्ज हो रही है"
+
+msgid "charging"
+msgstr "चार्ज हो रही है"
+
+msgid "drawing %s W"
+msgstr "%s W खर्च कर रही है"
+
+msgid "not charging"
+msgstr "चार्ज नहीं हो रही"
+
+msgid "on battery"
+msgstr "बैटरी पर"
+
+msgid "full"
+msgstr "पूरी भरी"
+
+msgid "USB in %s W"
+msgstr "USB इनपुट %s W"
 
 msgid "Online"
 msgstr "ऑनलाइन"

@@ -336,8 +336,8 @@ msgstr "메모리"
 msgid "Storage"
 msgstr "저장소"
 
-msgid "Power"
-msgstr "전원"
+msgid "Battery"
+msgstr "배터리"
 
 msgid "Channel"
 msgstr "채널"
@@ -581,6 +581,27 @@ msgstr "클러스터 %d"
 
 msgid "Total %s · free %s"
 msgstr "전체 %s · 여유 %s"
+
+msgid "charging %s W"
+msgstr "%s W로 충전 중"
+
+msgid "charging"
+msgstr "충전 중"
+
+msgid "drawing %s W"
+msgstr "%s W 소비 중"
+
+msgid "not charging"
+msgstr "충전 안 됨"
+
+msgid "on battery"
+msgstr "배터리 사용 중"
+
+msgid "full"
+msgstr "완충"
+
+msgid "USB in %s W"
+msgstr "USB 입력 %s W"
 
 msgid "Online"
 msgstr "온라인"

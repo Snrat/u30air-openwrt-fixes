@@ -336,8 +336,8 @@ msgstr "Geheugen"
 msgid "Storage"
 msgstr "Opslag"
 
-msgid "Power"
-msgstr "Voeding"
+msgid "Battery"
+msgstr "Accu"
 
 msgid "Channel"
 msgstr "Kanaal"
@@ -581,6 +581,27 @@ msgstr "Cluster %d"
 
 msgid "Total %s · free %s"
 msgstr "Totaal %s · vrij %s"
+
+msgid "charging %s W"
+msgstr "laadt met %s W"
+
+msgid "charging"
+msgstr "laadt"
+
+msgid "drawing %s W"
+msgstr "verbruikt %s W"
+
+msgid "not charging"
+msgstr "laadt niet"
+
+msgid "on battery"
+msgstr "op accu"
+
+msgid "full"
+msgstr "vol"
+
+msgid "USB in %s W"
+msgstr "USB-ingang %s W"
 
 msgid "Online"
 msgstr "Online"

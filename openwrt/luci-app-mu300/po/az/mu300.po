@@ -336,8 +336,8 @@ msgstr "Yaddaş"
 msgid "Storage"
 msgstr "Saxlama yeri"
 
-msgid "Power"
-msgstr "Qidalanma"
+msgid "Battery"
+msgstr "Batareya"
 
 msgid "Channel"
 msgstr "Kanal"
@@ -581,6 +581,27 @@ msgstr "Klaster %d"
 
 msgid "Total %s · free %s"
 msgstr "Cəmi %s · boş %s"
+
+msgid "charging %s W"
+msgstr "%s W ilə doldurulur"
+
+msgid "charging"
+msgstr "doldurulur"
+
+msgid "drawing %s W"
+msgstr "%s W sərf edir"
+
+msgid "not charging"
+msgstr "doldurulmur"
+
+msgid "on battery"
+msgstr "batareyadan işləyir"
+
+msgid "full"
+msgstr "dolu"
+
+msgid "USB in %s W"
+msgstr "USB girişi %s W"
 
 msgid "Online"
 msgstr "Onlayn"

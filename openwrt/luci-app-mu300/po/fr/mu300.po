@@ -336,8 +336,8 @@ msgstr "Mémoire"
 msgid "Storage"
 msgstr "Stockage"
 
-msgid "Power"
-msgstr "Alimentation"
+msgid "Battery"
+msgstr "Batterie"
 
 msgid "Channel"
 msgstr "Canal"
@@ -581,6 +581,27 @@ msgstr "Cluster %d"
 
 msgid "Total %s · free %s"
 msgstr "Total %s · libre %s"
+
+msgid "charging %s W"
+msgstr "en charge à %s W"
+
+msgid "charging"
+msgstr "en charge"
+
+msgid "drawing %s W"
+msgstr "consomme %s W"
+
+msgid "not charging"
+msgstr "pas en charge"
+
+msgid "on battery"
+msgstr "sur batterie"
+
+msgid "full"
+msgstr "pleine"
+
+msgid "USB in %s W"
+msgstr "entrée USB %s W"
 
 msgid "Online"
 msgstr "En ligne"

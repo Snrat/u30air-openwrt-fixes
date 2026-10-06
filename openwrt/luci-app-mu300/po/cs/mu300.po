@@ -336,8 +336,8 @@ msgstr "Paměť"
 msgid "Storage"
 msgstr "Úložiště"
 
-msgid "Power"
-msgstr "Napájení"
+msgid "Battery"
+msgstr "Baterie"
 
 msgid "Channel"
 msgstr "Kanál"
@@ -581,6 +581,27 @@ msgstr "Cluster %d"
 
 msgid "Total %s · free %s"
 msgstr "Celkem %s · volno %s"
+
+msgid "charging %s W"
+msgstr "nabíjí se %s W"
+
+msgid "charging"
+msgstr "nabíjí se"
+
+msgid "drawing %s W"
+msgstr "odebírá %s W"
+
+msgid "not charging"
+msgstr "nenabíjí se"
+
+msgid "on battery"
+msgstr "na baterii"
+
+msgid "full"
+msgstr "nabitá"
+
+msgid "USB in %s W"
+msgstr "vstup USB %s W"
 
 msgid "Online"
 msgstr "Online"

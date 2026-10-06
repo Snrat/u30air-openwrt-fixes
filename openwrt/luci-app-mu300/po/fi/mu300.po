@@ -336,8 +336,8 @@ msgstr "Muisti"
 msgid "Storage"
 msgstr "Tallennustila"
 
-msgid "Power"
-msgstr "Virta"
+msgid "Battery"
+msgstr "Akku"
 
 msgid "Channel"
 msgstr "Kanava"
@@ -581,6 +581,27 @@ msgstr "Klusteri %d"
 
 msgid "Total %s · free %s"
 msgstr "Yhteensä %s · vapaana %s"
+
+msgid "charging %s W"
+msgstr "latautuu %s W"
+
+msgid "charging"
+msgstr "latautuu"
+
+msgid "drawing %s W"
+msgstr "kuluttaa %s W"
+
+msgid "not charging"
+msgstr "ei lataudu"
+
+msgid "on battery"
+msgstr "akkukäytössä"
+
+msgid "full"
+msgstr "täynnä"
+
+msgid "USB in %s W"
+msgstr "USB-tulo %s W"
 
 msgid "Online"
 msgstr "Verkossa"

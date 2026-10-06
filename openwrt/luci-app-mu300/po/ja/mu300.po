@@ -336,8 +336,8 @@ msgstr "メモリ"
 msgid "Storage"
 msgstr "ストレージ"
 
-msgid "Power"
-msgstr "電源"
+msgid "Battery"
+msgstr "バッテリー"
 
 msgid "Channel"
 msgstr "チャネル"
@@ -581,6 +581,27 @@ msgstr "クラスタ %d"
 
 msgid "Total %s · free %s"
 msgstr "合計 %s · 空き %s"
+
+msgid "charging %s W"
+msgstr "%s W で充電中"
+
+msgid "charging"
+msgstr "充電中"
+
+msgid "drawing %s W"
+msgstr "%s W を消費中"
+
+msgid "not charging"
+msgstr "充電していません"
+
+msgid "on battery"
+msgstr "バッテリー駆動"
+
+msgid "full"
+msgstr "満充電"
+
+msgid "USB in %s W"
+msgstr "USB 入力 %s W"
 
 msgid "Online"
 msgstr "オンライン"

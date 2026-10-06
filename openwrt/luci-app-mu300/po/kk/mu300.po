@@ -336,8 +336,8 @@ msgstr "Жад"
 msgid "Storage"
 msgstr "Сақтау орны"
 
-msgid "Power"
-msgstr "Қуат"
+msgid "Battery"
+msgstr "Батарея"
 
 msgid "Channel"
 msgstr "Арна"
@@ -581,6 +581,27 @@ msgstr "Кластер %d"
 
 msgid "Total %s · free %s"
 msgstr "Барлығы %s · бос %s"
+
+msgid "charging %s W"
+msgstr "%s W қуатпен зарядталуда"
+
+msgid "charging"
+msgstr "зарядталуда"
+
+msgid "drawing %s W"
+msgstr "%s W тұтынуда"
+
+msgid "not charging"
+msgstr "зарядталмайды"
+
+msgid "on battery"
+msgstr "батареядан"
+
+msgid "full"
+msgstr "толы"
+
+msgid "USB in %s W"
+msgstr "USB кірісі %s W"
 
 msgid "Online"
 msgstr "Желіде"

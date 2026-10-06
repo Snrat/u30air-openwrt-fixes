@@ -336,8 +336,8 @@ msgstr "記憶體"
 msgid "Storage"
 msgstr "儲存空間"
 
-msgid "Power"
-msgstr "電源"
+msgid "Battery"
+msgstr "電池"
 
 msgid "Channel"
 msgstr "頻道"
@@ -581,6 +581,27 @@ msgstr "叢集 %d"
 
 msgid "Total %s · free %s"
 msgstr "共 %s · 可用 %s"
+
+msgid "charging %s W"
+msgstr "充電中 %s W"
+
+msgid "charging"
+msgstr "充電中"
+
+msgid "drawing %s W"
+msgstr "耗電 %s W"
+
+msgid "not charging"
+msgstr "未充電"
+
+msgid "on battery"
+msgstr "使用電池"
+
+msgid "full"
+msgstr "已充滿"
+
+msgid "USB in %s W"
+msgstr "USB 輸入 %s W"
 
 msgid "Online"
 msgstr "線上"

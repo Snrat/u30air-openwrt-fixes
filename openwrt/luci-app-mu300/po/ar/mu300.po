@@ -336,8 +336,8 @@ msgstr "الذاكرة"
 msgid "Storage"
 msgstr "التخزين"
 
-msgid "Power"
-msgstr "الطاقة"
+msgid "Battery"
+msgstr "البطارية"
 
 msgid "Channel"
 msgstr "القناة"
@@ -581,6 +581,27 @@ msgstr "العنقود %d"
 
 msgid "Total %s · free %s"
 msgstr "الإجمالي %s · المتاح %s"
+
+msgid "charging %s W"
+msgstr "يشحن بقدرة %s واط"
+
+msgid "charging"
+msgstr "يشحن"
+
+msgid "drawing %s W"
+msgstr "يستهلك %s واط"
+
+msgid "not charging"
+msgstr "لا يشحن"
+
+msgid "on battery"
+msgstr "يعمل على البطارية"
+
+msgid "full"
+msgstr "ممتلئة"
+
+msgid "USB in %s W"
+msgstr "دخل USB %s واط"
 
 msgid "Online"
 msgstr "متصل"

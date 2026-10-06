@@ -336,8 +336,8 @@ msgstr "Μνήμη"
 msgid "Storage"
 msgstr "Αποθηκευτικός χώρος"
 
-msgid "Power"
-msgstr "Τροφοδοσία"
+msgid "Battery"
+msgstr "Μπαταρία"
 
 msgid "Channel"
 msgstr "Κανάλι"
@@ -581,6 +581,27 @@ msgstr "Συστάδα %d"
 
 msgid "Total %s · free %s"
 msgstr "Σύνολο %s · ελεύθερα %s"
+
+msgid "charging %s W"
+msgstr "φόρτιση %s W"
+
+msgid "charging"
+msgstr "φορτίζει"
+
+msgid "drawing %s W"
+msgstr "κατανάλωση %s W"
+
+msgid "not charging"
+msgstr "δεν φορτίζει"
+
+msgid "on battery"
+msgstr "σε μπαταρία"
+
+msgid "full"
+msgstr "πλήρης"
+
+msgid "USB in %s W"
+msgstr "είσοδος USB %s W"
 
 msgid "Online"
 msgstr "Σε σύνδεση"

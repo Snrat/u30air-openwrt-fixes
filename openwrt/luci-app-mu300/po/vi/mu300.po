@@ -336,8 +336,8 @@ msgstr "Bộ nhớ"
 msgid "Storage"
 msgstr "Lưu trữ"
 
-msgid "Power"
-msgstr "Nguồn"
+msgid "Battery"
+msgstr "Pin"
 
 msgid "Channel"
 msgstr "Kênh"
@@ -581,6 +581,27 @@ msgstr "Cụm %d"
 
 msgid "Total %s · free %s"
 msgstr "Tổng %s · trống %s"
+
+msgid "charging %s W"
+msgstr "đang sạc %s W"
+
+msgid "charging"
+msgstr "đang sạc"
+
+msgid "drawing %s W"
+msgstr "đang tiêu thụ %s W"
+
+msgid "not charging"
+msgstr "không sạc"
+
+msgid "on battery"
+msgstr "dùng pin"
+
+msgid "full"
+msgstr "đầy"
+
+msgid "USB in %s W"
+msgstr "đầu vào USB %s W"
 
 msgid "Online"
 msgstr "Trực tuyến"

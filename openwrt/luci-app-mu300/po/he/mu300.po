@@ -336,8 +336,8 @@ msgstr "זיכרון"
 msgid "Storage"
 msgstr "אחסון"
 
-msgid "Power"
-msgstr "אספקת חשמל"
+msgid "Battery"
+msgstr "סוללה"
 
 msgid "Channel"
 msgstr "ערוץ"
@@ -581,6 +581,27 @@ msgstr "אשכול %d"
 
 msgid "Total %s · free %s"
 msgstr "סה״כ %s · פנוי %s"
+
+msgid "charging %s W"
+msgstr "נטענת ב־%s W"
+
+msgid "charging"
+msgstr "נטענת"
+
+msgid "drawing %s W"
+msgstr "צורכת %s W"
+
+msgid "not charging"
+msgstr "לא נטענת"
+
+msgid "on battery"
+msgstr "על סוללה"
+
+msgid "full"
+msgstr "מלאה"
+
+msgid "USB in %s W"
+msgstr "כניסת USB %s W"
 
 msgid "Online"
 msgstr "מקוון"

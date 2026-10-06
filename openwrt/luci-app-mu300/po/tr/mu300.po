@@ -339,27 +339,6 @@ msgstr "Depolama"
 msgid "Battery"
 msgstr "Pil"
 
-msgid "charging %s W"
-msgstr "%s W ile şarj oluyor"
-
-msgid "charging"
-msgstr "şarj oluyor"
-
-msgid "drawing %s W"
-msgstr "%s W çekiyor"
-
-msgid "on battery"
-msgstr "pille çalışıyor"
-
-msgid "full"
-msgstr "dolu"
-
-msgid "not charging"
-msgstr "şarj edilmiyor"
-
-msgid "USB in %s W"
-msgstr "USB girişi %s W"
-
 msgid "Channel"
 msgstr "Kanal"
 
@@ -602,6 +581,27 @@ msgstr "Küme %d"
 
 msgid "Total %s · free %s"
 msgstr "Toplam %s · boş %s"
+
+msgid "charging %s W"
+msgstr "%s W ile şarj oluyor"
+
+msgid "charging"
+msgstr "şarj oluyor"
+
+msgid "drawing %s W"
+msgstr "%s W çekiyor"
+
+msgid "not charging"
+msgstr "şarj edilmiyor"
+
+msgid "on battery"
+msgstr "pille çalışıyor"
+
+msgid "full"
+msgstr "dolu"
+
+msgid "USB in %s W"
+msgstr "USB girişi %s W"
 
 msgid "Online"
 msgstr "Çevrimiçi"
