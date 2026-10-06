@@ -21,6 +21,9 @@ msgstr "AT терминалы"
 msgid "Adapter settings"
 msgstr "Адаптер параметрлері"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Құрылғыны басқару"
 
@@ -1023,6 +1026,45 @@ msgstr "Мен: %s"
 msgid "Delete"
 msgstr "Жою"
 
+msgid "Current setting"
+msgstr "Ағымдағы баптау"
+
+msgid "Fixed at %d"
+msgstr "%d мәнінде бекітілген"
+
+msgid "Not changed (default)"
+msgstr "Өзгертілмеген (әдепкі)"
+
+msgid "Rule in force"
+msgstr "Қолданыстағы ереже"
+
+msgid "Flow offloading"
+msgstr "Ағындарды жеңілдету (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "Мобильді деректердің TTL мәні"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Мобильді деректер арқылы шығатын әр пакет осы TTL мәнін алады (IPv6: hop limit). Хотспотқа қосылған телефон не ноутбук 64 (Windows: 128) жібереді, ал құрылғы оны бірге кем етіп жібереді — оператор бөлісілген трафикті осыдан танып алады."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Бұл ядрода TTL орнатылып тұрғанда брандмауэрдің жылдам жолы өшірулі"
+
+msgid "Set %d"
+msgstr "%d орнату"
+
+msgid "Set"
+msgstr "Орнату"
+
+msgid "Enter a number from 1 to 255"
+msgstr "1 мен 255 аралығындағы санды енгізіңіз"
+
+msgid "Turn off"
+msgstr "Өшіру"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "64 мәнінде әр пакет құрылғының өз трафигі сияқты шығады"
+
 msgid "Dashboard info failed"
 msgstr "Тақта деректерін алу сәтсіз"
 
@@ -1145,6 +1187,12 @@ msgstr "Жарамсыз тіл сұрауы"
 
 msgid "Unknown source"
 msgstr "Белгісіз дереккөз"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "TTL адаптері жарамды жауап бермеді"
+
+msgid "Invalid TTL"
+msgstr "Жарамсыз TTL"
 
 msgid "Request too large"
 msgstr "Сұрау тым үлкен"
@@ -1274,3 +1322,12 @@ msgstr "Бекіту кэші қолжетімсіз"
 
 msgid "No serving cell to lock to"
 msgstr "Бекітетін қызмет көрсететін ұяшық жоқ"
+
+msgid "The TTL setting could not be read"
+msgstr "TTL баптауын оқу мүмкін болмады"
+
+msgid "The TTL could not be set"
+msgstr "TTL орнату мүмкін болмады"
+
+msgid "Unknown TTL operation"
+msgstr "Белгісіз TTL әрекеті"

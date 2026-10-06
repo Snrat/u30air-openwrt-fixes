@@ -21,6 +21,9 @@ msgstr "AT-Terminal"
 msgid "Adapter settings"
 msgstr "Adaptereinstellungen"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Geräteverwaltung"
 
@@ -1023,6 +1026,45 @@ msgstr "Ich: %s"
 msgid "Delete"
 msgstr "Löschen"
 
+msgid "Current setting"
+msgstr "Aktuelle Einstellung"
+
+msgid "Fixed at %d"
+msgstr "Fest auf %d"
+
+msgid "Not changed (default)"
+msgstr "Nicht geändert (Standard)"
+
+msgid "Rule in force"
+msgstr "Aktive Regel"
+
+msgid "Flow offloading"
+msgstr "Flow-Offloading"
+
+msgid "TTL of mobile data"
+msgstr "TTL der mobilen Daten"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Jedes Paket, das über die mobilen Daten hinausgeht, bekommt diese TTL (IPv6: Hop-Limit). Ein Telefon oder Laptop am Hotspot sendet 64 (Windows: 128), und das Gerät leitet es mit eins weniger weiter – daran kann ein Netzbetreiber geteilten Datenverkehr erkennen."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Auf diesem Kernel ist der Schnellpfad der Firewall aus, solange eine TTL gesetzt ist"
+
+msgid "Set %d"
+msgstr "Auf %d setzen"
+
+msgid "Set"
+msgstr "Setzen"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Geben Sie eine Zahl von 1 bis 255 ein"
+
+msgid "Turn off"
+msgstr "Ausschalten"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "Mit 64 verlässt jedes Paket das Gerät wie dessen eigener Datenverkehr"
+
 msgid "Dashboard info failed"
 msgstr "Dashboard-Informationen fehlgeschlagen"
 
@@ -1145,6 +1187,12 @@ msgstr "Ungültige Sprachanfrage"
 
 msgid "Unknown source"
 msgstr "Unbekannte Quelle"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "Der TTL-Adapter gab keine gültige Antwort"
+
+msgid "Invalid TTL"
+msgstr "Ungültige TTL"
 
 msgid "Request too large"
 msgstr "Anfrage zu groß"
@@ -1274,3 +1322,12 @@ msgstr "Sperr-Cache nicht verfügbar"
 
 msgid "No serving cell to lock to"
 msgstr "Keine versorgende Zelle zum Sperren"
+
+msgid "The TTL setting could not be read"
+msgstr "Die TTL-Einstellung konnte nicht gelesen werden"
+
+msgid "The TTL could not be set"
+msgstr "Die TTL konnte nicht gesetzt werden"
+
+msgid "Unknown TTL operation"
+msgstr "Unbekannte TTL-Operation"

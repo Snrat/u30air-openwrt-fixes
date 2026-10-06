@@ -21,6 +21,9 @@ msgstr "Terminál AT"
 msgid "Adapter settings"
 msgstr "Nastavenia adaptéra"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Správa zariadenia"
 
@@ -1023,6 +1026,45 @@ msgstr "Ja: %s"
 msgid "Delete"
 msgstr "Odstrániť"
 
+msgid "Current setting"
+msgstr "Aktuálne nastavenie"
+
+msgid "Fixed at %d"
+msgstr "Pevne %d"
+
+msgid "Not changed (default)"
+msgstr "Nezmenené (predvolené)"
+
+msgid "Rule in force"
+msgstr "Platné pravidlo"
+
+msgid "Flow offloading"
+msgstr "Odľahčenie tokov (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL mobilných dát"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Každý paket, ktorý odchádza cez mobilné dáta, dostane toto TTL (IPv6: hop limit). Telefón alebo notebook za hotspotom posiela 64 (Windows: 128) a zariadenie ho prepošle o jedna menšie, podľa čoho operátor rozpozná zdieľanú prevádzku."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Na tomto jadre je rýchla cesta firewallu vypnutá, kým je nastavené TTL"
+
+msgid "Set %d"
+msgstr "Nastaviť %d"
+
+msgid "Set"
+msgstr "Nastaviť"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Zadajte číslo od 1 do 255"
+
+msgid "Turn off"
+msgstr "Vypnúť"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "S 64 odchádza každý paket ako vlastná prevádzka zariadenia"
+
 msgid "Dashboard info failed"
 msgstr "Informácie prehľadu zlyhali"
 
@@ -1145,6 +1187,12 @@ msgstr "Neplatná jazyková požiadavka"
 
 msgid "Unknown source"
 msgstr "Neznámy zdroj"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "Adaptér TTL nevrátil platnú odpoveď"
+
+msgid "Invalid TTL"
+msgstr "Neplatné TTL"
 
 msgid "Request too large"
 msgstr "Požiadavka je príliš veľká"
@@ -1274,3 +1322,12 @@ msgstr "Vyrovnávacia pamäť zámkov nie je dostupná"
 
 msgid "No serving cell to lock to"
 msgstr "Žiadna obsluhujúca bunka na uzamknutie"
+
+msgid "The TTL setting could not be read"
+msgstr "Nastavenie TTL sa nepodarilo prečítať"
+
+msgid "The TTL could not be set"
+msgstr "TTL sa nepodarilo nastaviť"
+
+msgid "Unknown TTL operation"
+msgstr "Neznáma operácia TTL"

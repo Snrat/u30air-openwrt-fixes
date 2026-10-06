@@ -21,6 +21,9 @@ msgstr "AT ターミナル"
 msgid "Adapter settings"
 msgstr "アダプタ設定"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "デバイス管理"
 
@@ -1023,6 +1026,45 @@ msgstr "自分: %s"
 msgid "Delete"
 msgstr "削除"
 
+msgid "Current setting"
+msgstr "現在の設定"
+
+msgid "Fixed at %d"
+msgstr "%d に固定"
+
+msgid "Not changed (default)"
+msgstr "変更なし（既定）"
+
+msgid "Rule in force"
+msgstr "適用中のルール"
+
+msgid "Flow offloading"
+msgstr "フローオフロード"
+
+msgid "TTL of mobile data"
+msgstr "モバイルデータの TTL"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "モバイルデータから出ていくすべてのパケットにこの TTL（IPv6: ホップ制限）が付きます。ホットスポットにつないだスマートフォンやノート PC は 64（Windows: 128）で送信し、デバイスは 1 減らして転送するため、通信事業者はそこから共有トラフィックを見分けられます。"
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "このカーネルでは、TTL を設定している間はファイアウォールの高速経路がオフになります"
+
+msgid "Set %d"
+msgstr "%d に設定"
+
+msgid "Set"
+msgstr "設定"
+
+msgid "Enter a number from 1 to 255"
+msgstr "1 から 255 までの数値を入力してください"
+
+msgid "Turn off"
+msgstr "オフにする"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "64 にすると、すべてのパケットがデバイス自身の通信と同じように送出されます"
+
 msgid "Dashboard info failed"
 msgstr "ダッシュボード情報の取得に失敗しました"
 
@@ -1145,6 +1187,12 @@ msgstr "無効な言語リクエスト"
 
 msgid "Unknown source"
 msgstr "不明なソース"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "TTL アダプターから有効な応答がありませんでした"
+
+msgid "Invalid TTL"
+msgstr "無効な TTL"
 
 msgid "Request too large"
 msgstr "リクエストが大きすぎます"
@@ -1274,3 +1322,12 @@ msgstr "ロックキャッシュを利用できません"
 
 msgid "No serving cell to lock to"
 msgstr "ロックできるサービングセルがありません"
+
+msgid "The TTL setting could not be read"
+msgstr "TTL 設定を読み取れませんでした"
+
+msgid "The TTL could not be set"
+msgstr "TTL を設定できませんでした"
+
+msgid "Unknown TTL operation"
+msgstr "不明な TTL 操作"

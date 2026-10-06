@@ -21,6 +21,9 @@ msgstr "AT terminalı"
 msgid "Adapter settings"
 msgstr "Adapter parametrləri"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Cihazın idarəsi"
 
@@ -1023,6 +1026,45 @@ msgstr "Mən: %s"
 msgid "Delete"
 msgstr "Sil"
 
+msgid "Current setting"
+msgstr "Cari ayar"
+
+msgid "Fixed at %d"
+msgstr "%d olaraq sabit"
+
+msgid "Not changed (default)"
+msgstr "Dəyişdirilməyib (standart)"
+
+msgid "Rule in force"
+msgstr "Qüvvədə olan qayda"
+
+msgid "Flow offloading"
+msgstr "Axın yüngülləşdirmə (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "Mobil məlumatın TTL dəyəri"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Mobil məlumat vasitəsilə çıxan hər paket bu TTL dəyərini alır (IPv6: hop limit). Hotspota qoşulan telefon və ya noutbuk 64 (Windows: 128) göndərir, cihaz isə onu bir azı ilə ötürür — operator paylaşılan trafiki bundan tanıya bilər."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Bu nüvədə TTL təyin olunduqca firewall-un sürətli yolu söndürülüdür"
+
+msgid "Set %d"
+msgstr "%d təyin et"
+
+msgid "Set"
+msgstr "Təyin et"
+
+msgid "Enter a number from 1 to 255"
+msgstr "1 ilə 255 arasında rəqəm daxil edin"
+
+msgid "Turn off"
+msgstr "Söndür"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "64 ilə hər paket cihazın öz trafiki kimi çıxır"
+
 msgid "Dashboard info failed"
 msgstr "Panel məlumatını almaq mümkün olmadı"
 
@@ -1145,6 +1187,12 @@ msgstr "Yanlış dil sorğusu"
 
 msgid "Unknown source"
 msgstr "Naməlum mənbə"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "TTL adapteri etibarlı cavab vermədi"
+
+msgid "Invalid TTL"
+msgstr "Yanlış TTL"
 
 msgid "Request too large"
 msgstr "Sorğu çox böyükdür"
@@ -1274,3 +1322,12 @@ msgstr "Kilid keşi əlçatan deyil"
 
 msgid "No serving cell to lock to"
 msgstr "Kilidlənəcək xidmət edən hüceyrə yoxdur"
+
+msgid "The TTL setting could not be read"
+msgstr "TTL ayarı oxuna bilmədi"
+
+msgid "The TTL could not be set"
+msgstr "TTL təyin edilə bilmədi"
+
+msgid "Unknown TTL operation"
+msgstr "Naməlum TTL əməliyyatı"

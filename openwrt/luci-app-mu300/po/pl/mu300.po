@@ -21,6 +21,9 @@ msgstr "Terminal AT"
 msgid "Adapter settings"
 msgstr "Ustawienia adaptera"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Zarządzanie urządzeniem"
 
@@ -1023,6 +1026,45 @@ msgstr "Ja: %s"
 msgid "Delete"
 msgstr "Usuń"
 
+msgid "Current setting"
+msgstr "Bieżące ustawienie"
+
+msgid "Fixed at %d"
+msgstr "Stała wartość %d"
+
+msgid "Not changed (default)"
+msgstr "Bez zmian (domyślnie)"
+
+msgid "Rule in force"
+msgstr "Obowiązująca reguła"
+
+msgid "Flow offloading"
+msgstr "Odciążanie przepływów (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL danych mobilnych"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Każdy pakiet wychodzący przez dane mobilne otrzymuje ten TTL (IPv6: hop limit). Telefon lub laptop za hotspotem wysyła 64 (Windows: 128), a urządzenie przekazuje go z wartością o jeden mniejszą – po tym operator może rozpoznać udostępniany ruch."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Na tym jądrze szybka ścieżka zapory jest wyłączona, dopóki ustawiony jest TTL"
+
+msgid "Set %d"
+msgstr "Ustaw %d"
+
+msgid "Set"
+msgstr "Ustaw"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Wpisz liczbę od 1 do 255"
+
+msgid "Turn off"
+msgstr "Wyłącz"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "Przy 64 każdy pakiet wychodzi jak własny ruch urządzenia"
+
 msgid "Dashboard info failed"
 msgstr "Błąd informacji panelu"
 
@@ -1145,6 +1187,12 @@ msgstr "Nieprawidłowe żądanie językowe"
 
 msgid "Unknown source"
 msgstr "Nieznane źródło"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "Adapter TTL nie zwrócił poprawnej odpowiedzi"
+
+msgid "Invalid TTL"
+msgstr "Nieprawidłowy TTL"
 
 msgid "Request too large"
 msgstr "Żądanie jest za duże"
@@ -1274,3 +1322,12 @@ msgstr "Pamięć podręczna blokad niedostępna"
 
 msgid "No serving cell to lock to"
 msgstr "Brak komórki obsługującej do zablokowania"
+
+msgid "The TTL setting could not be read"
+msgstr "Nie udało się odczytać ustawienia TTL"
+
+msgid "The TTL could not be set"
+msgstr "Nie udało się ustawić TTL"
+
+msgid "Unknown TTL operation"
+msgstr "Nieznana operacja TTL"
