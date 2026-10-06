@@ -337,7 +337,7 @@ msgid "Battery"
 msgstr "Pil"
 
 msgid "charging %s W"
-msgstr "şarj oluyor %s W"
+msgstr "%s W ile şarj oluyor"
 
 msgid "charging"
 msgstr "şarj oluyor"
@@ -346,13 +346,13 @@ msgid "drawing %s W"
 msgstr "%s W çekiyor"
 
 msgid "on battery"
-msgstr "pilde"
+msgstr "pille çalışıyor"
 
 msgid "full"
 msgstr "dolu"
 
 msgid "not charging"
-msgstr "şarj olmuyor"
+msgstr "şarj edilmiyor"
 
 msgid "USB in %s W"
 msgstr "USB girişi %s W"
