@@ -24,6 +24,9 @@ msgstr "Bağdaştırıcı ayarları"
 msgid "Device management"
 msgstr "Cihaz yönetimi"
 
+msgid "Languages"
+msgstr ""
+
 msgid "MU300 control center: status dashboard, network locks, AT terminal and SMS"
 msgstr "MU300 kontrol merkezi: durum paneli, ağ kilitleri, AT terminali ve SMS"
 
@@ -606,6 +609,102 @@ msgstr "Çevrimiçi"
 msgid "AT adapter unavailable"
 msgstr "AT bağdaştırıcısı kullanılamıyor"
 
+msgid "Saved"
+msgstr ""
+
+msgid "Management connection lost"
+msgstr ""
+
+msgid "Installing the language pack…"
+msgstr ""
+
+msgid "The language pack is installed"
+msgstr ""
+
+msgid "The language pack could not be installed"
+msgstr ""
+
+msgid "Upload failed: %s"
+msgstr ""
+
+msgid "Language of the browser"
+msgstr ""
+
+msgid "Language of the web interface"
+msgstr ""
+
+msgid "English, Turkish and Chinese come with the system; the language pack adds the others."
+msgstr ""
+
+msgid "The same setting is in System > System > Language and Style."
+msgstr ""
+
+msgid "Language pack"
+msgstr ""
+
+msgid "The language pack (mu300-extra-lang.tar.gz, about 2 MB) adds LuCI in about 40 more languages and this panel in 29 of them. Download it from the release of this system, or upload the file from the release page when the device has no internet."
+msgstr ""
+
+msgid "Download from the release"
+msgstr ""
+
+msgid "Upload the file…"
+msgstr ""
+
+msgid "Release"
+msgstr ""
+
+msgid "Enable all"
+msgstr ""
+
+msgid "Disable all"
+msgstr ""
+
+msgid "Remove the language pack"
+msgstr ""
+
+msgid "Remove the language pack?"
+msgstr ""
+
+msgid "Its languages disappear from the list; a page in one of them switches to English."
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Disable"
+msgstr ""
+
+msgid "Enable"
+msgstr ""
+
+msgid "LuCI and this panel"
+msgstr ""
+
+msgid "LuCI only"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "Code"
+msgstr ""
+
+msgid "Translated"
+msgstr ""
+
+msgid "State"
+msgstr ""
+
+msgid "LuCI's own translations come from OpenWrt. This panel's translations other than Turkish and Chinese are machine (AI) translations; corrections are welcome."
+msgstr ""
+
 msgid "Automatic"
 msgstr "Otomatik"
 
@@ -1032,6 +1131,21 @@ msgstr "Bilinmeyen USB ayarı"
 msgid "Invalid interface name"
 msgstr "Geçersiz arayüz adı"
 
+msgid "The languages adapter gave no valid reply"
+msgstr ""
+
+msgid "Unknown language operation"
+msgstr ""
+
+msgid "Invalid language code"
+msgstr ""
+
+msgid "Invalid language request"
+msgstr ""
+
+msgid "Unknown source"
+msgstr ""
+
 msgid "Request too large"
 msgstr "İstek çok büyük"
 
@@ -1133,6 +1247,27 @@ msgstr "Ağ yeniden yüklenemedi"
 
 msgid "Cannot attach USB interface to LAN bridge"
 msgstr "USB arayüzü LAN köprüsüne bağlanamıyor"
+
+msgid "The language pack is not installed"
+msgstr ""
+
+msgid "No language given"
+msgstr ""
+
+msgid "The language could not be changed"
+msgstr ""
+
+msgid "LuCI does not offer this language"
+msgstr ""
+
+msgid "No uploaded language pack"
+msgstr ""
+
+msgid "An installation is already running"
+msgstr ""
+
+msgid "The language pack could not be removed"
+msgstr ""
 
 msgid "Lock cache unavailable"
 msgstr "Kilit önbelleği kullanılamıyor"
