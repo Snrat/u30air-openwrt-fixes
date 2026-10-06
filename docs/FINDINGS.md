@@ -2135,9 +2135,12 @@ the bq25601's data, and patch 0009 changes the following for that node only:
   4050 mAh cell. VREG is at most 4.208 V: Android's REG04 has that, while the node says 4.3 V. Termination is on and
   the watchdog off. VINDPM comes from `vindpm-value`, rounded up to the chip's 100 mV steps.
 - The node has no `input-current-limit-microamp`, and the driver's default of 2.4 A is too much for a 500 mA USB
-  port. The input current is 500 mA until the chip's own input detection has run (IINDET_EN in REG07, then
-  VBUS_STAT in REG08). The result sets it: SDP or unknown 500 mA, CDP 1.5 A, DCP 2 A, non-standard 1 A. Detection
-  runs at probe and again on every VBUS change. With no interrupt, those changes come from the extcon. If the node's
+  port. The input current is 500 mA until a charger type is known. The type comes from the UMP9620's own charger
+  detection (`sprd_pmic_detect_charger_type()`, as `sc2731_charger` and the Unisoc kernel use it): SDP 500 mA,
+  CDP 1.5 A, DCP 2 A, and `usb_type` from the same result. The charger's own input detection (IINDET_EN in REG07,
+  then VBUS_STAT in REG08) drives D+/D-, which on this board are the USB gadget's lines to the computer. It runs
+  only when the PMIC device or its result is missing, and the driver says so once. With it, SDP or unknown is
+  500 mA, CDP 1.5 A, DCP 2 A and non-standard 1 A. The type is read at probe and again on every VBUS change. With no interrupt, those changes come from the extcon. If the node's
   extcon is not the `extcon-usb-gpio` device (on the U30 Air the PHY's points at the PMIC's Type-C block, which has
   no driver, 33c), the driver uses that device, as the USB PHY does. Each run also switches charging on.
 - `charge_type` on `/sys/class/power_supply/bq256xx-charger` is the userspace switch: `N/A` stops charging, also
