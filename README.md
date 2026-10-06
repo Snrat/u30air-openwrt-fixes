@@ -416,6 +416,17 @@ copy and an update or reinstall of a system keeps it; `mu300-update apply` bring
 off again (turn the VPN off first; it refuses while the VPN is on). A device that used the VPN before the engines became an extra keeps it working: the update installs the
 vpn extra by itself (or keeps the engines of the old system), and `mu300-vpn` fetches it when it finds none.
 
+**Tailscale through the VPN.** Tailscale marks its own connections (WireGuard to peers, DERP relays, the control
+server) and gives them a routing rule of their own (`fwmark 0x80000/0xff0000 lookup main`, pref 5210) that would send
+them past the tunnel straight to the carrier - on a network where only the VPN gets out, Tailscale then never
+connects. When the tunnel comes up, with either engine, `mu300-vpn` puts a rule before it (pref 5200, into the
+tunnel's table 2022). Private addresses (the device's LAN, RFC 1918) stay outside the tunnel (pref 5199), so peers on
+the same network are reached directly. The engine's own connection keeps going to the carrier even with a Tailscale
+exit node (pref 5198). The tailnet itself (`100.64.0.0/10`, Tailscale's table 52) works as before. The kill switch
+still drops every Tailscale packet on the cellular interface, so with it on they only leave through the tunnel. With
+the VPN off, or with an engine stopped, the rules have nothing to send packets into and Tailscale goes out directly
+as usual; `mu300-vpn off` and the next start clear them. IPv4 only. `TAILSCALE=0` in vpn.conf turns this off.
+
 ### Languages
 
 Both OpenWrt systems speak **English, Turkish and Simplified Chinese** out of the box: LuCI's own pages (from
