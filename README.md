@@ -23,6 +23,38 @@ is talking to; see [Supported devices](#supported-devices).
 
 ---
 
+## A hobby project, at your own risk
+
+This is an experimental hobby project, made in spare time by people who like these devices. It is not a product,
+it has no support line, and it comes with **no warranty of any kind**. Everything here is offered as it is; a release
+that works on our boards may not work on yours.
+
+What you do with your device is your decision and your responsibility. In particular:
+
+* **Rooting, unlocking and recovery are not part of this project.** Getting a device rooted, flashing with Magisk,
+  SPD/BROM or any other third-party tool, and anything you download from anywhere else to do so, is done at your own
+  risk, following those tools' own instructions. We did not write them, we do not check them, and we cannot say
+  what they do to your device, your data or your warranty.
+* **Writing to a phone-class device can leave it unusable.** The installer takes care to touch as little as it can
+  (see [Before you start](#before-you-start)), and the device falls back to Android when Linux does not start, but a
+  wrong partition, a power cut at the wrong moment, a bad cable or a mistake on our side can still brick it or erase
+  it. Keep a backup; do not install on a device you cannot afford to lose.
+* **The modem, the radio and the network are yours to use lawfully.** Changing what your device sends (TTL, IMEI-related
+  settings, band locks, VPNs) may break your operator's terms or local law. Check before you turn something on.
+* **Nothing here is endorsed by ZTE, Unisoc or any operator**, and no trademark is claimed.
+
+To the fullest extent allowed by law, the authors and contributors are not liable for any damage, loss of data,
+loss of service, cost or injury arising from the use of this software, this documentation or anything linked from
+them. If that is not acceptable to you, do not install it.
+
+> **Türkçe:** Bu deneysel bir hobi projesidir; ürün değildir, desteği ve hiçbir garantisi yoktur. Cihazın root'lanması,
+> kilidinin açılması ve Magisk, SPD/BROM gibi üçüncü taraf araçlarla yapılan her türlü işlem bu projenin dışındadır ve
+> tamamen sizin sorumluluğunuzdadır. Kurulum cihazı kullanılamaz hâle getirebilir ya da verilerinizi silebilir; yedek
+> alın, kaybetmeyi göze alamayacağınız bir cihaza kurmayın. Yazarlar ve katkıda bulunanlar, bu yazılımın kullanımından
+> doğabilecek hiçbir zarar, veri veya hizmet kaybından sorumlu değildir.
+
+---
+
 ## Supported devices
 
 | | ZTE F50 / MU300 | ZTE U30 Air |
