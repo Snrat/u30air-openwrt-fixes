@@ -2165,7 +2165,39 @@ first build:
 - `sc27xx-fgu/capacity` read 575. The FGU's always-on user area keeps the last capacity across a reboot, and
   Android keeps it in 0.1 %. Until then the status had been Full, and the calibration that runs whenever the
   battery is not charging forced anything above 100 back to 100. Patch 0011 reads and saves that value in 0.1 % on
-  the UMP9620, and clamps the reported capacity to 0-100.
+  the UMP9620, and clamps the reported capacity to 0-100. (Its format was wrong: see 2026-10-07 below.)
+
+2026-10-07, U30 Air under 7.2.9 with 0009-0011: charged from about 60 % (Android said 65 % at 4.04 V under 1.3 A) for
+about 1.5 h at 1.1-1.3 A. Then bq256xx-charger said Full (charge_type Trickle), and the battery rested at 4.146 V with
++2 mA, so it was physically full. `sc27xx-fgu` said status Full and capacity 58, and over the whole charge the capacity
+had read 57.5, 59 and 58. Two faults in the driver, and a third that is still open:
+
+- The user-area format. Unisoc's 5.4 driver (`sc27xx_fgu_save_last_cap()`/`read_last_cap()`, `FCC_PERCENT` 1000)
+  keeps the capacity as whole percent in bits 7:0 and tenths in bits 11:8. That makes 575 (0x23f) 63.2 %, close to
+  Android's 65 %, not 57.5 %. Android's own capacity is in 0.1 % internally (its `sc27xx-fgu` capacity read 615 when `battery` said 65), but that is not
+  what it stores. The 0.1 % that 0011 wrote back would read as something else under Android (580 = 0x244 = 68.2 %).
+  Mainline's arithmetic is in whole percent throughout (`init_cap`, `ocv2cap`, the delta from the coulomb count over
+  `total_cap`), and 0011 had converted at the user area, so the units inside the driver agreed. The value read was
+  the wrong one.
+- No calibration at the end of a charge. Mainline sets 100 % only when the OCV is above the top of the OCV table.
+  The charger ends at VREG 4.208 V, below the top of the table (4.3 V and up for these cells), so with Full and 4.146 V
+  nothing moved the 58. Mainline also writes the user area only on a first power-on, so every boot started again
+  from the value Android had left.
+- Open: the coulomb count should have added about 40 % (1.6-1.8 Ah of a 4050 mAh cell). Its arithmetic matches the
+  vendor's (`clbcnt * 10 / 72 / cur_1000ma_adc` mAh, the same registers, 2 Hz) and does not overflow at these values,
+  and nothing calibrates while the status is Charging. A reboot during the charge would explain the 59 -> 58 step
+  (each boot restarted from the stale saved value), but not the small rise. `charge_now` (uAh) is the raw counter:
+  it should rise by about 1.2 Ah per hour at 1.2 A. If it does not, the UMP9620's counter needs something the
+  driver does not do.
+
+Patch 0011 is replaced (`0011-power-sc27xx-fuel-gauge-UMP9620-saved-capacity-and-full.patch`). On UMP9620 it reads
+the saved value in Android's format and writes whole percent, which is the same number in both formats. A value that
+is not a capacity in that format goes to the OCV. So does a multiple of 10 with tenths, which the first 0011 may have
+written: the OCV table decides it right away with the battery at rest (under 50 mA), and under load the value is taken
+in Android's format. Either way dmesg says `boot capacity N % (saved 0x...)` or `... from the OCV`. The capacity is
+written to the user area whenever its whole percent changes. A Full from a charger driver (not 0006's guess from the
+current) sets 100 % while the OCV table puts the battery at 70 % or more. The reported value stays within 0-100. Built
+for 6.18.55 and 7.2.9. Not yet tested on the device.
 
 ### 33e. USB host on the U30 Air, and a trial guard that outlived its trial
 
