@@ -7,7 +7,8 @@ ConditionPathExists=/opt/mu300/bin/mu300-power
 ExecStart=/opt/mu300/bin/mu300-power daemon
 Restart=always
 RestartSec=10
-# stopped while idle, the TERM trap runs the whole wake: hotspot, LEDs and CPU, then the modem (up to ~120 s for the radio lock)
+# stopped while idle, the TERM trap brings back the hotspot, LEDs and CPU, then the radio without a dial (up to ~120 s
+# for the radio lock; the watchdog redials); not during a shutdown
 TimeoutStopSec=150
 
 [Install]
