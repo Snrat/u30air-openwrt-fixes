@@ -2151,8 +2151,21 @@ the bq25601's data, and patch 0009 changes the following for that node only:
 
 The driver owns 6-006b now, so `mu300-usb` reaches the chip with `i2cget/i2cset -f` and leaves its watchdog off.
 On expiry, the watchdog would drop the driver's settings. Nothing answers at 0x6b on the F50 (24). If its DT has
-the node, the probe stops at the first read. All of this is built for 6.18.55 and 7.2.9 and has not yet run on the
-device.
+the node, the probe stops at the first read.
+
+On the U30 Air under 7.2.9 (2026-10-06) the driver binds (`part 2, rev 0`), switches charging on (Android had left
+CHG_CONFIG at 0), and the fuel gauge reads +219 mA at 3.888 V, status Charging. Two things were wrong in that
+first build:
+
+- `sc27xx-pmic spi4.0: failed to detect charger type`, so the driver fell back to IINDET_EN. On that Mac CDP port
+  the result was usb_type 0 and 500 mA; Android uses 1.5 A there. `port/install.py` had given the UMP9620 the
+  SC2730's detection register, 0x1b9c. The UMP9620's BC1.2 status register is 0x239c (`UMP9620_CHARGE_STATUS` in
+  Unisoc's `sprd-bc1p2.h`), with the bits mainline expects: DONE 11, SDP 7, DCP 6, CDP 5. The edit now uses it,
+  and input detection has to be tested again.
+- `sc27xx-fgu/capacity` read 575. The FGU's always-on user area keeps the last capacity across a reboot, and
+  Android keeps it in 0.1 %. Until then the status had been Full, and the calibration that runs whenever the
+  battery is not charging forced anything above 100 back to 100. Patch 0011 reads and saves that value in 0.1 % on
+  the UMP9620, and clamps the reported capacity to 0-100.
 
 ### 33e. USB host on the U30 Air, and a trial guard that outlived its trial
 
