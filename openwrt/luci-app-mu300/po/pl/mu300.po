@@ -4,1252 +4,1252 @@ msgstr ""
 "Language: pl\n"
 
 msgid "Status dashboard"
-msgstr ""
+msgstr "Panel stanu"
 
 msgid "Cellular"
-msgstr ""
+msgstr "Sieć komórkowa"
 
 msgid "Network locks"
-msgstr ""
+msgstr "Blokady sieci"
 
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 msgid "AT terminal"
-msgstr ""
+msgstr "Terminal AT"
 
 msgid "Adapter settings"
-msgstr ""
+msgstr "Ustawienia adaptera"
 
 msgid "Device management"
-msgstr ""
+msgstr "Zarządzanie urządzeniem"
 
 msgid "Languages"
-msgstr ""
+msgstr "Języki"
 
 msgid "MU300 control center: status dashboard, network locks, AT terminal and SMS"
-msgstr ""
+msgstr "Centrum sterowania MU300: panel stanu, blokady sieci, terminal AT i SMS"
 
 msgid "China Mobile"
-msgstr ""
+msgstr "China Mobile"
 
 msgid "China Unicom"
-msgstr ""
+msgstr "China Unicom"
 
 msgid "China Telecom"
-msgstr ""
+msgstr "China Telecom"
 
 msgid "China Broadnet"
-msgstr ""
+msgstr "China Broadnet"
 
 msgid "China Tietong"
-msgstr ""
+msgstr "China Tietong"
 
 msgid "Excellent"
-msgstr ""
+msgstr "Doskonały"
 
 msgid "Good"
-msgstr ""
+msgstr "Dobry"
 
 msgid "Fair"
-msgstr ""
+msgstr "Średni"
 
 msgid "Poor"
-msgstr ""
+msgstr "Słaby"
 
 msgid "Unknown"
-msgstr ""
+msgstr "Nieznany"
 
 msgid "%d d %d h"
-msgstr ""
+msgstr "%d d %d godz."
 
 msgid "%d h %d min"
-msgstr ""
+msgstr "%d godz. %d min"
 
 msgid "%d min"
-msgstr ""
+msgstr "%d min"
 
 msgid "No neighbor-cell data"
-msgstr ""
+msgstr "Brak danych o komórkach sąsiednich"
 
 msgid "Locked"
-msgstr ""
+msgstr "Zablokowano"
 
 msgid "Lock"
-msgstr ""
+msgstr "Zablokuj"
 
 msgid "Unknown error"
-msgstr ""
+msgstr "Nieznany błąd"
 
 msgid "Confirm"
-msgstr ""
+msgstr "Potwierdź"
 
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 msgid "Cancel"
-msgstr ""
+msgstr "Anuluj"
 
 msgid "New SMS · %s"
-msgstr ""
+msgstr "Nowy SMS · %s"
 
 msgid "Unknown number"
-msgstr ""
+msgstr "Nieznany numer"
 
 msgid "Select"
-msgstr ""
+msgstr "Wybierz"
 
 msgid "Basic"
-msgstr ""
+msgstr "Podstawowe"
 
 msgid "Registration/signal"
-msgstr ""
+msgstr "Rejestracja/sygnał"
 
 msgid "Bearer"
-msgstr ""
+msgstr "Nośnik"
 
 msgid "Engineering mode"
-msgstr ""
+msgstr "Tryb inżynierski"
 
 msgid "AT command (↑↓ history, Enter to send)"
-msgstr ""
+msgstr "Polecenie AT (↑↓ historia, Enter wysyła)"
 
 msgid "Send"
-msgstr ""
+msgstr "Wyślij"
 
 msgid "Clear screen"
-msgstr ""
+msgstr "Wyczyść ekran"
 
 msgid "Ready."
-msgstr ""
+msgstr "Gotowe."
 
 msgid "Session history (click to reuse)"
-msgstr ""
+msgstr "Historia sesji (kliknij, aby użyć ponownie)"
 
 msgid "(no output)"
-msgstr ""
+msgstr "(brak wyniku)"
 
 msgid "Request failed"
-msgstr ""
+msgstr "Żądanie nie powiodło się"
 
 msgid "(empty)"
-msgstr ""
+msgstr "(puste)"
 
 msgid "USB role"
-msgstr ""
+msgstr "Rola USB"
 
 msgid "Current role"
-msgstr ""
+msgstr "Bieżąca rola"
 
 msgid "Switch USB role"
-msgstr ""
+msgstr "Przełącz rolę USB"
 
 msgid "Device mode"
-msgstr ""
+msgstr "Tryb urządzenia"
 
 msgid "Host mode"
-msgstr ""
+msgstr "Tryb hosta"
 
 msgid "Enable host mode at boot"
-msgstr ""
+msgstr "Włącz tryb hosta przy starcie"
 
 msgid "Apply role"
-msgstr ""
+msgstr "Zastosuj rolę"
 
 msgid "Host mode disconnects USB networking and serial on this port. F50 has no battery; management may be lost and a USB adapter usually needs a powered hub."
-msgstr ""
+msgstr "Tryb hosta rozłącza sieć USB i port szeregowy na tym porcie. F50 nie ma baterii; zarządzanie może zostać utracone, a adapter USB zwykle wymaga zasilanego huba."
 
 msgid "USB network mode"
-msgstr ""
+msgstr "Tryb sieci USB"
 
 msgid "Network protocol"
-msgstr ""
+msgstr "Protokół sieciowy"
 
 msgid "Apply duration"
-msgstr ""
+msgstr "Czas obowiązywania"
 
 msgid "Next reboot only"
-msgstr ""
+msgstr "Tylko przy następnym uruchomieniu"
 
 msgid "Permanent"
-msgstr ""
+msgstr "Na stałe"
 
 msgid "Enable selected protocol"
-msgstr ""
+msgstr "Włącz wybrany protokół"
 
 msgid "Save; apply after reboot"
-msgstr ""
+msgstr "Zapisz; zastosuj po ponownym uruchomieniu"
 
 msgid "NCM is the default. Windows does not natively support ECM; RNDIS changes enumeration. With Enable selected protocol off, only your choice is saved. Next reboot only applies once, then returns to NCM."
-msgstr ""
+msgstr "Domyślny jest NCM. Windows nie obsługuje natywnie ECM; RNDIS zmienia enumerację. Gdy opcja Włącz wybrany protokół jest wyłączona, zapisywany jest tylko Twój wybór. Tylko przy następnym uruchomieniu działa raz, potem wraca do NCM."
 
 msgid "USB adapters"
-msgstr ""
+msgstr "Adaptery USB"
 
 msgid "Refresh"
-msgstr ""
+msgstr "Odśwież"
 
 msgid "Available only in host mode. Refresh brings discovered USB adapters up; adding to LAN saves the bridge and reloads networking."
-msgstr ""
+msgstr "Dostępne tylko w trybie hosta. Odśwież uruchamia wykryte adaptery USB; dodanie do LAN zapisuje most i przeładowuje sieć."
 
 msgid "Unavailable"
-msgstr ""
+msgstr "Niedostępne"
 
 msgid "USB network mode is unavailable in host mode; host auto-start also disables USB network auto-start."
-msgstr ""
+msgstr "Tryb sieci USB jest niedostępny w trybie hosta; automatyczne uruchamianie hosta wyłącza też automatyczne uruchamianie sieci USB."
 
 msgid "Host mode immediately disconnects USB management. F50 has no battery and peripherals may need external power; make sure another management path exists."
-msgstr ""
+msgstr "Tryb hosta natychmiast rozłącza zarządzanie przez USB. F50 nie ma baterii, a urządzenia peryferyjne mogą wymagać zewnętrznego zasilania; upewnij się, że istnieje inna droga zarządzania."
 
 msgid "USB networking and serial will re-enumerate in device mode."
-msgstr ""
+msgstr "Sieć USB i port szeregowy zostaną ponownie wyliczone w trybie urządzenia."
 
 msgid "Switch USB role?"
-msgstr ""
+msgstr "Przełączyć rolę USB?"
 
 msgid "Apply"
-msgstr ""
+msgstr "Zastosuj"
 
 msgid "Switching USB role…"
-msgstr ""
+msgstr "Przełączanie roli USB…"
 
 msgid "Switch failed: %s"
-msgstr ""
+msgstr "Przełączenie nie powiodło się: %s"
 
 msgid "Management connection lost; reconnect to confirm the USB role."
-msgstr ""
+msgstr "Utracono połączenie zarządzające; połącz się ponownie, aby potwierdzić rolę USB."
 
 msgid "Switch request accepted; the USB connection may briefly disconnect."
-msgstr ""
+msgstr "Żądanie przełączenia przyjęte; połączenie USB może na chwilę zostać przerwane."
 
 msgid "USB role applied"
-msgstr ""
+msgstr "Zastosowano rolę USB"
 
 msgid "Save USB network mode?"
-msgstr ""
+msgstr "Zapisać tryb sieci USB?"
 
 msgid "The network mode applies on the next reboot; USB management may need to reconnect."
-msgstr ""
+msgstr "Tryb sieci zostanie zastosowany przy następnym uruchomieniu; zarządzanie przez USB może wymagać ponownego połączenia."
 
 msgid "Save the selection only; with the selected protocol disabled, the next boot still uses default NCM."
-msgstr ""
+msgstr "Zapisz tylko wybór; gdy wybrany protokół jest wyłączony, następne uruchomienie nadal używa domyślnego NCM."
 
 msgid "Save"
-msgstr ""
+msgstr "Zapisz"
 
 msgid "Saving USB network settings…"
-msgstr ""
+msgstr "Zapisywanie ustawień sieci USB…"
 
 msgid "Settings saved"
-msgstr ""
+msgstr "Zapisano ustawienia"
 
 msgid "Save failed: %s"
-msgstr ""
+msgstr "Zapis nie powiódł się: %s"
 
 msgid "Unable to confirm the role yet; reconnect and refresh the page."
-msgstr ""
+msgstr "Nie można jeszcze potwierdzić roli; połącz się ponownie i odśwież stronę."
 
 msgid "Switch to host mode to see USB adapters."
-msgstr ""
+msgstr "Przełącz na tryb hosta, aby zobaczyć adaptery USB."
 
 msgid "Scanning USB adapters…"
-msgstr ""
+msgstr "Wyszukiwanie adapterów USB…"
 
 msgid "No USB adapters found."
-msgstr ""
+msgstr "Nie znaleziono adapterów USB."
 
 msgid "Link connected"
-msgstr ""
+msgstr "Łącze połączone"
 
 msgid "No link; enable attempted"
-msgstr ""
+msgstr "Brak łącza; próbowano włączyć"
 
 msgid "Added to LAN"
-msgstr ""
+msgstr "Dodano do LAN"
 
 msgid "Add to LAN"
-msgstr ""
+msgstr "Dodaj do LAN"
 
 msgid "Add USB adapter to LAN?"
-msgstr ""
+msgstr "Dodać adapter USB do LAN?"
 
 msgid "This saves the bridge configuration and reloads networking; existing connections may briefly drop."
-msgstr ""
+msgstr "Zapisuje to konfigurację mostu i przeładowuje sieć; istniejące połączenia mogą zostać na chwilę przerwane."
 
 msgid "Add"
-msgstr ""
+msgstr "Dodaj"
 
 msgid "Adding USB adapter…"
-msgstr ""
+msgstr "Dodawanie adaptera USB…"
 
 msgid "Add failed: %s"
-msgstr ""
+msgstr "Dodawanie nie powiodło się: %s"
 
 msgid "Modulation DL/UL"
-msgstr ""
+msgstr "Modulacja DL/UL"
 
 msgid "Estimated from current MCS"
-msgstr ""
+msgstr "Oszacowano z bieżącego MCS"
 
 msgid "MCS DL/UL"
-msgstr ""
+msgstr "MCS DL/UL"
 
 msgid "BLER DL/UL"
-msgstr ""
+msgstr "BLER DL/UL"
 
 msgid "Link & traffic"
-msgstr ""
+msgstr "Łącze i ruch"
 
 msgid "Download rate"
-msgstr ""
+msgstr "Prędkość pobierania"
 
 msgid "Upload rate"
-msgstr ""
+msgstr "Prędkość wysyłania"
 
 msgid "Total received"
-msgstr ""
+msgstr "Odebrano łącznie"
 
 msgid "Total sent"
-msgstr ""
+msgstr "Wysłano łącznie"
 
 msgid "Session duration"
-msgstr ""
+msgstr "Czas sesji"
 
 msgid "Registration"
-msgstr ""
+msgstr "Rejestracja"
 
 msgid "Bandwidth"
-msgstr ""
+msgstr "Szerokość pasma"
 
 msgid "AMBR DL/UL"
-msgstr ""
+msgstr "AMBR DL/UL"
 
 msgid "Wi-Fi · LAN · Device · SIM"
-msgstr ""
+msgstr "Wi-Fi · LAN · Urządzenie · SIM"
 
 msgid "CPU usage"
-msgstr ""
+msgstr "Użycie CPU"
 
 msgid "Memory"
-msgstr ""
+msgstr "Pamięć"
 
 msgid "Storage"
-msgstr ""
+msgstr "Pamięć masowa"
 
 msgid "Power"
-msgstr ""
+msgstr "Zasilanie"
 
 msgid "Channel"
-msgstr ""
+msgstr "Kanał"
 
 msgid "Encryption"
-msgstr ""
+msgstr "Szyfrowanie"
 
 msgid "Hidden SSID"
-msgstr ""
+msgstr "Ukryty SSID"
 
 msgid "Country"
-msgstr ""
+msgstr "Kraj"
 
 msgid "AP status"
-msgstr ""
+msgstr "Stan AP"
 
 msgid "USB network"
-msgstr ""
+msgstr "Sieć USB"
 
 msgid "Connection tracking"
-msgstr ""
+msgstr "Śledzenie połączeń"
 
 msgid "LAN address"
-msgstr ""
+msgstr "Adres LAN"
 
 msgid "Wi-Fi clients"
-msgstr ""
+msgstr "Klienci Wi-Fi"
 
 msgid "DHCP leases"
-msgstr ""
+msgstr "Dzierżawy DHCP"
 
 msgid "Device model"
-msgstr ""
+msgstr "Model urządzenia"
 
 msgid "System"
-msgstr ""
+msgstr "System"
 
 msgid "Modem"
-msgstr ""
+msgstr "Modem"
 
 msgid "Carrier"
-msgstr ""
+msgstr "Operator"
 
 msgid "Module"
-msgstr ""
+msgstr "Moduł"
 
 msgid "Firmware"
-msgstr ""
+msgstr "Oprogramowanie układowe"
 
 msgid "Show SIM identifiers"
-msgstr ""
+msgstr "Pokaż identyfikatory SIM"
 
 msgid "Quick controls"
-msgstr ""
+msgstr "Szybkie sterowanie"
 
 msgid "Data connection"
-msgstr ""
+msgstr "Transmisja danych"
 
 msgid "Cellular radio"
-msgstr ""
+msgstr "Radio komórkowe"
 
 msgid "Wi-Fi hotspot"
-msgstr ""
+msgstr "Hotspot Wi-Fi"
 
 msgid "Restart modem"
-msgstr ""
+msgstr "Uruchom ponownie modem"
 
 msgid "Restart device"
-msgstr ""
+msgstr "Uruchom ponownie urządzenie"
 
 msgid "Switch to Android"
-msgstr ""
+msgstr "Przełącz na Android"
 
 msgid "Neighbor cells"
-msgstr ""
+msgstr "Komórki sąsiednie"
 
 msgid "RAT/Band"
-msgstr ""
+msgstr "RAT/pasmo"
 
 msgid "Frequency"
-msgstr ""
+msgstr "Częstotliwość"
 
 msgid "Running %s…"
-msgstr ""
+msgstr "Wykonywanie %s…"
 
 msgid "Started in background: %s"
-msgstr ""
+msgstr "Uruchomiono w tle: %s"
 
 msgid "Done: %s"
-msgstr ""
+msgstr "Gotowe: %s"
 
 msgid "Failed: %s"
-msgstr ""
+msgstr "Niepowodzenie: %s"
 
 msgid "Disconnecting data…"
-msgstr ""
+msgstr "Rozłączanie transmisji danych…"
 
 msgid "Connecting data…"
-msgstr ""
+msgstr "Łączenie transmisji danych…"
 
 msgid "Turn off cellular radio"
-msgstr ""
+msgstr "Wyłącz radio komórkowe"
 
 msgid "Cellular connectivity will be interrupted."
-msgstr ""
+msgstr "Łączność komórkowa zostanie przerwana."
 
 msgid "Turn on cellular radio"
-msgstr ""
+msgstr "Włącz radio komórkowe"
 
 msgid "The SFUN power-on sequence will run (up to about 1 minute)."
-msgstr ""
+msgstr "Zostanie wykonana sekwencja włączania SFUN (do około 1 minuty)."
 
 msgid "Cellular connectivity may stop for 1–2 minutes."
-msgstr ""
+msgstr "Łączność komórkowa może zostać przerwana na 1–2 minuty."
 
 msgid "Restart the entire device"
-msgstr ""
+msgstr "Uruchom ponownie całe urządzenie"
 
 msgid "All connections will be interrupted."
-msgstr ""
+msgstr "Wszystkie połączenia zostaną przerwane."
 
 msgid "The next boot will enter Android and reboot now. This management page and cellular sharing will disconnect."
-msgstr ""
+msgstr "Następne uruchomienie przejdzie do Android, a urządzenie zostanie teraz ponownie uruchomione. Ta strona zarządzania i udostępnianie sieci komórkowej zostaną rozłączone."
 
 msgid "To return to OpenWrt, run mu300-next-boot linux in Android and reboot."
-msgstr ""
+msgstr "Aby wrócić do OpenWrt, uruchom mu300-next-boot linux w Android i uruchom ponownie urządzenie."
 
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
-msgstr ""
+msgstr "Lub nic nie rób: po pięciu nieukończonych uruchomieniach nastąpi automatyczny powrót."
 
 msgid "Switch and reboot"
-msgstr ""
+msgstr "Przełącz i uruchom ponownie"
 
 msgid "Preparing Android boot and rebooting…"
-msgstr ""
+msgstr "Przygotowywanie uruchomienia Android i ponowne uruchamianie…"
 
 msgid "Hide SIM identifiers"
-msgstr ""
+msgstr "Ukryj identyfikatory SIM"
 
 msgid "Lock cell %s?"
-msgstr ""
+msgstr "Zablokować komórkę %s?"
 
 msgid "The radio stack will restart (SFUN); cellular service will stop for about 30 seconds."
-msgstr ""
+msgstr "Stos radiowy zostanie ponownie uruchomiony (SFUN); usługa komórkowa zostanie wstrzymana na około 30 sekund."
 
 msgid "Locking %s in the background, about 30 seconds"
-msgstr ""
+msgstr "Blokowanie %s w tle, około 30 sekund"
 
 msgid "Locked %s in the background; the status will refresh shortly"
-msgstr ""
+msgstr "Zablokowano %s w tle; stan zostanie wkrótce odświeżony"
 
 msgid "Lock failed: %s"
-msgstr ""
+msgstr "Blokada nie powiodła się: %s"
 
 msgid "Uptime %s"
-msgstr ""
+msgstr "Czas pracy %s"
 
 msgid "Radio off"
-msgstr ""
+msgstr "Radio wyłączone"
 
 msgid "No response"
-msgstr ""
+msgstr "Brak odpowiedzi"
 
 msgid "%s · Signal %s %s/10"
-msgstr ""
+msgstr "%s · Sygnał %s %s/10"
 
 msgid "%s · Signal %s"
-msgstr ""
+msgstr "%s · Sygnał %s"
 
 msgid "Anchor B%s"
-msgstr ""
+msgstr "Kotwica B%s"
 
 msgid "No serving cell"
-msgstr ""
+msgstr "Brak komórki obsługującej"
 
 msgid "Not registered"
-msgstr ""
+msgstr "Niezarejestrowany"
 
 msgid "Registered"
-msgstr ""
+msgstr "Zarejestrowany"
 
 msgid "Searching"
-msgstr ""
+msgstr "Wyszukiwanie"
 
 msgid "Registration denied"
-msgstr ""
+msgstr "Rejestracja odrzucona"
 
 msgid "Registered (roaming)"
-msgstr ""
+msgstr "Zarejestrowany (roaming)"
 
 msgid "Emergency only"
-msgstr ""
+msgstr "Tylko połączenia alarmowe"
 
 msgid "Status %s"
-msgstr ""
+msgstr "Stan %s"
 
 msgid "LTE anchor"
-msgstr ""
+msgstr "Kotwica LTE"
 
 msgid "LTE link"
-msgstr ""
+msgstr "Łącze LTE"
 
 msgid "Hidden"
-msgstr ""
+msgstr "Ukryty"
 
 msgid "No"
-msgstr ""
+msgstr "Nie"
 
 msgid "Running"
-msgstr ""
+msgstr "Działa"
 
 msgid "Not running"
-msgstr ""
+msgstr "Nie działa"
 
 msgid "Connected"
-msgstr ""
+msgstr "Połączono"
 
 msgid "Disconnected"
-msgstr ""
+msgstr "Rozłączono"
 
 msgid "%s entries"
-msgstr ""
+msgstr "Wpisów: %s"
 
 msgid "%s clients"
-msgstr ""
+msgstr "Klientów: %s"
 
 msgid "Recent DHCP leases"
-msgstr ""
+msgstr "Ostatnie dzierżawy DHCP"
 
 msgid "%d h"
-msgstr ""
+msgstr "%d godz."
 
 msgid "Board"
-msgstr ""
+msgstr "Płyta"
 
 msgid "No temperature readings"
-msgstr ""
+msgstr "Brak odczytów temperatury"
 
 msgid "Cluster %d"
-msgstr ""
+msgstr "Klaster %d"
 
 msgid "Total %s · free %s"
-msgstr ""
+msgstr "Łącznie %s · wolne %s"
 
 msgid "Online"
-msgstr ""
+msgstr "Online"
 
 msgid "AT adapter unavailable"
-msgstr ""
+msgstr "Adapter AT niedostępny"
 
 msgid "Saved"
-msgstr ""
+msgstr "Zapisano"
 
 msgid "Management connection lost"
-msgstr ""
+msgstr "Utracono połączenie zarządzające"
 
 msgid "Installing the language pack…"
-msgstr ""
+msgstr "Instalowanie pakietu językowego…"
 
 msgid "The language pack is installed"
-msgstr ""
+msgstr "Pakiet językowy został zainstalowany"
 
 msgid "The language pack could not be installed"
-msgstr ""
+msgstr "Nie udało się zainstalować pakietu językowego"
 
 msgid "Upload failed: %s"
-msgstr ""
+msgstr "Przesyłanie nie powiodło się: %s"
 
 msgid "Language of the browser"
-msgstr ""
+msgstr "Język przeglądarki"
 
 msgid "Language of the web interface"
-msgstr ""
+msgstr "Język interfejsu WWW"
 
 msgid "English, Turkish and Chinese come with the system; the language pack adds the others."
-msgstr ""
+msgstr "Angielski, turecki i chiński są dostarczane z systemem; pakiet językowy dodaje pozostałe."
 
 msgid "The same setting is in System > System > Language and Style."
-msgstr ""
+msgstr "To samo ustawienie znajduje się w System > System > Wygląd i język."
 
 msgid "Language pack"
-msgstr ""
+msgstr "Pakiet językowy"
 
 msgid "The language pack (mu300-extra-lang.tar.gz, about 2 MB) adds LuCI in about 40 more languages and this panel in 29 of them. Download it from the release of this system, or upload the file from the release page when the device has no internet."
-msgstr ""
+msgstr "Pakiet językowy (mu300-extra-lang.tar.gz, około 2 MB) dodaje LuCI w około 40 kolejnych językach, a ten panel w 29 z nich. Pobierz go z wydania tego systemu lub prześlij plik ze strony wydania, gdy urządzenie nie ma internetu."
 
 msgid "Download from the release"
-msgstr ""
+msgstr "Pobierz z wydania"
 
 msgid "Upload the file…"
-msgstr ""
+msgstr "Prześlij plik…"
 
 msgid "Release"
-msgstr ""
+msgstr "Wydanie"
 
 msgid "Enable all"
-msgstr ""
+msgstr "Włącz wszystkie"
 
 msgid "Disable all"
-msgstr ""
+msgstr "Wyłącz wszystkie"
 
 msgid "Remove the language pack"
-msgstr ""
+msgstr "Usuń pakiet językowy"
 
 msgid "Remove the language pack?"
-msgstr ""
+msgstr "Usunąć pakiet językowy?"
 
 msgid "Its languages disappear from the list; a page in one of them switches to English."
-msgstr ""
+msgstr "Jego języki znikną z listy; strona w jednym z nich przełączy się na angielski."
 
 msgid "Remove"
-msgstr ""
+msgstr "Usuń"
 
 msgid "Disable"
-msgstr ""
+msgstr "Wyłącz"
 
 msgid "Enable"
-msgstr ""
+msgstr "Włącz"
 
 msgid "LuCI and this panel"
-msgstr ""
+msgstr "LuCI i ten panel"
 
 msgid "LuCI only"
-msgstr ""
+msgstr "Tylko LuCI"
 
 msgid "Enabled"
-msgstr ""
+msgstr "Włączony"
 
 msgid "Disabled"
-msgstr ""
+msgstr "Wyłączony"
 
 msgid "Language"
-msgstr ""
+msgstr "Język"
 
 msgid "Code"
-msgstr ""
+msgstr "Kod"
 
 msgid "Translated"
-msgstr ""
+msgstr "Przetłumaczono"
 
 msgid "State"
-msgstr ""
+msgstr "Stan"
 
 msgid "LuCI's own translations come from OpenWrt. This panel's translations other than Turkish and Chinese are machine (AI) translations; corrections are welcome."
-msgstr ""
+msgstr "Tłumaczenia samego LuCI pochodzą z OpenWrt. Tłumaczenia tego panelu, poza tureckim i chińskim, są tłumaczeniami maszynowymi (AI); poprawki są mile widziane."
 
 msgid "Automatic"
-msgstr ""
+msgstr "Automatyczny"
 
 msgid "4G only"
-msgstr ""
+msgstr "Tylko 4G"
 
 msgid "Serving network"
-msgstr ""
+msgstr "Sieć obsługująca"
 
 msgid "Network mode · EN-DC"
-msgstr ""
+msgstr "Tryb sieci · EN-DC"
 
 msgid "Refresh lock status"
-msgstr ""
+msgstr "Odśwież stan blokad"
 
 msgid "Apply at startup"
-msgstr ""
+msgstr "Zastosuj przy starcie"
 
 msgid "Turning this off only stops replay at the next boot; saved network mode, EN-DC, band and cell settings remain."
-msgstr ""
+msgstr "Wyłączenie tej opcji zatrzymuje jedynie ponowne stosowanie przy następnym uruchomieniu; zapisane ustawienia trybu sieci, EN-DC, pasm i komórek pozostają."
 
 msgid "Band locking"
-msgstr ""
+msgstr "Blokada pasm"
 
 msgid "NR bands"
-msgstr ""
+msgstr "Pasma NR"
 
 msgid "LTE bands"
-msgstr ""
+msgstr "Pasma LTE"
 
 msgid "Apply NR bands"
-msgstr ""
+msgstr "Zastosuj pasma NR"
 
 msgid "Apply LTE bands"
-msgstr ""
+msgstr "Zastosuj pasma LTE"
 
 msgid "Neighbor cells and cell locking"
-msgstr ""
+msgstr "Komórki sąsiednie i blokada komórki"
 
 msgid "Lock current serving cell"
-msgstr ""
+msgstr "Zablokuj bieżącą komórkę obsługującą"
 
 msgid "Unlock cell"
-msgstr ""
+msgstr "Odblokuj komórkę"
 
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
-msgstr ""
+msgstr "Zastosowanie restartuje stos radiowy (SFUN) i na chwilę przerywa usługę komórkową. Ustawienia są zapisywane i ponownie stosowane przez wtyczkę, gdy AT jest gotowe, jeśli włączono Zastosuj przy starcie. Hak platformy uruchamiany przed radiem może je zastosować bez restartu. Zastosuj bez wybranych pasm, aby przywrócić tryb automatyczny."
 
 msgid "Apply “%s”?"
-msgstr ""
+msgstr "Zastosować „%s”?"
 
 msgid "Applying %s in the background…"
-msgstr ""
+msgstr "Stosowanie %s w tle…"
 
 msgid "Applying %s in the background… (SFUN restart and re-registration, about 30 seconds)"
-msgstr ""
+msgstr "Stosowanie %s w tle… (restart SFUN i ponowna rejestracja, około 30 sekund)"
 
 msgid "Queued: another lock is being applied during SFUN restart; this will take effect afterward"
-msgstr ""
+msgstr "W kolejce: inna blokada jest stosowana podczas restartu SFUN; ta zacznie obowiązywać później"
 
 msgid "Confirming the EN-DC status…"
-msgstr ""
+msgstr "Potwierdzanie stanu EN-DC…"
 
 msgid "Confirming apply at startup…"
-msgstr ""
+msgstr "Potwierdzanie stosowania przy starcie…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
-msgstr ""
+msgstr "Uruchomiono w tle: %s (restart SFUN, około 30 sekund); odczytywanie stanu…"
 
 msgid "Network mode: %s"
-msgstr ""
+msgstr "Tryb sieci: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
-msgstr ""
+msgstr "Wyłącz EN-DC (kotwica NSA)"
 
 msgid "Enable EN-DC (NSA anchor)"
-msgstr ""
+msgstr "Włącz EN-DC (kotwica NSA)"
 
 msgid "Disable apply at startup"
-msgstr ""
+msgstr "Wyłącz stosowanie przy starcie"
 
 msgid "Enable apply at startup"
-msgstr ""
+msgstr "Włącz stosowanie przy starcie"
 
 msgid "Reading the modem directly (a few seconds at most)…"
-msgstr ""
+msgstr "Bezpośredni odczyt z modemu (najwyżej kilka sekund)…"
 
 msgid "Refreshed"
-msgstr ""
+msgstr "Odświeżono"
 
 msgid "Refresh failed"
-msgstr ""
+msgstr "Odświeżanie nie powiodło się"
 
 msgid "NR bands: back to automatic"
-msgstr ""
+msgstr "Pasma NR: powrót do trybu automatycznego"
 
 msgid "NR band lock: %s"
-msgstr ""
+msgstr "Blokada pasm NR: %s"
 
 msgid "LTE bands: back to automatic"
-msgstr ""
+msgstr "Pasma LTE: powrót do trybu automatycznego"
 
 msgid "LTE band lock: %s"
-msgstr ""
+msgstr "Blokada pasm LTE: %s"
 
 msgid "Remove the %s cell lock"
-msgstr ""
+msgstr "Usuń blokadę komórki %s"
 
 msgid "The radio stack will restart (SFUN), taking about 30 seconds."
-msgstr ""
+msgstr "Stos radiowy zostanie ponownie uruchomiony (SFUN), co potrwa około 30 sekund."
 
 msgid "Removing the %s cell lock…"
-msgstr ""
+msgstr "Usuwanie blokady komórki %s…"
 
 msgid "Unlock failed: %s"
-msgstr ""
+msgstr "Odblokowanie nie powiodło się: %s"
 
 msgid "Unlock started in background (SFUN restart, about 30 seconds); reading the status back…"
-msgstr ""
+msgstr "Odblokowanie uruchomiono w tle (restart SFUN, około 30 sekund); odczytywanie stanu…"
 
 msgid "Locking %s in the background…"
-msgstr ""
+msgstr "Blokowanie %s w tle…"
 
 msgid "Locked %s in the background (SFUN restart, about 30 seconds); reading the status back…"
-msgstr ""
+msgstr "Zablokowano %s w tle (restart SFUN, około 30 sekund); odczytywanie stanu…"
 
 msgid "No serving-network data"
-msgstr ""
+msgstr "Brak danych o sieci obsługującej"
 
 msgid "NR serving cell"
-msgstr ""
+msgstr "Komórka obsługująca NR"
 
 msgid "Status confirmed"
-msgstr ""
+msgstr "Stan potwierdzony"
 
 msgid "Readback timed out; select “Refresh lock status”"
-msgstr ""
+msgstr "Przekroczono czas odczytu; wybierz „Odśwież stan blokad”"
 
 msgid "Applied (EN-DC does not require a radio-stack restart)"
-msgstr ""
+msgstr "Zastosowano (EN-DC nie wymaga restartu stosu radiowego)"
 
 msgid "Apply at startup is on"
-msgstr ""
+msgstr "Stosowanie przy starcie jest włączone"
 
 msgid "Apply at startup is off"
-msgstr ""
+msgstr "Stosowanie przy starcie jest wyłączone"
 
 msgid "EN-DC status readback timed out; use “Refresh lock status” to confirm"
-msgstr ""
+msgstr "Przekroczono czas odczytu stanu EN-DC; użyj „Odśwież stan blokad”, aby potwierdzić"
 
 msgid "Apply-at-startup status readback timed out; use “Refresh lock status” to confirm"
-msgstr ""
+msgstr "Przekroczono czas odczytu stanu stosowania przy starcie; użyj „Odśwież stan blokad”, aby potwierdzić"
 
 msgid "Locked cells"
-msgstr ""
+msgstr "Zablokowane komórki"
 
 msgid "Unlock %s"
-msgstr ""
+msgstr "Odblokuj %s"
 
 msgid "Automatic (%d supported)"
-msgstr ""
+msgstr "Automatyczny (obsługiwanych: %d)"
 
 msgid "%d locked: %s"
-msgstr ""
+msgstr "Zablokowano %d: %s"
 
 msgid "Configure how this plugin connects to the current Unisoc OpenWrt platform. Changes do not require editing the dashboard, AT, locks or SMS pages."
-msgstr ""
+msgstr "Skonfiguruj sposób, w jaki ta wtyczka łączy się z bieżącą platformą Unisoc OpenWrt. Zmiany nie wymagają edycji stron panelu, AT, blokad ani SMS."
 
 msgid "Platform adapter"
-msgstr ""
+msgstr "Adapter platformy"
 
 msgid "AT backend"
-msgstr ""
+msgstr "Backend AT"
 
 msgid "Auto-detect"
-msgstr ""
+msgstr "Wykryj automatycznie"
 
 msgid "atinout + serial port"
-msgstr ""
+msgstr "atinout + port szeregowy"
 
 msgid "Custom adapter"
-msgstr ""
+msgstr "Własny adapter"
 
 msgid "AT serial port"
-msgstr ""
+msgstr "Port szeregowy AT"
 
 msgid "Custom AT adapter"
-msgstr ""
+msgstr "Własny adapter AT"
 
 msgid "The executable receives a timeout in seconds and the complete AT command, in that order. It must share the serial lock with the platform dialer."
-msgstr ""
+msgstr "Plik wykonywalny otrzymuje limit czasu w sekundach i pełne polecenie AT, w tej kolejności. Musi współdzielić blokadę portu szeregowego z programem wybierającym platformy."
 
 msgid "SMS adapter"
-msgstr ""
+msgstr "Adapter SMS"
 
 msgid "Implement the list, show, send, delete and sync subcommands; leave blank to find mu300-sms automatically."
-msgstr ""
+msgstr "Zaimplementuj podpolecenia list, show, send, delete i sync; pozostaw puste, aby automatycznie znaleźć mu300-sms."
 
 msgid "SMS pool directory"
-msgstr ""
+msgstr "Katalog puli SMS"
 
 msgid "Cellular logical interface"
-msgstr ""
+msgstr "Logiczny interfejs komórkowy"
 
 msgid "Cellular IPv6 interface"
-msgstr ""
+msgstr "Komórkowy interfejs IPv6"
 
 msgid "Cellular network device"
-msgstr ""
+msgstr "Komórkowe urządzenie sieciowe"
 
 msgid "Leave blank to detect from netifd"
-msgstr ""
+msgstr "Pozostaw puste, aby wykryć z netifd"
 
 msgid "LAN bridge"
-msgstr ""
+msgstr "Most LAN"
 
 msgid "Wi-Fi device"
-msgstr ""
+msgstr "Urządzenie Wi-Fi"
 
 msgid "USB device"
-msgstr ""
+msgstr "Urządzenie USB"
 
 msgid "Maximum wait for AT readiness (seconds)"
-msgstr ""
+msgstr "Maksymalny czas oczekiwania na gotowość AT (sekundy)"
 
 msgid "Home dashboard refresh interval (seconds)"
-msgstr ""
+msgstr "Interwał odświeżania panelu głównego (sekundy)"
 
 msgid "Controls only the home dashboard refresh rate; 0.5–60 seconds. Reopen Home after saving to apply."
-msgstr ""
+msgstr "Steruje tylko częstotliwością odświeżania panelu głównego; 0,5–60 sekund. Po zapisaniu otwórz ponownie stronę główną, aby zastosować."
 
 msgid "Persistent state directory"
-msgstr ""
+msgstr "Katalog stanu trwałego"
 
 msgid "Recipient: number, e.g. 10086 or +86..."
-msgstr ""
+msgstr "Odbiorca: numer, np. 10086 lub +86..."
 
 msgid "Sync from SIM"
-msgstr ""
+msgstr "Synchronizuj z SIM"
 
 msgid "Clear local pool"
-msgstr ""
+msgstr "Wyczyść lokalną pulę"
 
 msgid "Loading…"
-msgstr ""
+msgstr "Ładowanie…"
 
 msgid "Select a conversation on the left, or enter a number below to send."
-msgstr ""
+msgstr "Wybierz rozmowę po lewej lub wpisz numer poniżej, aby wysłać."
 
 msgid "Message (Enter to send, Shift+Enter for newline)"
-msgstr ""
+msgstr "Wiadomość (Enter wysyła, Shift+Enter nowa linia)"
 
 msgid "Sending uses AT+CMGS (PDU mode); retry if the channel is busy. To delete one message, use the bin icon on its bubble."
-msgstr ""
+msgstr "Wysyłanie używa AT+CMGS (tryb PDU); ponów, jeśli kanał jest zajęty. Aby usunąć jedną wiadomość, użyj ikony kosza na jej dymku."
 
 msgid "Syncing from the SIM in the background (AT+CMGL)…"
-msgstr ""
+msgstr "Synchronizacja z SIM w tle (AT+CMGL)…"
 
 msgid "SIM sync started; the list refreshes in a few seconds."
-msgstr ""
+msgstr "Rozpoczęto synchronizację SIM; lista odświeży się za kilka sekund."
 
 msgid "Clear local SMS pool"
-msgstr ""
+msgstr "Wyczyść lokalną pulę SMS"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
-msgstr ""
+msgstr "Usunięte zostaną tylko pliki lokalne; wiadomości na karcie SIM pozostaną."
 
 msgid "Clear"
-msgstr ""
+msgstr "Wyczyść"
 
 msgid "Delete this SMS"
-msgstr ""
+msgstr "Usuń ten SMS"
 
 msgid "Deletion cannot be undone."
-msgstr ""
+msgstr "Usunięcia nie można cofnąć."
 
 msgid "Local only"
-msgstr ""
+msgstr "Tylko lokalnie"
 
 msgid "Local + SIM"
-msgstr ""
+msgstr "Lokalnie + SIM"
 
 msgid "Delete failed"
-msgstr ""
+msgstr "Usuwanie nie powiodło się"
 
 msgid "Deleted (local + SIM)"
-msgstr ""
+msgstr "Usunięto (lokalnie + SIM)"
 
 msgid "Deleted (local only)"
-msgstr ""
+msgstr "Usunięto (tylko lokalnie)"
 
 msgid "Enter both a number and a message."
-msgstr ""
+msgstr "Wprowadź numer i wiadomość."
 
 msgid "Sending…"
-msgstr ""
+msgstr "Wysyłanie…"
 
 msgid "Sent; the list refreshes shortly."
-msgstr ""
+msgstr "Wysłano; lista wkrótce się odświeży."
 
 msgid "Sending failed"
-msgstr ""
+msgstr "Wysyłanie nie powiodło się"
 
 msgid "· %d messages, %d unread · %d conversations"
-msgstr ""
+msgstr "· wiadomości: %d, nieprzeczytane: %d · rozmowy: %d"
 
 msgid "· %d messages · %d conversations"
-msgstr ""
+msgstr "· wiadomości: %d · rozmowy: %d"
 
 msgid "The pool is empty. Incoming and sent messages appear here, or select “Sync from SIM”."
-msgstr ""
+msgstr "Pula jest pusta. Wiadomości przychodzące i wysłane pojawiają się tutaj; możesz też wybrać „Synchronizuj z SIM”."
 
 msgid "Me: %s"
-msgstr ""
+msgstr "Ja: %s"
 
 msgid "Delete"
-msgstr ""
+msgstr "Usuń"
 
 msgid "Dashboard info failed"
-msgstr ""
+msgstr "Błąd informacji panelu"
 
 msgid "Applying network locks: no live signal right now"
-msgstr ""
+msgstr "Stosowanie blokad sieci: brak bieżącego sygnału"
 
 msgid "Live signal read failed"
-msgstr ""
+msgstr "Odczyt bieżącego sygnału nie powiódł się"
 
 msgid "Unknown op"
-msgstr ""
+msgstr "Nieznana operacja"
 
 msgid "Invalid argument for this op"
-msgstr ""
+msgstr "Nieprawidłowy argument dla tej operacji"
 
 msgid "The radio is busy: the dial or the watchdog is switching it, try again shortly"
-msgstr ""
+msgstr "Radio jest zajęte: przełącza je wybieranie lub watchdog, spróbuj ponownie za chwilę"
 
 msgid "The action gave no valid reply"
-msgstr ""
+msgstr "Akcja nie zwróciła prawidłowej odpowiedzi"
 
 msgid "An AT command is one line of printable ASCII, at most 512 characters"
-msgstr ""
+msgstr "Polecenie AT to jedna linia drukowalnych znaków ASCII, najwyżej 512 znaków"
 
 msgid "Must be an AT command"
-msgstr ""
+msgstr "Musi to być polecenie AT"
 
 msgid "No \";\" command chaining"
-msgstr ""
+msgstr "Bez łączenia poleceń przez \";\""
 
 msgid "Denied: this command wedges the AT port until a reboot"
-msgstr ""
+msgstr "Odmowa: to polecenie blokuje port AT aż do ponownego uruchomienia"
 
 msgid "Applying network locks: the modem is restarting (about half a minute), try again shortly"
-msgstr ""
+msgstr "Stosowanie blokad sieci: modem jest restartowany (około pół minuty), spróbuj ponownie za chwilę"
 
 msgid "The AT channel is busy; the command was not sent, try again"
-msgstr ""
+msgstr "Kanał AT jest zajęty; polecenie nie zostało wysłane, spróbuj ponownie"
 
 msgid "The modem did not answer in time; the command may still run, check before sending it again"
-msgstr ""
+msgstr "Modem nie odpowiedział na czas; polecenie może nadal działać, sprawdź przed ponownym wysłaniem"
 
 msgid "The fresh parameter must be 0 or 1"
-msgstr ""
+msgstr "Parametr fresh musi wynosić 0 lub 1"
 
 msgid "Lock read failed"
-msgstr ""
+msgstr "Odczyt blokad nie powiódł się"
 
 msgid "Unknown lock kind"
-msgstr ""
+msgstr "Nieznany rodzaj blokady"
 
 msgid "Invalid value for this lock kind"
-msgstr ""
+msgstr "Nieprawidłowa wartość dla tego rodzaju blokady"
 
 msgid "Invalid page"
-msgstr ""
+msgstr "Nieprawidłowa strona"
 
 msgid "mu300-sms is not available (the SMS service is not installed or not running)"
-msgstr ""
+msgstr "mu300-sms jest niedostępny (usługa SMS nie jest zainstalowana lub nie działa)"
 
 msgid "No output"
-msgstr ""
+msgstr "Brak wyniku"
 
 msgid "Bad ID"
-msgstr ""
+msgstr "Nieprawidłowy identyfikator"
 
 msgid "Read failed"
-msgstr ""
+msgstr "Odczyt nie powiódł się"
 
 msgid "The number may only contain digits (and a leading +)"
-msgstr ""
+msgstr "Numer może zawierać tylko cyfry (i początkowy +)"
 
 msgid "The message is empty"
-msgstr ""
+msgstr "Wiadomość jest pusta"
 
 msgid "The message is too long (over 480 characters)"
-msgstr ""
+msgstr "Wiadomość jest za długa (ponad 480 znaków)"
 
 msgid "The message contains a control character"
-msgstr ""
+msgstr "Wiadomość zawiera znak sterujący"
 
 msgid "The sim parameter must be 0 or 1"
-msgstr ""
+msgstr "Parametr sim musi wynosić 0 lub 1"
 
 msgid "The USB adapter (device-usb) gave no valid reply"
-msgstr ""
+msgstr "Adapter USB (device-usb) nie zwrócił prawidłowej odpowiedzi"
 
 msgid "The auto parameter must be 0 or 1"
-msgstr ""
+msgstr "Parametr auto musi wynosić 0 lub 1"
 
 msgid "Invalid USB role"
-msgstr ""
+msgstr "Nieprawidłowa rola USB"
 
 msgid "A USB role takes no scope"
-msgstr ""
+msgstr "Rola USB nie przyjmuje zakresu"
 
 msgid "Invalid USB network mode"
-msgstr ""
+msgstr "Nieprawidłowy tryb sieci USB"
 
 msgid "Invalid USB network scope"
-msgstr ""
+msgstr "Nieprawidłowy zakres sieci USB"
 
 msgid "Unknown USB setting"
-msgstr ""
+msgstr "Nieznane ustawienie USB"
 
 msgid "Invalid interface name"
-msgstr ""
+msgstr "Nieprawidłowa nazwa interfejsu"
 
 msgid "The languages adapter gave no valid reply"
-msgstr ""
+msgstr "Adapter języków nie zwrócił prawidłowej odpowiedzi"
 
 msgid "Unknown language operation"
-msgstr ""
+msgstr "Nieznana operacja językowa"
 
 msgid "Invalid language code"
-msgstr ""
+msgstr "Nieprawidłowy kod języka"
 
 msgid "Invalid language request"
-msgstr ""
+msgstr "Nieprawidłowe żądanie językowe"
 
 msgid "Unknown source"
-msgstr ""
+msgstr "Nieznane źródło"
 
 msgid "Request too large"
-msgstr ""
+msgstr "Żądanie jest za duże"
 
 msgid "The runtime directory is not safe; nothing was run"
-msgstr ""
+msgstr "Katalog uruchomieniowy nie jest bezpieczny; niczego nie uruchomiono"
 
 msgid "No such method"
-msgstr ""
+msgstr "Brak takiej metody"
 
 msgid "Radio did not come up"
-msgstr ""
+msgstr "Radio nie uruchomiło się"
 
 msgid "Expected on or off"
-msgstr ""
+msgstr "Oczekiwano on lub off"
 
 msgid "VPN integration is not provided by this platform"
-msgstr ""
+msgstr "Ta platforma nie zapewnia integracji VPN"
 
 msgid "Dual-boot integration is not provided by this platform"
-msgstr ""
+msgstr "Ta platforma nie zapewnia integracji podwójnego rozruchu"
 
 msgid "mu300-next-boot failed"
-msgstr ""
+msgstr "mu300-next-boot nie powiódł się"
 
 msgid "AT backend did not answer (radio off, modem restarting, or adapter unavailable)"
-msgstr ""
+msgstr "Backend AT nie odpowiedział (radio wyłączone, modem restartuje się lub adapter jest niedostępny)"
 
 msgid "USB role adapter is not executable"
-msgstr ""
+msgstr "Adapter roli USB nie jest wykonywalny"
 
 msgid "USB role adapter failed"
-msgstr ""
+msgstr "Adapter roli USB zawiódł"
 
 msgid "USB role switch is unavailable"
-msgstr ""
+msgstr "Przełączanie roli USB jest niedostępne"
 
 msgid "USB role switch failed"
-msgstr ""
+msgstr "Przełączanie roli USB nie powiodło się"
 
 msgid "USB role switch was refused by platform safety checks"
-msgstr ""
+msgstr "Przełączanie roli USB zostało odrzucone przez kontrole bezpieczeństwa platformy"
 
 msgid "Cannot create USB boot settings directory"
-msgstr ""
+msgstr "Nie można utworzyć katalogu ustawień rozruchowych USB"
 
 msgid "Cannot write USB boot settings"
-msgstr ""
+msgstr "Nie można zapisać ustawień rozruchowych USB"
 
 msgid "Cannot save USB boot settings"
-msgstr ""
+msgstr "Nie można zachować ustawień rozruchowych USB"
 
 msgid "Invalid boot-auto value"
-msgstr ""
+msgstr "Nieprawidłowa wartość boot-auto"
 
 msgid "Device is the boot default; host auto-apply is the only persistent role"
-msgstr ""
+msgstr "Urządzenie jest rolą domyślną przy rozruchu; jedyną trwałą rolą jest automatyczne stosowanie hosta"
 
 msgid "Cannot save USB role policy"
-msgstr ""
+msgstr "Nie można zapisać zasad roli USB"
 
 msgid "Cannot disable USB network boot policy"
-msgstr ""
+msgstr "Nie można wyłączyć zasad rozruchowych sieci USB"
 
 msgid "Cannot commit USB role policy"
-msgstr ""
+msgstr "Nie można zatwierdzić zasad roli USB"
 
 msgid "USB network mode is unavailable in host role"
-msgstr ""
+msgstr "Tryb sieci USB jest niedostępny w roli hosta"
 
 msgid "Disable host boot-auto before configuring USB network"
-msgstr ""
+msgstr "Wyłącz boot-auto hosta przed konfiguracją sieci USB"
 
 msgid "Cannot save USB network policy"
-msgstr ""
+msgstr "Nie można zapisać zasad sieci USB"
 
 msgid "Cannot commit USB network policy"
-msgstr ""
+msgstr "Nie można zatwierdzić zasad sieci USB"
 
 msgid "USB host mode is required"
-msgstr ""
+msgstr "Wymagany jest tryb hosta USB"
 
 msgid "Not a USB network interface"
-msgstr ""
+msgstr "To nie jest interfejs sieciowy USB"
 
 msgid "LAN bridge device section was not found"
-msgstr ""
+msgstr "Nie znaleziono sekcji urządzenia mostu LAN"
 
 msgid "Cannot bring USB network interface up"
-msgstr ""
+msgstr "Nie można uruchomić interfejsu sieciowego USB"
 
 msgid "Cannot add interface to LAN bridge"
-msgstr ""
+msgstr "Nie można dodać interfejsu do mostu LAN"
 
 msgid "Cannot save LAN bridge"
-msgstr ""
+msgstr "Nie można zapisać mostu LAN"
 
 msgid "Network reload failed"
-msgstr ""
+msgstr "Przeładowanie sieci nie powiodło się"
 
 msgid "Cannot attach USB interface to LAN bridge"
-msgstr ""
+msgstr "Nie można dołączyć interfejsu USB do mostu LAN"
 
 msgid "The language pack is not installed"
-msgstr ""
+msgstr "Pakiet językowy nie jest zainstalowany"
 
 msgid "No language given"
-msgstr ""
+msgstr "Nie podano języka"
 
 msgid "The language could not be changed"
-msgstr ""
+msgstr "Nie udało się zmienić języka"
 
 msgid "LuCI does not offer this language"
-msgstr ""
+msgstr "LuCI nie oferuje tego języka"
 
 msgid "No uploaded language pack"
-msgstr ""
+msgstr "Brak przesłanego pakietu językowego"
 
 msgid "An installation is already running"
-msgstr ""
+msgstr "Instalacja jest już w toku"
 
 msgid "The language pack could not be removed"
-msgstr ""
+msgstr "Nie udało się usunąć pakietu językowego"
 
 msgid "Lock cache unavailable"
-msgstr ""
+msgstr "Pamięć podręczna blokad niedostępna"
 
 msgid "No serving cell to lock to"
-msgstr ""
+msgstr "Brak komórki obsługującej do zablokowania"

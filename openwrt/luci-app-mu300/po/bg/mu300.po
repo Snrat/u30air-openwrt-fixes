@@ -4,1252 +4,1252 @@ msgstr ""
 "Language: bg\n"
 
 msgid "Status dashboard"
-msgstr ""
+msgstr "Табло за състоянието"
 
 msgid "Cellular"
-msgstr ""
+msgstr "Мобилна мрежа"
 
 msgid "Network locks"
-msgstr ""
+msgstr "Мрежови заключвания"
 
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 msgid "AT terminal"
-msgstr ""
+msgstr "AT терминал"
 
 msgid "Adapter settings"
-msgstr ""
+msgstr "Настройки на адаптера"
 
 msgid "Device management"
-msgstr ""
+msgstr "Управление на устройството"
 
 msgid "Languages"
-msgstr ""
+msgstr "Езици"
 
 msgid "MU300 control center: status dashboard, network locks, AT terminal and SMS"
-msgstr ""
+msgstr "Контролен център MU300: табло за състоянието, мрежови заключвания, AT терминал и SMS"
 
 msgid "China Mobile"
-msgstr ""
+msgstr "China Mobile"
 
 msgid "China Unicom"
-msgstr ""
+msgstr "China Unicom"
 
 msgid "China Telecom"
-msgstr ""
+msgstr "China Telecom"
 
 msgid "China Broadnet"
-msgstr ""
+msgstr "China Broadnet"
 
 msgid "China Tietong"
-msgstr ""
+msgstr "China Tietong"
 
 msgid "Excellent"
-msgstr ""
+msgstr "Отличен"
 
 msgid "Good"
-msgstr ""
+msgstr "Добър"
 
 msgid "Fair"
-msgstr ""
+msgstr "Среден"
 
 msgid "Poor"
-msgstr ""
+msgstr "Слаб"
 
 msgid "Unknown"
-msgstr ""
+msgstr "Неизвестно"
 
 msgid "%d d %d h"
-msgstr ""
+msgstr "%d д %d ч"
 
 msgid "%d h %d min"
-msgstr ""
+msgstr "%d ч %d мин"
 
 msgid "%d min"
-msgstr ""
+msgstr "%d мин"
 
 msgid "No neighbor-cell data"
-msgstr ""
+msgstr "Няма данни за съседни клетки"
 
 msgid "Locked"
-msgstr ""
+msgstr "Заключено"
 
 msgid "Lock"
-msgstr ""
+msgstr "Заключване"
 
 msgid "Unknown error"
-msgstr ""
+msgstr "Неизвестна грешка"
 
 msgid "Confirm"
-msgstr ""
+msgstr "Потвърждаване"
 
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 msgid "Cancel"
-msgstr ""
+msgstr "Отказ"
 
 msgid "New SMS · %s"
-msgstr ""
+msgstr "Нов SMS · %s"
 
 msgid "Unknown number"
-msgstr ""
+msgstr "Неизвестен номер"
 
 msgid "Select"
-msgstr ""
+msgstr "Избор"
 
 msgid "Basic"
-msgstr ""
+msgstr "Основни"
 
 msgid "Registration/signal"
-msgstr ""
+msgstr "Регистрация/сигнал"
 
 msgid "Bearer"
-msgstr ""
+msgstr "Носител"
 
 msgid "Engineering mode"
-msgstr ""
+msgstr "Инженерен режим"
 
 msgid "AT command (↑↓ history, Enter to send)"
-msgstr ""
+msgstr "AT команда (↑↓ история, Enter за изпращане)"
 
 msgid "Send"
-msgstr ""
+msgstr "Изпращане"
 
 msgid "Clear screen"
-msgstr ""
+msgstr "Изчистване на екрана"
 
 msgid "Ready."
-msgstr ""
+msgstr "Готово."
 
 msgid "Session history (click to reuse)"
-msgstr ""
+msgstr "История на сесията (щракнете за повторна употреба)"
 
 msgid "(no output)"
-msgstr ""
+msgstr "(няма изход)"
 
 msgid "Request failed"
-msgstr ""
+msgstr "Заявката е неуспешна"
 
 msgid "(empty)"
-msgstr ""
+msgstr "(празно)"
 
 msgid "USB role"
-msgstr ""
+msgstr "USB роля"
 
 msgid "Current role"
-msgstr ""
+msgstr "Текуща роля"
 
 msgid "Switch USB role"
-msgstr ""
+msgstr "Смяна на USB ролята"
 
 msgid "Device mode"
-msgstr ""
+msgstr "Режим устройство"
 
 msgid "Host mode"
-msgstr ""
+msgstr "Режим хост"
 
 msgid "Enable host mode at boot"
-msgstr ""
+msgstr "Включване на режим хост при стартиране"
 
 msgid "Apply role"
-msgstr ""
+msgstr "Прилагане на ролята"
 
 msgid "Host mode disconnects USB networking and serial on this port. F50 has no battery; management may be lost and a USB adapter usually needs a powered hub."
-msgstr ""
+msgstr "Режимът хост прекъсва USB мрежата и серийната връзка на този порт. F50 няма батерия; управлението може да бъде загубено, а USB адаптерът обикновено изисква хъб със захранване."
 
 msgid "USB network mode"
-msgstr ""
+msgstr "USB мрежов режим"
 
 msgid "Network protocol"
-msgstr ""
+msgstr "Мрежов протокол"
 
 msgid "Apply duration"
-msgstr ""
+msgstr "Продължителност на прилагането"
 
 msgid "Next reboot only"
-msgstr ""
+msgstr "Само при следващото рестартиране"
 
 msgid "Permanent"
-msgstr ""
+msgstr "Постоянно"
 
 msgid "Enable selected protocol"
-msgstr ""
+msgstr "Включване на избрания протокол"
 
 msgid "Save; apply after reboot"
-msgstr ""
+msgstr "Запазване; прилагане след рестартиране"
 
 msgid "NCM is the default. Windows does not natively support ECM; RNDIS changes enumeration. With Enable selected protocol off, only your choice is saved. Next reboot only applies once, then returns to NCM."
-msgstr ""
+msgstr "NCM е по подразбиране. Windows не поддържа ECM вградено; RNDIS променя енумерацията. При изключено Включване на избрания протокол се запазва само изборът ви. Само при следващото рестартиране се прилага веднъж, след което се връща към NCM."
 
 msgid "USB adapters"
-msgstr ""
+msgstr "USB адаптери"
 
 msgid "Refresh"
-msgstr ""
+msgstr "Опресняване"
 
 msgid "Available only in host mode. Refresh brings discovered USB adapters up; adding to LAN saves the bridge and reloads networking."
-msgstr ""
+msgstr "Достъпно само в режим хост. Опресняването активира откритите USB адаптери; добавянето към LAN запазва моста и презарежда мрежата."
 
 msgid "Unavailable"
-msgstr ""
+msgstr "Недостъпно"
 
 msgid "USB network mode is unavailable in host mode; host auto-start also disables USB network auto-start."
-msgstr ""
+msgstr "USB мрежовият режим е недостъпен в режим хост; автоматичното стартиране на хост изключва и автоматичното стартиране на USB мрежата."
 
 msgid "Host mode immediately disconnects USB management. F50 has no battery and peripherals may need external power; make sure another management path exists."
-msgstr ""
+msgstr "Режимът хост незабавно прекъсва управлението през USB. F50 няма батерия и периферните устройства може да изискват външно захранване; уверете се, че има друг път за управление."
 
 msgid "USB networking and serial will re-enumerate in device mode."
-msgstr ""
+msgstr "USB мрежата и серийната връзка ще се енумерират отново в режим устройство."
 
 msgid "Switch USB role?"
-msgstr ""
+msgstr "Смяна на USB ролята?"
 
 msgid "Apply"
-msgstr ""
+msgstr "Прилагане"
 
 msgid "Switching USB role…"
-msgstr ""
+msgstr "Смяна на USB ролята…"
 
 msgid "Switch failed: %s"
-msgstr ""
+msgstr "Смяната е неуспешна: %s"
 
 msgid "Management connection lost; reconnect to confirm the USB role."
-msgstr ""
+msgstr "Връзката за управление е загубена; свържете се отново, за да потвърдите USB ролята."
 
 msgid "Switch request accepted; the USB connection may briefly disconnect."
-msgstr ""
+msgstr "Заявката за смяна е приета; USB връзката може да прекъсне за кратко."
 
 msgid "USB role applied"
-msgstr ""
+msgstr "USB ролята е приложена"
 
 msgid "Save USB network mode?"
-msgstr ""
+msgstr "Запазване на USB мрежовия режим?"
 
 msgid "The network mode applies on the next reboot; USB management may need to reconnect."
-msgstr ""
+msgstr "Мрежовият режим се прилага при следващото рестартиране; управлението през USB може да изисква повторно свързване."
 
 msgid "Save the selection only; with the selected protocol disabled, the next boot still uses default NCM."
-msgstr ""
+msgstr "Запазване само на избора; при изключен избран протокол следващото стартиране пак използва NCM по подразбиране."
 
 msgid "Save"
-msgstr ""
+msgstr "Запазване"
 
 msgid "Saving USB network settings…"
-msgstr ""
+msgstr "Запазване на настройките на USB мрежата…"
 
 msgid "Settings saved"
-msgstr ""
+msgstr "Настройките са запазени"
 
 msgid "Save failed: %s"
-msgstr ""
+msgstr "Запазването е неуспешно: %s"
 
 msgid "Unable to confirm the role yet; reconnect and refresh the page."
-msgstr ""
+msgstr "Ролята все още не може да бъде потвърдена; свържете се отново и опреснете страницата."
 
 msgid "Switch to host mode to see USB adapters."
-msgstr ""
+msgstr "Превключете в режим хост, за да видите USB адаптерите."
 
 msgid "Scanning USB adapters…"
-msgstr ""
+msgstr "Сканиране за USB адаптери…"
 
 msgid "No USB adapters found."
-msgstr ""
+msgstr "Не са открити USB адаптери."
 
 msgid "Link connected"
-msgstr ""
+msgstr "Връзката е установена"
 
 msgid "No link; enable attempted"
-msgstr ""
+msgstr "Няма връзка; опит за активиране"
 
 msgid "Added to LAN"
-msgstr ""
+msgstr "Добавен към LAN"
 
 msgid "Add to LAN"
-msgstr ""
+msgstr "Добавяне към LAN"
 
 msgid "Add USB adapter to LAN?"
-msgstr ""
+msgstr "Добавяне на USB адаптера към LAN?"
 
 msgid "This saves the bridge configuration and reloads networking; existing connections may briefly drop."
-msgstr ""
+msgstr "Това запазва конфигурацията на моста и презарежда мрежата; съществуващите връзки може да прекъснат за кратко."
 
 msgid "Add"
-msgstr ""
+msgstr "Добавяне"
 
 msgid "Adding USB adapter…"
-msgstr ""
+msgstr "Добавяне на USB адаптер…"
 
 msgid "Add failed: %s"
-msgstr ""
+msgstr "Добавянето е неуспешно: %s"
 
 msgid "Modulation DL/UL"
-msgstr ""
+msgstr "Модулация DL/UL"
 
 msgid "Estimated from current MCS"
-msgstr ""
+msgstr "Оценено по текущия MCS"
 
 msgid "MCS DL/UL"
-msgstr ""
+msgstr "MCS DL/UL"
 
 msgid "BLER DL/UL"
-msgstr ""
+msgstr "BLER DL/UL"
 
 msgid "Link & traffic"
-msgstr ""
+msgstr "Връзка и трафик"
 
 msgid "Download rate"
-msgstr ""
+msgstr "Скорост на изтегляне"
 
 msgid "Upload rate"
-msgstr ""
+msgstr "Скорост на качване"
 
 msgid "Total received"
-msgstr ""
+msgstr "Общо получени"
 
 msgid "Total sent"
-msgstr ""
+msgstr "Общо изпратени"
 
 msgid "Session duration"
-msgstr ""
+msgstr "Продължителност на сесията"
 
 msgid "Registration"
-msgstr ""
+msgstr "Регистрация"
 
 msgid "Bandwidth"
-msgstr ""
+msgstr "Честотна лента"
 
 msgid "AMBR DL/UL"
-msgstr ""
+msgstr "AMBR DL/UL"
 
 msgid "Wi-Fi · LAN · Device · SIM"
-msgstr ""
+msgstr "Wi-Fi · LAN · Устройство · SIM"
 
 msgid "CPU usage"
-msgstr ""
+msgstr "Натоварване на CPU"
 
 msgid "Memory"
-msgstr ""
+msgstr "Памет"
 
 msgid "Storage"
-msgstr ""
+msgstr "Хранилище"
 
 msgid "Power"
-msgstr ""
+msgstr "Захранване"
 
 msgid "Channel"
-msgstr ""
+msgstr "Канал"
 
 msgid "Encryption"
-msgstr ""
+msgstr "Криптиране"
 
 msgid "Hidden SSID"
-msgstr ""
+msgstr "Скрит SSID"
 
 msgid "Country"
-msgstr ""
+msgstr "Държава"
 
 msgid "AP status"
-msgstr ""
+msgstr "Състояние на AP"
 
 msgid "USB network"
-msgstr ""
+msgstr "USB мрежа"
 
 msgid "Connection tracking"
-msgstr ""
+msgstr "Проследяване на връзките"
 
 msgid "LAN address"
-msgstr ""
+msgstr "LAN адрес"
 
 msgid "Wi-Fi clients"
-msgstr ""
+msgstr "Wi-Fi клиенти"
 
 msgid "DHCP leases"
-msgstr ""
+msgstr "DHCP наеми"
 
 msgid "Device model"
-msgstr ""
+msgstr "Модел на устройството"
 
 msgid "System"
-msgstr ""
+msgstr "Система"
 
 msgid "Modem"
-msgstr ""
+msgstr "Модем"
 
 msgid "Carrier"
-msgstr ""
+msgstr "Оператор"
 
 msgid "Module"
-msgstr ""
+msgstr "Модул"
 
 msgid "Firmware"
-msgstr ""
+msgstr "Фърмуер"
 
 msgid "Show SIM identifiers"
-msgstr ""
+msgstr "Показване на SIM идентификаторите"
 
 msgid "Quick controls"
-msgstr ""
+msgstr "Бързи контроли"
 
 msgid "Data connection"
-msgstr ""
+msgstr "Връзка за данни"
 
 msgid "Cellular radio"
-msgstr ""
+msgstr "Мобилно радио"
 
 msgid "Wi-Fi hotspot"
-msgstr ""
+msgstr "Wi-Fi точка за достъп"
 
 msgid "Restart modem"
-msgstr ""
+msgstr "Рестартиране на модема"
 
 msgid "Restart device"
-msgstr ""
+msgstr "Рестартиране на устройството"
 
 msgid "Switch to Android"
-msgstr ""
+msgstr "Превключване към Android"
 
 msgid "Neighbor cells"
-msgstr ""
+msgstr "Съседни клетки"
 
 msgid "RAT/Band"
-msgstr ""
+msgstr "RAT/Лента"
 
 msgid "Frequency"
-msgstr ""
+msgstr "Честота"
 
 msgid "Running %s…"
-msgstr ""
+msgstr "Изпълнение на %s…"
 
 msgid "Started in background: %s"
-msgstr ""
+msgstr "Стартирано във фонов режим: %s"
 
 msgid "Done: %s"
-msgstr ""
+msgstr "Готово: %s"
 
 msgid "Failed: %s"
-msgstr ""
+msgstr "Неуспешно: %s"
 
 msgid "Disconnecting data…"
-msgstr ""
+msgstr "Прекъсване на данните…"
 
 msgid "Connecting data…"
-msgstr ""
+msgstr "Свързване на данните…"
 
 msgid "Turn off cellular radio"
-msgstr ""
+msgstr "Изключване на мобилното радио"
 
 msgid "Cellular connectivity will be interrupted."
-msgstr ""
+msgstr "Мобилната свързаност ще бъде прекъсната."
 
 msgid "Turn on cellular radio"
-msgstr ""
+msgstr "Включване на мобилното радио"
 
 msgid "The SFUN power-on sequence will run (up to about 1 minute)."
-msgstr ""
+msgstr "Ще се изпълни последователността за включване SFUN (до около 1 минута)."
 
 msgid "Cellular connectivity may stop for 1–2 minutes."
-msgstr ""
+msgstr "Мобилната свързаност може да спре за 1–2 минути."
 
 msgid "Restart the entire device"
-msgstr ""
+msgstr "Рестартиране на цялото устройство"
 
 msgid "All connections will be interrupted."
-msgstr ""
+msgstr "Всички връзки ще бъдат прекъснати."
 
 msgid "The next boot will enter Android and reboot now. This management page and cellular sharing will disconnect."
-msgstr ""
+msgstr "Следващото стартиране ще бъде в Android и устройството се рестартира сега. Тази страница за управление и споделянето на мобилната мрежа ще прекъснат."
 
 msgid "To return to OpenWrt, run mu300-next-boot linux in Android and reboot."
-msgstr ""
+msgstr "За връщане към OpenWrt изпълнете mu300-next-boot linux в Android и рестартирайте."
 
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
-msgstr ""
+msgstr "Или не правете нищо: след пет незавършени стартирания системата се връща автоматично."
 
 msgid "Switch and reboot"
-msgstr ""
+msgstr "Превключване и рестартиране"
 
 msgid "Preparing Android boot and rebooting…"
-msgstr ""
+msgstr "Подготовка на стартиране на Android и рестартиране…"
 
 msgid "Hide SIM identifiers"
-msgstr ""
+msgstr "Скриване на SIM идентификаторите"
 
 msgid "Lock cell %s?"
-msgstr ""
+msgstr "Заключване на клетка %s?"
 
 msgid "The radio stack will restart (SFUN); cellular service will stop for about 30 seconds."
-msgstr ""
+msgstr "Радио стекът ще се рестартира (SFUN); мобилната услуга ще спре за около 30 секунди."
 
 msgid "Locking %s in the background, about 30 seconds"
-msgstr ""
+msgstr "Заключване на %s във фонов режим, около 30 секунди"
 
 msgid "Locked %s in the background; the status will refresh shortly"
-msgstr ""
+msgstr "%s е заключена във фонов режим; състоянието ще се опресни скоро"
 
 msgid "Lock failed: %s"
-msgstr ""
+msgstr "Заключването е неуспешно: %s"
 
 msgid "Uptime %s"
-msgstr ""
+msgstr "Време на работа %s"
 
 msgid "Radio off"
-msgstr ""
+msgstr "Радиото е изключено"
 
 msgid "No response"
-msgstr ""
+msgstr "Няма отговор"
 
 msgid "%s · Signal %s %s/10"
-msgstr ""
+msgstr "%s · Сигнал %s %s/10"
 
 msgid "%s · Signal %s"
-msgstr ""
+msgstr "%s · Сигнал %s"
 
 msgid "Anchor B%s"
-msgstr ""
+msgstr "Котва B%s"
 
 msgid "No serving cell"
-msgstr ""
+msgstr "Няма обслужваща клетка"
 
 msgid "Not registered"
-msgstr ""
+msgstr "Не е регистрирано"
 
 msgid "Registered"
-msgstr ""
+msgstr "Регистрирано"
 
 msgid "Searching"
-msgstr ""
+msgstr "Търсене"
 
 msgid "Registration denied"
-msgstr ""
+msgstr "Регистрацията е отказана"
 
 msgid "Registered (roaming)"
-msgstr ""
+msgstr "Регистрирано (роуминг)"
 
 msgid "Emergency only"
-msgstr ""
+msgstr "Само спешни повиквания"
 
 msgid "Status %s"
-msgstr ""
+msgstr "Състояние %s"
 
 msgid "LTE anchor"
-msgstr ""
+msgstr "LTE котва"
 
 msgid "LTE link"
-msgstr ""
+msgstr "LTE връзка"
 
 msgid "Hidden"
-msgstr ""
+msgstr "Скрит"
 
 msgid "No"
-msgstr ""
+msgstr "Не"
 
 msgid "Running"
-msgstr ""
+msgstr "Работи"
 
 msgid "Not running"
-msgstr ""
+msgstr "Не работи"
 
 msgid "Connected"
-msgstr ""
+msgstr "Свързано"
 
 msgid "Disconnected"
-msgstr ""
+msgstr "Прекъснато"
 
 msgid "%s entries"
-msgstr ""
+msgstr "%s записа"
 
 msgid "%s clients"
-msgstr ""
+msgstr "%s клиента"
 
 msgid "Recent DHCP leases"
-msgstr ""
+msgstr "Последни DHCP наеми"
 
 msgid "%d h"
-msgstr ""
+msgstr "%d ч"
 
 msgid "Board"
-msgstr ""
+msgstr "Платка"
 
 msgid "No temperature readings"
-msgstr ""
+msgstr "Няма показания за температура"
 
 msgid "Cluster %d"
-msgstr ""
+msgstr "Клъстер %d"
 
 msgid "Total %s · free %s"
-msgstr ""
+msgstr "Общо %s · свободни %s"
 
 msgid "Online"
-msgstr ""
+msgstr "Онлайн"
 
 msgid "AT adapter unavailable"
-msgstr ""
+msgstr "AT адаптерът е недостъпен"
 
 msgid "Saved"
-msgstr ""
+msgstr "Запазено"
 
 msgid "Management connection lost"
-msgstr ""
+msgstr "Връзката за управление е загубена"
 
 msgid "Installing the language pack…"
-msgstr ""
+msgstr "Инсталиране на езиковия пакет…"
 
 msgid "The language pack is installed"
-msgstr ""
+msgstr "Езиковият пакет е инсталиран"
 
 msgid "The language pack could not be installed"
-msgstr ""
+msgstr "Езиковият пакет не можа да бъде инсталиран"
 
 msgid "Upload failed: %s"
-msgstr ""
+msgstr "Качването е неуспешно: %s"
 
 msgid "Language of the browser"
-msgstr ""
+msgstr "Език на браузъра"
 
 msgid "Language of the web interface"
-msgstr ""
+msgstr "Език на уеб интерфейса"
 
 msgid "English, Turkish and Chinese come with the system; the language pack adds the others."
-msgstr ""
+msgstr "Английски, турски и китайски са включени в системата; езиковият пакет добавя останалите."
 
 msgid "The same setting is in System > System > Language and Style."
-msgstr ""
+msgstr "Същата настройка е в Система > Система > Език и стил."
 
 msgid "Language pack"
-msgstr ""
+msgstr "Езиков пакет"
 
 msgid "The language pack (mu300-extra-lang.tar.gz, about 2 MB) adds LuCI in about 40 more languages and this panel in 29 of them. Download it from the release of this system, or upload the file from the release page when the device has no internet."
-msgstr ""
+msgstr "Езиковият пакет (mu300-extra-lang.tar.gz, около 2 MB) добавя LuCI на още около 40 езика и този панел на 29 от тях. Изтеглете го от изданието на тази система или качете файла от страницата на изданието, когато устройството няма интернет."
 
 msgid "Download from the release"
-msgstr ""
+msgstr "Изтегляне от изданието"
 
 msgid "Upload the file…"
-msgstr ""
+msgstr "Качване на файла…"
 
 msgid "Release"
-msgstr ""
+msgstr "Издание"
 
 msgid "Enable all"
-msgstr ""
+msgstr "Включване на всички"
 
 msgid "Disable all"
-msgstr ""
+msgstr "Изключване на всички"
 
 msgid "Remove the language pack"
-msgstr ""
+msgstr "Премахване на езиковия пакет"
 
 msgid "Remove the language pack?"
-msgstr ""
+msgstr "Премахване на езиковия пакет?"
 
 msgid "Its languages disappear from the list; a page in one of them switches to English."
-msgstr ""
+msgstr "Езиците му изчезват от списъка; страница на някой от тях превключва на английски."
 
 msgid "Remove"
-msgstr ""
+msgstr "Премахване"
 
 msgid "Disable"
-msgstr ""
+msgstr "Изключване"
 
 msgid "Enable"
-msgstr ""
+msgstr "Включване"
 
 msgid "LuCI and this panel"
-msgstr ""
+msgstr "LuCI и този панел"
 
 msgid "LuCI only"
-msgstr ""
+msgstr "Само LuCI"
 
 msgid "Enabled"
-msgstr ""
+msgstr "Включен"
 
 msgid "Disabled"
-msgstr ""
+msgstr "Изключен"
 
 msgid "Language"
-msgstr ""
+msgstr "Език"
 
 msgid "Code"
-msgstr ""
+msgstr "Код"
 
 msgid "Translated"
-msgstr ""
+msgstr "Преведено"
 
 msgid "State"
-msgstr ""
+msgstr "Състояние"
 
 msgid "LuCI's own translations come from OpenWrt. This panel's translations other than Turkish and Chinese are machine (AI) translations; corrections are welcome."
-msgstr ""
+msgstr "Собствените преводи на LuCI идват от OpenWrt. Преводите на този панел, освен турския и китайския, са машинни (AI); корекциите са добре дошли."
 
 msgid "Automatic"
-msgstr ""
+msgstr "Автоматично"
 
 msgid "4G only"
-msgstr ""
+msgstr "Само 4G"
 
 msgid "Serving network"
-msgstr ""
+msgstr "Обслужваща мрежа"
 
 msgid "Network mode · EN-DC"
-msgstr ""
+msgstr "Мрежов режим · EN-DC"
 
 msgid "Refresh lock status"
-msgstr ""
+msgstr "Опресняване на състоянието на заключването"
 
 msgid "Apply at startup"
-msgstr ""
+msgstr "Прилагане при стартиране"
 
 msgid "Turning this off only stops replay at the next boot; saved network mode, EN-DC, band and cell settings remain."
-msgstr ""
+msgstr "Изключването спира само повторното прилагане при следващото стартиране; запазените настройки за мрежов режим, EN-DC, ленти и клетки остават."
 
 msgid "Band locking"
-msgstr ""
+msgstr "Заключване на ленти"
 
 msgid "NR bands"
-msgstr ""
+msgstr "NR ленти"
 
 msgid "LTE bands"
-msgstr ""
+msgstr "LTE ленти"
 
 msgid "Apply NR bands"
-msgstr ""
+msgstr "Прилагане на NR ленти"
 
 msgid "Apply LTE bands"
-msgstr ""
+msgstr "Прилагане на LTE ленти"
 
 msgid "Neighbor cells and cell locking"
-msgstr ""
+msgstr "Съседни клетки и заключване на клетка"
 
 msgid "Lock current serving cell"
-msgstr ""
+msgstr "Заключване на текущата обслужваща клетка"
 
 msgid "Unlock cell"
-msgstr ""
+msgstr "Отключване на клетка"
 
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
-msgstr ""
+msgstr "Прилагането рестартира радио стека (SFUN) и за кратко прекъсва мобилната услуга. Настройките се запазват и се прилагат отново от добавката, след като AT е готов, ако Прилагане при стартиране е включено. Платформен hook преди радиото може да ги приложи без рестартиране. Приложете без избрани ленти, за да възстановите автоматичния режим."
 
 msgid "Apply “%s”?"
-msgstr ""
+msgstr "Прилагане на „%s“?"
 
 msgid "Applying %s in the background…"
-msgstr ""
+msgstr "Прилагане на %s във фонов режим…"
 
 msgid "Applying %s in the background… (SFUN restart and re-registration, about 30 seconds)"
-msgstr ""
+msgstr "Прилагане на %s във фонов режим… (рестартиране на SFUN и повторна регистрация, около 30 секунди)"
 
 msgid "Queued: another lock is being applied during SFUN restart; this will take effect afterward"
-msgstr ""
+msgstr "На опашка: друго заключване се прилага по време на рестартирането на SFUN; това ще влезе в сила след него"
 
 msgid "Confirming the EN-DC status…"
-msgstr ""
+msgstr "Потвърждаване на състоянието на EN-DC…"
 
 msgid "Confirming apply at startup…"
-msgstr ""
+msgstr "Потвърждаване на прилагането при стартиране…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
-msgstr ""
+msgstr "Стартирано във фонов режим: %s (рестартиране на SFUN, около 30 секунди); прочитане на състоянието…"
 
 msgid "Network mode: %s"
-msgstr ""
+msgstr "Мрежов режим: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
-msgstr ""
+msgstr "Изключване на EN-DC (NSA котва)"
 
 msgid "Enable EN-DC (NSA anchor)"
-msgstr ""
+msgstr "Включване на EN-DC (NSA котва)"
 
 msgid "Disable apply at startup"
-msgstr ""
+msgstr "Изключване на прилагането при стартиране"
 
 msgid "Enable apply at startup"
-msgstr ""
+msgstr "Включване на прилагането при стартиране"
 
 msgid "Reading the modem directly (a few seconds at most)…"
-msgstr ""
+msgstr "Директно четене от модема (най-много няколко секунди)…"
 
 msgid "Refreshed"
-msgstr ""
+msgstr "Опреснено"
 
 msgid "Refresh failed"
-msgstr ""
+msgstr "Опресняването е неуспешно"
 
 msgid "NR bands: back to automatic"
-msgstr ""
+msgstr "NR ленти: обратно на автоматично"
 
 msgid "NR band lock: %s"
-msgstr ""
+msgstr "Заключване на NR ленти: %s"
 
 msgid "LTE bands: back to automatic"
-msgstr ""
+msgstr "LTE ленти: обратно на автоматично"
 
 msgid "LTE band lock: %s"
-msgstr ""
+msgstr "Заключване на LTE ленти: %s"
 
 msgid "Remove the %s cell lock"
-msgstr ""
+msgstr "Премахване на заключването на клетка %s"
 
 msgid "The radio stack will restart (SFUN), taking about 30 seconds."
-msgstr ""
+msgstr "Радио стекът ще се рестартира (SFUN), което отнема около 30 секунди."
 
 msgid "Removing the %s cell lock…"
-msgstr ""
+msgstr "Премахване на заключването на клетка %s…"
 
 msgid "Unlock failed: %s"
-msgstr ""
+msgstr "Отключването е неуспешно: %s"
 
 msgid "Unlock started in background (SFUN restart, about 30 seconds); reading the status back…"
-msgstr ""
+msgstr "Отключването е стартирано във фонов режим (рестартиране на SFUN, около 30 секунди); прочитане на състоянието…"
 
 msgid "Locking %s in the background…"
-msgstr ""
+msgstr "Заключване на %s във фонов режим…"
 
 msgid "Locked %s in the background (SFUN restart, about 30 seconds); reading the status back…"
-msgstr ""
+msgstr "%s е заключена във фонов режим (рестартиране на SFUN, около 30 секунди); прочитане на състоянието…"
 
 msgid "No serving-network data"
-msgstr ""
+msgstr "Няма данни за обслужващата мрежа"
 
 msgid "NR serving cell"
-msgstr ""
+msgstr "NR обслужваща клетка"
 
 msgid "Status confirmed"
-msgstr ""
+msgstr "Състоянието е потвърдено"
 
 msgid "Readback timed out; select “Refresh lock status”"
-msgstr ""
+msgstr "Времето за прочитане изтече; изберете „Опресняване на състоянието на заключването“"
 
 msgid "Applied (EN-DC does not require a radio-stack restart)"
-msgstr ""
+msgstr "Приложено (EN-DC не изисква рестартиране на радио стека)"
 
 msgid "Apply at startup is on"
-msgstr ""
+msgstr "Прилагането при стартиране е включено"
 
 msgid "Apply at startup is off"
-msgstr ""
+msgstr "Прилагането при стартиране е изключено"
 
 msgid "EN-DC status readback timed out; use “Refresh lock status” to confirm"
-msgstr ""
+msgstr "Времето за прочитане на състоянието на EN-DC изтече; използвайте „Опресняване на състоянието на заключването“ за потвърждение"
 
 msgid "Apply-at-startup status readback timed out; use “Refresh lock status” to confirm"
-msgstr ""
+msgstr "Времето за прочитане на състоянието на прилагането при стартиране изтече; използвайте „Опресняване на състоянието на заключването“ за потвърждение"
 
 msgid "Locked cells"
-msgstr ""
+msgstr "Заключени клетки"
 
 msgid "Unlock %s"
-msgstr ""
+msgstr "Отключване на %s"
 
 msgid "Automatic (%d supported)"
-msgstr ""
+msgstr "Автоматично (%d поддържани)"
 
 msgid "%d locked: %s"
-msgstr ""
+msgstr "%d заключени: %s"
 
 msgid "Configure how this plugin connects to the current Unisoc OpenWrt platform. Changes do not require editing the dashboard, AT, locks or SMS pages."
-msgstr ""
+msgstr "Настройте как тази добавка се свързва с текущата платформа Unisoc OpenWrt. Промените не изискват редактиране на страниците на таблото, AT, заключванията или SMS."
 
 msgid "Platform adapter"
-msgstr ""
+msgstr "Адаптер на платформата"
 
 msgid "AT backend"
-msgstr ""
+msgstr "AT бекенд"
 
 msgid "Auto-detect"
-msgstr ""
+msgstr "Автоматично откриване"
 
 msgid "atinout + serial port"
-msgstr ""
+msgstr "atinout + сериен порт"
 
 msgid "Custom adapter"
-msgstr ""
+msgstr "Персонализиран адаптер"
 
 msgid "AT serial port"
-msgstr ""
+msgstr "AT сериен порт"
 
 msgid "Custom AT adapter"
-msgstr ""
+msgstr "Персонализиран AT адаптер"
 
 msgid "The executable receives a timeout in seconds and the complete AT command, in that order. It must share the serial lock with the platform dialer."
-msgstr ""
+msgstr "Изпълнимият файл получава време за изчакване в секунди и пълната AT команда, в този ред. Той трябва да споделя серийното заключване с dialer-а на платформата."
 
 msgid "SMS adapter"
-msgstr ""
+msgstr "SMS адаптер"
 
 msgid "Implement the list, show, send, delete and sync subcommands; leave blank to find mu300-sms automatically."
-msgstr ""
+msgstr "Реализирайте подкомандите list, show, send, delete и sync; оставете празно, за да се намери mu300-sms автоматично."
 
 msgid "SMS pool directory"
-msgstr ""
+msgstr "Директория на SMS хранилището"
 
 msgid "Cellular logical interface"
-msgstr ""
+msgstr "Логически интерфейс на мобилната мрежа"
 
 msgid "Cellular IPv6 interface"
-msgstr ""
+msgstr "IPv6 интерфейс на мобилната мрежа"
 
 msgid "Cellular network device"
-msgstr ""
+msgstr "Мрежово устройство на мобилната мрежа"
 
 msgid "Leave blank to detect from netifd"
-msgstr ""
+msgstr "Оставете празно за откриване чрез netifd"
 
 msgid "LAN bridge"
-msgstr ""
+msgstr "LAN мост"
 
 msgid "Wi-Fi device"
-msgstr ""
+msgstr "Wi-Fi устройство"
 
 msgid "USB device"
-msgstr ""
+msgstr "USB устройство"
 
 msgid "Maximum wait for AT readiness (seconds)"
-msgstr ""
+msgstr "Максимално изчакване за готовност на AT (секунди)"
 
 msgid "Home dashboard refresh interval (seconds)"
-msgstr ""
+msgstr "Интервал на опресняване на началното табло (секунди)"
 
 msgid "Controls only the home dashboard refresh rate; 0.5–60 seconds. Reopen Home after saving to apply."
-msgstr ""
+msgstr "Управлява само честотата на опресняване на началното табло; 0.5–60 секунди. След запазване отворете отново Начало, за да се приложи."
 
 msgid "Persistent state directory"
-msgstr ""
+msgstr "Директория за постоянно състояние"
 
 msgid "Recipient: number, e.g. 10086 or +86..."
-msgstr ""
+msgstr "Получател: номер, напр. 10086 или +86..."
 
 msgid "Sync from SIM"
-msgstr ""
+msgstr "Синхронизиране от SIM"
 
 msgid "Clear local pool"
-msgstr ""
+msgstr "Изчистване на локалното хранилище"
 
 msgid "Loading…"
-msgstr ""
+msgstr "Зареждане…"
 
 msgid "Select a conversation on the left, or enter a number below to send."
-msgstr ""
+msgstr "Изберете разговор вляво или въведете номер по-долу, за да изпратите."
 
 msgid "Message (Enter to send, Shift+Enter for newline)"
-msgstr ""
+msgstr "Съобщение (Enter за изпращане, Shift+Enter за нов ред)"
 
 msgid "Sending uses AT+CMGS (PDU mode); retry if the channel is busy. To delete one message, use the bin icon on its bubble."
-msgstr ""
+msgstr "Изпращането използва AT+CMGS (PDU режим); опитайте отново, ако каналът е зает. За изтриване на едно съобщение използвайте иконата с кошче в неговия балон."
 
 msgid "Syncing from the SIM in the background (AT+CMGL)…"
-msgstr ""
+msgstr "Синхронизиране от SIM във фонов режим (AT+CMGL)…"
 
 msgid "SIM sync started; the list refreshes in a few seconds."
-msgstr ""
+msgstr "Синхронизирането на SIM започна; списъкът ще се опресни след няколко секунди."
 
 msgid "Clear local SMS pool"
-msgstr ""
+msgstr "Изчистване на локалното SMS хранилище"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
-msgstr ""
+msgstr "Ще бъдат изтрити само локалните файлове; съобщенията в SIM остават."
 
 msgid "Clear"
-msgstr ""
+msgstr "Изчистване"
 
 msgid "Delete this SMS"
-msgstr ""
+msgstr "Изтриване на този SMS"
 
 msgid "Deletion cannot be undone."
-msgstr ""
+msgstr "Изтриването не може да бъде отменено."
 
 msgid "Local only"
-msgstr ""
+msgstr "Само локално"
 
 msgid "Local + SIM"
-msgstr ""
+msgstr "Локално + SIM"
 
 msgid "Delete failed"
-msgstr ""
+msgstr "Изтриването е неуспешно"
 
 msgid "Deleted (local + SIM)"
-msgstr ""
+msgstr "Изтрито (локално + SIM)"
 
 msgid "Deleted (local only)"
-msgstr ""
+msgstr "Изтрито (само локално)"
 
 msgid "Enter both a number and a message."
-msgstr ""
+msgstr "Въведете номер и съобщение."
 
 msgid "Sending…"
-msgstr ""
+msgstr "Изпращане…"
 
 msgid "Sent; the list refreshes shortly."
-msgstr ""
+msgstr "Изпратено; списъкът ще се опресни скоро."
 
 msgid "Sending failed"
-msgstr ""
+msgstr "Изпращането е неуспешно"
 
 msgid "· %d messages, %d unread · %d conversations"
-msgstr ""
+msgstr "· %d съобщения, %d непрочетени · %d разговора"
 
 msgid "· %d messages · %d conversations"
-msgstr ""
+msgstr "· %d съобщения · %d разговора"
 
 msgid "The pool is empty. Incoming and sent messages appear here, or select “Sync from SIM”."
-msgstr ""
+msgstr "Хранилището е празно. Входящите и изпратените съобщения се показват тук, или изберете „Синхронизиране от SIM“."
 
 msgid "Me: %s"
-msgstr ""
+msgstr "Аз: %s"
 
 msgid "Delete"
-msgstr ""
+msgstr "Изтриване"
 
 msgid "Dashboard info failed"
-msgstr ""
+msgstr "Информацията за таблото е недостъпна"
 
 msgid "Applying network locks: no live signal right now"
-msgstr ""
+msgstr "Прилагане на мрежови заключвания: в момента няма сигнал на живо"
 
 msgid "Live signal read failed"
-msgstr ""
+msgstr "Четенето на сигнала на живо е неуспешно"
 
 msgid "Unknown op"
-msgstr ""
+msgstr "Неизвестна операция"
 
 msgid "Invalid argument for this op"
-msgstr ""
+msgstr "Невалиден аргумент за тази операция"
 
 msgid "The radio is busy: the dial or the watchdog is switching it, try again shortly"
-msgstr ""
+msgstr "Радиото е заето: набирането или watchdog го превключва, опитайте отново след малко"
 
 msgid "The action gave no valid reply"
-msgstr ""
+msgstr "Действието не върна валиден отговор"
 
 msgid "An AT command is one line of printable ASCII, at most 512 characters"
-msgstr ""
+msgstr "AT командата е един ред от печатими ASCII символи, най-много 512 знака"
 
 msgid "Must be an AT command"
-msgstr ""
+msgstr "Трябва да е AT команда"
 
 msgid "No \";\" command chaining"
-msgstr ""
+msgstr "Без верижно свързване на команди с \";\""
 
 msgid "Denied: this command wedges the AT port until a reboot"
-msgstr ""
+msgstr "Отказано: тази команда блокира AT порта до рестартиране"
 
 msgid "Applying network locks: the modem is restarting (about half a minute), try again shortly"
-msgstr ""
+msgstr "Прилагане на мрежови заключвания: модемът се рестартира (около половин минута), опитайте отново след малко"
 
 msgid "The AT channel is busy; the command was not sent, try again"
-msgstr ""
+msgstr "AT каналът е зает; командата не е изпратена, опитайте отново"
 
 msgid "The modem did not answer in time; the command may still run, check before sending it again"
-msgstr ""
+msgstr "Модемът не отговори навреме; командата може още да се изпълнява, проверете, преди да я изпратите отново"
 
 msgid "The fresh parameter must be 0 or 1"
-msgstr ""
+msgstr "Параметърът fresh трябва да е 0 или 1"
 
 msgid "Lock read failed"
-msgstr ""
+msgstr "Четенето на заключването е неуспешно"
 
 msgid "Unknown lock kind"
-msgstr ""
+msgstr "Неизвестен вид заключване"
 
 msgid "Invalid value for this lock kind"
-msgstr ""
+msgstr "Невалидна стойност за този вид заключване"
 
 msgid "Invalid page"
-msgstr ""
+msgstr "Невалидна страница"
 
 msgid "mu300-sms is not available (the SMS service is not installed or not running)"
-msgstr ""
+msgstr "mu300-sms е недостъпен (SMS услугата не е инсталирана или не работи)"
 
 msgid "No output"
-msgstr ""
+msgstr "Няма изход"
 
 msgid "Bad ID"
-msgstr ""
+msgstr "Невалиден ID"
 
 msgid "Read failed"
-msgstr ""
+msgstr "Четенето е неуспешно"
 
 msgid "The number may only contain digits (and a leading +)"
-msgstr ""
+msgstr "Номерът може да съдържа само цифри (и водещ +)"
 
 msgid "The message is empty"
-msgstr ""
+msgstr "Съобщението е празно"
 
 msgid "The message is too long (over 480 characters)"
-msgstr ""
+msgstr "Съобщението е твърде дълго (над 480 знака)"
 
 msgid "The message contains a control character"
-msgstr ""
+msgstr "Съобщението съдържа управляващ знак"
 
 msgid "The sim parameter must be 0 or 1"
-msgstr ""
+msgstr "Параметърът sim трябва да е 0 или 1"
 
 msgid "The USB adapter (device-usb) gave no valid reply"
-msgstr ""
+msgstr "USB адаптерът (device-usb) не върна валиден отговор"
 
 msgid "The auto parameter must be 0 or 1"
-msgstr ""
+msgstr "Параметърът auto трябва да е 0 или 1"
 
 msgid "Invalid USB role"
-msgstr ""
+msgstr "Невалидна USB роля"
 
 msgid "A USB role takes no scope"
-msgstr ""
+msgstr "USB ролята не приема обхват"
 
 msgid "Invalid USB network mode"
-msgstr ""
+msgstr "Невалиден USB мрежов режим"
 
 msgid "Invalid USB network scope"
-msgstr ""
+msgstr "Невалиден обхват на USB мрежата"
 
 msgid "Unknown USB setting"
-msgstr ""
+msgstr "Неизвестна USB настройка"
 
 msgid "Invalid interface name"
-msgstr ""
+msgstr "Невалидно име на интерфейс"
 
 msgid "The languages adapter gave no valid reply"
-msgstr ""
+msgstr "Езиковият адаптер не върна валиден отговор"
 
 msgid "Unknown language operation"
-msgstr ""
+msgstr "Неизвестна езикова операция"
 
 msgid "Invalid language code"
-msgstr ""
+msgstr "Невалиден езиков код"
 
 msgid "Invalid language request"
-msgstr ""
+msgstr "Невалидна езикова заявка"
 
 msgid "Unknown source"
-msgstr ""
+msgstr "Неизвестен източник"
 
 msgid "Request too large"
-msgstr ""
+msgstr "Заявката е твърде голяма"
 
 msgid "The runtime directory is not safe; nothing was run"
-msgstr ""
+msgstr "Директорията за изпълнение не е безопасна; нищо не е изпълнено"
 
 msgid "No such method"
-msgstr ""
+msgstr "Няма такъв метод"
 
 msgid "Radio did not come up"
-msgstr ""
+msgstr "Радиото не се включи"
 
 msgid "Expected on or off"
-msgstr ""
+msgstr "Очаква се on или off"
 
 msgid "VPN integration is not provided by this platform"
-msgstr ""
+msgstr "Тази платформа не предоставя VPN интеграция"
 
 msgid "Dual-boot integration is not provided by this platform"
-msgstr ""
+msgstr "Тази платформа не предоставя интеграция за двойно стартиране"
 
 msgid "mu300-next-boot failed"
-msgstr ""
+msgstr "mu300-next-boot е неуспешен"
 
 msgid "AT backend did not answer (radio off, modem restarting, or adapter unavailable)"
-msgstr ""
+msgstr "AT бекендът не отговори (радиото е изключено, модемът се рестартира или адаптерът е недостъпен)"
 
 msgid "USB role adapter is not executable"
-msgstr ""
+msgstr "Адаптерът за USB ролята не е изпълним"
 
 msgid "USB role adapter failed"
-msgstr ""
+msgstr "Адаптерът за USB ролята е неуспешен"
 
 msgid "USB role switch is unavailable"
-msgstr ""
+msgstr "Смяната на USB ролята е недостъпна"
 
 msgid "USB role switch failed"
-msgstr ""
+msgstr "Смяната на USB ролята е неуспешна"
 
 msgid "USB role switch was refused by platform safety checks"
-msgstr ""
+msgstr "Смяната на USB ролята е отказана от проверките за безопасност на платформата"
 
 msgid "Cannot create USB boot settings directory"
-msgstr ""
+msgstr "Не може да се създаде директорията за USB настройките при стартиране"
 
 msgid "Cannot write USB boot settings"
-msgstr ""
+msgstr "Не могат да се запишат USB настройките при стартиране"
 
 msgid "Cannot save USB boot settings"
-msgstr ""
+msgstr "Не могат да се запазят USB настройките при стартиране"
 
 msgid "Invalid boot-auto value"
-msgstr ""
+msgstr "Невалидна стойност на boot-auto"
 
 msgid "Device is the boot default; host auto-apply is the only persistent role"
-msgstr ""
+msgstr "Устройството е по подразбиране при стартиране; автоматичното прилагане на хост е единствената постоянна роля"
 
 msgid "Cannot save USB role policy"
-msgstr ""
+msgstr "Не може да се запази политиката за USB ролята"
 
 msgid "Cannot disable USB network boot policy"
-msgstr ""
+msgstr "Не може да се изключи политиката за стартиране на USB мрежата"
 
 msgid "Cannot commit USB role policy"
-msgstr ""
+msgstr "Не може да се потвърди политиката за USB ролята"
 
 msgid "USB network mode is unavailable in host role"
-msgstr ""
+msgstr "USB мрежовият режим е недостъпен в ролята хост"
 
 msgid "Disable host boot-auto before configuring USB network"
-msgstr ""
+msgstr "Изключете boot-auto на хоста, преди да настроите USB мрежата"
 
 msgid "Cannot save USB network policy"
-msgstr ""
+msgstr "Не може да се запази политиката за USB мрежата"
 
 msgid "Cannot commit USB network policy"
-msgstr ""
+msgstr "Не може да се потвърди политиката за USB мрежата"
 
 msgid "USB host mode is required"
-msgstr ""
+msgstr "Изисква се USB режим хост"
 
 msgid "Not a USB network interface"
-msgstr ""
+msgstr "Не е USB мрежов интерфейс"
 
 msgid "LAN bridge device section was not found"
-msgstr ""
+msgstr "Секцията за устройството на LAN моста не е открита"
 
 msgid "Cannot bring USB network interface up"
-msgstr ""
+msgstr "Не може да се активира USB мрежовият интерфейс"
 
 msgid "Cannot add interface to LAN bridge"
-msgstr ""
+msgstr "Не може да се добави интерфейсът към LAN моста"
 
 msgid "Cannot save LAN bridge"
-msgstr ""
+msgstr "Не може да се запази LAN мостът"
 
 msgid "Network reload failed"
-msgstr ""
+msgstr "Презареждането на мрежата е неуспешно"
 
 msgid "Cannot attach USB interface to LAN bridge"
-msgstr ""
+msgstr "Не може да се свърже USB интерфейсът към LAN моста"
 
 msgid "The language pack is not installed"
-msgstr ""
+msgstr "Езиковият пакет не е инсталиран"
 
 msgid "No language given"
-msgstr ""
+msgstr "Не е зададен език"
 
 msgid "The language could not be changed"
-msgstr ""
+msgstr "Езикът не можа да бъде сменен"
 
 msgid "LuCI does not offer this language"
-msgstr ""
+msgstr "LuCI не предлага този език"
 
 msgid "No uploaded language pack"
-msgstr ""
+msgstr "Няма качен езиков пакет"
 
 msgid "An installation is already running"
-msgstr ""
+msgstr "Вече се изпълнява инсталация"
 
 msgid "The language pack could not be removed"
-msgstr ""
+msgstr "Езиковият пакет не можа да бъде премахнат"
 
 msgid "Lock cache unavailable"
-msgstr ""
+msgstr "Кешът на заключванията е недостъпен"
 
 msgid "No serving cell to lock to"
-msgstr ""
+msgstr "Няма обслужваща клетка за заключване"

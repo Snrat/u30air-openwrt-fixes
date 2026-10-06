@@ -4,1252 +4,1252 @@ msgstr ""
 "Language: sv\n"
 
 msgid "Status dashboard"
-msgstr ""
+msgstr "Statuspanel"
 
 msgid "Cellular"
-msgstr ""
+msgstr "Mobilnät"
 
 msgid "Network locks"
-msgstr ""
+msgstr "Nätverkslås"
 
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 msgid "AT terminal"
-msgstr ""
+msgstr "AT-terminal"
 
 msgid "Adapter settings"
-msgstr ""
+msgstr "Adapterinställningar"
 
 msgid "Device management"
-msgstr ""
+msgstr "Enhetshantering"
 
 msgid "Languages"
-msgstr ""
+msgstr "Språk"
 
 msgid "MU300 control center: status dashboard, network locks, AT terminal and SMS"
-msgstr ""
+msgstr "MU300-kontrollcenter: statuspanel, nätverkslås, AT-terminal och SMS"
 
 msgid "China Mobile"
-msgstr ""
+msgstr "China Mobile"
 
 msgid "China Unicom"
-msgstr ""
+msgstr "China Unicom"
 
 msgid "China Telecom"
-msgstr ""
+msgstr "China Telecom"
 
 msgid "China Broadnet"
-msgstr ""
+msgstr "China Broadnet"
 
 msgid "China Tietong"
-msgstr ""
+msgstr "China Tietong"
 
 msgid "Excellent"
-msgstr ""
+msgstr "Utmärkt"
 
 msgid "Good"
-msgstr ""
+msgstr "Bra"
 
 msgid "Fair"
-msgstr ""
+msgstr "Godtagbar"
 
 msgid "Poor"
-msgstr ""
+msgstr "Dålig"
 
 msgid "Unknown"
-msgstr ""
+msgstr "Okänd"
 
 msgid "%d d %d h"
-msgstr ""
+msgstr "%d d %d h"
 
 msgid "%d h %d min"
-msgstr ""
+msgstr "%d h %d min"
 
 msgid "%d min"
-msgstr ""
+msgstr "%d min"
 
 msgid "No neighbor-cell data"
-msgstr ""
+msgstr "Inga data om grannceller"
 
 msgid "Locked"
-msgstr ""
+msgstr "Låst"
 
 msgid "Lock"
-msgstr ""
+msgstr "Lås"
 
 msgid "Unknown error"
-msgstr ""
+msgstr "Okänt fel"
 
 msgid "Confirm"
-msgstr ""
+msgstr "Bekräfta"
 
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 msgid "New SMS · %s"
-msgstr ""
+msgstr "Nytt SMS · %s"
 
 msgid "Unknown number"
-msgstr ""
+msgstr "Okänt nummer"
 
 msgid "Select"
-msgstr ""
+msgstr "Välj"
 
 msgid "Basic"
-msgstr ""
+msgstr "Grundläggande"
 
 msgid "Registration/signal"
-msgstr ""
+msgstr "Registrering/signal"
 
 msgid "Bearer"
-msgstr ""
+msgstr "Bärare"
 
 msgid "Engineering mode"
-msgstr ""
+msgstr "Ingenjörsläge"
 
 msgid "AT command (↑↓ history, Enter to send)"
-msgstr ""
+msgstr "AT-kommando (↑↓ historik, Enter för att skicka)"
 
 msgid "Send"
-msgstr ""
+msgstr "Skicka"
 
 msgid "Clear screen"
-msgstr ""
+msgstr "Rensa skärmen"
 
 msgid "Ready."
-msgstr ""
+msgstr "Redo."
 
 msgid "Session history (click to reuse)"
-msgstr ""
+msgstr "Sessionshistorik (klicka för att återanvända)"
 
 msgid "(no output)"
-msgstr ""
+msgstr "(ingen utdata)"
 
 msgid "Request failed"
-msgstr ""
+msgstr "Begäran misslyckades"
 
 msgid "(empty)"
-msgstr ""
+msgstr "(tom)"
 
 msgid "USB role"
-msgstr ""
+msgstr "USB-roll"
 
 msgid "Current role"
-msgstr ""
+msgstr "Aktuell roll"
 
 msgid "Switch USB role"
-msgstr ""
+msgstr "Byt USB-roll"
 
 msgid "Device mode"
-msgstr ""
+msgstr "Enhetsläge"
 
 msgid "Host mode"
-msgstr ""
+msgstr "Värdläge"
 
 msgid "Enable host mode at boot"
-msgstr ""
+msgstr "Aktivera värdläge vid uppstart"
 
 msgid "Apply role"
-msgstr ""
+msgstr "Verkställ roll"
 
 msgid "Host mode disconnects USB networking and serial on this port. F50 has no battery; management may be lost and a USB adapter usually needs a powered hub."
-msgstr ""
+msgstr "Värdläge kopplar bort USB-nätverk och seriell anslutning på denna port. F50 har inget batteri; hanteringen kan gå förlorad och en USB-adapter behöver oftast en strömförsörjd hubb."
 
 msgid "USB network mode"
-msgstr ""
+msgstr "USB-nätverksläge"
 
 msgid "Network protocol"
-msgstr ""
+msgstr "Nätverksprotokoll"
 
 msgid "Apply duration"
-msgstr ""
+msgstr "Giltighetstid"
 
 msgid "Next reboot only"
-msgstr ""
+msgstr "Endast nästa omstart"
 
 msgid "Permanent"
-msgstr ""
+msgstr "Permanent"
 
 msgid "Enable selected protocol"
-msgstr ""
+msgstr "Aktivera valt protokoll"
 
 msgid "Save; apply after reboot"
-msgstr ""
+msgstr "Spara; verkställ efter omstart"
 
 msgid "NCM is the default. Windows does not natively support ECM; RNDIS changes enumeration. With Enable selected protocol off, only your choice is saved. Next reboot only applies once, then returns to NCM."
-msgstr ""
+msgstr "NCM är standard. Windows stöder inte ECM inbyggt; RNDIS ändrar enumereringen. Med ”Aktivera valt protokoll” av sparas bara ditt val. ”Endast nästa omstart” gäller en gång och återgår sedan till NCM."
 
 msgid "USB adapters"
-msgstr ""
+msgstr "USB-adaptrar"
 
 msgid "Refresh"
-msgstr ""
+msgstr "Uppdatera"
 
 msgid "Available only in host mode. Refresh brings discovered USB adapters up; adding to LAN saves the bridge and reloads networking."
-msgstr ""
+msgstr "Endast tillgängligt i värdläge. Uppdatera aktiverar upptäckta USB-adaptrar; att lägga till i LAN sparar bryggan och läser om nätverket."
 
 msgid "Unavailable"
-msgstr ""
+msgstr "Inte tillgängligt"
 
 msgid "USB network mode is unavailable in host mode; host auto-start also disables USB network auto-start."
-msgstr ""
+msgstr "USB-nätverksläget är inte tillgängligt i värdläge; automatisk start som värd inaktiverar även automatisk start av USB-nätverket."
 
 msgid "Host mode immediately disconnects USB management. F50 has no battery and peripherals may need external power; make sure another management path exists."
-msgstr ""
+msgstr "Värdläge kopplar omedelbart bort USB-hanteringen. F50 har inget batteri och kringutrustning kan behöva extern ström; se till att det finns en annan hanteringsväg."
 
 msgid "USB networking and serial will re-enumerate in device mode."
-msgstr ""
+msgstr "USB-nätverk och seriell anslutning enumereras om i enhetsläge."
 
 msgid "Switch USB role?"
-msgstr ""
+msgstr "Byta USB-roll?"
 
 msgid "Apply"
-msgstr ""
+msgstr "Verkställ"
 
 msgid "Switching USB role…"
-msgstr ""
+msgstr "Byter USB-roll…"
 
 msgid "Switch failed: %s"
-msgstr ""
+msgstr "Bytet misslyckades: %s"
 
 msgid "Management connection lost; reconnect to confirm the USB role."
-msgstr ""
+msgstr "Hanteringsanslutningen förlorades; anslut igen för att bekräfta USB-rollen."
 
 msgid "Switch request accepted; the USB connection may briefly disconnect."
-msgstr ""
+msgstr "Begäran om byte accepterad; USB-anslutningen kan kort brytas."
 
 msgid "USB role applied"
-msgstr ""
+msgstr "USB-roll verkställd"
 
 msgid "Save USB network mode?"
-msgstr ""
+msgstr "Spara USB-nätverksläge?"
 
 msgid "The network mode applies on the next reboot; USB management may need to reconnect."
-msgstr ""
+msgstr "Nätverksläget gäller vid nästa omstart; USB-hanteringen kan behöva anslutas igen."
 
 msgid "Save the selection only; with the selected protocol disabled, the next boot still uses default NCM."
-msgstr ""
+msgstr "Spara endast valet; med valt protokoll inaktiverat använder nästa uppstart fortfarande standard-NCM."
 
 msgid "Save"
-msgstr ""
+msgstr "Spara"
 
 msgid "Saving USB network settings…"
-msgstr ""
+msgstr "Sparar USB-nätverksinställningar…"
 
 msgid "Settings saved"
-msgstr ""
+msgstr "Inställningar sparade"
 
 msgid "Save failed: %s"
-msgstr ""
+msgstr "Sparandet misslyckades: %s"
 
 msgid "Unable to confirm the role yet; reconnect and refresh the page."
-msgstr ""
+msgstr "Rollen kan inte bekräftas än; anslut igen och uppdatera sidan."
 
 msgid "Switch to host mode to see USB adapters."
-msgstr ""
+msgstr "Byt till värdläge för att se USB-adaptrar."
 
 msgid "Scanning USB adapters…"
-msgstr ""
+msgstr "Söker efter USB-adaptrar…"
 
 msgid "No USB adapters found."
-msgstr ""
+msgstr "Inga USB-adaptrar hittades."
 
 msgid "Link connected"
-msgstr ""
+msgstr "Länk ansluten"
 
 msgid "No link; enable attempted"
-msgstr ""
+msgstr "Ingen länk; aktivering försökt"
 
 msgid "Added to LAN"
-msgstr ""
+msgstr "Tillagd i LAN"
 
 msgid "Add to LAN"
-msgstr ""
+msgstr "Lägg till i LAN"
 
 msgid "Add USB adapter to LAN?"
-msgstr ""
+msgstr "Lägga till USB-adapter i LAN?"
 
 msgid "This saves the bridge configuration and reloads networking; existing connections may briefly drop."
-msgstr ""
+msgstr "Detta sparar bryggkonfigurationen och läser om nätverket; befintliga anslutningar kan kort brytas."
 
 msgid "Add"
-msgstr ""
+msgstr "Lägg till"
 
 msgid "Adding USB adapter…"
-msgstr ""
+msgstr "Lägger till USB-adapter…"
 
 msgid "Add failed: %s"
-msgstr ""
+msgstr "Tillägg misslyckades: %s"
 
 msgid "Modulation DL/UL"
-msgstr ""
+msgstr "Modulering DL/UL"
 
 msgid "Estimated from current MCS"
-msgstr ""
+msgstr "Uppskattat från aktuell MCS"
 
 msgid "MCS DL/UL"
-msgstr ""
+msgstr "MCS DL/UL"
 
 msgid "BLER DL/UL"
-msgstr ""
+msgstr "BLER DL/UL"
 
 msgid "Link & traffic"
-msgstr ""
+msgstr "Länk & trafik"
 
 msgid "Download rate"
-msgstr ""
+msgstr "Nedladdningshastighet"
 
 msgid "Upload rate"
-msgstr ""
+msgstr "Uppladdningshastighet"
 
 msgid "Total received"
-msgstr ""
+msgstr "Totalt mottaget"
 
 msgid "Total sent"
-msgstr ""
+msgstr "Totalt skickat"
 
 msgid "Session duration"
-msgstr ""
+msgstr "Sessionslängd"
 
 msgid "Registration"
-msgstr ""
+msgstr "Registrering"
 
 msgid "Bandwidth"
-msgstr ""
+msgstr "Bandbredd"
 
 msgid "AMBR DL/UL"
-msgstr ""
+msgstr "AMBR DL/UL"
 
 msgid "Wi-Fi · LAN · Device · SIM"
-msgstr ""
+msgstr "Wi-Fi · LAN · Enhet · SIM"
 
 msgid "CPU usage"
-msgstr ""
+msgstr "CPU-användning"
 
 msgid "Memory"
-msgstr ""
+msgstr "Minne"
 
 msgid "Storage"
-msgstr ""
+msgstr "Lagring"
 
 msgid "Power"
-msgstr ""
+msgstr "Strömförsörjning"
 
 msgid "Channel"
-msgstr ""
+msgstr "Kanal"
 
 msgid "Encryption"
-msgstr ""
+msgstr "Kryptering"
 
 msgid "Hidden SSID"
-msgstr ""
+msgstr "Dold SSID"
 
 msgid "Country"
-msgstr ""
+msgstr "Land"
 
 msgid "AP status"
-msgstr ""
+msgstr "AP-status"
 
 msgid "USB network"
-msgstr ""
+msgstr "USB-nätverk"
 
 msgid "Connection tracking"
-msgstr ""
+msgstr "Anslutningsspårning"
 
 msgid "LAN address"
-msgstr ""
+msgstr "LAN-adress"
 
 msgid "Wi-Fi clients"
-msgstr ""
+msgstr "Wi-Fi-klienter"
 
 msgid "DHCP leases"
-msgstr ""
+msgstr "DHCP-lån"
 
 msgid "Device model"
-msgstr ""
+msgstr "Enhetsmodell"
 
 msgid "System"
-msgstr ""
+msgstr "System"
 
 msgid "Modem"
-msgstr ""
+msgstr "Modem"
 
 msgid "Carrier"
-msgstr ""
+msgstr "Operatör"
 
 msgid "Module"
-msgstr ""
+msgstr "Modul"
 
 msgid "Firmware"
-msgstr ""
+msgstr "Firmware"
 
 msgid "Show SIM identifiers"
-msgstr ""
+msgstr "Visa SIM-identifierare"
 
 msgid "Quick controls"
-msgstr ""
+msgstr "Snabbkontroller"
 
 msgid "Data connection"
-msgstr ""
+msgstr "Dataanslutning"
 
 msgid "Cellular radio"
-msgstr ""
+msgstr "Mobilradio"
 
 msgid "Wi-Fi hotspot"
-msgstr ""
+msgstr "Wi-Fi-surfzon"
 
 msgid "Restart modem"
-msgstr ""
+msgstr "Starta om modemet"
 
 msgid "Restart device"
-msgstr ""
+msgstr "Starta om enheten"
 
 msgid "Switch to Android"
-msgstr ""
+msgstr "Byt till Android"
 
 msgid "Neighbor cells"
-msgstr ""
+msgstr "Grannceller"
 
 msgid "RAT/Band"
-msgstr ""
+msgstr "RAT/band"
 
 msgid "Frequency"
-msgstr ""
+msgstr "Frekvens"
 
 msgid "Running %s…"
-msgstr ""
+msgstr "Kör %s…"
 
 msgid "Started in background: %s"
-msgstr ""
+msgstr "Startat i bakgrunden: %s"
 
 msgid "Done: %s"
-msgstr ""
+msgstr "Klart: %s"
 
 msgid "Failed: %s"
-msgstr ""
+msgstr "Misslyckades: %s"
 
 msgid "Disconnecting data…"
-msgstr ""
+msgstr "Kopplar från data…"
 
 msgid "Connecting data…"
-msgstr ""
+msgstr "Ansluter data…"
 
 msgid "Turn off cellular radio"
-msgstr ""
+msgstr "Stäng av mobilradion"
 
 msgid "Cellular connectivity will be interrupted."
-msgstr ""
+msgstr "Mobilanslutningen kommer att avbrytas."
 
 msgid "Turn on cellular radio"
-msgstr ""
+msgstr "Slå på mobilradion"
 
 msgid "The SFUN power-on sequence will run (up to about 1 minute)."
-msgstr ""
+msgstr "SFUN-startsekvensen körs (upp till cirka 1 minut)."
 
 msgid "Cellular connectivity may stop for 1–2 minutes."
-msgstr ""
+msgstr "Mobilanslutningen kan avbrytas i 1–2 minuter."
 
 msgid "Restart the entire device"
-msgstr ""
+msgstr "Starta om hela enheten"
 
 msgid "All connections will be interrupted."
-msgstr ""
+msgstr "Alla anslutningar kommer att avbrytas."
 
 msgid "The next boot will enter Android and reboot now. This management page and cellular sharing will disconnect."
-msgstr ""
+msgstr "Nästa uppstart går till Android och enheten startas om nu. Denna hanteringssida och delningen av mobilanslutningen kopplas bort."
 
 msgid "To return to OpenWrt, run mu300-next-boot linux in Android and reboot."
-msgstr ""
+msgstr "För att återgå till OpenWrt, kör mu300-next-boot linux i Android och starta om."
 
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
-msgstr ""
+msgstr "Eller gör ingenting: efter fem uppstarter som inte slutförs sker återgången automatiskt."
 
 msgid "Switch and reboot"
-msgstr ""
+msgstr "Byt och starta om"
 
 msgid "Preparing Android boot and rebooting…"
-msgstr ""
+msgstr "Förbereder Android-uppstart och startar om…"
 
 msgid "Hide SIM identifiers"
-msgstr ""
+msgstr "Dölj SIM-identifierare"
 
 msgid "Lock cell %s?"
-msgstr ""
+msgstr "Lås cell %s?"
 
 msgid "The radio stack will restart (SFUN); cellular service will stop for about 30 seconds."
-msgstr ""
+msgstr "Radiostacken startas om (SFUN); mobiltjänsten avbryts i cirka 30 sekunder."
 
 msgid "Locking %s in the background, about 30 seconds"
-msgstr ""
+msgstr "Låser %s i bakgrunden, cirka 30 sekunder"
 
 msgid "Locked %s in the background; the status will refresh shortly"
-msgstr ""
+msgstr "%s låst i bakgrunden; statusen uppdateras strax"
 
 msgid "Lock failed: %s"
-msgstr ""
+msgstr "Låsning misslyckades: %s"
 
 msgid "Uptime %s"
-msgstr ""
+msgstr "Drifttid %s"
 
 msgid "Radio off"
-msgstr ""
+msgstr "Radio av"
 
 msgid "No response"
-msgstr ""
+msgstr "Inget svar"
 
 msgid "%s · Signal %s %s/10"
-msgstr ""
+msgstr "%s · Signal %s %s/10"
 
 msgid "%s · Signal %s"
-msgstr ""
+msgstr "%s · Signal %s"
 
 msgid "Anchor B%s"
-msgstr ""
+msgstr "Ankare B%s"
 
 msgid "No serving cell"
-msgstr ""
+msgstr "Ingen betjänande cell"
 
 msgid "Not registered"
-msgstr ""
+msgstr "Inte registrerad"
 
 msgid "Registered"
-msgstr ""
+msgstr "Registrerad"
 
 msgid "Searching"
-msgstr ""
+msgstr "Söker"
 
 msgid "Registration denied"
-msgstr ""
+msgstr "Registrering nekad"
 
 msgid "Registered (roaming)"
-msgstr ""
+msgstr "Registrerad (roaming)"
 
 msgid "Emergency only"
-msgstr ""
+msgstr "Endast nödsamtal"
 
 msgid "Status %s"
-msgstr ""
+msgstr "Status %s"
 
 msgid "LTE anchor"
-msgstr ""
+msgstr "LTE-ankare"
 
 msgid "LTE link"
-msgstr ""
+msgstr "LTE-länk"
 
 msgid "Hidden"
-msgstr ""
+msgstr "Dold"
 
 msgid "No"
-msgstr ""
+msgstr "Nej"
 
 msgid "Running"
-msgstr ""
+msgstr "Körs"
 
 msgid "Not running"
-msgstr ""
+msgstr "Körs inte"
 
 msgid "Connected"
-msgstr ""
+msgstr "Ansluten"
 
 msgid "Disconnected"
-msgstr ""
+msgstr "Frånkopplad"
 
 msgid "%s entries"
-msgstr ""
+msgstr "%s poster"
 
 msgid "%s clients"
-msgstr ""
+msgstr "%s klienter"
 
 msgid "Recent DHCP leases"
-msgstr ""
+msgstr "Senaste DHCP-lån"
 
 msgid "%d h"
-msgstr ""
+msgstr "%d h"
 
 msgid "Board"
-msgstr ""
+msgstr "Kort"
 
 msgid "No temperature readings"
-msgstr ""
+msgstr "Inga temperaturvärden"
 
 msgid "Cluster %d"
-msgstr ""
+msgstr "Kluster %d"
 
 msgid "Total %s · free %s"
-msgstr ""
+msgstr "Totalt %s · ledigt %s"
 
 msgid "Online"
-msgstr ""
+msgstr "Online"
 
 msgid "AT adapter unavailable"
-msgstr ""
+msgstr "AT-adapter inte tillgänglig"
 
 msgid "Saved"
-msgstr ""
+msgstr "Sparat"
 
 msgid "Management connection lost"
-msgstr ""
+msgstr "Hanteringsanslutningen förlorades"
 
 msgid "Installing the language pack…"
-msgstr ""
+msgstr "Installerar språkpaketet…"
 
 msgid "The language pack is installed"
-msgstr ""
+msgstr "Språkpaketet är installerat"
 
 msgid "The language pack could not be installed"
-msgstr ""
+msgstr "Språkpaketet kunde inte installeras"
 
 msgid "Upload failed: %s"
-msgstr ""
+msgstr "Uppladdningen misslyckades: %s"
 
 msgid "Language of the browser"
-msgstr ""
+msgstr "Webbläsarens språk"
 
 msgid "Language of the web interface"
-msgstr ""
+msgstr "Webbgränssnittets språk"
 
 msgid "English, Turkish and Chinese come with the system; the language pack adds the others."
-msgstr ""
+msgstr "Engelska, turkiska och kinesiska ingår i systemet; språkpaketet lägger till de övriga."
 
 msgid "The same setting is in System > System > Language and Style."
-msgstr ""
+msgstr "Samma inställning finns under System > System > Språk och Stil."
 
 msgid "Language pack"
-msgstr ""
+msgstr "Språkpaket"
 
 msgid "The language pack (mu300-extra-lang.tar.gz, about 2 MB) adds LuCI in about 40 more languages and this panel in 29 of them. Download it from the release of this system, or upload the file from the release page when the device has no internet."
-msgstr ""
+msgstr "Språkpaketet (mu300-extra-lang.tar.gz, cirka 2 MB) lägger till LuCI på cirka 40 fler språk och denna panel på 29 av dem. Ladda ner det från systemets release, eller ladda upp filen från release-sidan om enheten saknar internet."
 
 msgid "Download from the release"
-msgstr ""
+msgstr "Ladda ner från releasen"
 
 msgid "Upload the file…"
-msgstr ""
+msgstr "Ladda upp filen…"
 
 msgid "Release"
-msgstr ""
+msgstr "Release"
 
 msgid "Enable all"
-msgstr ""
+msgstr "Aktivera alla"
 
 msgid "Disable all"
-msgstr ""
+msgstr "Inaktivera alla"
 
 msgid "Remove the language pack"
-msgstr ""
+msgstr "Ta bort språkpaketet"
 
 msgid "Remove the language pack?"
-msgstr ""
+msgstr "Ta bort språkpaketet?"
 
 msgid "Its languages disappear from the list; a page in one of them switches to English."
-msgstr ""
+msgstr "Dess språk försvinner från listan; en sida på något av dem byter till engelska."
 
 msgid "Remove"
-msgstr ""
+msgstr "Ta bort"
 
 msgid "Disable"
-msgstr ""
+msgstr "Inaktivera"
 
 msgid "Enable"
-msgstr ""
+msgstr "Aktivera"
 
 msgid "LuCI and this panel"
-msgstr ""
+msgstr "LuCI och denna panel"
 
 msgid "LuCI only"
-msgstr ""
+msgstr "Endast LuCI"
 
 msgid "Enabled"
-msgstr ""
+msgstr "Aktiverad"
 
 msgid "Disabled"
-msgstr ""
+msgstr "Inaktiverad"
 
 msgid "Language"
-msgstr ""
+msgstr "Språk"
 
 msgid "Code"
-msgstr ""
+msgstr "Kod"
 
 msgid "Translated"
-msgstr ""
+msgstr "Översatt"
 
 msgid "State"
-msgstr ""
+msgstr "Tillstånd"
 
 msgid "LuCI's own translations come from OpenWrt. This panel's translations other than Turkish and Chinese are machine (AI) translations; corrections are welcome."
-msgstr ""
+msgstr "LuCI:s egna översättningar kommer från OpenWrt. Denna panels översättningar utöver turkiska och kinesiska är maskinöversättningar (AI); rättelser är välkomna."
 
 msgid "Automatic"
-msgstr ""
+msgstr "Automatiskt"
 
 msgid "4G only"
-msgstr ""
+msgstr "Endast 4G"
 
 msgid "Serving network"
-msgstr ""
+msgstr "Betjänande nät"
 
 msgid "Network mode · EN-DC"
-msgstr ""
+msgstr "Nätverksläge · EN-DC"
 
 msgid "Refresh lock status"
-msgstr ""
+msgstr "Uppdatera låsstatus"
 
 msgid "Apply at startup"
-msgstr ""
+msgstr "Verkställ vid uppstart"
 
 msgid "Turning this off only stops replay at the next boot; saved network mode, EN-DC, band and cell settings remain."
-msgstr ""
+msgstr "Att stänga av detta stoppar bara återställningen vid nästa uppstart; sparade inställningar för nätverksläge, EN-DC, band och celler finns kvar."
 
 msgid "Band locking"
-msgstr ""
+msgstr "Bandlåsning"
 
 msgid "NR bands"
-msgstr ""
+msgstr "NR-band"
 
 msgid "LTE bands"
-msgstr ""
+msgstr "LTE-band"
 
 msgid "Apply NR bands"
-msgstr ""
+msgstr "Verkställ NR-band"
 
 msgid "Apply LTE bands"
-msgstr ""
+msgstr "Verkställ LTE-band"
 
 msgid "Neighbor cells and cell locking"
-msgstr ""
+msgstr "Grannceller och celllåsning"
 
 msgid "Lock current serving cell"
-msgstr ""
+msgstr "Lås aktuell betjänande cell"
 
 msgid "Unlock cell"
-msgstr ""
+msgstr "Lås upp cell"
 
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
-msgstr ""
+msgstr "Att verkställa startar om radiostacken (SFUN) och avbryter mobiltjänsten kort. Inställningarna sparas och återställs av pluginet när AT är redo, om ”Verkställ vid uppstart” är aktiverat. En pre-radio-hook i plattformen kan återställa dem utan omstart. Verkställ utan valda band för att återgå till automatiskt läge."
 
 msgid "Apply “%s”?"
-msgstr ""
+msgstr "Verkställa ”%s”?"
 
 msgid "Applying %s in the background…"
-msgstr ""
+msgstr "Verkställer %s i bakgrunden…"
 
 msgid "Applying %s in the background… (SFUN restart and re-registration, about 30 seconds)"
-msgstr ""
+msgstr "Verkställer %s i bakgrunden… (SFUN-omstart och omregistrering, cirka 30 sekunder)"
 
 msgid "Queued: another lock is being applied during SFUN restart; this will take effect afterward"
-msgstr ""
+msgstr "I kö: ett annat lås verkställs under SFUN-omstarten; detta träder i kraft efteråt"
 
 msgid "Confirming the EN-DC status…"
-msgstr ""
+msgstr "Bekräftar EN-DC-status…"
 
 msgid "Confirming apply at startup…"
-msgstr ""
+msgstr "Bekräftar ”Verkställ vid uppstart”…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
-msgstr ""
+msgstr "Startat i bakgrunden: %s (SFUN-omstart, cirka 30 sekunder); läser tillbaka statusen…"
 
 msgid "Network mode: %s"
-msgstr ""
+msgstr "Nätverksläge: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
-msgstr ""
+msgstr "Inaktivera EN-DC (NSA-ankare)"
 
 msgid "Enable EN-DC (NSA anchor)"
-msgstr ""
+msgstr "Aktivera EN-DC (NSA-ankare)"
 
 msgid "Disable apply at startup"
-msgstr ""
+msgstr "Inaktivera ”Verkställ vid uppstart”"
 
 msgid "Enable apply at startup"
-msgstr ""
+msgstr "Aktivera ”Verkställ vid uppstart”"
 
 msgid "Reading the modem directly (a few seconds at most)…"
-msgstr ""
+msgstr "Läser modemet direkt (högst några sekunder)…"
 
 msgid "Refreshed"
-msgstr ""
+msgstr "Uppdaterat"
 
 msgid "Refresh failed"
-msgstr ""
+msgstr "Uppdateringen misslyckades"
 
 msgid "NR bands: back to automatic"
-msgstr ""
+msgstr "NR-band: tillbaka till automatiskt"
 
 msgid "NR band lock: %s"
-msgstr ""
+msgstr "NR-bandlåsning: %s"
 
 msgid "LTE bands: back to automatic"
-msgstr ""
+msgstr "LTE-band: tillbaka till automatiskt"
 
 msgid "LTE band lock: %s"
-msgstr ""
+msgstr "LTE-bandlåsning: %s"
 
 msgid "Remove the %s cell lock"
-msgstr ""
+msgstr "Ta bort %s-celllåsningen"
 
 msgid "The radio stack will restart (SFUN), taking about 30 seconds."
-msgstr ""
+msgstr "Radiostacken startas om (SFUN), vilket tar cirka 30 sekunder."
 
 msgid "Removing the %s cell lock…"
-msgstr ""
+msgstr "Tar bort %s-celllåsningen…"
 
 msgid "Unlock failed: %s"
-msgstr ""
+msgstr "Upplåsning misslyckades: %s"
 
 msgid "Unlock started in background (SFUN restart, about 30 seconds); reading the status back…"
-msgstr ""
+msgstr "Upplåsning startad i bakgrunden (SFUN-omstart, cirka 30 sekunder); läser tillbaka statusen…"
 
 msgid "Locking %s in the background…"
-msgstr ""
+msgstr "Låser %s i bakgrunden…"
 
 msgid "Locked %s in the background (SFUN restart, about 30 seconds); reading the status back…"
-msgstr ""
+msgstr "%s låst i bakgrunden (SFUN-omstart, cirka 30 sekunder); läser tillbaka statusen…"
 
 msgid "No serving-network data"
-msgstr ""
+msgstr "Inga data om betjänande nät"
 
 msgid "NR serving cell"
-msgstr ""
+msgstr "Betjänande NR-cell"
 
 msgid "Status confirmed"
-msgstr ""
+msgstr "Status bekräftad"
 
 msgid "Readback timed out; select “Refresh lock status”"
-msgstr ""
+msgstr "Tidsgräns för återläsning överskreds; välj ”Uppdatera låsstatus”"
 
 msgid "Applied (EN-DC does not require a radio-stack restart)"
-msgstr ""
+msgstr "Verkställt (EN-DC kräver ingen omstart av radiostacken)"
 
 msgid "Apply at startup is on"
-msgstr ""
+msgstr "”Verkställ vid uppstart” är på"
 
 msgid "Apply at startup is off"
-msgstr ""
+msgstr "”Verkställ vid uppstart” är av"
 
 msgid "EN-DC status readback timed out; use “Refresh lock status” to confirm"
-msgstr ""
+msgstr "Tidsgräns för återläsning av EN-DC-status överskreds; använd ”Uppdatera låsstatus” för att bekräfta"
 
 msgid "Apply-at-startup status readback timed out; use “Refresh lock status” to confirm"
-msgstr ""
+msgstr "Tidsgräns för återläsning av ”Verkställ vid uppstart” överskreds; använd ”Uppdatera låsstatus” för att bekräfta"
 
 msgid "Locked cells"
-msgstr ""
+msgstr "Låsta celler"
 
 msgid "Unlock %s"
-msgstr ""
+msgstr "Lås upp %s"
 
 msgid "Automatic (%d supported)"
-msgstr ""
+msgstr "Automatiskt (%d stöds)"
 
 msgid "%d locked: %s"
-msgstr ""
+msgstr "%d låsta: %s"
 
 msgid "Configure how this plugin connects to the current Unisoc OpenWrt platform. Changes do not require editing the dashboard, AT, locks or SMS pages."
-msgstr ""
+msgstr "Ställ in hur detta plugin ansluter till den aktuella Unisoc OpenWrt-plattformen. Ändringar kräver ingen redigering av sidorna för panel, AT, lås eller SMS."
 
 msgid "Platform adapter"
-msgstr ""
+msgstr "Plattformsadapter"
 
 msgid "AT backend"
-msgstr ""
+msgstr "AT-backend"
 
 msgid "Auto-detect"
-msgstr ""
+msgstr "Identifiera automatiskt"
 
 msgid "atinout + serial port"
-msgstr ""
+msgstr "atinout + seriell port"
 
 msgid "Custom adapter"
-msgstr ""
+msgstr "Anpassad adapter"
 
 msgid "AT serial port"
-msgstr ""
+msgstr "Seriell AT-port"
 
 msgid "Custom AT adapter"
-msgstr ""
+msgstr "Anpassad AT-adapter"
 
 msgid "The executable receives a timeout in seconds and the complete AT command, in that order. It must share the serial lock with the platform dialer."
-msgstr ""
+msgstr "Programmet får en tidsgräns i sekunder och det fullständiga AT-kommandot, i den ordningen. Det måste dela det seriella låset med plattformens uppringare."
 
 msgid "SMS adapter"
-msgstr ""
+msgstr "SMS-adapter"
 
 msgid "Implement the list, show, send, delete and sync subcommands; leave blank to find mu300-sms automatically."
-msgstr ""
+msgstr "Implementera underkommandona list, show, send, delete och sync; lämna tomt för att hitta mu300-sms automatiskt."
 
 msgid "SMS pool directory"
-msgstr ""
+msgstr "Katalog för SMS-pool"
 
 msgid "Cellular logical interface"
-msgstr ""
+msgstr "Logiskt mobilnätsgränssnitt"
 
 msgid "Cellular IPv6 interface"
-msgstr ""
+msgstr "IPv6-gränssnitt för mobilnät"
 
 msgid "Cellular network device"
-msgstr ""
+msgstr "Nätverksenhet för mobilnät"
 
 msgid "Leave blank to detect from netifd"
-msgstr ""
+msgstr "Lämna tomt för att identifiera via netifd"
 
 msgid "LAN bridge"
-msgstr ""
+msgstr "LAN-brygga"
 
 msgid "Wi-Fi device"
-msgstr ""
+msgstr "Wi-Fi-enhet"
 
 msgid "USB device"
-msgstr ""
+msgstr "USB-enhet"
 
 msgid "Maximum wait for AT readiness (seconds)"
-msgstr ""
+msgstr "Maximal väntetid på att AT är redo (sekunder)"
 
 msgid "Home dashboard refresh interval (seconds)"
-msgstr ""
+msgstr "Uppdateringsintervall för startpanelen (sekunder)"
 
 msgid "Controls only the home dashboard refresh rate; 0.5–60 seconds. Reopen Home after saving to apply."
-msgstr ""
+msgstr "Styr endast startpanelens uppdateringsfrekvens; 0,5–60 sekunder. Öppna Start igen efter att ha sparat för att verkställa."
 
 msgid "Persistent state directory"
-msgstr ""
+msgstr "Katalog för beständigt tillstånd"
 
 msgid "Recipient: number, e.g. 10086 or +86..."
-msgstr ""
+msgstr "Mottagare: nummer, t.ex. 10086 eller +86..."
 
 msgid "Sync from SIM"
-msgstr ""
+msgstr "Synkronisera från SIM"
 
 msgid "Clear local pool"
-msgstr ""
+msgstr "Rensa lokal pool"
 
 msgid "Loading…"
-msgstr ""
+msgstr "Läser in…"
 
 msgid "Select a conversation on the left, or enter a number below to send."
-msgstr ""
+msgstr "Välj en konversation till vänster, eller ange ett nummer nedan för att skicka."
 
 msgid "Message (Enter to send, Shift+Enter for newline)"
-msgstr ""
+msgstr "Meddelande (Enter för att skicka, Skift+Enter för ny rad)"
 
 msgid "Sending uses AT+CMGS (PDU mode); retry if the channel is busy. To delete one message, use the bin icon on its bubble."
-msgstr ""
+msgstr "Sändning använder AT+CMGS (PDU-läge); försök igen om kanalen är upptagen. Använd papperskorgsikonen på bubblan för att radera ett enskilt meddelande."
 
 msgid "Syncing from the SIM in the background (AT+CMGL)…"
-msgstr ""
+msgstr "Synkroniserar från SIM i bakgrunden (AT+CMGL)…"
 
 msgid "SIM sync started; the list refreshes in a few seconds."
-msgstr ""
+msgstr "SIM-synkronisering startad; listan uppdateras om några sekunder."
 
 msgid "Clear local SMS pool"
-msgstr ""
+msgstr "Rensa lokal SMS-pool"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
-msgstr ""
+msgstr "Endast lokala filer raderas; meddelanden på SIM-kortet finns kvar."
 
 msgid "Clear"
-msgstr ""
+msgstr "Rensa"
 
 msgid "Delete this SMS"
-msgstr ""
+msgstr "Radera detta SMS"
 
 msgid "Deletion cannot be undone."
-msgstr ""
+msgstr "Raderingen kan inte ångras."
 
 msgid "Local only"
-msgstr ""
+msgstr "Endast lokalt"
 
 msgid "Local + SIM"
-msgstr ""
+msgstr "Lokalt + SIM"
 
 msgid "Delete failed"
-msgstr ""
+msgstr "Raderingen misslyckades"
 
 msgid "Deleted (local + SIM)"
-msgstr ""
+msgstr "Raderat (lokalt + SIM)"
 
 msgid "Deleted (local only)"
-msgstr ""
+msgstr "Raderat (endast lokalt)"
 
 msgid "Enter both a number and a message."
-msgstr ""
+msgstr "Ange både ett nummer och ett meddelande."
 
 msgid "Sending…"
-msgstr ""
+msgstr "Skickar…"
 
 msgid "Sent; the list refreshes shortly."
-msgstr ""
+msgstr "Skickat; listan uppdateras strax."
 
 msgid "Sending failed"
-msgstr ""
+msgstr "Sändningen misslyckades"
 
 msgid "· %d messages, %d unread · %d conversations"
-msgstr ""
+msgstr "· %d meddelanden, %d olästa · %d konversationer"
 
 msgid "· %d messages · %d conversations"
-msgstr ""
+msgstr "· %d meddelanden · %d konversationer"
 
 msgid "The pool is empty. Incoming and sent messages appear here, or select “Sync from SIM”."
-msgstr ""
+msgstr "Poolen är tom. Inkommande och skickade meddelanden visas här, eller välj ”Synkronisera från SIM”."
 
 msgid "Me: %s"
-msgstr ""
+msgstr "Jag: %s"
 
 msgid "Delete"
-msgstr ""
+msgstr "Radera"
 
 msgid "Dashboard info failed"
-msgstr ""
+msgstr "Panelinformation misslyckades"
 
 msgid "Applying network locks: no live signal right now"
-msgstr ""
+msgstr "Nätverkslås verkställs: ingen livesignal just nu"
 
 msgid "Live signal read failed"
-msgstr ""
+msgstr "Läsning av livesignal misslyckades"
 
 msgid "Unknown op"
-msgstr ""
+msgstr "Okänd operation"
 
 msgid "Invalid argument for this op"
-msgstr ""
+msgstr "Ogiltigt argument för denna operation"
 
 msgid "The radio is busy: the dial or the watchdog is switching it, try again shortly"
-msgstr ""
+msgstr "Radion är upptagen: uppringningen eller watchdog växlar den, försök igen strax"
 
 msgid "The action gave no valid reply"
-msgstr ""
+msgstr "Åtgärden gav inget giltigt svar"
 
 msgid "An AT command is one line of printable ASCII, at most 512 characters"
-msgstr ""
+msgstr "Ett AT-kommando är en rad med utskrivbar ASCII, högst 512 tecken"
 
 msgid "Must be an AT command"
-msgstr ""
+msgstr "Måste vara ett AT-kommando"
 
 msgid "No \";\" command chaining"
-msgstr ""
+msgstr "Ingen kommandokedjning med \";\""
 
 msgid "Denied: this command wedges the AT port until a reboot"
-msgstr ""
+msgstr "Nekad: detta kommando låser AT-porten tills omstart"
 
 msgid "Applying network locks: the modem is restarting (about half a minute), try again shortly"
-msgstr ""
+msgstr "Nätverkslås verkställs: modemet startar om (cirka en halv minut), försök igen strax"
 
 msgid "The AT channel is busy; the command was not sent, try again"
-msgstr ""
+msgstr "AT-kanalen är upptagen; kommandot skickades inte, försök igen"
 
 msgid "The modem did not answer in time; the command may still run, check before sending it again"
-msgstr ""
+msgstr "Modemet svarade inte i tid; kommandot kan fortfarande köras, kontrollera innan du skickar det igen"
 
 msgid "The fresh parameter must be 0 or 1"
-msgstr ""
+msgstr "Parametern fresh måste vara 0 eller 1"
 
 msgid "Lock read failed"
-msgstr ""
+msgstr "Läsning av lås misslyckades"
 
 msgid "Unknown lock kind"
-msgstr ""
+msgstr "Okänd låstyp"
 
 msgid "Invalid value for this lock kind"
-msgstr ""
+msgstr "Ogiltigt värde för denna låstyp"
 
 msgid "Invalid page"
-msgstr ""
+msgstr "Ogiltig sida"
 
 msgid "mu300-sms is not available (the SMS service is not installed or not running)"
-msgstr ""
+msgstr "mu300-sms är inte tillgängligt (SMS-tjänsten är inte installerad eller körs inte)"
 
 msgid "No output"
-msgstr ""
+msgstr "Ingen utdata"
 
 msgid "Bad ID"
-msgstr ""
+msgstr "Ogiltigt ID"
 
 msgid "Read failed"
-msgstr ""
+msgstr "Läsningen misslyckades"
 
 msgid "The number may only contain digits (and a leading +)"
-msgstr ""
+msgstr "Numret får bara innehålla siffror (och ett inledande +)"
 
 msgid "The message is empty"
-msgstr ""
+msgstr "Meddelandet är tomt"
 
 msgid "The message is too long (over 480 characters)"
-msgstr ""
+msgstr "Meddelandet är för långt (över 480 tecken)"
 
 msgid "The message contains a control character"
-msgstr ""
+msgstr "Meddelandet innehåller ett styrtecken"
 
 msgid "The sim parameter must be 0 or 1"
-msgstr ""
+msgstr "Parametern sim måste vara 0 eller 1"
 
 msgid "The USB adapter (device-usb) gave no valid reply"
-msgstr ""
+msgstr "USB-adaptern (device-usb) gav inget giltigt svar"
 
 msgid "The auto parameter must be 0 or 1"
-msgstr ""
+msgstr "Parametern auto måste vara 0 eller 1"
 
 msgid "Invalid USB role"
-msgstr ""
+msgstr "Ogiltig USB-roll"
 
 msgid "A USB role takes no scope"
-msgstr ""
+msgstr "En USB-roll tar inget omfång"
 
 msgid "Invalid USB network mode"
-msgstr ""
+msgstr "Ogiltigt USB-nätverksläge"
 
 msgid "Invalid USB network scope"
-msgstr ""
+msgstr "Ogiltigt omfång för USB-nätverk"
 
 msgid "Unknown USB setting"
-msgstr ""
+msgstr "Okänd USB-inställning"
 
 msgid "Invalid interface name"
-msgstr ""
+msgstr "Ogiltigt gränssnittsnamn"
 
 msgid "The languages adapter gave no valid reply"
-msgstr ""
+msgstr "Språkadaptern gav inget giltigt svar"
 
 msgid "Unknown language operation"
-msgstr ""
+msgstr "Okänd språkoperation"
 
 msgid "Invalid language code"
-msgstr ""
+msgstr "Ogiltig språkkod"
 
 msgid "Invalid language request"
-msgstr ""
+msgstr "Ogiltig språkbegäran"
 
 msgid "Unknown source"
-msgstr ""
+msgstr "Okänd källa"
 
 msgid "Request too large"
-msgstr ""
+msgstr "Begäran för stor"
 
 msgid "The runtime directory is not safe; nothing was run"
-msgstr ""
+msgstr "Körtidskatalogen är inte säker; inget kördes"
 
 msgid "No such method"
-msgstr ""
+msgstr "Ingen sådan metod"
 
 msgid "Radio did not come up"
-msgstr ""
+msgstr "Radion startade inte"
 
 msgid "Expected on or off"
-msgstr ""
+msgstr "Förväntade on eller off"
 
 msgid "VPN integration is not provided by this platform"
-msgstr ""
+msgstr "VPN-integration tillhandahålls inte av denna plattform"
 
 msgid "Dual-boot integration is not provided by this platform"
-msgstr ""
+msgstr "Dual-boot-integration tillhandahålls inte av denna plattform"
 
 msgid "mu300-next-boot failed"
-msgstr ""
+msgstr "mu300-next-boot misslyckades"
 
 msgid "AT backend did not answer (radio off, modem restarting, or adapter unavailable)"
-msgstr ""
+msgstr "AT-backend svarade inte (radio av, modemet startar om eller adaptern är inte tillgänglig)"
 
 msgid "USB role adapter is not executable"
-msgstr ""
+msgstr "USB-rolladaptern är inte körbar"
 
 msgid "USB role adapter failed"
-msgstr ""
+msgstr "USB-rolladaptern misslyckades"
 
 msgid "USB role switch is unavailable"
-msgstr ""
+msgstr "Byte av USB-roll är inte tillgängligt"
 
 msgid "USB role switch failed"
-msgstr ""
+msgstr "Byte av USB-roll misslyckades"
 
 msgid "USB role switch was refused by platform safety checks"
-msgstr ""
+msgstr "Byte av USB-roll nekades av plattformens säkerhetskontroller"
 
 msgid "Cannot create USB boot settings directory"
-msgstr ""
+msgstr "Kan inte skapa katalog för USB-uppstartsinställningar"
 
 msgid "Cannot write USB boot settings"
-msgstr ""
+msgstr "Kan inte skriva USB-uppstartsinställningar"
 
 msgid "Cannot save USB boot settings"
-msgstr ""
+msgstr "Kan inte spara USB-uppstartsinställningar"
 
 msgid "Invalid boot-auto value"
-msgstr ""
+msgstr "Ogiltigt boot-auto-värde"
 
 msgid "Device is the boot default; host auto-apply is the only persistent role"
-msgstr ""
+msgstr "Enhetsläge är standard vid uppstart; automatisk värdaktivering är den enda beständiga rollen"
 
 msgid "Cannot save USB role policy"
-msgstr ""
+msgstr "Kan inte spara USB-rollpolicy"
 
 msgid "Cannot disable USB network boot policy"
-msgstr ""
+msgstr "Kan inte inaktivera uppstartspolicy för USB-nätverk"
 
 msgid "Cannot commit USB role policy"
-msgstr ""
+msgstr "Kan inte verkställa USB-rollpolicy"
 
 msgid "USB network mode is unavailable in host role"
-msgstr ""
+msgstr "USB-nätverksläget är inte tillgängligt i värdroll"
 
 msgid "Disable host boot-auto before configuring USB network"
-msgstr ""
+msgstr "Inaktivera boot-auto för värd innan USB-nätverket konfigureras"
 
 msgid "Cannot save USB network policy"
-msgstr ""
+msgstr "Kan inte spara USB-nätverkspolicy"
 
 msgid "Cannot commit USB network policy"
-msgstr ""
+msgstr "Kan inte verkställa USB-nätverkspolicy"
 
 msgid "USB host mode is required"
-msgstr ""
+msgstr "USB-värdläge krävs"
 
 msgid "Not a USB network interface"
-msgstr ""
+msgstr "Inte ett USB-nätverksgränssnitt"
 
 msgid "LAN bridge device section was not found"
-msgstr ""
+msgstr "Enhetsavsnittet för LAN-bryggan hittades inte"
 
 msgid "Cannot bring USB network interface up"
-msgstr ""
+msgstr "Kan inte aktivera USB-nätverksgränssnittet"
 
 msgid "Cannot add interface to LAN bridge"
-msgstr ""
+msgstr "Kan inte lägga till gränssnittet i LAN-bryggan"
 
 msgid "Cannot save LAN bridge"
-msgstr ""
+msgstr "Kan inte spara LAN-bryggan"
 
 msgid "Network reload failed"
-msgstr ""
+msgstr "Omläsning av nätverket misslyckades"
 
 msgid "Cannot attach USB interface to LAN bridge"
-msgstr ""
+msgstr "Kan inte ansluta USB-gränssnittet till LAN-bryggan"
 
 msgid "The language pack is not installed"
-msgstr ""
+msgstr "Språkpaketet är inte installerat"
 
 msgid "No language given"
-msgstr ""
+msgstr "Inget språk angivet"
 
 msgid "The language could not be changed"
-msgstr ""
+msgstr "Språket kunde inte ändras"
 
 msgid "LuCI does not offer this language"
-msgstr ""
+msgstr "LuCI erbjuder inte detta språk"
 
 msgid "No uploaded language pack"
-msgstr ""
+msgstr "Inget uppladdat språkpaket"
 
 msgid "An installation is already running"
-msgstr ""
+msgstr "En installation pågår redan"
 
 msgid "The language pack could not be removed"
-msgstr ""
+msgstr "Språkpaketet kunde inte tas bort"
 
 msgid "Lock cache unavailable"
-msgstr ""
+msgstr "Låscache inte tillgänglig"
 
 msgid "No serving cell to lock to"
-msgstr ""
+msgstr "Ingen betjänande cell att låsa till"
