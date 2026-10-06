@@ -2391,20 +2391,31 @@ What was built:
   LEDs follow `LEDS_IDLE`, and the modem follows `RADIO_IDLE`: `mobile-data suspend lte` only switches EN-DC off with
   `AT+SPENDC=2` (the lock adapter's measured "off" value; no stack restart, the data connection is untouched) and
   `resume` restores `AT+SPENDC=1` only if EN-DC was on before; `suspend off` is the radio off (`AT+SFUN=5`) with data
-  down, and `resume` runs `radio_on` and redials itself. The Wi-Fi key (`mu300-power wake`) is the way out.
-* **State** is kept across daemon restarts within a boot. The daemon's TERM trap wakes the radios (hotspot first),
-  so the units have a 150 s stop timeout (`TimeoutStopSec=150`, procd `term_timeout 150`). A failed action is
-  logged and retried by the following loops.
+  down, and `resume` runs `radio_on` and redials itself; `mobile-data up` refuses to dial while the modem is
+  suspended `off`, except from `resume`. On OpenWrt the daemon runs with `MU300_NETIFD=1`, so `suspend off` is
+  `ifdown wan` before `AT+SFUN=5` and `resume` redials with `ifup wan`: netifd keeps owning the WAN's address,
+  route, firewall, DNS and IPv6. Idle wakes on a key, a computer on USB, a Wi-Fi station, or plugging in (the edge
+  battery -> plugged, not being plugged: idle on the charger, a forced profile and the battery-less F50 stay idle).
+  Every wake brings the hotspot up first, then the LEDs and the CPU, then the modem, whose dial can take minutes.
+* **State** is kept across daemon restarts within a boot. The daemon's TERM trap wakes the radios without a dial
+  (`mobile-data resume nodial`: the radio on, the watcher redials) and does nothing during a shutdown (the held
+  power key and the low-battery poweroff leave `/run/mu300/power/shutdown`; Ubuntu also says `stopping`). The
+  units keep a 150 s stop timeout (`TimeoutStopSec=150`, procd `term_timeout 150`) for the radio lock. A failed
+  action is logged and retried by the following loops.
 * **Charging boot**: `init` writes `/run/mu300/boot-mode` and, in a charger boot, `/run/mu300/charging-boot`. The
   Ubuntu hotspot and mobile-data units skip on that file; the daemon enters the charging boot only on its first start
-  of a boot, and leaves it only by the Wi-Fi key (a computer on USB does not). It powers the device off only
-  unplugged, below 5 % for three loops in a row, never on one sample.
+  of a boot, and leaves it only by the Wi-Fi key (`mu300-power wake wifi`; a computer on USB or the power key does
+  not). It powers the device off only unplugged (no charger online, no extcon `USB=1`, the battery not `Charging`),
+  below 5 % for three loops in a row, never on one sample. OpenWrt's early radio warm-up skips a charging boot.
 * **Charge guard**: charging off at battery `temp` above 45.0 C or below 0 C, on again below 40.0 C and above 3.0 C;
-  with `CHARGE_TO=80` off at 80 % and on below 75 %. It writes the charger's `charge_type` (`N/A` off, `Fast` on) and
-  compares it with the node, so the node wins over the state file. No reading means no change.
+  with `CHARGE_TO=80` off at 80 % and on below 75 %. It writes the bq256xx charger's `charge_type` (`N/A` off,
+  `Fast` on). bq256xx reads `N/A` whenever it is not charging, so `Fast` is written only when the guard itself turned
+  charging off (`/run/mu300/power/charge-off`); the driver resets its switch at probe, so a marker lost with `/run`
+  leaves nothing off. It logs only when that marker changes, and a failed write turns the guard off for the boot
+  with one log line. No reading means no change.
 * **Panel**: System -> Power on `openwrt-luci` (state, profile, knobs, charge limit), catalogs in all 31 languages.
 
-Method for the numbers: `mu300-power log 5 /tmp/power.csv` writes `time,V,mA,W,%,temp,state,profile` every 5 s.
+Method for the numbers: `mu300-power log 5 /tmp/power.csv` writes `epoch,mV,mA,mW,capacity,temp,state,profile` every 5 s.
 Each row is a 3-minute run unplugged, the hotspot idle (a client associated, no traffic) unless the row says
 otherwise, `mu300-power set` or the verbs between runs. The fuel gauge's `current_now` is negative when
 discharging; the draw is the mean of the run's mA (and W) after the first 30 s. Android's own idle figure comes from
