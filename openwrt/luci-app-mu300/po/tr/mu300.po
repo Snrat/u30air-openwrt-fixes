@@ -333,8 +333,29 @@ msgstr "Bellek"
 msgid "Storage"
 msgstr "Depolama"
 
-msgid "Power"
-msgstr "Güç"
+msgid "Battery"
+msgstr "Pil"
+
+msgid "charging %s W"
+msgstr "şarj oluyor %s W"
+
+msgid "charging"
+msgstr "şarj oluyor"
+
+msgid "drawing %s W"
+msgstr "%s W çekiyor"
+
+msgid "on battery"
+msgstr "pilde"
+
+msgid "full"
+msgstr "dolu"
+
+msgid "not charging"
+msgstr "şarj olmuyor"
+
+msgid "USB in %s W"
+msgstr "USB girişi %s W"
 
 msgid "Channel"
 msgstr "Kanal"
