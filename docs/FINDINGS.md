@@ -1891,9 +1891,9 @@ u32, ematches, police/mirred/ctinfo/ct and the other actions), vhost-net/vsock, 
 modems, AQC111, printers, MediaTek/Ralink/Realtek Wi-Fi sticks with mac80211, btusb, snd-usb-audio, uinput/uhid),
 device mapper (crypt, verity, snapshot, thin), MD RAID 0/1/10, NBD, filesystems (btrfs, f2fs, XFS, ntfs3, HFS+,
 FUSE, ISO 9660/UDF, NFS client and server, CIFS, ksmbd), the crypto user API with XTS/CTR/CBC/GCM/CCM/
-ChaCha20-Poly1305 and the ARMv8 AES/GHASH engines, binfmt_misc and `/proc/config.gz`. Built in, because they cost
-little and container runtimes look for them: PSI, the net_prio/net_cls/misc cgroups, CFS bandwidth, block
-throttling. What was built in stays built in: three defaults the new options would have turned into modules (SIT,
+ChaCha20-Poly1305 and the ARMv8 AES/GHASH engines, and binfmt_misc. Built in, because they cost little and
+container runtimes look for them: `/proc/config.gz` (check-config scripts read it without loading a module), PSI,
+the net_prio/net_cls/misc cgroups, CFS bandwidth, block throttling. What was built in stays built in: three defaults the new options would have turned into modules (SIT,
 the AX8817X and CDC subset USB drivers) were left out of the fragment. Not taken: legacy iptables/ebtables tables
 (`NETFILTER_XTABLES_LEGACY`: Ubuntu and OpenWrt run iptables over nftables), kexec (arm64 has it only with
 `PM_SLEEP_SMP`, not built here).
@@ -1909,22 +1909,26 @@ The modules unpack to 20 MiB (6.18, debug sections stripped) under `/lib/modules
 both times, the mobile-data watch waiting for a modem without a SIM.
 
 Packaging: `build-modules.sh` now runs `modules_install` (stripped) and puts the kernel's own modules flat into
-`out/modules` next to the vendor ones, refusing a vendor module with an in-tree name. Nothing on the device had to
-change: `mu300-update` already puts the bundle's flat directory under `extra/` on Ubuntu, where depmod indexes
-every module there (`modprobe dm-crypt` pulls in `dm-mod`), and flat into `/lib/modules/<release>` on OpenWrt,
-where ubox's kmodloader resolves dependencies from each module's `depends=`. The generic ramdisk still loads only
-`module-order.txt`. On F50-B, `modprobe` of 34 new modules (sch_cake, ntfs3, cdc_ether, cdc_mbim, dm-crypt,
-vhost_net, xfrm_user, esp4, pppoe, bonding, vxlan, btrfs, nfs, cifs, snd-usb-audio, btusb, mt7921u, br_netfilter,
-ip_vs, ifb, act_mirred, algif_skcipher and others) succeeded on 6.18 and 7.2, a cake qdisc went onto a dummy link,
-and no Oops followed; USB network, the Wi-Fi client and the 5 GHz hotspot came up on both.
+`out/modules` next to the vendor ones, refusing a vendor module with an in-tree name. The layout on the device did
+not change: `mu300-update` already put the bundle's flat directory under `extra/` on Ubuntu, where depmod indexes
+every module there (`modprobe dm-crypt` pulls in `dm-mod`), and flat into `/lib/modules/<release>` on OpenWrt, where
+ubox's kmodloader resolves dependencies from each module's `depends=`. With a set this size it now replaces the
+modules of an earlier bundle of the same release instead of adding to them (a module a newer bundle dropped stayed
+loadable). The generic ramdisk still loads only `module-order.txt`. On F50-B, `modprobe` of 34 new modules
+(sch_cake, ntfs3, cdc_ether, cdc_mbim, dm-crypt, vhost_net, xfrm_user, esp4, pppoe, bonding, vxlan, btrfs, nfs,
+cifs, snd-usb-audio, btusb, mt7921u, br_netfilter, ip_vs, ifb, act_mirred, algif_skcipher and others) succeeded on
+6.18 and 7.2, a cake qdisc went onto a dummy link, and no Oops followed; USB network, the Wi-Fi client and the 5 GHz
+hotspot came up on both.
 
 OpenWrt's packages ask for `kmod-*` packages, which apk installs from the feed for OpenWrt's own kernel (6.12);
 `build-rootfs.sh` then deletes `lib/modules/6.*` as it always did, so apk's database is satisfied and the running
 kernel's modules (built in, or from the bundle) are what loads; the `/etc/modules.d` lists the kmods leave behind
 make kmodloader load the matching mainline modules at boot. The images now carry wireguard-tools and
 luci-proto-wireguard, PPTP and L2TP (xl2tpd), 6in4/6rd/DS-Lite, GRE and VXLAN with their LuCI protocols, ipset,
-and SQM (sqm-scripts, luci-app-sqm; cake is built in on mainline and on 5.4, ifb a module on both). Not tried on an
-OpenWrt device in this round.
+and SQM (sqm-scripts, luci-app-sqm; cake is built in on mainline and on 5.4, ifb a module on both); apk resolves
+the whole set together (65 kmods). xl2tpd starts at boot and listens on UDP 1701, which fw4 closes on WAN. The
+images also carry the 6.18 modules from `upstream/out` (about 20 MiB unpacked, some 6 MB more in the tarball), so
+the switch to 6.18 needs nothing more. Not tried on an OpenWrt device in this round.
 
 ## Updating on the device
 
