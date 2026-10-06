@@ -27,6 +27,9 @@ msgstr "Gerenciamento do dispositivo"
 msgid "Languages"
 msgstr "Idiomas"
 
+msgid "Power"
+msgstr "Energia"
+
 msgid "MU300 control center: status dashboard, network locks, AT terminal and SMS"
 msgstr "Central de controle MU300: painel de status, bloqueios de rede, terminal AT e SMS"
 
@@ -870,6 +873,111 @@ msgstr "Automático (%d suportadas)"
 msgid "%d locked: %s"
 msgstr "%d bloqueadas: %s"
 
+msgid "Plugged in"
+msgstr "Na tomada"
+
+msgid "On battery"
+msgstr "Na bateria"
+
+msgid "Saver"
+msgstr "Economia"
+
+msgid "Asleep: hotspot off"
+msgstr "Suspenso: ponto de acesso desligado"
+
+msgid "Charging boot: press the Wi-Fi key to start"
+msgstr "Inicialização em carga: pressione a tecla Wi-Fi para iniciar"
+
+msgid "Awake"
+msgstr "Ativo"
+
+msgid "forced"
+msgstr "forçado"
+
+msgid "automatic, battery under %d %%"
+msgstr "automático, bateria abaixo de %d %%"
+
+msgid "automatic"
+msgstr "automático"
+
+msgid "Nobody connected for %d s"
+msgstr "Ninguém conectado há %d s"
+
+msgid "Profile"
+msgstr "Perfil"
+
+msgid "Profile in use: %s (%s)"
+msgstr "Perfil em uso: %s (%s)"
+
+msgid "%d %%, %s, %d mV, %d mA, %.1f °C"
+msgstr "%d %%, %s, %d mV, %d mA, %.1f °C"
+
+msgid "Charger"
+msgstr "Carregador"
+
+msgid "Charger: %s, %s port"
+msgstr "Carregador: %s, porta %s"
+
+msgid "Charging paused: battery temperature"
+msgstr "Carga pausada: temperatura da bateria"
+
+msgid "Charging paused: charge limit"
+msgstr "Carga pausada: limite de carga"
+
+msgid "Sleep now"
+msgstr "Suspender agora"
+
+msgid "Wake"
+msgstr "Acordar"
+
+msgid "Nobody connected means no Wi-Fi client and no computer on USB. The Wi-Fi key, a computer on USB or the charger wake the device."
+msgstr "Ninguém conectado significa nenhum cliente Wi-Fi e nenhum computador no USB. A tecla Wi-Fi, um computador no USB ou o carregador acordam o dispositivo."
+
+msgid "Automatic: plugged in / on battery"
+msgstr "Automático: na tomada / na bateria"
+
+msgid "Switch to Saver under %"
+msgstr "Mudar para Economia abaixo de %"
+
+msgid "Stop charging at"
+msgstr "Parar de carregar em"
+
+msgid "80 % keeps the battery healthier on a device that stays plugged in."
+msgstr "80 % preservam melhor a bateria de um dispositivo que fica na tomada."
+
+msgid "Keep as is"
+msgstr "Manter como está"
+
+msgid "LTE only (5G off)"
+msgstr "Somente LTE (5G desligado)"
+
+msgid "Off"
+msgstr "Desligado"
+
+msgid "On"
+msgstr "Ligado"
+
+msgid "Full"
+msgstr "Completo"
+
+msgid "Eco: big core off"
+msgstr "Eco: núcleo grande desligado"
+
+msgid "Hotspot off after (min, 0 = never)"
+msgstr "Desligar o ponto de acesso após (min, 0 = nunca)"
+
+msgid "Modem when idle"
+msgstr "Modem em repouso"
+
+msgid "LEDs when idle"
+msgstr "LEDs em repouso"
+
+msgid "CPU"
+msgstr "CPU"
+
+msgid "Ignored lines in power.conf: %s"
+msgstr "Linhas ignoradas em power.conf: %s"
+
 msgid "Configure how this plugin connects to the current Unisoc OpenWrt platform. Changes do not require editing the dashboard, AT, locks or SMS pages."
 msgstr "Configure como este plugin se conecta à plataforma OpenWrt Unisoc atual. As alterações não exigem editar as páginas de painel, AT, bloqueios ou SMS."
 
@@ -1131,6 +1239,21 @@ msgstr "Configuração USB desconhecida"
 msgid "Invalid interface name"
 msgstr "Nome de interface inválido"
 
+msgid "The power adapter gave no valid reply"
+msgstr "O adaptador de energia não deu uma resposta válida"
+
+msgid "Unknown power operation"
+msgstr "Operação de energia desconhecida"
+
+msgid "Unknown power setting"
+msgstr "Configuração de energia desconhecida"
+
+msgid "Invalid power value"
+msgstr "Valor de energia inválido"
+
+msgid "Invalid power request"
+msgstr "Solicitação de energia inválida"
+
 msgid "The languages adapter gave no valid reply"
 msgstr "O adaptador de idiomas não deu uma resposta válida"
 
@@ -1274,3 +1397,6 @@ msgstr "Cache de bloqueios indisponível"
 
 msgid "No serving cell to lock to"
 msgstr "Sem célula servidora para bloquear"
+
+msgid "usage: power get|set KEY VALUE|wake|idle"
+msgstr "usage: power get|set KEY VALUE|wake|idle"

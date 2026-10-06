@@ -27,6 +27,9 @@ msgstr "Cihaz yönetimi"
 msgid "Languages"
 msgstr "Diller"
 
+msgid "Power"
+msgstr "Güç"
+
 msgid "MU300 control center: status dashboard, network locks, AT terminal and SMS"
 msgstr "MU300 kontrol merkezi: durum paneli, ağ kilitleri, AT terminali ve SMS"
 
@@ -870,6 +873,111 @@ msgstr "Otomatik (%d destekleniyor)"
 msgid "%d locked: %s"
 msgstr "%d kilitli: %s"
 
+msgid "Plugged in"
+msgstr "Fişe takılı"
+
+msgid "On battery"
+msgstr "Pilde"
+
+msgid "Saver"
+msgstr "Tasarruf"
+
+msgid "Asleep: hotspot off"
+msgstr "Uyuyor: erişim noktası kapalı"
+
+msgid "Charging boot: press the Wi-Fi key to start"
+msgstr "Şarj açılışı: başlatmak için Wi-Fi tuşuna basın"
+
+msgid "Awake"
+msgstr "Uyanık"
+
+msgid "forced"
+msgstr "zorla"
+
+msgid "automatic, battery under %d %%"
+msgstr "otomatik, pil %d %% altında"
+
+msgid "automatic"
+msgstr "otomatik"
+
+msgid "Nobody connected for %d s"
+msgstr "%d sn'dir kimse bağlı değil"
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Profile in use: %s (%s)"
+msgstr "Kullanılan profil: %s (%s)"
+
+msgid "%d %%, %s, %d mV, %d mA, %.1f °C"
+msgstr "%d %%, %s, %d mV, %d mA, %.1f °C"
+
+msgid "Charger"
+msgstr "Şarj cihazı"
+
+msgid "Charger: %s, %s port"
+msgstr "Şarj cihazı: %s, %s portu"
+
+msgid "Charging paused: battery temperature"
+msgstr "Şarj duraklatıldı: pil sıcaklığı"
+
+msgid "Charging paused: charge limit"
+msgstr "Şarj duraklatıldı: şarj sınırı"
+
+msgid "Sleep now"
+msgstr "Şimdi uyut"
+
+msgid "Wake"
+msgstr "Uyandır"
+
+msgid "Nobody connected means no Wi-Fi client and no computer on USB. The Wi-Fi key, a computer on USB or the charger wake the device."
+msgstr "Kimse bağlı değil: ne bir Wi-Fi istemcisi ne de USB'de bir bilgisayar var. Wi-Fi tuşu, USB'deki bir bilgisayar veya şarj cihazı cihazı uyandırır."
+
+msgid "Automatic: plugged in / on battery"
+msgstr "Otomatik: fişe takılı / pilde"
+
+msgid "Switch to Saver under %"
+msgstr "Pil bunun altına düşünce Tasarruf'a geç %"
+
+msgid "Stop charging at"
+msgstr "Şarjı şurada durdur"
+
+msgid "80 % keeps the battery healthier on a device that stays plugged in."
+msgstr "80 % sınırı, sürekli fişte duran bir cihazda pili daha sağlıklı tutar."
+
+msgid "Keep as is"
+msgstr "Olduğu gibi bırak"
+
+msgid "LTE only (5G off)"
+msgstr "Yalnızca LTE (5G kapalı)"
+
+msgid "Off"
+msgstr "Kapalı"
+
+msgid "On"
+msgstr "Açık"
+
+msgid "Full"
+msgstr "Tam"
+
+msgid "Eco: big core off"
+msgstr "Eko: büyük çekirdek kapalı"
+
+msgid "Hotspot off after (min, 0 = never)"
+msgstr "Erişim noktası şu süre sonra kapansın (dk, 0 = hiç)"
+
+msgid "Modem when idle"
+msgstr "Boştayken modem"
+
+msgid "LEDs when idle"
+msgstr "Boştayken LED'ler"
+
+msgid "CPU"
+msgstr "CPU"
+
+msgid "Ignored lines in power.conf: %s"
+msgstr "power.conf içindeki yok sayılan satırlar: %s"
+
 msgid "Configure how this plugin connects to the current Unisoc OpenWrt platform. Changes do not require editing the dashboard, AT, locks or SMS pages."
 msgstr "Bu eklentinin mevcut Unisoc OpenWrt platformuna nasıl bağlandığını yapılandırın. Değişiklikler panel, AT, kilit veya SMS sayfalarını düzenlemeyi gerektirmez."
 
@@ -1131,6 +1239,21 @@ msgstr "Bilinmeyen USB ayarı"
 msgid "Invalid interface name"
 msgstr "Geçersiz arayüz adı"
 
+msgid "The power adapter gave no valid reply"
+msgstr "Güç bağdaştırıcısı geçerli yanıt vermedi"
+
+msgid "Unknown power operation"
+msgstr "Bilinmeyen güç işlemi"
+
+msgid "Unknown power setting"
+msgstr "Bilinmeyen güç ayarı"
+
+msgid "Invalid power value"
+msgstr "Geçersiz güç değeri"
+
+msgid "Invalid power request"
+msgstr "Geçersiz güç isteği"
+
 msgid "The languages adapter gave no valid reply"
 msgstr "Dil bağdaştırıcısı geçerli bir yanıt vermedi"
 
@@ -1274,3 +1397,6 @@ msgstr "Kilit önbelleği kullanılamıyor"
 
 msgid "No serving cell to lock to"
 msgstr "Kilitlenecek hizmet hücresi yok"
+
+msgid "usage: power get|set KEY VALUE|wake|idle"
+msgstr "usage: power get|set KEY VALUE|wake|idle"
