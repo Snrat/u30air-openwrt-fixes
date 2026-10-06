@@ -21,6 +21,9 @@ msgstr "AT-terminal"
 msgid "Adapter settings"
 msgstr "Adapterindstillinger"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Enhedsstyring"
 
@@ -1023,6 +1026,45 @@ msgstr "Mig: %s"
 msgid "Delete"
 msgstr "Slet"
 
+msgid "Current setting"
+msgstr "Aktuel indstilling"
+
+msgid "Fixed at %d"
+msgstr "Fast på %d"
+
+msgid "Not changed (default)"
+msgstr "Ikke ændret (standard)"
+
+msgid "Rule in force"
+msgstr "Aktiv regel"
+
+msgid "Flow offloading"
+msgstr "Flow-offloading"
+
+msgid "TTL of mobile data"
+msgstr "TTL for mobildata"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Hver pakke, der forlader enheden via mobildata, får denne TTL (IPv6: hop limit). En telefon eller bærbar bag hotspottet sender 64 (Windows: 128), og enheden videresender den med én mindre, og sådan kan en operatør kende delt trafik."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "På denne kerne er firewallens hurtige vej slået fra, mens en TTL er sat"
+
+msgid "Set %d"
+msgstr "Sæt %d"
+
+msgid "Set"
+msgstr "Sæt"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Indtast et tal fra 1 til 255"
+
+msgid "Turn off"
+msgstr "Slå fra"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "Med 64 forlader hver pakke enheden som dens egen trafik"
+
 msgid "Dashboard info failed"
 msgstr "Kunne ikke hente oversigtsdata"
 
@@ -1145,6 +1187,12 @@ msgstr "Ugyldig sproganmodning"
 
 msgid "Unknown source"
 msgstr "Ukendt kilde"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "TTL-adapteren gav intet gyldigt svar"
+
+msgid "Invalid TTL"
+msgstr "Ugyldig TTL"
 
 msgid "Request too large"
 msgstr "Anmodningen er for stor"
@@ -1274,3 +1322,12 @@ msgstr "Låsecache utilgængelig"
 
 msgid "No serving cell to lock to"
 msgstr "Ingen betjenende celle at låse til"
+
+msgid "The TTL setting could not be read"
+msgstr "TTL-indstillingen kunne ikke læses"
+
+msgid "The TTL could not be set"
+msgstr "TTL kunne ikke sættes"
+
+msgid "Unknown TTL operation"
+msgstr "Ukendt TTL-handling"

@@ -21,6 +21,9 @@ msgstr "AT terminali"
 msgid "Adapter settings"
 msgstr "Bağdaştırıcı ayarları"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Cihaz yönetimi"
 
@@ -1023,6 +1026,45 @@ msgstr "Ben: %s"
 msgid "Delete"
 msgstr "Sil"
 
+msgid "Current setting"
+msgstr "Geçerli ayar"
+
+msgid "Fixed at %d"
+msgstr "%d olarak sabit"
+
+msgid "Not changed (default)"
+msgstr "Değiştirilmedi (varsayılan)"
+
+msgid "Rule in force"
+msgstr "Etkin kural"
+
+msgid "Flow offloading"
+msgstr "Akış hızlandırma (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "Mobil verinin TTL değeri"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Mobil veriden çıkan her paket bu TTL değerini alır (IPv6: hop limit). Hotspot'a bağlı bir telefon ya da dizüstü bilgisayar 64 (Windows: 128) gönderir ve cihaz paketi bir eksiğiyle iletir; operatör paylaşılan trafiği bu farktan anlayabilir."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Bu çekirdekte TTL ayarlıyken güvenlik duvarının hızlı yolu kapalıdır"
+
+msgid "Set %d"
+msgstr "%d yap"
+
+msgid "Set"
+msgstr "Ayarla"
+
+msgid "Enter a number from 1 to 255"
+msgstr "1 ile 255 arasında bir sayı girin"
+
+msgid "Turn off"
+msgstr "Kapat"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "64, her paketin cihazın kendi trafiği gibi çıkmasını sağlar"
+
 msgid "Dashboard info failed"
 msgstr "Gösterge paneli bilgisi alınamadı"
 
@@ -1145,6 +1187,12 @@ msgstr "Geçersiz dil isteği"
 
 msgid "Unknown source"
 msgstr "Bilinmeyen kaynak"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "TTL bağdaştırıcısı geçerli bir yanıt vermedi"
+
+msgid "Invalid TTL"
+msgstr "Geçersiz TTL"
 
 msgid "Request too large"
 msgstr "İstek çok büyük"
@@ -1274,3 +1322,12 @@ msgstr "Kilit önbelleği kullanılamıyor"
 
 msgid "No serving cell to lock to"
 msgstr "Kilitlenecek hizmet hücresi yok"
+
+msgid "The TTL setting could not be read"
+msgstr "TTL ayarı okunamadı"
+
+msgid "The TTL could not be set"
+msgstr "TTL ayarlanamadı"
+
+msgid "Unknown TTL operation"
+msgstr "Bilinmeyen TTL işlemi"

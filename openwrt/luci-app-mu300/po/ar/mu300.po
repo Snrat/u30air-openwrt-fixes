@@ -21,6 +21,9 @@ msgstr "طرفية AT"
 msgid "Adapter settings"
 msgstr "إعدادات المحوّل"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "إدارة الجهاز"
 
@@ -1023,6 +1026,45 @@ msgstr "أنا: %s"
 msgid "Delete"
 msgstr "حذف"
 
+msgid "Current setting"
+msgstr "الإعداد الحالي"
+
+msgid "Fixed at %d"
+msgstr "ثابت على %d"
+
+msgid "Not changed (default)"
+msgstr "دون تغيير (افتراضي)"
+
+msgid "Rule in force"
+msgstr "القاعدة السارية"
+
+msgid "Flow offloading"
+msgstr "تفريغ التدفقات (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "قيمة TTL لبيانات الجوال"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "كل حزمة تخرج عبر بيانات الجوال تحصل على قيمة TTL هذه (IPv6: حد القفزات). الهاتف أو الحاسوب المحمول خلف نقطة الاتصال يرسل 64 (Windows: 128) والجهاز يمررها بقيمة أقل بواحد، وهكذا يستطيع المشغل تمييز حركة المرور المشتركة."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "في هذه النواة يكون المسار السريع للجدار الناري متوقفًا ما دامت قيمة TTL مضبوطة"
+
+msgid "Set %d"
+msgstr "اضبط %d"
+
+msgid "Set"
+msgstr "اضبط"
+
+msgid "Enter a number from 1 to 255"
+msgstr "أدخل رقمًا من 1 إلى 255"
+
+msgid "Turn off"
+msgstr "إيقاف"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "مع 64 تخرج كل حزمة كأنها من حركة مرور الجهاز نفسه"
+
 msgid "Dashboard info failed"
 msgstr "فشل جلب معلومات اللوحة"
 
@@ -1145,6 +1187,12 @@ msgstr "طلب لغة غير صالح"
 
 msgid "Unknown source"
 msgstr "مصدر غير معروف"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "لم يُرجع محول TTL ردًا صالحًا"
+
+msgid "Invalid TTL"
+msgstr "قيمة TTL غير صالحة"
 
 msgid "Request too large"
 msgstr "الطلب كبير جداً"
@@ -1274,3 +1322,12 @@ msgstr "ذاكرة التخزين المؤقت للأقفال غير متاحة"
 
 msgid "No serving cell to lock to"
 msgstr "لا توجد خلية خادمة للقفل عليها"
+
+msgid "The TTL setting could not be read"
+msgstr "تعذرت قراءة إعداد TTL"
+
+msgid "The TTL could not be set"
+msgstr "تعذر ضبط TTL"
+
+msgid "Unknown TTL operation"
+msgstr "عملية TTL غير معروفة"

@@ -21,6 +21,9 @@ msgstr "AT-terminal"
 msgid "Adapter settings"
 msgstr "Adapterinstellingen"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Apparaatbeheer"
 
@@ -1023,6 +1026,45 @@ msgstr "Ik: %s"
 msgid "Delete"
 msgstr "Verwijderen"
 
+msgid "Current setting"
+msgstr "Huidige instelling"
+
+msgid "Fixed at %d"
+msgstr "Vast op %d"
+
+msgid "Not changed (default)"
+msgstr "Niet gewijzigd (standaard)"
+
+msgid "Rule in force"
+msgstr "Actieve regel"
+
+msgid "Flow offloading"
+msgstr "Flow-offloading"
+
+msgid "TTL of mobile data"
+msgstr "TTL van mobiele data"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Elk pakket dat via mobiele data vertrekt, krijgt deze TTL (IPv6: hop limit). Een telefoon of laptop achter de hotspot verstuurt 64 (Windows: 128) en het apparaat stuurt het door met één minder; zo kan een provider gedeeld verkeer herkennen."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Op deze kernel staat het snelle pad van de firewall uit zolang er een TTL is ingesteld"
+
+msgid "Set %d"
+msgstr "%d instellen"
+
+msgid "Set"
+msgstr "Instellen"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Voer een getal van 1 tot 255 in"
+
+msgid "Turn off"
+msgstr "Uitschakelen"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "Met 64 vertrekt elk pakket zoals het eigen verkeer van het apparaat"
+
 msgid "Dashboard info failed"
 msgstr "Dashboardinformatie mislukt"
 
@@ -1145,6 +1187,12 @@ msgstr "Ongeldig taalverzoek"
 
 msgid "Unknown source"
 msgstr "Onbekende bron"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "De TTL-adapter gaf geen geldig antwoord"
+
+msgid "Invalid TTL"
+msgstr "Ongeldige TTL"
 
 msgid "Request too large"
 msgstr "Verzoek te groot"
@@ -1274,3 +1322,12 @@ msgstr "Vergrendelingscache niet beschikbaar"
 
 msgid "No serving cell to lock to"
 msgstr "Geen serving cell om op te vergrendelen"
+
+msgid "The TTL setting could not be read"
+msgstr "De TTL-instelling kon niet worden gelezen"
+
+msgid "The TTL could not be set"
+msgstr "De TTL kon niet worden ingesteld"
+
+msgid "Unknown TTL operation"
+msgstr "Onbekende TTL-bewerking"

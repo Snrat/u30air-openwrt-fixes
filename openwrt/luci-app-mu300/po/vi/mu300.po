@@ -21,6 +21,9 @@ msgstr "Terminal AT"
 msgid "Adapter settings"
 msgstr "Cài đặt bộ điều hợp"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Quản lý thiết bị"
 
@@ -1023,6 +1026,45 @@ msgstr "Tôi: %s"
 msgid "Delete"
 msgstr "Xóa"
 
+msgid "Current setting"
+msgstr "Cài đặt hiện tại"
+
+msgid "Fixed at %d"
+msgstr "Cố định ở %d"
+
+msgid "Not changed (default)"
+msgstr "Không thay đổi (mặc định)"
+
+msgid "Rule in force"
+msgstr "Quy tắc đang áp dụng"
+
+msgid "Flow offloading"
+msgstr "Giảm tải luồng (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL của dữ liệu di động"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Mọi gói tin đi ra qua dữ liệu di động đều nhận TTL này (IPv6: hop limit). Điện thoại hoặc máy tính xách tay sau điểm phát gửi 64 (Windows: 128) và thiết bị chuyển tiếp với giá trị bớt một, nhờ đó nhà mạng có thể nhận ra lưu lượng chia sẻ."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Trên nhân này, đường nhanh của tường lửa bị tắt khi đang đặt TTL"
+
+msgid "Set %d"
+msgstr "Đặt %d"
+
+msgid "Set"
+msgstr "Đặt"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Nhập một số từ 1 đến 255"
+
+msgid "Turn off"
+msgstr "Tắt"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "Với 64, mọi gói tin đi ra giống như lưu lượng của chính thiết bị"
+
 msgid "Dashboard info failed"
 msgstr "Không lấy được thông tin bảng trạng thái"
 
@@ -1145,6 +1187,12 @@ msgstr "Yêu cầu ngôn ngữ không hợp lệ"
 
 msgid "Unknown source"
 msgstr "Nguồn không xác định"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "Bộ điều hợp TTL không trả lời hợp lệ"
+
+msgid "Invalid TTL"
+msgstr "TTL không hợp lệ"
 
 msgid "Request too large"
 msgstr "Yêu cầu quá lớn"
@@ -1274,3 +1322,12 @@ msgstr "Bộ đệm khóa không khả dụng"
 
 msgid "No serving cell to lock to"
 msgstr "Không có cell phục vụ để khóa"
+
+msgid "The TTL setting could not be read"
+msgstr "Không đọc được cài đặt TTL"
+
+msgid "The TTL could not be set"
+msgstr "Không đặt được TTL"
+
+msgid "Unknown TTL operation"
+msgstr "Thao tác TTL không xác định"

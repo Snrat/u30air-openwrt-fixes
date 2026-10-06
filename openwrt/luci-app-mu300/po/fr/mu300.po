@@ -21,6 +21,9 @@ msgstr "Terminal AT"
 msgid "Adapter settings"
 msgstr "Paramètres de l'adaptateur"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Gestion de l'appareil"
 
@@ -1023,6 +1026,45 @@ msgstr "Moi : %s"
 msgid "Delete"
 msgstr "Supprimer"
 
+msgid "Current setting"
+msgstr "Réglage actuel"
+
+msgid "Fixed at %d"
+msgstr "Fixé à %d"
+
+msgid "Not changed (default)"
+msgstr "Inchangé (par défaut)"
+
+msgid "Rule in force"
+msgstr "Règle en vigueur"
+
+msgid "Flow offloading"
+msgstr "Délestage des flux (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL des données mobiles"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Chaque paquet qui sort par les données mobiles reçoit ce TTL (IPv6 : hop limit). Un téléphone ou un portable derrière le point d'accès envoie 64 (Windows : 128) et l'appareil le transmet avec un de moins, ce qui permet à un opérateur de reconnaître le trafic partagé."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Sur ce noyau, le chemin rapide du pare-feu est désactivé tant qu'un TTL est défini"
+
+msgid "Set %d"
+msgstr "Mettre %d"
+
+msgid "Set"
+msgstr "Définir"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Saisissez un nombre de 1 à 255"
+
+msgid "Turn off"
+msgstr "Désactiver"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "Avec 64, chaque paquet sort comme le trafic propre de l'appareil"
+
 msgid "Dashboard info failed"
 msgstr "Échec des informations du tableau de bord"
 
@@ -1145,6 +1187,12 @@ msgstr "Requête de langue invalide"
 
 msgid "Unknown source"
 msgstr "Source inconnue"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "L'adaptateur TTL n'a pas donné de réponse valide"
+
+msgid "Invalid TTL"
+msgstr "TTL invalide"
 
 msgid "Request too large"
 msgstr "Requête trop volumineuse"
@@ -1274,3 +1322,12 @@ msgstr "Cache des verrouillages indisponible"
 
 msgid "No serving cell to lock to"
 msgstr "Aucune cellule de service à verrouiller"
+
+msgid "The TTL setting could not be read"
+msgstr "Le réglage du TTL n'a pas pu être lu"
+
+msgid "The TTL could not be set"
+msgstr "Le TTL n'a pas pu être défini"
+
+msgid "Unknown TTL operation"
+msgstr "Opération TTL inconnue"

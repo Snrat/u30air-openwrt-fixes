@@ -21,6 +21,9 @@ msgstr "Terminál AT"
 msgid "Adapter settings"
 msgstr "Nastavení adaptéru"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Správa zařízení"
 
@@ -1023,6 +1026,45 @@ msgstr "Já: %s"
 msgid "Delete"
 msgstr "Smazat"
 
+msgid "Current setting"
+msgstr "Aktuální nastavení"
+
+msgid "Fixed at %d"
+msgstr "Pevně %d"
+
+msgid "Not changed (default)"
+msgstr "Nezměněno (výchozí)"
+
+msgid "Rule in force"
+msgstr "Platné pravidlo"
+
+msgid "Flow offloading"
+msgstr "Odlehčení toků (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL mobilních dat"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Každý paket, který odchází přes mobilní data, dostane toto TTL (IPv6: hop limit). Telefon nebo notebook za hotspotem posílá 64 (Windows: 128) a zařízení jej přepošle o jedna menší, podle čehož operátor pozná sdílený provoz."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Na tomto jádře je rychlá cesta firewallu vypnutá, dokud je nastaveno TTL"
+
+msgid "Set %d"
+msgstr "Nastavit %d"
+
+msgid "Set"
+msgstr "Nastavit"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Zadejte číslo od 1 do 255"
+
+msgid "Turn off"
+msgstr "Vypnout"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "S 64 odchází každý paket jako vlastní provoz zařízení"
+
 msgid "Dashboard info failed"
 msgstr "Informace přehledu selhaly"
 
@@ -1145,6 +1187,12 @@ msgstr "Neplatný jazykový požadavek"
 
 msgid "Unknown source"
 msgstr "Neznámý zdroj"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "Adaptér TTL nevrátil platnou odpověď"
+
+msgid "Invalid TTL"
+msgstr "Neplatné TTL"
 
 msgid "Request too large"
 msgstr "Požadavek je příliš velký"
@@ -1274,3 +1322,12 @@ msgstr "Mezipaměť zámků není dostupná"
 
 msgid "No serving cell to lock to"
 msgstr "Žádná obsluhující buňka k uzamčení"
+
+msgid "The TTL setting could not be read"
+msgstr "Nastavení TTL nelze přečíst"
+
+msgid "The TTL could not be set"
+msgstr "TTL nelze nastavit"
+
+msgid "Unknown TTL operation"
+msgstr "Neznámá operace TTL"

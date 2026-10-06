@@ -21,6 +21,9 @@ msgstr "AT терминал"
 msgid "Adapter settings"
 msgstr "Настройки на адаптера"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Управление на устройството"
 
@@ -1023,6 +1026,45 @@ msgstr "Аз: %s"
 msgid "Delete"
 msgstr "Изтриване"
 
+msgid "Current setting"
+msgstr "Текуща настройка"
+
+msgid "Fixed at %d"
+msgstr "Фиксиран на %d"
+
+msgid "Not changed (default)"
+msgstr "Без промяна (по подразбиране)"
+
+msgid "Rule in force"
+msgstr "Действащо правило"
+
+msgid "Flow offloading"
+msgstr "Разтоварване на потоци (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL на мобилните данни"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Всеки пакет, който излиза през мобилните данни, получава този TTL (IPv6: hop limit). Телефон или лаптоп зад точката за достъп изпраща 64 (Windows: 128), а устройството го препраща с едно по-малко – така операторът може да разпознае споделения трафик."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "На това ядро бързият път на защитната стена е изключен, докато е зададен TTL"
+
+msgid "Set %d"
+msgstr "Задай %d"
+
+msgid "Set"
+msgstr "Задай"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Въведете число от 1 до 255"
+
+msgid "Turn off"
+msgstr "Изключи"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "С 64 всеки пакет излиза като собствения трафик на устройството"
+
 msgid "Dashboard info failed"
 msgstr "Информацията за таблото е недостъпна"
 
@@ -1145,6 +1187,12 @@ msgstr "Невалидна езикова заявка"
 
 msgid "Unknown source"
 msgstr "Неизвестен източник"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "Адаптерът за TTL не върна валиден отговор"
+
+msgid "Invalid TTL"
+msgstr "Невалиден TTL"
 
 msgid "Request too large"
 msgstr "Заявката е твърде голяма"
@@ -1274,3 +1322,12 @@ msgstr "Кешът на заключванията е недостъпен"
 
 msgid "No serving cell to lock to"
 msgstr "Няма обслужваща клетка за заключване"
+
+msgid "The TTL setting could not be read"
+msgstr "Настройката за TTL не можа да бъде прочетена"
+
+msgid "The TTL could not be set"
+msgstr "TTL не можа да бъде зададен"
+
+msgid "Unknown TTL operation"
+msgstr "Неизвестна операция с TTL"

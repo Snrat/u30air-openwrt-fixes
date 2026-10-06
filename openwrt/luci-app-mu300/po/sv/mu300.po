@@ -21,6 +21,9 @@ msgstr "AT-terminal"
 msgid "Adapter settings"
 msgstr "Adapterinställningar"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Enhetshantering"
 
@@ -1023,6 +1026,45 @@ msgstr "Jag: %s"
 msgid "Delete"
 msgstr "Radera"
 
+msgid "Current setting"
+msgstr "Aktuell inställning"
+
+msgid "Fixed at %d"
+msgstr "Fast på %d"
+
+msgid "Not changed (default)"
+msgstr "Inte ändrad (standard)"
+
+msgid "Rule in force"
+msgstr "Aktiv regel"
+
+msgid "Flow offloading"
+msgstr "Flödesavlastning (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL för mobildata"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Varje paket som lämnar via mobildata får denna TTL (IPv6: hop limit). En telefon eller bärbar dator bakom surfzonen skickar 64 (Windows: 128) och enheten vidarebefordrar det med ett mindre, vilket är hur en operatör kan känna igen delad trafik."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "På denna kärna är brandväggens snabbväg avstängd medan en TTL är satt"
+
+msgid "Set %d"
+msgstr "Sätt %d"
+
+msgid "Set"
+msgstr "Sätt"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Ange ett tal från 1 till 255"
+
+msgid "Turn off"
+msgstr "Stäng av"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "Med 64 lämnar varje paket enheten som dess egen trafik"
+
 msgid "Dashboard info failed"
 msgstr "Panelinformation misslyckades"
 
@@ -1145,6 +1187,12 @@ msgstr "Ogiltig språkbegäran"
 
 msgid "Unknown source"
 msgstr "Okänd källa"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "TTL-adaptern gav inget giltigt svar"
+
+msgid "Invalid TTL"
+msgstr "Ogiltig TTL"
 
 msgid "Request too large"
 msgstr "Begäran för stor"
@@ -1274,3 +1322,12 @@ msgstr "Låscache inte tillgänglig"
 
 msgid "No serving cell to lock to"
 msgstr "Ingen betjänande cell att låsa till"
+
+msgid "The TTL setting could not be read"
+msgstr "TTL-inställningen kunde inte läsas"
+
+msgid "The TTL could not be set"
+msgstr "TTL kunde inte sättas"
+
+msgid "Unknown TTL operation"
+msgstr "Okänd TTL-åtgärd"

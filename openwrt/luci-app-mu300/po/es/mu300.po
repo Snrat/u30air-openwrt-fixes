@@ -21,6 +21,9 @@ msgstr "Terminal AT"
 msgid "Adapter settings"
 msgstr "Ajustes del adaptador"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Administración del dispositivo"
 
@@ -1023,6 +1026,45 @@ msgstr "Yo: %s"
 msgid "Delete"
 msgstr "Eliminar"
 
+msgid "Current setting"
+msgstr "Ajuste actual"
+
+msgid "Fixed at %d"
+msgstr "Fijado en %d"
+
+msgid "Not changed (default)"
+msgstr "Sin cambios (predeterminado)"
+
+msgid "Rule in force"
+msgstr "Regla en vigor"
+
+msgid "Flow offloading"
+msgstr "Descarga de flujos (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL de los datos móviles"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Cada paquete que sale por los datos móviles recibe este TTL (IPv6: límite de saltos). Un teléfono o portátil detrás del punto de acceso envía 64 (Windows: 128) y el dispositivo lo reenvía con uno menos, que es como un operador puede distinguir el tráfico compartido."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "En este kernel la vía rápida del cortafuegos está desactivada mientras haya un TTL fijado"
+
+msgid "Set %d"
+msgstr "Fijar %d"
+
+msgid "Set"
+msgstr "Fijar"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Introduzca un número del 1 al 255"
+
+msgid "Turn off"
+msgstr "Desactivar"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "Con 64 cada paquete sale como el tráfico propio del dispositivo"
+
 msgid "Dashboard info failed"
 msgstr "Error en la información del panel"
 
@@ -1145,6 +1187,12 @@ msgstr "Solicitud de idioma no válida"
 
 msgid "Unknown source"
 msgstr "Origen desconocido"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "El adaptador de TTL no dio una respuesta válida"
+
+msgid "Invalid TTL"
+msgstr "TTL no válido"
 
 msgid "Request too large"
 msgstr "Solicitud demasiado grande"
@@ -1274,3 +1322,12 @@ msgstr "Caché de bloqueos no disponible"
 
 msgid "No serving cell to lock to"
 msgstr "No hay celda de servicio que bloquear"
+
+msgid "The TTL setting could not be read"
+msgstr "No se pudo leer el ajuste de TTL"
+
+msgid "The TTL could not be set"
+msgstr "No se pudo fijar el TTL"
+
+msgid "Unknown TTL operation"
+msgstr "Operación de TTL desconocida"
