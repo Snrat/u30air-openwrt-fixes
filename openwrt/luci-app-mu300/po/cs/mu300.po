@@ -873,6 +873,12 @@ msgstr "Automaticky (podporováno: %d)"
 msgid "%d locked: %s"
 msgstr "Uzamčeno %d: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Zadejte celé číslo od 0 do %d"
+
+msgid "Power status unavailable"
+msgstr "Stav napájení není dostupný"
+
 msgid "Plugged in"
 msgstr "Připojeno k síti"
 
@@ -902,6 +908,9 @@ msgstr "automaticky"
 
 msgid "Nobody connected for %d s"
 msgstr "Nikdo není připojen %d s"
+
+msgid "Power source"
+msgstr "Zdroj napájení"
 
 msgid "Profile"
 msgstr "Profil"

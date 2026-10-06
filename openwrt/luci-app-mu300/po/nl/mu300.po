@@ -873,6 +873,12 @@ msgstr "Automatisch (%d ondersteund)"
 msgid "%d locked: %s"
 msgstr "%d vergrendeld: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Voer een geheel getal van 0 tot %d in"
+
+msgid "Power status unavailable"
+msgstr "Voedingsstatus niet beschikbaar"
+
 msgid "Plugged in"
 msgstr "Aangesloten"
 
@@ -902,6 +908,9 @@ msgstr "automatisch"
 
 msgid "Nobody connected for %d s"
 msgstr "Al %d s niemand verbonden"
+
+msgid "Power source"
+msgstr "Voedingsbron"
 
 msgid "Profile"
 msgstr "Profiel"

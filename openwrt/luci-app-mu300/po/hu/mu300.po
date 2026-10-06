@@ -873,6 +873,12 @@ msgstr "Automatikus (%d támogatott)"
 msgid "%d locked: %s"
 msgstr "%d zárolva: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Adjon meg egy egész számot 0 és %d között"
+
+msgid "Power status unavailable"
+msgstr "Az energiaállapot nem érhető el"
+
 msgid "Plugged in"
 msgstr "Hálózaton"
 
@@ -902,6 +908,9 @@ msgstr "automatikus"
 
 msgid "Nobody connected for %d s"
 msgstr "Már %d másodperce nincs csatlakozva senki"
+
+msgid "Power source"
+msgstr "Tápforrás"
 
 msgid "Profile"
 msgstr "Profil"

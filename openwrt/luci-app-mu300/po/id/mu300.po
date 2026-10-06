@@ -873,6 +873,12 @@ msgstr "Otomatis (%d didukung)"
 msgid "%d locked: %s"
 msgstr "%d terkunci: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Masukkan bilangan bulat dari 0 hingga %d"
+
+msgid "Power status unavailable"
+msgstr "Status daya tidak tersedia"
+
 msgid "Plugged in"
 msgstr "Terhubung ke listrik"
 
@@ -902,6 +908,9 @@ msgstr "otomatis"
 
 msgid "Nobody connected for %d s"
 msgstr "Tidak ada yang terhubung selama %d dtk"
+
+msgid "Power source"
+msgstr "Sumber daya"
 
 msgid "Profile"
 msgstr "Profil"

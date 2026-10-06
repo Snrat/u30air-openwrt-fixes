@@ -873,6 +873,12 @@ msgstr "स्वचालित (%d समर्थित)"
 msgid "%d locked: %s"
 msgstr "%d लॉक: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "0 से %d के बीच की पूर्ण संख्या दर्ज करें"
+
+msgid "Power status unavailable"
+msgstr "पावर स्थिति उपलब्ध नहीं है"
+
 msgid "Plugged in"
 msgstr "बिजली से जुड़ा"
 
@@ -902,6 +908,9 @@ msgstr "स्वचालित"
 
 msgid "Nobody connected for %d s"
 msgstr "%d सेकंड से कोई जुड़ा नहीं है"
+
+msgid "Power source"
+msgstr "पावर स्रोत"
 
 msgid "Profile"
 msgstr "प्रोफ़ाइल"

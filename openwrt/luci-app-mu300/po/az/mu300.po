@@ -873,6 +873,12 @@ msgstr "Avtomatik (%d dəstəklənir)"
 msgid "%d locked: %s"
 msgstr "%d kilidlənib: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "0 ilə %d arasında tam ədəd daxil edin"
+
+msgid "Power status unavailable"
+msgstr "Enerji vəziyyəti əlçatan deyil"
+
 msgid "Plugged in"
 msgstr "Şəbəkəyə qoşulub"
 
@@ -902,6 +908,9 @@ msgstr "avtomatik"
 
 msgid "Nobody connected for %d s"
 msgstr "%d saniyədir heç kim qoşulmayıb"
+
+msgid "Power source"
+msgstr "Enerji mənbəyi"
 
 msgid "Profile"
 msgstr "Profil"

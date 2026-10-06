@@ -873,6 +873,12 @@ msgstr "Автоматично (%d поддържани)"
 msgid "%d locked: %s"
 msgstr "%d заключени: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Въведете цяло число от 0 до %d"
+
+msgid "Power status unavailable"
+msgstr "Състоянието на захранването не е налично"
+
 msgid "Plugged in"
 msgstr "На зарядно"
 
@@ -902,6 +908,9 @@ msgstr "автоматично"
 
 msgid "Nobody connected for %d s"
 msgstr "Никой не е свързан от %d сек"
+
+msgid "Power source"
+msgstr "Източник на захранване"
 
 msgid "Profile"
 msgstr "Профил"

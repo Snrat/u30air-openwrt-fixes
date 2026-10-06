@@ -873,6 +873,12 @@ msgstr "تلقائي (%d مدعوم)"
 msgid "%d locked: %s"
 msgstr "%d مقفل: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "أدخل عددًا صحيحًا من 0 إلى %d"
+
+msgid "Power status unavailable"
+msgstr "حالة الطاقة غير متاحة"
+
 msgid "Plugged in"
 msgstr "موصول بالكهرباء"
 
@@ -902,6 +908,9 @@ msgstr "تلقائي"
 
 msgid "Nobody connected for %d s"
 msgstr "لا يوجد أحد متصل منذ %d ثانية"
+
+msgid "Power source"
+msgstr "مصدر الطاقة"
 
 msgid "Profile"
 msgstr "الملف"

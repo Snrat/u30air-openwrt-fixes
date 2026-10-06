@@ -873,6 +873,12 @@ msgstr "Automaattinen (%d tuettu)"
 msgid "%d locked: %s"
 msgstr "%d lukittu: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Anna kokonaisluku väliltä 0–%d"
+
+msgid "Power status unavailable"
+msgstr "Virran tila ei ole saatavilla"
+
 msgid "Plugged in"
 msgstr "Verkossa"
 
@@ -902,6 +908,9 @@ msgstr "automaattinen"
 
 msgid "Nobody connected for %d s"
 msgstr "Kukaan ei ole ollut yhteydessä %d s"
+
+msgid "Power source"
+msgstr "Virtalähde"
 
 msgid "Profile"
 msgstr "Profiili"

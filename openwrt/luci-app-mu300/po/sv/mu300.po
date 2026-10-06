@@ -873,6 +873,12 @@ msgstr "Automatiskt (%d stöds)"
 msgid "%d locked: %s"
 msgstr "%d låsta: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Ange ett heltal från 0 till %d"
+
+msgid "Power status unavailable"
+msgstr "Strömstatus otillgänglig"
+
 msgid "Plugged in"
 msgstr "Inkopplad"
 
@@ -902,6 +908,9 @@ msgstr "automatiskt"
 
 msgid "Nobody connected for %d s"
 msgstr "Ingen ansluten på %d s"
+
+msgid "Power source"
+msgstr "Strömkälla"
 
 msgid "Profile"
 msgstr "Profil"

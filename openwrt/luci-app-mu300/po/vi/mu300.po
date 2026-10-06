@@ -873,6 +873,12 @@ msgstr "Tự động (hỗ trợ %d)"
 msgid "%d locked: %s"
 msgstr "%d đã khóa: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Nhập số nguyên từ 0 đến %d"
+
+msgid "Power status unavailable"
+msgstr "Không có trạng thái nguồn"
+
 msgid "Plugged in"
 msgstr "Đang cắm sạc"
 
@@ -902,6 +908,9 @@ msgstr "tự động"
 
 msgid "Nobody connected for %d s"
 msgstr "Không có ai kết nối trong %d giây"
+
+msgid "Power source"
+msgstr "Nguồn điện"
 
 msgid "Profile"
 msgstr "Hồ sơ"

@@ -873,6 +873,12 @@ msgstr "خودکار (%d پشتیبانی‌شده)"
 msgid "%d locked: %s"
 msgstr "%d قفل‌شده: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "یک عدد صحیح از 0 تا %d وارد کنید"
+
+msgid "Power status unavailable"
+msgstr "وضعیت توان در دسترس نیست"
+
 msgid "Plugged in"
 msgstr "به برق وصل است"
 
@@ -902,6 +908,9 @@ msgstr "خودکار"
 
 msgid "Nobody connected for %d s"
 msgstr "%d ثانیه است که کسی متصل نیست"
+
+msgid "Power source"
+msgstr "منبع تغذیه"
 
 msgid "Profile"
 msgstr "نمایه"

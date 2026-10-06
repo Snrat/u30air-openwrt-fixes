@@ -873,6 +873,12 @@ msgstr "Автоматты (%d қолдау көрсетіледі)"
 msgid "%d locked: %s"
 msgstr "%d бекітілген: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "0-ден %d-ге дейінгі бүтін санды енгізіңіз"
+
+msgid "Power status unavailable"
+msgstr "Қуат күйі қолжетімсіз"
+
 msgid "Plugged in"
 msgstr "Желіге қосулы"
 
@@ -902,6 +908,9 @@ msgstr "автоматты"
 
 msgid "Nobody connected for %d s"
 msgstr "%d с бойы ешкім қосылмаған"
+
+msgid "Power source"
+msgstr "Қуат көзі"
 
 msgid "Profile"
 msgstr "Профиль"

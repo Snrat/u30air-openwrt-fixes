@@ -873,6 +873,12 @@ msgstr "Automatisk (%d understøttet)"
 msgid "%d locked: %s"
 msgstr "%d låst: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Angiv et helt tal fra 0 til %d"
+
+msgid "Power status unavailable"
+msgstr "Strømstatus ikke tilgængelig"
+
 msgid "Plugged in"
 msgstr "Tilsluttet"
 
@@ -902,6 +908,9 @@ msgstr "automatisk"
 
 msgid "Nobody connected for %d s"
 msgstr "Ingen har været tilsluttet i %d s"
+
+msgid "Power source"
+msgstr "Strømkilde"
 
 msgid "Profile"
 msgstr "Profil"

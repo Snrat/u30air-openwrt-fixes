@@ -873,6 +873,12 @@ msgstr "자동 (%d개 지원)"
 msgid "%d locked: %s"
 msgstr "%d개 잠김: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "0에서 %d 사이의 정수를 입력하세요"
+
+msgid "Power status unavailable"
+msgstr "전원 상태를 확인할 수 없음"
+
 msgid "Plugged in"
 msgstr "전원 연결됨"
 
@@ -902,6 +908,9 @@ msgstr "자동"
 
 msgid "Nobody connected for %d s"
 msgstr "%d초째 연결된 사용자 없음"
+
+msgid "Power source"
+msgstr "전원 공급원"
 
 msgid "Profile"
 msgstr "프로필"

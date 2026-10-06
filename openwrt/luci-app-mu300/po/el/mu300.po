@@ -873,6 +873,12 @@ msgstr "Αυτόματο (%d υποστηριζόμενες)"
 msgid "%d locked: %s"
 msgstr "%d κλειδωμένες: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Εισαγάγετε έναν ακέραιο από 0 έως %d"
+
+msgid "Power status unavailable"
+msgstr "Η κατάσταση ισχύος δεν είναι διαθέσιμη"
+
 msgid "Plugged in"
 msgstr "Στην πρίζα"
 
@@ -902,6 +908,9 @@ msgstr "αυτόματο"
 
 msgid "Nobody connected for %d s"
 msgstr "Κανείς δεν είναι συνδεδεμένος εδώ και %d δ"
+
+msgid "Power source"
+msgstr "Πηγή ισχύος"
 
 msgid "Profile"
 msgstr "Προφίλ"

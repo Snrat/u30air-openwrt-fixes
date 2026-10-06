@@ -873,6 +873,12 @@ msgstr "אוטומטי (%d נתמכים)"
 msgid "%d locked: %s"
 msgstr "%d נעולים: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "הזינו מספר שלם בין 0 ל-%d"
+
+msgid "Power status unavailable"
+msgstr "מצב החשמל אינו זמין"
+
 msgid "Plugged in"
 msgstr "מחובר לחשמל"
 
@@ -902,6 +908,9 @@ msgstr "אוטומטי"
 
 msgid "Nobody connected for %d s"
 msgstr "אף אחד לא מחובר כבר %d שניות"
+
+msgid "Power source"
+msgstr "מקור חשמל"
 
 msgid "Profile"
 msgstr "פרופיל"

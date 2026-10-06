@@ -873,6 +873,12 @@ msgstr "Automatyczny (obsługiwanych: %d)"
 msgid "%d locked: %s"
 msgstr "Zablokowano %d: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Wpisz liczbę całkowitą od 0 do %d"
+
+msgid "Power status unavailable"
+msgstr "Stan zasilania niedostępny"
+
 msgid "Plugged in"
 msgstr "Podłączone do zasilania"
 
@@ -902,6 +908,9 @@ msgstr "automatycznie"
 
 msgid "Nobody connected for %d s"
 msgstr "Nikt nie jest połączony od %d s"
+
+msgid "Power source"
+msgstr "Źródło zasilania"
 
 msgid "Profile"
 msgstr "Profil"

@@ -873,6 +873,12 @@ msgstr "Automatico (%d supportate)"
 msgid "%d locked: %s"
 msgstr "%d bloccate: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Inserisci un numero intero da 0 a %d"
+
+msgid "Power status unavailable"
+msgstr "Stato dell'alimentazione non disponibile"
+
 msgid "Plugged in"
 msgstr "Collegato alla rete"
 
@@ -902,6 +908,9 @@ msgstr "automatico"
 
 msgid "Nobody connected for %d s"
 msgstr "Nessuno connesso da %d s"
+
+msgid "Power source"
+msgstr "Fonte di alimentazione"
 
 msgid "Profile"
 msgstr "Profilo"

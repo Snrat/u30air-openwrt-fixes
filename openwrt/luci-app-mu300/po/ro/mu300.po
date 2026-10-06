@@ -873,6 +873,12 @@ msgstr "Automat (%d suportate)"
 msgid "%d locked: %s"
 msgstr "%d blocate: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Introduceți un număr întreg de la 0 la %d"
+
+msgid "Power status unavailable"
+msgstr "Starea alimentării nu este disponibilă"
+
 msgid "Plugged in"
 msgstr "Conectat la priză"
 
@@ -902,6 +908,9 @@ msgstr "automat"
 
 msgid "Nobody connected for %d s"
 msgstr "Nimeni nu este conectat de %d s"
+
+msgid "Power source"
+msgstr "Sursă de alimentare"
 
 msgid "Profile"
 msgstr "Profil"

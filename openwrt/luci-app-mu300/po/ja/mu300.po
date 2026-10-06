@@ -873,6 +873,12 @@ msgstr "自動 (%d 個対応)"
 msgid "%d locked: %s"
 msgstr "%d 件ロック中: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "0 から %d までの整数を入力してください"
+
+msgid "Power status unavailable"
+msgstr "電源の状態を取得できません"
+
 msgid "Plugged in"
 msgstr "電源接続中"
 
@@ -902,6 +908,9 @@ msgstr "自動"
 
 msgid "Nobody connected for %d s"
 msgstr "%d 秒間、誰も接続していません"
+
+msgid "Power source"
+msgstr "電源の種類"
 
 msgid "Profile"
 msgstr "プロファイル"
