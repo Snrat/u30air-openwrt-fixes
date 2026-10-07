@@ -2748,33 +2748,39 @@ What changed (the design: bootability and "a key always shows life" over everyth
 * **Nothing can hang.** Every external step of `mu300-power` runs under a deadline (a background job, a watchdog
   that kills the job's whole process tree, and a USR1 to the waiting shell for a child stuck in the kernel; busybox
   has no `timeout` in `/bin`): probes 5 s, LEDs 10 s, wifi/systemctl/VPN 30 s, the modem 90 s, the background LED
-  sync 150 s (`MU300_POWER_*_DEADLINE`). `mobile-data suspend|resume` end within `MU300_SUSPEND_DEADLINE` (60 s)
-  whatever the modem does: AT through `mu300-at` with `-t` <= 20, a 10 s client-lock wait and a 15 s budget
-  (`MU300_AT_LOCK_WAIT`, `MU300_AT_BUDGET`), the radio lock 20 s, each external step 15 s; HUP ignored; their
-  output goes through a file and a bounded write. On a failure or a timeout they leave the files consistent - no
-  mode file, no "down" flag of their own - so the watcher restores whatever is off, and they exit non-zero. An `lte`
-  step that failed leaves `/run/mu300-mobile-data.endc-restore` (unless EN-DC was off before): every `resume`
-  sends `AT+SPENDC=1` until it answers OK, and mu300-power's wake and self-check call `resume` while it is there;
-  the watcher ignores it. The Wi-Fi key's toggles run in the background under a deadline too. On
-  OpenWrt they go through netifd (`ifdown`/`ifup wan`) also when run by hand.
+  sync 150 s (`MU300_POWER_*_DEADLINE`). The tree is stopped until a look finds nothing new, then every process
+  any look saw is killed (one reparented between two looks too). `mobile-data suspend|resume` end within
+  `MU300_SUSPEND_DEADLINE` (60 s) whatever the modem does: AT through `mu300-at` with `-t` <= 20, a 10 s
+  client-lock wait and a 22 s budget (`MU300_AT_LOCK_WAIT`, `MU300_AT_BUDGET`), the radio lock 20 s, each external
+  step 15 s; HUP ignored; their output goes through a file and a bounded write. On a failure or a timeout they
+  leave the files consistent - no mode file, no "down" flag of their own - so the watcher restores whatever is off,
+  and they exit non-zero. An `lte` step that failed (also an `AT+SPENDC=1` answered ERROR or not at all: only OK
+  counts, as `mu300-at` exits 0 on ERROR) leaves `/run/mu300-mobile-data.endc-restore` (unless EN-DC was off
+  before): every `resume` sends `AT+SPENDC=1` until it answers OK, and mu300-power's wake and self-check call
+  `resume` while it is there; the watcher ignores it. The Wi-Fi key's toggles run in the background under a
+  deadline too, and the hold's direction (is the hotspot up?) is asked within 5 s
+  (`MU300_BUTTONS_PROBE_DEADLINE`): no answer counts as down, and the key turns it on. On OpenWrt they go through
+  netifd (`ifdown`/`ifup wan`) also when run by hand.
 * **The VPN while the modem is off.** `RADIO_IDLE=off` stops `mu300-vpn` (systemd or procd) once the modem is off,
   if it was running (`/run/mu300/power/vpn-stopped`; a suspend that keeps failing never touches it, and a Wi-Fi
   client uplink keeps it), and the wake starts it again before the modem, so a `KILL_SWITCH=0` dial is never ahead
-  of it - unless the service was disabled or `ENABLE=0` meanwhile (asked through `mu300-vpn status`); `lte` leaves it
-  alone. The service stop keeps the kill
-  switch (`nft table inet mu300_vpn` stays; only `ENABLE=0` and `mu300-vpn off` remove it), and the engine's routes
+  of it - unless the service was disabled or `ENABLE=0` meanwhile (asked through `mu300-vpn enabled`, which prints
+  `ENABLE` and touches no network; a probe that fails or times out counts as wanted); a start that failed is
+  retried by the self-check at most every 120 s; `lte` leaves it alone. The service stop keeps the kill switch
+  (`nft table inet mu300_vpn` stays; only `ENABLE=0` and `mu300-vpn off` remove it), and the engine's routes
   go with the engine: with `KILL_SWITCH=1` nothing unmarked leaves on `sipa_eth*` or the Wi-Fi client while it is
   stopped; with `KILL_SWITCH=0` nothing holds traffic back, as on any stop, and the bearer is down anyway. Both
   service definitions raise the descriptor limit to 65536 (`LimitNOFILE`, procd `limits nofile`).
 * **Self-check.** Each loop, while the state says `active`: a modem mode file, or (with `WIFI_IDLE=0`) the hotspot
   down although nobody turned it off on purpose, is logged and restored. On purpose means the Wi-Fi key's hold
   (`mu300-buttons` writes `/run/mu300/power/hotspot-off` with the hold's uptime before the wake of that press
-  starts, until the next hold; a marker older than 60 s is dropped once the hotspot is seen up), UCI
-  (`wireless.@wifi-iface[0].disabled` or `wireless.@wifi-device[0].disabled` = 1: the panel, `wifi-client`), the
-  unit disabled on Ubuntu, a Wi-Fi client (`/run/mu300-wifi-client.active`) or the scan-mode boot. A hotspot that
-  idle took down (`hotspot-idled`) always comes back, whatever a marker says. The hotspot is not looked at in the
-  first 120 s of a boot nor within 120 s of any `hotspot on`; one that does not stay up is retried at a doubling
-  interval up to 30 min, logged once per step. A modem left with EN-DC off is resumed too.
+  starts, until the next hold; a marker older than the toggle's deadline + 30 s (180 s) is dropped once the hotspot
+  is seen up), UCI (`wireless.@wifi-iface[0].disabled` or `wireless.@wifi-device[0].disabled` = 1: the panel,
+  `wifi-client`), the unit disabled on Ubuntu, a Wi-Fi client (`/run/mu300-wifi-client.active`) or the scan-mode
+  boot. A hotspot that idle took down (`hotspot-idled`) comes back whatever a hold marker says, but not for a Wi-Fi
+  client or in scan mode. The hotspot is not looked at in the first 120 s of a boot nor within 120 s of any
+  `hotspot on`; one that does not stay up is retried at a doubling interval up to 30 min, logged once per step. A
+  modem left with EN-DC off is resumed too, and a VPN left stopped is started (see above).
 
 For measurements this means: the raw actions by hand are undone by the daemon's next loop (the modem) and by any key.
 Use `mu300-power idle` and the profiles, or stop the daemon first, and run long measurements under `nohup` or
