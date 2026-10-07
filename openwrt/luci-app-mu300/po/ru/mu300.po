@@ -21,6 +21,9 @@ msgstr "AT-терминал"
 msgid "Adapter settings"
 msgstr "Настройки адаптера"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Управление устройством"
 
@@ -1140,6 +1143,45 @@ msgstr "Я: %s"
 msgid "Delete"
 msgstr "Удалить"
 
+msgid "Current setting"
+msgstr "Текущая настройка"
+
+msgid "Fixed at %d"
+msgstr "Фиксирован на %d"
+
+msgid "Not changed (default)"
+msgstr "Не изменён (по умолчанию)"
+
+msgid "Rule in force"
+msgstr "Действующее правило"
+
+msgid "Flow offloading"
+msgstr "Разгрузка потоков (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL мобильных данных"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Каждый пакет, уходящий через мобильные данные, получает этот TTL (IPv6: hop limit). Телефон или ноутбук за точкой доступа отправляет 64 (Windows: 128), а устройство пересылает его с уменьшением на единицу — по этому оператор может распознать раздаваемый трафик."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "На этом ядре быстрый путь межсетевого экрана выключен, пока задан TTL"
+
+msgid "Set %d"
+msgstr "Задать %d"
+
+msgid "Set"
+msgstr "Задать"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Введите число от 1 до 255"
+
+msgid "Turn off"
+msgstr "Выключить"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "С 64 каждый пакет уходит как собственный трафик устройства"
+
 msgid "Dashboard info failed"
 msgstr "Ошибка получения данных панели"
 
@@ -1278,6 +1320,12 @@ msgstr "Недопустимый языковой запрос"
 msgid "Unknown source"
 msgstr "Неизвестный источник"
 
+msgid "The TTL adapter gave no valid reply"
+msgstr "Адаптер TTL не дал корректного ответа"
+
+msgid "Invalid TTL"
+msgstr "Недопустимый TTL"
+
 msgid "Request too large"
 msgstr "Слишком большой запрос"
 
@@ -1409,3 +1457,12 @@ msgstr "Нет обслуживающей соты для фиксации"
 
 msgid "usage: power get|set KEY VALUE|wake|idle"
 msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "Не удалось прочитать настройку TTL"
+
+msgid "The TTL could not be set"
+msgstr "Не удалось задать TTL"
+
+msgid "Unknown TTL operation"
+msgstr "Неизвестная операция TTL"

@@ -21,6 +21,9 @@ msgstr "AT टर्मिनल"
 msgid "Adapter settings"
 msgstr "एडेप्टर सेटिंग्स"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "डिवाइस प्रबंधन"
 
@@ -1140,6 +1143,45 @@ msgstr "मैं: %s"
 msgid "Delete"
 msgstr "हटाएँ"
 
+msgid "Current setting"
+msgstr "वर्तमान सेटिंग"
+
+msgid "Fixed at %d"
+msgstr "%d पर स्थिर"
+
+msgid "Not changed (default)"
+msgstr "नहीं बदला (डिफ़ॉल्ट)"
+
+msgid "Rule in force"
+msgstr "लागू नियम"
+
+msgid "Flow offloading"
+msgstr "फ़्लो ऑफ़लोडिंग"
+
+msgid "TTL of mobile data"
+msgstr "मोबाइल डेटा का TTL"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "मोबाइल डेटा से बाहर जाने वाले हर पैकेट को यह TTL (IPv6: hop limit) मिलता है। हॉटस्पॉट से जुड़ा फ़ोन या लैपटॉप 64 (Windows: 128) भेजता है और डिवाइस उसे एक कम करके आगे भेजता है, इसी से ऑपरेटर साझा ट्रैफ़िक पहचान सकता है।"
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "इस कर्नेल पर TTL सेट रहने तक फ़ायरवॉल का तेज़ पथ बंद रहता है"
+
+msgid "Set %d"
+msgstr "%d सेट करें"
+
+msgid "Set"
+msgstr "सेट करें"
+
+msgid "Enter a number from 1 to 255"
+msgstr "1 से 255 तक की संख्या दर्ज करें"
+
+msgid "Turn off"
+msgstr "बंद करें"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "64 से हर पैकेट डिवाइस के अपने ट्रैफ़िक की तरह बाहर जाता है"
+
 msgid "Dashboard info failed"
 msgstr "डैशबोर्ड जानकारी प्राप्त नहीं हो सकी"
 
@@ -1278,6 +1320,12 @@ msgstr "अमान्य भाषा अनुरोध"
 msgid "Unknown source"
 msgstr "अज्ञात स्रोत"
 
+msgid "The TTL adapter gave no valid reply"
+msgstr "TTL एडेप्टर ने कोई मान्य उत्तर नहीं दिया"
+
+msgid "Invalid TTL"
+msgstr "अमान्य TTL"
+
 msgid "Request too large"
 msgstr "अनुरोध बहुत बड़ा है"
 
@@ -1409,3 +1457,12 @@ msgstr "लॉक करने के लिए कोई सर्विंग 
 
 msgid "usage: power get|set KEY VALUE|wake|idle"
 msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "TTL सेटिंग पढ़ी नहीं जा सकी"
+
+msgid "The TTL could not be set"
+msgstr "TTL सेट नहीं किया जा सका"
+
+msgid "Unknown TTL operation"
+msgstr "अज्ञात TTL कार्रवाई"

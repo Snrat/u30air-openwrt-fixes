@@ -21,6 +21,9 @@ msgstr "AT 終端機"
 msgid "Adapter settings"
 msgstr "轉接器設定"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "裝置管理"
 
@@ -1140,6 +1143,45 @@ msgstr "我：%s"
 msgid "Delete"
 msgstr "刪除"
 
+msgid "Current setting"
+msgstr "目前設定"
+
+msgid "Fixed at %d"
+msgstr "固定為 %d"
+
+msgid "Not changed (default)"
+msgstr "未變更（預設）"
+
+msgid "Rule in force"
+msgstr "生效的規則"
+
+msgid "Flow offloading"
+msgstr "流量卸載（flow offloading）"
+
+msgid "TTL of mobile data"
+msgstr "行動數據的 TTL"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "經行動數據送出的每個封包都會使用此 TTL（IPv6：跳數限制）。熱點後方的手機或筆電送出 64（Windows：128），裝置轉送時會減一，電信業者可藉此辨識分享的流量。"
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "在此核心上，設定 TTL 期間防火牆快速路徑為關閉狀態"
+
+msgid "Set %d"
+msgstr "設為 %d"
+
+msgid "Set"
+msgstr "設定"
+
+msgid "Enter a number from 1 to 255"
+msgstr "請輸入 1 到 255 之間的數字"
+
+msgid "Turn off"
+msgstr "關閉"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "64 讓每個封包都像裝置本身的流量一樣送出"
+
 msgid "Dashboard info failed"
 msgstr "取得儀表板資訊失敗"
 
@@ -1278,6 +1320,12 @@ msgstr "語言請求無效"
 msgid "Unknown source"
 msgstr "未知的來源"
 
+msgid "The TTL adapter gave no valid reply"
+msgstr "TTL 介面卡未傳回有效回覆"
+
+msgid "Invalid TTL"
+msgstr "無效的 TTL"
+
 msgid "Request too large"
 msgstr "請求過大"
 
@@ -1409,3 +1457,12 @@ msgstr "沒有可鎖定的服務基地台"
 
 msgid "usage: power get|set KEY VALUE|wake|idle"
 msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "無法讀取 TTL 設定"
+
+msgid "The TTL could not be set"
+msgstr "無法設定 TTL"
+
+msgid "Unknown TTL operation"
+msgstr "未知的 TTL 操作"

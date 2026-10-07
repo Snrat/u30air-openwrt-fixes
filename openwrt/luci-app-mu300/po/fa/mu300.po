@@ -21,6 +21,9 @@ msgstr "ترمینال AT"
 msgid "Adapter settings"
 msgstr "تنظیمات آداپتور"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "مدیریت دستگاه"
 
@@ -1140,6 +1143,45 @@ msgstr "من: %s"
 msgid "Delete"
 msgstr "حذف"
 
+msgid "Current setting"
+msgstr "تنظیم فعلی"
+
+msgid "Fixed at %d"
+msgstr "ثابت روی %d"
+
+msgid "Not changed (default)"
+msgstr "تغییر نکرده (پیش‌فرض)"
+
+msgid "Rule in force"
+msgstr "قانون فعال"
+
+msgid "Flow offloading"
+msgstr "تخلیه جریان‌ها (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL داده تلفن همراه"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "هر بسته‌ای که از طریق داده تلفن همراه خارج می‌شود این TTL را می‌گیرد (IPv6: hop limit). تلفن یا لپ‌تاپ پشت هات‌اسپات 64 (Windows: 128) می‌فرستد و دستگاه آن را با یکی کمتر ارسال می‌کند؛ اپراتور از همین راه ترافیک اشتراکی را تشخیص می‌دهد."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "در این کرنل تا وقتی TTL تنظیم شده است مسیر سریع دیوار آتش خاموش است"
+
+msgid "Set %d"
+msgstr "تنظیم روی %d"
+
+msgid "Set"
+msgstr "تنظیم"
+
+msgid "Enter a number from 1 to 255"
+msgstr "عددی از 1 تا 255 وارد کنید"
+
+msgid "Turn off"
+msgstr "خاموش کردن"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "با 64 هر بسته مانند ترافیک خود دستگاه خارج می‌شود"
+
 msgid "Dashboard info failed"
 msgstr "دریافت اطلاعات داشبورد ناموفق بود"
 
@@ -1278,6 +1320,12 @@ msgstr "درخواست زبان نامعتبر"
 msgid "Unknown source"
 msgstr "منبع نامشخص"
 
+msgid "The TTL adapter gave no valid reply"
+msgstr "آداپتور TTL پاسخ معتبری نداد"
+
+msgid "Invalid TTL"
+msgstr "TTL نامعتبر"
+
 msgid "Request too large"
 msgstr "درخواست بیش از حد بزرگ است"
 
@@ -1409,3 +1457,12 @@ msgstr "سلول سرویس‌دهنده‌ای برای قفل کردن نیس�
 
 msgid "usage: power get|set KEY VALUE|wake|idle"
 msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "تنظیم TTL خوانده نشد"
+
+msgid "The TTL could not be set"
+msgstr "TTL تنظیم نشد"
+
+msgid "Unknown TTL operation"
+msgstr "عملیات TTL ناشناخته"

@@ -21,6 +21,9 @@ msgstr "Τερματικό AT"
 msgid "Adapter settings"
 msgstr "Ρυθμίσεις προσαρμογέα"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Διαχείριση συσκευής"
 
@@ -1140,6 +1143,45 @@ msgstr "Εγώ: %s"
 msgid "Delete"
 msgstr "Διαγραφή"
 
+msgid "Current setting"
+msgstr "Τρέχουσα ρύθμιση"
+
+msgid "Fixed at %d"
+msgstr "Σταθερό στο %d"
+
+msgid "Not changed (default)"
+msgstr "Χωρίς αλλαγή (προεπιλογή)"
+
+msgid "Rule in force"
+msgstr "Ενεργός κανόνας"
+
+msgid "Flow offloading"
+msgstr "Εκφόρτωση ροών (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL των δεδομένων κινητής"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Κάθε πακέτο που φεύγει μέσω των δεδομένων κινητής παίρνει αυτό το TTL (IPv6: hop limit). Ένα τηλέφωνο ή φορητός πίσω από το hotspot στέλνει 64 (Windows: 128) και η συσκευή το προωθεί με ένα λιγότερο — έτσι ένας πάροχος μπορεί να αναγνωρίσει την κοινόχρηστη κίνηση."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Σε αυτόν τον πυρήνα η γρήγορη διαδρομή του τείχους προστασίας είναι κλειστή όσο έχει οριστεί TTL"
+
+msgid "Set %d"
+msgstr "Ορισμός %d"
+
+msgid "Set"
+msgstr "Ορισμός"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Εισαγάγετε έναν αριθμό από 1 έως 255"
+
+msgid "Turn off"
+msgstr "Απενεργοποίηση"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "Με 64 κάθε πακέτο φεύγει όπως η κίνηση της ίδιας της συσκευής"
+
 msgid "Dashboard info failed"
 msgstr "Οι πληροφορίες του πίνακα απέτυχαν"
 
@@ -1278,6 +1320,12 @@ msgstr "Μη έγκυρο αίτημα γλώσσας"
 msgid "Unknown source"
 msgstr "Άγνωστη πηγή"
 
+msgid "The TTL adapter gave no valid reply"
+msgstr "Ο προσαρμογέας TTL δεν έδωσε έγκυρη απάντηση"
+
+msgid "Invalid TTL"
+msgstr "Μη έγκυρο TTL"
+
 msgid "Request too large"
 msgstr "Το αίτημα είναι πολύ μεγάλο"
 
@@ -1409,3 +1457,12 @@ msgstr "Δεν υπάρχει κυψέλη εξυπηρέτησης για κλ�
 
 msgid "usage: power get|set KEY VALUE|wake|idle"
 msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "Δεν ήταν δυνατή η ανάγνωση της ρύθμισης TTL"
+
+msgid "The TTL could not be set"
+msgstr "Δεν ήταν δυνατός ο ορισμός του TTL"
+
+msgid "Unknown TTL operation"
+msgstr "Άγνωστη λειτουργία TTL"

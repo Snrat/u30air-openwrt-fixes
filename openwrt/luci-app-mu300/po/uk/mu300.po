@@ -21,6 +21,9 @@ msgstr "AT-термінал"
 msgid "Adapter settings"
 msgstr "Налаштування адаптера"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Керування пристроєм"
 
@@ -1140,6 +1143,45 @@ msgstr "Я: %s"
 msgid "Delete"
 msgstr "Видалити"
 
+msgid "Current setting"
+msgstr "Поточне налаштування"
+
+msgid "Fixed at %d"
+msgstr "Зафіксовано на %d"
+
+msgid "Not changed (default)"
+msgstr "Не змінено (типово)"
+
+msgid "Rule in force"
+msgstr "Чинне правило"
+
+msgid "Flow offloading"
+msgstr "Розвантаження потоків (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL мобільних даних"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Кожен пакет, що виходить через мобільні дані, отримує цей TTL (IPv6: hop limit). Телефон чи ноутбук за точкою доступу надсилає 64 (Windows: 128), а пристрій пересилає його зі зменшенням на одиницю — за цим оператор може розпізнати роздаваний трафік."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "На цьому ядрі швидкий шлях брандмауера вимкнено, доки задано TTL"
+
+msgid "Set %d"
+msgstr "Задати %d"
+
+msgid "Set"
+msgstr "Задати"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Введіть число від 1 до 255"
+
+msgid "Turn off"
+msgstr "Вимкнути"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "З 64 кожен пакет виходить як власний трафік пристрою"
+
 msgid "Dashboard info failed"
 msgstr "Помилка отримання даних панелі"
 
@@ -1278,6 +1320,12 @@ msgstr "Неприпустимий мовний запит"
 msgid "Unknown source"
 msgstr "Невідоме джерело"
 
+msgid "The TTL adapter gave no valid reply"
+msgstr "Адаптер TTL не дав коректної відповіді"
+
+msgid "Invalid TTL"
+msgstr "Неприпустимий TTL"
+
 msgid "Request too large"
 msgstr "Запит завеликий"
 
@@ -1409,3 +1457,12 @@ msgstr "Немає обслуговуючої соти для фіксації"
 
 msgid "usage: power get|set KEY VALUE|wake|idle"
 msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "Не вдалося прочитати налаштування TTL"
+
+msgid "The TTL could not be set"
+msgstr "Не вдалося задати TTL"
+
+msgid "Unknown TTL operation"
+msgstr "Невідома операція TTL"

@@ -21,6 +21,9 @@ msgstr "AT-terminál"
 msgid "Adapter settings"
 msgstr "Adapterbeállítások"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Eszközkezelés"
 
@@ -1140,6 +1143,45 @@ msgstr "Én: %s"
 msgid "Delete"
 msgstr "Törlés"
 
+msgid "Current setting"
+msgstr "Jelenlegi beállítás"
+
+msgid "Fixed at %d"
+msgstr "Rögzítve: %d"
+
+msgid "Not changed (default)"
+msgstr "Nincs módosítva (alapértelmezett)"
+
+msgid "Rule in force"
+msgstr "Érvényes szabály"
+
+msgid "Flow offloading"
+msgstr "Folyamtehermentesítés (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "A mobiladat TTL-je"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Minden csomag, amely a mobiladaton át távozik, ezt a TTL-t kapja (IPv6: hop limit). A hotspot mögötti telefon vagy laptop 64-et küld (Windows: 128), az eszköz pedig eggyel kevesebbel továbbítja – erről ismerheti fel a szolgáltató a megosztott forgalmat."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Ezen a kernelen a tűzfal gyorsútja ki van kapcsolva, amíg TTL van beállítva"
+
+msgid "Set %d"
+msgstr "Legyen %d"
+
+msgid "Set"
+msgstr "Beállítás"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Adjon meg egy számot 1 és 255 között"
+
+msgid "Turn off"
+msgstr "Kikapcsolás"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "64 esetén minden csomag úgy távozik, mint az eszköz saját forgalma"
+
 msgid "Dashboard info failed"
 msgstr "Az irányítópult adatai nem érhetők el"
 
@@ -1278,6 +1320,12 @@ msgstr "Érvénytelen nyelvi kérés"
 msgid "Unknown source"
 msgstr "Ismeretlen forrás"
 
+msgid "The TTL adapter gave no valid reply"
+msgstr "A TTL-adapter nem adott érvényes választ"
+
+msgid "Invalid TTL"
+msgstr "Érvénytelen TTL"
+
 msgid "Request too large"
 msgstr "A kérés túl nagy"
 
@@ -1409,3 +1457,12 @@ msgstr "Nincs kiszolgáló cella a zároláshoz"
 
 msgid "usage: power get|set KEY VALUE|wake|idle"
 msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "A TTL-beállítás nem olvasható"
+
+msgid "The TTL could not be set"
+msgstr "A TTL nem állítható be"
+
+msgid "Unknown TTL operation"
+msgstr "Ismeretlen TTL-művelet"

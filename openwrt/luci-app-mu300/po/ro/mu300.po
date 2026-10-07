@@ -21,6 +21,9 @@ msgstr "Terminal AT"
 msgid "Adapter settings"
 msgstr "Setări adaptor"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Gestionare dispozitiv"
 
@@ -1140,6 +1143,45 @@ msgstr "Eu: %s"
 msgid "Delete"
 msgstr "Ștergere"
 
+msgid "Current setting"
+msgstr "Setarea curentă"
+
+msgid "Fixed at %d"
+msgstr "Fixat la %d"
+
+msgid "Not changed (default)"
+msgstr "Neschimbat (implicit)"
+
+msgid "Rule in force"
+msgstr "Regula în vigoare"
+
+msgid "Flow offloading"
+msgstr "Descărcarea fluxurilor (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL pentru datele mobile"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Fiecare pachet care pleacă prin datele mobile primește acest TTL (IPv6: hop limit). Un telefon sau laptop din spatele hotspotului trimite 64 (Windows: 128), iar dispozitivul îl redirecționează cu unu mai puțin, după care un operator poate recunoaște traficul partajat."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Pe acest kernel calea rapidă a firewallului este oprită cât timp este setat un TTL"
+
+msgid "Set %d"
+msgstr "Setează %d"
+
+msgid "Set"
+msgstr "Setează"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Introduceți un număr de la 1 la 255"
+
+msgid "Turn off"
+msgstr "Dezactivează"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "Cu 64 fiecare pachet pleacă la fel ca traficul propriu al dispozitivului"
+
 msgid "Dashboard info failed"
 msgstr "Informațiile panoului au eșuat"
 
@@ -1278,6 +1320,12 @@ msgstr "Cerere de limbă invalidă"
 msgid "Unknown source"
 msgstr "Sursă necunoscută"
 
+msgid "The TTL adapter gave no valid reply"
+msgstr "Adaptorul TTL nu a dat un răspuns valid"
+
+msgid "Invalid TTL"
+msgstr "TTL nevalid"
+
 msgid "Request too large"
 msgstr "Cerere prea mare"
 
@@ -1409,3 +1457,12 @@ msgstr "Nicio celulă de servire pe care să se blocheze"
 
 msgid "usage: power get|set KEY VALUE|wake|idle"
 msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "Setarea TTL nu a putut fi citită"
+
+msgid "The TTL could not be set"
+msgstr "TTL-ul nu a putut fi setat"
+
+msgid "Unknown TTL operation"
+msgstr "Operație TTL necunoscută"

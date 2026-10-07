@@ -21,6 +21,9 @@ msgstr "AT-pääte"
 msgid "Adapter settings"
 msgstr "Sovittimen asetukset"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Laitehallinta"
 
@@ -1140,6 +1143,45 @@ msgstr "Minä: %s"
 msgid "Delete"
 msgstr "Poista"
 
+msgid "Current setting"
+msgstr "Nykyinen asetus"
+
+msgid "Fixed at %d"
+msgstr "Kiinteä %d"
+
+msgid "Not changed (default)"
+msgstr "Ei muutettu (oletus)"
+
+msgid "Rule in force"
+msgstr "Voimassa oleva sääntö"
+
+msgid "Flow offloading"
+msgstr "Vuon purku (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "Mobiilidatan TTL"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Jokainen mobiilidatan kautta lähtevä paketti saa tämän TTL:n (IPv6: hop limit). Tukiaseman takana oleva puhelin tai kannettava lähettää 64 (Windows: 128), ja laite välittää sen yhtä pienemmällä arvolla, mistä operaattori voi tunnistaa jaetun liikenteen."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Tässä ytimessä palomuurin pikapolku on pois päältä, kun TTL on asetettu"
+
+msgid "Set %d"
+msgstr "Aseta %d"
+
+msgid "Set"
+msgstr "Aseta"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Anna luku väliltä 1–255"
+
+msgid "Turn off"
+msgstr "Poista käytöstä"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "Arvolla 64 jokainen paketti lähtee kuin laitteen oma liikenne"
+
 msgid "Dashboard info failed"
 msgstr "Yleiskatsauksen tietojen haku epäonnistui"
 
@@ -1278,6 +1320,12 @@ msgstr "Virheellinen kielipyyntö"
 msgid "Unknown source"
 msgstr "Tuntematon lähde"
 
+msgid "The TTL adapter gave no valid reply"
+msgstr "TTL-sovitin ei antanut kelvollista vastausta"
+
+msgid "Invalid TTL"
+msgstr "Virheellinen TTL"
+
 msgid "Request too large"
 msgstr "Pyyntö on liian suuri"
 
@@ -1409,3 +1457,12 @@ msgstr "Ei palvelevaa solua lukittavaksi"
 
 msgid "usage: power get|set KEY VALUE|wake|idle"
 msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "TTL-asetusta ei voitu lukea"
+
+msgid "The TTL could not be set"
+msgstr "TTL:ää ei voitu asettaa"
+
+msgid "Unknown TTL operation"
+msgstr "Tuntematon TTL-toiminto"

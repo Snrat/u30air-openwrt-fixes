@@ -21,6 +21,9 @@ msgstr "Terminal AT"
 msgid "Adapter settings"
 msgstr "Configurações do adaptador"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Gerenciamento do dispositivo"
 
@@ -1140,6 +1143,45 @@ msgstr "Eu: %s"
 msgid "Delete"
 msgstr "Excluir"
 
+msgid "Current setting"
+msgstr "Configuração atual"
+
+msgid "Fixed at %d"
+msgstr "Fixo em %d"
+
+msgid "Not changed (default)"
+msgstr "Não alterado (padrão)"
+
+msgid "Rule in force"
+msgstr "Regra em vigor"
+
+msgid "Flow offloading"
+msgstr "Descarregamento de fluxos (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL dos dados móveis"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Cada pacote que sai pelos dados móveis recebe este TTL (IPv6: limite de saltos). Um celular ou notebook atrás do hotspot envia 64 (Windows: 128) e o dispositivo o encaminha com um a menos, e é assim que uma operadora consegue distinguir o tráfego compartilhado."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Neste kernel o caminho rápido do firewall fica desligado enquanto um TTL estiver definido"
+
+msgid "Set %d"
+msgstr "Definir %d"
+
+msgid "Set"
+msgstr "Definir"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Digite um número de 1 a 255"
+
+msgid "Turn off"
+msgstr "Desligar"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "Com 64 cada pacote sai como o tráfego do próprio dispositivo"
+
 msgid "Dashboard info failed"
 msgstr "Falha nas informações do painel"
 
@@ -1278,6 +1320,12 @@ msgstr "Solicitação de idioma inválida"
 msgid "Unknown source"
 msgstr "Origem desconhecida"
 
+msgid "The TTL adapter gave no valid reply"
+msgstr "O adaptador de TTL não deu uma resposta válida"
+
+msgid "Invalid TTL"
+msgstr "TTL inválido"
+
 msgid "Request too large"
 msgstr "Solicitação grande demais"
 
@@ -1409,3 +1457,12 @@ msgstr "Sem célula servidora para bloquear"
 
 msgid "usage: power get|set KEY VALUE|wake|idle"
 msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "Não foi possível ler a configuração de TTL"
+
+msgid "The TTL could not be set"
+msgstr "Não foi possível definir o TTL"
+
+msgid "Unknown TTL operation"
+msgstr "Operação de TTL desconhecida"

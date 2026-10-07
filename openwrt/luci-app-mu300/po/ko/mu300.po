@@ -21,6 +21,9 @@ msgstr "AT 터미널"
 msgid "Adapter settings"
 msgstr "어댑터 설정"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "장치 관리"
 
@@ -1140,6 +1143,45 @@ msgstr "나: %s"
 msgid "Delete"
 msgstr "삭제"
 
+msgid "Current setting"
+msgstr "현재 설정"
+
+msgid "Fixed at %d"
+msgstr "%d(으)로 고정"
+
+msgid "Not changed (default)"
+msgstr "변경 안 함(기본값)"
+
+msgid "Rule in force"
+msgstr "적용 중인 규칙"
+
+msgid "Flow offloading"
+msgstr "플로 오프로딩"
+
+msgid "TTL of mobile data"
+msgstr "모바일 데이터의 TTL"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "모바일 데이터로 나가는 모든 패킷이 이 TTL(IPv6: 홉 제한)을 갖습니다. 핫스폿에 연결된 휴대폰이나 노트북은 64(Windows: 128)를 보내고 기기는 하나 줄여 전달하므로, 통신사는 이를 보고 공유 트래픽을 구별할 수 있습니다."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "이 커널에서는 TTL이 설정된 동안 방화벽 빠른 경로가 꺼집니다"
+
+msgid "Set %d"
+msgstr "%d(으)로 설정"
+
+msgid "Set"
+msgstr "설정"
+
+msgid "Enter a number from 1 to 255"
+msgstr "1부터 255까지의 숫자를 입력하세요"
+
+msgid "Turn off"
+msgstr "끄기"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "64로 하면 모든 패킷이 기기 자체의 트래픽처럼 나갑니다"
+
 msgid "Dashboard info failed"
 msgstr "대시보드 정보를 가져오지 못함"
 
@@ -1278,6 +1320,12 @@ msgstr "잘못된 언어 요청"
 msgid "Unknown source"
 msgstr "알 수 없는 소스"
 
+msgid "The TTL adapter gave no valid reply"
+msgstr "TTL 어댑터가 올바른 응답을 주지 않았습니다"
+
+msgid "Invalid TTL"
+msgstr "잘못된 TTL"
+
 msgid "Request too large"
 msgstr "요청이 너무 큽니다"
 
@@ -1409,3 +1457,12 @@ msgstr "잠글 서빙 셀이 없습니다"
 
 msgid "usage: power get|set KEY VALUE|wake|idle"
 msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "TTL 설정을 읽을 수 없습니다"
+
+msgid "The TTL could not be set"
+msgstr "TTL을 설정할 수 없습니다"
+
+msgid "Unknown TTL operation"
+msgstr "알 수 없는 TTL 작업"
