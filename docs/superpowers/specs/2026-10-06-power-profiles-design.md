@@ -189,6 +189,17 @@ fine print (whether `eco` is worth its latency, whether `lte` is worth having).
 * A hotspot or modem command that fails is logged and the state still changes; the next loop retries the action
   that failed (idempotent commands).
 
+### Amendment after the device-test incident (2026-10-07, FINDINGS 36)
+
+* A key always shows life: `mu300-buttons` runs `mu300-led wake` first on every press, and `mu300-led wake` lights
+  the LEDs for `LED_TIMEOUT` (60 s when 0) under `idle on` too. The idle flag means "not unasked", not "never".
+* `mu300-power wake` restores by inspection (hotspot, modem mode file, LED idle flag, `cpu7`/eco cap, the VPN it
+  stopped) without the daemon, and is what the keys call (in the background); the daemon's wake is the same code.
+* Every external step has a deadline; `mobile-data suspend|resume` end within ~60 s and leave the files consistent.
+* `RADIO_IDLE=off` stops `mu300-vpn` while the modem is off and starts it again on the wake, if it was running.
+* The daemon self-checks each loop: `active` with the modem held down, or (`WIFI_IDLE=0`) with the hotspot down that
+  nobody turned off on purpose, is restored.
+
 ## Tests
 
 Unit tests in `tests/` in the existing style (stubs on PATH, fake sysfs tree, every shell, no device):
