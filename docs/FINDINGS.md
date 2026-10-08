@@ -721,6 +721,67 @@ with `wget -T` or `curl -m`, check the tool's own exit status rather than a pipe
 something that must succeed before believing a failure. To test the bearer while a tunnel runs, route a single
 address around it: `ip rule add pref 8999 to <addr> lookup main`, test, delete the rule.
 
+### 26f. One VPN command for every protocol: profiles and engine drivers
+`mu300-vpn` spoke one protocol: a VLESS link in `vpn.conf`. People have WireGuard configs, OpenVPN files,
+Clash/mihomo subscriptions and raw Xray/sing-box JSON from their panels, so it now keeps named profiles under
+`/etc/mu300/vpn` (`profile import|add|edit|use|remove|export|show|list`, `settings`, `engines`, `check`) and runs
+the active one through a driver per engine (`/opt/mu300/lib/vpn/<type>.sh`: `drv_check`, `drv_gen`, `drv_start`,
+`drv_alive`, `drv_stop`, `drv_import`...). The core owns what the drivers must not differ in: the kill switch, the
+routing (rules 9000-9010, table 2022), the DNS nat and the Tailscale rules. The decisions:
+
+* **ENABLE stays in `vpn.conf`.** Everything else moved, but the switch has too many readers to move with it:
+  `mu300-update` and `android-install.sh` (a VPN in use keeps its engines across an update), `wifi-client` (the kill
+  switch is fatal only when the VPN is on), `mu300-extra` (refuses to remove the vpn extra while ENABLE=1), the
+  dashboard, and every older image, which must find a working VLESS VPN after a downgrade. So `on`/`off` write that
+  one line and `vpn.conf` keeps its legacy keys; `wifi-client` and the dashboard read `KILL_SWITCH` and the engine
+  from the store first and fall back to `vpn.conf`.
+* **Migration by snapshot diff.** At every start (any command, as root) the legacy keys of `vpn.conf` are compared
+  with `legacy.snapshot`, the keys as last migrated; only a key whose value changed since is applied (a setting
+  set, or profile `legacy` updated). The first run moves everything, a later run does nothing, and a later edit of
+  `vpn.conf` - the old README's way, or an older image's `save_pin` after a downgrade and upgrade - wins for the
+  keys it touched while settings made with the new commands are kept otherwise. A plain "vpn.conf wins" would undo
+  every `settings set`; "the store wins" would ignore the edit the old instructions tell people to make.
+* **Marks per engine.** The kill switch lets only traffic marked `0x2d0` (720) out on an uplink, and rule 9000
+  keeps marked traffic off the tunnel, so each driver marks its engine's own sockets: Xray's `sockopt.mark` on every
+  outbound (and on every dialer nested inside one - xhttp's `downloadSettings`, a `dialerProxy`), sing-box's
+  `route.default_mark`, mihomo's `routing-mark`, WireGuard's `wg set fwmark`, OpenVPN's `--mark`. No engine needs an
+  exception in the kill switch, which is unchanged.
+* **The resolve window.** A server name (WireGuard's Endpoint, OpenVPN's remote, a link's host, the `vnext`
+  servers of raw JSON) has to be resolved before the tunnel exists, and with the kill switch up the device's own DNS
+  is dropped too (26e's reason Xray needed the sing-box substitute). The core opens the download window's ruleset
+  with only the DNS sets filled, resolves, and puts the full kill switch back - one nft transaction each way, never
+  a gap. VLESS on Xray behind the kill switch still runs on sing-box, as before, so the existing tests hold.
+* **Raw configs are parsed once, strictly, and rebuilt from an allowlist.** A panel's JSON runs as root and could
+  open a listener on the LAN, expose an API, bind another interface or write a file. It is read by `jq` once
+  (`json_strict`: one object, no duplicate keys, no two keys equal under Go's case folding, since the engines'
+  decoders match field names without regard to case and jq keeps the last duplicate silently) and the engine gets a
+  new document built from what the allowlist accepts, with the inbound, the log, the mark and the bootstrap DNS
+  written last so they always win. An allowlist, not a denylist, because each engine release adds features (some of
+  which listen) faster than a denylist would follow. No jq regex (OpenWrt's jq may lack it) and jq's own errors are
+  never shown (they quote the file); refusals name a key from our own lists, never a value. What a config may do -
+  pick outbounds, route between them, name its DNS - is also its exposure: a `direct`/`freedom` outbound goes past
+  the kill switch with the engine's mark, by the config's own choice.
+* **OpenVPN never reads the user's file.** The `.ovpn` is tokenized with openvpn's own lexical rules (what the two
+  could read differently is refused: a backslash, a quote inside a word, a `</` prefix inside a key block), held to
+  an allowlist of directives and key blocks, and openvpn runs only `$RUN/openvpn.conf`, which we write, with our
+  options after it: `--route-noexec` and pull-filters for `redirect-gateway`, `route`, `setenv`,
+  `block-outside-dns`, and only our own `--up` script. Not `--route-nopull`: it would also drop the pushed
+  `dhcp-option DNS`, which is the one thing from the server the up script wants.
+* **sing-box keeps `auto_route`.** Its own routing does exactly what the core does (same prefs, same table), so the
+  driver says `DRV_ROUTES=self` and the core only adds the Tailscale rules and the DNS nat, as before.
+* **jq is in the images** (Ubuntu, OpenWrt, Arch): the raw-JSON drivers need it, and `wireguard-tools` goes into
+  Ubuntu and Arch (OpenWrt has it). Nothing else grows; mihomo is the new `vpn-mihomo` extra.
+
+Measured on the U30 Air (OpenWrt, mainline), stated as what was seen and no more: the migration of the device's
+working legacy VLESS `vpn.conf` produced profile `legacy` with the same exit IP, without the link ever being read
+or printed. Import from stdin, `check`, and switching `legacy` -> a WireGuard profile -> `legacy` worked, with the
+routes and rules of the previous profile cleaned up each time and the tunnel up. Then the carrier: on the U30 Air's
+SIM, UDP to the WireGuard port never reaches the server - `tcpdump` on `sipa_eth0` shows the marked packets leaving
+the device, and the same UDP sent from a Mac on another network arrives at the server - and OpenVPN over TCP
+connects but the TLS handshake times out, while the same `.ovpn` completes from the home network. The carrier
+drops that UDP and DPI-blocks OpenVPN's TLS; the VLESS profile goes through. The WireGuard and OpenVPN drivers were
+verified on the device up to that point, no further.
+
 ## Default boot
 
 ### 17. Linux as default without losing the Android fallback
