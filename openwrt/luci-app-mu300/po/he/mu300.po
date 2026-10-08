@@ -30,6 +30,9 @@ msgstr "ניהול התקן"
 msgid "Languages"
 msgstr "שפות"
 
+msgid "Power"
+msgstr "צריכת חשמל"
+
 msgid "MU300 control center: status dashboard, network locks, AT terminal and SMS"
 msgstr "מרכז הבקרה של MU300: לוח מצב, נעילות רשת, מסוף AT ו-SMS"
 
@@ -873,6 +876,120 @@ msgstr "אוטומטי (%d נתמכים)"
 msgid "%d locked: %s"
 msgstr "%d נעולים: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "הזינו מספר שלם בין 0 ל-%d"
+
+msgid "Power status unavailable"
+msgstr "מצב החשמל אינו זמין"
+
+msgid "Plugged in"
+msgstr "מחובר לחשמל"
+
+msgid "On battery"
+msgstr "על סוללה"
+
+msgid "Saver"
+msgstr "חיסכון"
+
+msgid "Asleep: hotspot off"
+msgstr "שינה: הנקודה החמה כבויה"
+
+msgid "Charging boot: press the Wi-Fi key to start"
+msgstr "אתחול בטעינה: לחצו על מקש ה-Wi-Fi כדי להתחיל"
+
+msgid "Awake"
+msgstr "ער"
+
+msgid "forced"
+msgstr "מאולץ"
+
+msgid "automatic, battery under %d %%"
+msgstr "אוטומטי, סוללה מתחת ל-%d %%"
+
+msgid "automatic"
+msgstr "אוטומטי"
+
+msgid "Nobody connected for %d s"
+msgstr "אף אחד לא מחובר כבר %d שניות"
+
+msgid "Power source"
+msgstr "מקור חשמל"
+
+msgid "Profile"
+msgstr "פרופיל"
+
+msgid "Profile in use: %s (%s)"
+msgstr "פרופיל בשימוש: %s (%s)"
+
+msgid "%d %%, %s, %d mV, %d mA, %.1f °C"
+msgstr "%d %%, %s, %d mV, %d mA, %.1f °C"
+
+msgid "Charger"
+msgstr "מטען"
+
+msgid "Charger: %s, %s port"
+msgstr "מטען: %s, יציאה %s"
+
+msgid "Charging paused: battery temperature"
+msgstr "הטעינה הושהתה: טמפרטורת הסוללה"
+
+msgid "Charging paused: charge limit"
+msgstr "הטעינה הושהתה: מגבלת הטעינה"
+
+msgid "Sleep now"
+msgstr "שינה עכשיו"
+
+msgid "Wake"
+msgstr "התעוררות"
+
+msgid "Nobody connected means no Wi-Fi client and no computer on USB. The Wi-Fi key, a computer on USB or the charger wake the device."
+msgstr "אף אחד לא מחובר פירושו שאין לקוח Wi-Fi ואין מחשב ב-USB. מקש ה-Wi-Fi, מחשב ב-USB או המטען מעירים את ההתקן."
+
+msgid "Automatic: plugged in / on battery"
+msgstr "אוטומטי: מחובר לחשמל / על סוללה"
+
+msgid "Switch to Saver under %"
+msgstr "מעבר לחיסכון מתחת ל-%"
+
+msgid "Stop charging at"
+msgstr "הפסקת טעינה ב-"
+
+msgid "80 % keeps the battery healthier on a device that stays plugged in."
+msgstr "80 % שומרים על הסוללה במכשיר שנשאר מחובר לחשמל."
+
+msgid "Keep as is"
+msgstr "ללא שינוי"
+
+msgid "LTE only (5G off)"
+msgstr "LTE בלבד (5G כבוי)"
+
+msgid "Off"
+msgstr "כבוי"
+
+msgid "On"
+msgstr "פועל"
+
+msgid "Full"
+msgstr "מלא"
+
+msgid "Eco: big core off"
+msgstr "חסכוני: הליבה הגדולה כבויה"
+
+msgid "Hotspot off after (min, 0 = never)"
+msgstr "כיבוי הנקודה החמה אחרי (דקות, 0 = אף פעם)"
+
+msgid "Modem when idle"
+msgstr "מודם במנוחה"
+
+msgid "LEDs when idle"
+msgstr "נורות LED במנוחה"
+
+msgid "CPU"
+msgstr "CPU"
+
+msgid "Ignored lines in power.conf: %s"
+msgstr "שורות שהתעלמו מהן ב-power.conf: %s"
+
 msgid "Configure how this plugin connects to the current Unisoc OpenWrt platform. Changes do not require editing the dashboard, AT, locks or SMS pages."
 msgstr "הגדרת אופן החיבור של תוסף זה לפלטפורמת Unisoc OpenWrt הנוכחית. השינויים אינם דורשים עריכה של דפי לוח המצב, AT, הנעילות או SMS."
 
@@ -1173,6 +1290,21 @@ msgstr "הגדרת USB לא ידועה"
 msgid "Invalid interface name"
 msgstr "שם ממשק לא חוקי"
 
+msgid "The power adapter gave no valid reply"
+msgstr "מתאם החשמל לא החזיר תשובה תקפה"
+
+msgid "Unknown power operation"
+msgstr "פעולת חשמל לא מוכרת"
+
+msgid "Unknown power setting"
+msgstr "הגדרת חשמל לא מוכרת"
+
+msgid "Invalid power value"
+msgstr "ערך חשמל לא תקין"
+
+msgid "Invalid power request"
+msgstr "בקשת חשמל לא תקינה"
+
 msgid "The languages adapter gave no valid reply"
 msgstr "מתאם השפות לא החזיר תשובה תקינה"
 
@@ -1322,6 +1454,9 @@ msgstr "מטמון הנעילות אינו זמין"
 
 msgid "No serving cell to lock to"
 msgstr "אין תא משרת לנעילה"
+
+msgid "usage: power get|set KEY VALUE|wake|idle"
+msgstr "usage: power get|set KEY VALUE|wake|idle"
 
 msgid "The TTL setting could not be read"
 msgstr "לא ניתן לקרוא את הגדרת ה-TTL"

@@ -30,6 +30,9 @@ msgstr "Zarządzanie urządzeniem"
 msgid "Languages"
 msgstr "Języki"
 
+msgid "Power"
+msgstr "Zasilanie"
+
 msgid "MU300 control center: status dashboard, network locks, AT terminal and SMS"
 msgstr "Centrum sterowania MU300: panel stanu, blokady sieci, terminal AT i SMS"
 
@@ -873,6 +876,120 @@ msgstr "Automatyczny (obsługiwanych: %d)"
 msgid "%d locked: %s"
 msgstr "Zablokowano %d: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Wpisz liczbę całkowitą od 0 do %d"
+
+msgid "Power status unavailable"
+msgstr "Stan zasilania niedostępny"
+
+msgid "Plugged in"
+msgstr "Podłączone do zasilania"
+
+msgid "On battery"
+msgstr "Na baterii"
+
+msgid "Saver"
+msgstr "Oszczędzanie"
+
+msgid "Asleep: hotspot off"
+msgstr "Uśpienie: hotspot wyłączony"
+
+msgid "Charging boot: press the Wi-Fi key to start"
+msgstr "Start w trybie ładowania: naciśnij klawisz Wi-Fi, aby uruchomić"
+
+msgid "Awake"
+msgstr "Aktywne"
+
+msgid "forced"
+msgstr "wymuszony"
+
+msgid "automatic, battery under %d %%"
+msgstr "automatycznie, bateria poniżej %d %%"
+
+msgid "automatic"
+msgstr "automatycznie"
+
+msgid "Nobody connected for %d s"
+msgstr "Nikt nie jest połączony od %d s"
+
+msgid "Power source"
+msgstr "Źródło zasilania"
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Profile in use: %s (%s)"
+msgstr "Używany profil: %s (%s)"
+
+msgid "%d %%, %s, %d mV, %d mA, %.1f °C"
+msgstr "%d %%, %s, %d mV, %d mA, %.1f °C"
+
+msgid "Charger"
+msgstr "Ładowarka"
+
+msgid "Charger: %s, %s port"
+msgstr "Ładowarka: %s, port %s"
+
+msgid "Charging paused: battery temperature"
+msgstr "Ładowanie wstrzymane: temperatura baterii"
+
+msgid "Charging paused: charge limit"
+msgstr "Ładowanie wstrzymane: limit ładowania"
+
+msgid "Sleep now"
+msgstr "Uśpij teraz"
+
+msgid "Wake"
+msgstr "Obudź"
+
+msgid "Nobody connected means no Wi-Fi client and no computer on USB. The Wi-Fi key, a computer on USB or the charger wake the device."
+msgstr "Brak połączonych oznacza brak klienta Wi-Fi i brak komputera na USB. Klawisz Wi-Fi, komputer na USB lub ładowarka budzą urządzenie."
+
+msgid "Automatic: plugged in / on battery"
+msgstr "Automatycznie: zasilanie / bateria"
+
+msgid "Switch to Saver under %"
+msgstr "Przełącz na Oszczędzanie poniżej %"
+
+msgid "Stop charging at"
+msgstr "Zatrzymaj ładowanie przy"
+
+msgid "80 % keeps the battery healthier on a device that stays plugged in."
+msgstr "80 % lepiej chroni baterię urządzenia, które stale jest podłączone."
+
+msgid "Keep as is"
+msgstr "Bez zmian"
+
+msgid "LTE only (5G off)"
+msgstr "Tylko LTE (5G wyłączone)"
+
+msgid "Off"
+msgstr "Wyłączony"
+
+msgid "On"
+msgstr "Włączony"
+
+msgid "Full"
+msgstr "Pełna"
+
+msgid "Eco: big core off"
+msgstr "Eco: duży rdzeń wyłączony"
+
+msgid "Hotspot off after (min, 0 = never)"
+msgstr "Wyłącz hotspot po (min, 0 = nigdy)"
+
+msgid "Modem when idle"
+msgstr "Modem w bezczynności"
+
+msgid "LEDs when idle"
+msgstr "Diody LED w bezczynności"
+
+msgid "CPU"
+msgstr "CPU"
+
+msgid "Ignored lines in power.conf: %s"
+msgstr "Zignorowane wiersze w power.conf: %s"
+
 msgid "Configure how this plugin connects to the current Unisoc OpenWrt platform. Changes do not require editing the dashboard, AT, locks or SMS pages."
 msgstr "Skonfiguruj sposób, w jaki ta wtyczka łączy się z bieżącą platformą Unisoc OpenWrt. Zmiany nie wymagają edycji stron panelu, AT, blokad ani SMS."
 
@@ -1173,6 +1290,21 @@ msgstr "Nieznane ustawienie USB"
 msgid "Invalid interface name"
 msgstr "Nieprawidłowa nazwa interfejsu"
 
+msgid "The power adapter gave no valid reply"
+msgstr "Adapter zasilania nie dał poprawnej odpowiedzi"
+
+msgid "Unknown power operation"
+msgstr "Nieznana operacja zasilania"
+
+msgid "Unknown power setting"
+msgstr "Nieznane ustawienie zasilania"
+
+msgid "Invalid power value"
+msgstr "Nieprawidłowa wartość zasilania"
+
+msgid "Invalid power request"
+msgstr "Nieprawidłowe żądanie zasilania"
+
 msgid "The languages adapter gave no valid reply"
 msgstr "Adapter języków nie zwrócił prawidłowej odpowiedzi"
 
@@ -1322,6 +1454,9 @@ msgstr "Pamięć podręczna blokad niedostępna"
 
 msgid "No serving cell to lock to"
 msgstr "Brak komórki obsługującej do zablokowania"
+
+msgid "usage: power get|set KEY VALUE|wake|idle"
+msgstr "usage: power get|set KEY VALUE|wake|idle"
 
 msgid "The TTL setting could not be read"
 msgstr "Nie udało się odczytać ustawienia TTL"
