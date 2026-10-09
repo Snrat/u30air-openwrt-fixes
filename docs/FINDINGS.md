@@ -2973,10 +2973,11 @@ held the SoC at 97 °C in #65 until a reboot. #52 (the Magisk installer, OpenWrt
 `region_find_existing` without seeing why. The legacy offset is the same trap on the 32 GB variant: it lies
 beyond that eMMC altogether and was read all the same.
 
-Fixed in `tools/storage.sh` (which `install.sh`, `uninstall.sh`, `tools/reset-password.sh` and the Magisk
-installer share) and in `install.ps1`: a region whose boundaries cross is an empty one (`SIZE=0`; the installers
+Fixed in `tools/storage.sh` (`region_find_existing`, which `install.sh` and the Magisk installer share, and
+`region_on_disk`, which the probe loops of `uninstall.sh` and `tools/reset-password.sh` call), in `install.ps1` and
+in `uninstall.ps1` (`RegionOnDisk`): a region whose boundaries cross is an empty one (`SIZE=0`; the installers
 then offer the card or the repartitioning, as they do for any region that is too small), and a candidate
-superblock is read only when it lies on the disk (`region_on_disk`, `RegionOnDisk`). The SD-card installation of
+superblock is read only when it lies on the disk. The SD-card installation of
 #52 and #65 goes through without a single read past the end. `tests/test_installer.py` (`Region`) runs the
 layout of #65 against the functions and checks that no `dd` crosses the disk's last byte.
 
@@ -2995,10 +2996,12 @@ only looks at ports: `rndis0` was not one yet, kept `192.168.77.1/24`, and then 
 one of its ports with the same address, two equal routes, and the device could not reach its own Wi-Fi client
 nor the USB host, with the serial console the only way in. MRWOODEN measured it on an F50 (6.18, `openwrt-luci`,
 Windows without `UsbNcm.sys`) and sent the fix: join first, then take the address off; and after the hook's own
-re-enumeration of the gadget (K10), which destroys the function's netdev and binds a new one, put the gadget
-netdevs back into the bridge, since netifd re-adds a port it has in its configuration (`usb0`) and never one it
-never had. Applied as sent, with the regression test (`test_early_dhcp`: the RNDIS netdev that is not a port
-yet). Verified on the reporter's device: `br-lan` the only holder of the address, both the Wi-Fi client and the
+re-enumeration of the gadget (K10) put the gadget netdevs back into the bridge, in case the rebind left one bare
+(with a configfs gadget the netdev is made with the function and should survive an UDC rebind, so this is a
+guard, not a mechanism that was seen; netifd would re-add a port it has in its configuration, `usb0`, and never
+one it never had). Applied as sent, except that only a netdev that was a port before the rebind is made one
+again: a user who took `usb0` out of `br-lan` for an interface of its own keeps it that way. With the regression
+tests (`test_early_dhcp`: the RNDIS netdev that is not a port yet; the `usb0` that is not a port stays out). Verified on the reporter's device: `br-lan` the only holder of the address, both the Wi-Fi client and the
 USB host served by the one `dnsmasq`, `rndis0` still a port after the rebind.
 
 #### 38c. fw4 on 5.4: the boot ruleset without the LAN, and a reload that always fails (#67, #61)
@@ -3019,7 +3022,9 @@ renders both. Two things stack:
    list without regard to the pending deletion (the check skips inactive entries from 5.13 on). `flowtable ft {
    ... } Error: Resource busy`, the whole transaction is rejected, and the S19 ruleset stays. The flowtable exists
    from S19 on because the `earlyusb` zone names `usb0`, which init has made by then, and fw4 puts every zone
-   device into `ft`. The first ruleset is therefore the one with the flowtable and without the LAN, and nothing
+   device that exists into `ft` (a device without a `/sys/class/net` entry is left out, see
+   `openwrt/patches/fw4-sipa-offload.patch`; that is what makes naming `br-lan` and `sipa_eth0` in the zones
+   safe at S19). The first ruleset is therefore the one with the flowtable and without the LAN, and nothing
    after it can replace it. Deleting the flowtable on its own (`nft delete flowtable inet fw4 ft`), in a
    transaction that is committed before the reload, is enough: the reload then creates it afresh.
 
@@ -3038,8 +3043,9 @@ Two fixes, both in `openwrt/overlay`:
   reload, under the same conditions 20-firewall reloads on: an ifup of an interface that is in a zone. The reload
   succeeds; the offloaded flows of the moment take the ordinary path until the flowtable is back.
 
-Not covered on 5.4: a reload that is not an ifup's - the firewall saved in LuCI, `fw4 reload` by hand - still
-fails while the flowtable is there. Until a cleaner hook is found (the flowtable deleted from fw4's own reload
+Not covered on 5.4: a reload that is not an ifup's - the firewall saved in LuCI, `fw4 reload` by hand, and
+`mu300-vpn`'s own `/etc/init.d/firewall reload` after it adds the tunnel to the wan zone (the clients get no
+forwarding into the VPN until the next ifup of a zone interface) - still fails while the flowtable is there. Until a cleaner hook is found (the flowtable deleted from fw4's own reload
 path), the way to apply a firewall change on 5.4 is `nft delete flowtable inet fw4 ft; fw4 reload`, or a reboot.
 Turning software flow offloading off would end that, at the cost of the fast path on the one kernel that has
 none other.
