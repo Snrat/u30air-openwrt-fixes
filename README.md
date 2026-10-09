@@ -449,41 +449,104 @@ button that reboots the device into Linux, and `su -c mu300-linux` does the same
 
 ### VPN
 
-The device can send its own traffic **and** everything from connected clients through a VLESS server. The default
-engine is [Xray](https://github.com/XTLS/Xray-core) behind [hev-socks5-tunnel](https://github.com/heiher/hev-socks5-tunnel)
-on a kernel TUN; `ENGINE=sing-box` in the config switches back to sing-box. Links that ask for `allowInsecure`
-work: Xray 26 dropped that option, so the server's certificate is fetched once, pinned, and re-fetched by itself
-when the server renews it. The kill switch (`KILL_SWITCH=1`) needs sing-box: with it on, sing-box runs even when
-`ENGINE=xray` is set, and when the engines are missing it stays up while they are downloaded (only the device
-itself, only to the release hosts, for 15 minutes at most); nothing that fails takes it down.
-
-The engines (about 40 MB to download, 120 MB on the device) are not part of the systems: they are the **vpn extra**, which you add once - the
-installer asks, or on the device:
+The device can send its own traffic **and** everything from connected clients through a VPN server. `mu300-vpn`
+keeps **profiles** - a WireGuard `.conf`, an OpenVPN `.ovpn`, a Clash/mihomo YAML, a VLESS, VMess, Trojan or
+Shadowsocks share link, or a raw Xray or sing-box JSON from a panel - and runs the active one with the engine that
+speaks its protocol. One command for all of them; the kill switch, the routing, DNS and Tailscale are the same
+whatever the type.
 
 ```sh
-sudo mu300-extra install vpn          # downloads it from the release, checks it against the release's SHA256SUMS
-sudo cp /etc/mu300/vpn.conf.example /etc/mu300/vpn.conf
-sudo nano /etc/mu300/vpn.conf         # paste your vless:// link into VLESS_URI, set ENABLE=1
-sudo systemctl enable --now mu300-vpn
-mu300-vpn status
+sudo mu300-vpn profile import 'vless://...'          # a share link (vless, vmess, trojan, ss)
+sudo mu300-vpn profile import ~/office.conf Office    # a file: wg .conf, .ovpn, Xray/sing-box .json, mihomo .yaml
+cat client.ovpn | sudo mu300-vpn profile import -     # from stdin (ssh: nothing is left on the device's disk)
+mu300-vpn profile list                                # id, type, name; * marks the active one
+sudo mu300-vpn profile use office                     # make it active (a running VPN restarts on it)
+sudo mu300-vpn on                                     # ENABLE=1, starts at boot; off: stops and removes the kill switch
+mu300-vpn status                                      # profile, engine, tunnel, exit IP - never a secret
 ```
 
-Extras live on the Linux partition next to the systems (`/mnt/mu300-disk/extra`), so Ubuntu and OpenWrt share one
-copy and an update or reinstall of a system keeps it; `mu300-update apply` brings them to the new release.
-`mu300-extra list` shows what there is, `mu300-extra status` what is installed, `sudo mu300-extra remove vpn` takes it
-off again (turn the VPN off first; it refuses while the VPN is on). A device that used the VPN before the engines became an extra keeps it working: the update installs the
-vpn extra by itself (or keeps the engines of the old system), and `mu300-vpn` fetches it when it finds none.
+The type is sniffed from the link's scheme or the file's content; `profile add TYPE NAME SRC` says it outright. A
+profile is checked with its engine when it is imported and again at every start (`mu300-vpn check [ID]` does it
+by hand). `profile show ID` tells name, type, source, date and the server's host and port; `profile edit ID SRC`
+replaces its config, `profile set ID KEY VALUE` sets a per-type option (`TLS_PIN_SHA256`, `MIHOMO_STACK`,
+`OVPN_USER`...), `profile remove ID` removes it (not the active one while the VPN is on), and `profile export ID`
+prints the raw config back - the one command that prints a secret. Everything lives under `/etc/mu300/vpn`
+(profiles and settings, 0600, kept across updates; each system - Ubuntu, OpenWrt - has its own) and
+`/etc/mu300/vpn.conf` holds only the `ENABLE` switch, which `on`/`off` write. A `vpn.conf` written the old way
+(a `VLESS_URI` and the keys next to it) still works: it is moved into the store as the profile `legacy` the first
+time `mu300-vpn` runs, and an edit to it later wins for the keys it changed.
+
+**Settings** (`mu300-vpn settings`, `settings get KEY`, `settings set KEY VALUE`; an empty value is the default; a
+VPN that is on uses a new value from its next `mu300-vpn restart`):
+
+| key | values | default | |
+|---|---|---|---|
+| `KILL_SWITCH` | 0, 1 | 1 | nothing but the tunnel leaves the device, also while the tunnel is down |
+| `TAILSCALE` | 0, 1 | 1 | Tailscale's own traffic through the tunnel (below) |
+| `IPV6` | 0, 1 | 0 | IPv6 through the tunnel as well, when the tunnel has an IPv6 address |
+| `REMOTE_DNS` | an address | 1.1.1.1 | DNS for the device and its clients, through the tunnel |
+| `BOOTSTRAP_DNS` | an address | 1.1.1.1 | for the server's own name, outside the tunnel (sing-box, mihomo) |
+| `LAN_CIDRS` | CIDRs, comma-separated | empty | more networks that stay local (the device's own LAN always does) |
+| `XRAY` `HEV` `SING_BOX` `MIHOMO` `OPENVPN` | a path | empty | another binary for that engine |
+
+**Engines.** Each type runs on its own engine, and `mu300-vpn engines` says which are present and how to get the
+missing ones; `sudo mu300-vpn engines install ENGINE` gets one (the `on` command and the toolkit's menu point to
+it). [Xray](https://github.com/XTLS/Xray-core) behind [hev-socks5-tunnel](https://github.com/heiher/hev-socks5-tunnel)
+on a kernel TUN, and [sing-box](https://github.com/SagerNet/sing-box), are the **vpn extra** (about 40 MB to download, 120 MB on the device);
+[mihomo](https://github.com/MetaCubeX/mihomo) is the **vpn-mihomo extra**; WireGuard is the kernel's, with
+`wireguard-tools` (in the images; the 5.4 vendor kernel has no WireGuard, mainline does); OpenVPN is the system's
+`openvpn` package (`apk add openvpn-openssl` on OpenWrt, `apt-get install openvpn` on Ubuntu), which the service
+never installs by itself - it fails closed and names the command. A VLESS link runs on Xray by default; with the kill
+switch it runs on sing-box, because Xray resolves the server's name and fetches its certificate (Xray 26 has no
+`allowInsecure`: the certificate is fetched once, pinned in the profile, and fetched again when the server renews
+it) before the tunnel exists, and the kill switch would drop both. Other types resolve their server's name through a
+short **resolve window** of the same kind as the download window (only the device's DNS, only for seconds), so they
+all work behind the kill switch.
+
+**The kill switch and every type.** The switch lets only marked traffic out on an uplink, and every engine marks its
+own packets (Xray and sing-box in their configs, mihomo's `routing-mark`, WireGuard's `fwmark`, OpenVPN's `--mark`),
+so no type needs an exception and nothing else leaves the device - with it on, when the tunnel is down, nothing
+goes out; when the engines are missing, it stays up while they are downloaded (only the device itself, only to the
+release hosts, for 15 minutes at most). **Raw configs** (Xray and sing-box JSON, mihomo YAML) are hostile input: a
+panel's export is parsed once, strictly, and the engine runs a new file rebuilt from an allowlist of what a config
+may contain - its outbounds and the servers they reach, its routing rules between them, its DNS servers. The
+inbound is always ours (nothing listens on the LAN or the device), the mark is ours, an API or controller is
+dropped, a key file path or a TLS key log is refused, and anything the allowlist does not know refuses the config
+with the key's name, never its value. What a raw config may do is also its exposure, said plainly: a `direct` or
+`freedom` outbound (or a DNS server that goes through one) sends that traffic out of the tunnel onto the uplink with
+the engine's mark, past the kill switch. Split tunnelling is the config's own choice and the kill switch does not
+override it; a config that routes everything through the tunnel gets everything through the tunnel. An OpenVPN file
+is held the same way: it is parsed with openvpn's own lexical rules into an allowlist of directives and key blocks,
+openvpn reads only the file we write, and a file that wants to run a script is refused.
+
+The extras are not part of the systems: the installer asks for the vpn extra, or on the device
+`sudo mu300-extra install vpn` (`vpn-mihomo` for mihomo) downloads it from the release and checks it against the
+release's SHA256SUMS. Extras live on the Linux partition next to the systems (`/mnt/mu300-disk/extra`), so Ubuntu
+and OpenWrt share one copy and an update or reinstall of a system keeps it; `mu300-update apply` brings them to the
+new release. `mu300-extra list` shows what there is, `mu300-extra status` what is installed, `sudo mu300-extra
+remove vpn` takes it off again (turn the VPN off first; it refuses while the VPN is on). A device that used the VPN
+before the engines became an extra keeps it working: the update installs the vpn extra by itself (or keeps the
+engines of the old system), and `mu300-vpn` fetches it when it finds none.
 
 **Tailscale through the VPN.** Tailscale marks its own connections (WireGuard to peers, DERP relays, the control
 server) and gives them a routing rule of their own (`fwmark 0x80000/0xff0000 lookup main`, pref 5210) that would send
 them past the tunnel straight to the carrier - on a network where only the VPN gets out, Tailscale then never
-connects. When the tunnel comes up, with either engine, `mu300-vpn` puts a rule before it (pref 5200, into the
+connects. When the tunnel comes up, whatever the engine, `mu300-vpn` puts a rule before it (pref 5200, into the
 tunnel's table 2022). Private addresses (the device's LAN, RFC 1918) stay outside the tunnel (pref 5199), so peers on
 the same network are reached directly. The engine's own connection keeps going to the carrier even with a Tailscale
 exit node (pref 5198). The tailnet itself (`100.64.0.0/10`, Tailscale's table 52) works as before. The kill switch
 still drops every Tailscale packet on the cellular interface, so with it on they only leave through the tunnel. With
 the VPN off, or with an engine stopped, the rules have nothing to send packets into and Tailscale goes out directly
-as usual; `mu300-vpn off` and the next start clear them. IPv4 only. `TAILSCALE=0` in vpn.conf turns this off.
+as usual; `mu300-vpn off` and the next start clear them. IPv4 only. `mu300-vpn settings set TAILSCALE 0` turns this
+off.
+
+**What the carrier lets through.** Measured on the U30 Air's SIM (mobile uplink): UDP to a WireGuard port never
+reaches the server - `tcpdump` on `sipa_eth0` shows the marked packets leaving, and the same UDP from a Mac on
+another network arrives - and OpenVPN over TCP connects but its TLS handshake times out, while the same `.ovpn`
+completes from the home network. That carrier drops the UDP and inspects and blocks OpenVPN's TLS; the VLESS
+profile goes through. If a WireGuard or OpenVPN profile never comes up on mobile data while it works on Wi-Fi, this
+is the first thing to suspect: try the same profile with `wifi-client`, or a type the carrier does not touch
+(docs/FINDINGS.md 26f).
 
 ### Languages
 
@@ -654,7 +717,7 @@ Like the installer, it offers to reboot the device from Linux into Android first
 | Wi-Fi client | ✅ WPA2 and WPA2/WPA3 mixed, shared with USB clients; ✗ WPA3-only networks (the driver has no SAE) |
 | USB network + serial console | ✅ `192.168.77.1` (U30 Air `192.168.78.1`), `screen /dev/cu.usbmodem* 115200` |
 | SSH, telnet | ✅ |
-| VPN (VLESS) | ✅ Xray or sing-box, kill switch, Tailscale through the tunnel; the engines are the vpn extra |
+| VPN | ✅ profiles: WireGuard, OpenVPN, VLESS/VMess/Trojan/Shadowsocks links, Clash/mihomo, raw Xray or sing-box JSON; kill switch, Tailscale through the tunnel; the engines are the vpn and vpn-mihomo extras |
 | Bluetooth | ✅ BlueZ, scanning works |
 | GPU (Mali-G57) | ✅ OpenCL 3.0, headless |
 | Storage | ✅ about 32 GB in the unused area of the internal eMMC on the 64 GB device; on the 32 GB one you choose the split with Android, or use an SD card (F50) |
