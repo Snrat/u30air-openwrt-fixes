@@ -2683,7 +2683,11 @@ Air, ten `ifdown wan; ifup wan` gave the WAN back in
 * **SMS (K58, K69)**: sending failed on both lines whatever `AT+CAVIMS` was (`+CMS ERROR: 28` on the U30 Air,
   `313` on the F50, the same with 0 and 1): the lines have no credit, so `AT+CAVIMS=1` is kept (no difference
   measured) and receiving was not tried. `AT+CMGL=4` marks messages read on this modem: on F50 #1's SIM the first
-  listing showed 35 as REC UNREAD, the second 35 as REC READ. The pool never deletes from the SIM.
+  listing showed 35 as REC UNREAD, the second 35 as REC READ. Since 2026-10-09 the pool moves what it holds off
+  the SIM (each slot read back with `AT+CMGR` and deleted only while it still holds the PDU that was pooled, after
+  the pool's file is on the disk): a full SIM (35/35 on the U30 Air's) took no more messages, and the second part of
+  a long reply then never arrived, so the pool never saw it. On that SIM one sync moved 34 slots off, and the
+  missing part of the waiting message arrived within a minute.
 * **Update keeps the user's settings (I3)**: on openwrt-luci with the language, theme, `pdptype` and `ipv6` changed,
   mu300-update's `apply_one` with a newer image and a reboot kept all four, and `dhcp` had no NDP option. The device
   check covered those four (91-mu300-luci). The update now keeps the user's network settings too: 90-mu300 is split
