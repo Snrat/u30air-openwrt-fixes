@@ -487,7 +487,6 @@ VPN that is on uses a new value from its next `mu300-vpn restart`):
 | `REMOTE_DNS` | an address | 1.1.1.1 | DNS for the device and its clients, through the tunnel |
 | `BOOTSTRAP_DNS` | an address | 1.1.1.1 | for the server's own name, outside the tunnel (sing-box, mihomo) |
 | `LAN_CIDRS` | CIDRs, comma-separated | empty | more networks that stay local (the device's own LAN always does) |
-| `MIHOMO_CONTROLLER` | empty, `127.0.0.1:PORT` | empty | mihomo's external controller, loopback only |
 | `XRAY` `HEV` `SING_BOX` `MIHOMO` `OPENVPN` | a path | empty | another binary for that engine |
 
 **Engines.** Each type runs on its own engine, and `mu300-vpn engines` says which are present and how to get the
