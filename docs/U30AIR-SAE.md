@@ -1,4 +1,4 @@
-# U30 Air SC2355 firmware SAE offload (experimental)
+# U30 Air SC2355 firmware SAE offload (opt-in)
 
 The tested U30 Air firmware performs AP SAE authentication in firmware, but
 the standard hostapd AP setup neither supplies the vendor runtime password
@@ -37,10 +37,22 @@ log protection; an existing stock module still contains the original logging.
 ## Build and opt in
 
 Use a dedicated [official OpenWrt 25.12.5 armsr/armv8 SDK](https://downloads.openwrt.org/releases/25.12.5/targets/armsr/armv8/).
-Verify its checksum before extracting. The package recipe must have source
-`ca266cc24d8705eb1a2a0857ad326e48b1408b20`, revision 5. The helper applies the
-patch after OpenWrt's existing patches, bumps revision to 6, replaces the SDK
-`.config`, and builds the OpenSSL variant with its normal SDK dependencies:
+Verify its checksum before extracting. Use an ASCII-only SDK path: the SDK's
+package stripping scripts failed with a non-ASCII build path on the test host.
+Install the SDK's pinned base feed before running the helper:
+
+```sh
+cd /absolute/path/to/sdk
+./scripts/feeds update base
+./scripts/feeds install -p base hostapd
+```
+
+The package recipe must have source
+`ca266cc24d8705eb1a2a0857ad326e48b1408b20`, revision 1 (the official SDK's
+pinned feed) or 5 (the previously recorded release feed). Other sources and
+revisions are refused. The helper finds the SDK feed recipe, applies the patch
+after OpenWrt's existing patches, bumps revision to 6, replaces the dedicated
+SDK's `.config`, and builds the OpenSSL variant with its normal dependencies:
 
 ```sh
 sh openwrt/build-u30-sae.sh /absolute/path/to/sdk /absolute/path/to/u30-sae-apks
@@ -70,37 +82,84 @@ generated hostapd configuration locally and confirm `wpa_key_mgmt=SAE`,
 `ieee80211w=2`, `sae_pwe=0` and `u30_sae_offload=1`. Do not publish that file.
 The firmware request uses group 19 even if the generator lists more groups.
 
-Use a complete `wifi down`, wpad stop/start, then `wifi up` when changing from
-OWE or replacing the binary. A plain reload once left the tested firmware in
-a state that timed out the four-way handshake (reason 15); a complete restart
-restored fresh authentication. Hot reconfiguration remains a review item.
-Keep a local original package/config backup for rollback and USB management
-access while testing. APK replacement after a later upgrade needs revalidation.
+## Installation and rollback
 
-## Validation and remaining work
+Keep USB management access and back up the wireless configuration, installed
+Wi-Fi packages/files and original `sprd_wlan_combo.ko` before installation.
+The OpenSSL variant also requires `libopenssl-legacy`; let APK resolve that
+from the official release feed, or download it locally for an offline install.
+Install the matching `hostapd-common` and `wpad-basic-openssl` pair together.
+Do not leave an earlier standalone `hostapd` binary in front of the package's
+`hostapd -> wpad` symlink. Trust only packages you built or whose origin and
+checksums you verified; locally built APKs are not signed by OpenWrt's release
+key. This is an opt-in build recipe, not an official OpenWrt binary release.
 
-The original seven-file integration patch was compiled with the OpenWrt
-25.12.5 GCC 14.3/musl toolchain and OpenWrt ubus/ucode/APUP support, then deployed
-on one U30 Air running Linux 7.2.9. After a full device reboot, a Linux client
-with a fresh MAC completed pure SAE, the four-way handshake and DHCP. Router
-HTTP returned 200 and external HTTPS returned 204 over Wi-Fi (no proxy, TLS 1.2).
-A wrong password was rejected; the correct password worked again afterwards.
-Other phones/clients have not been independently verified.
+When replacing packages, take Wi-Fi down, stop wpad and wait for all hostapd
+processes to exit before removing the old wpad variant. After installation,
+start wpad and bring Wi-Fi up. Do not unload/reload the WLAN module live:
+a trial on this device panicked in bridge teardown when hostapd was still
+operating an old netdev callback after module unload. Install the matching
+module file and use a complete Linux reboot instead. For a module trial, an
+early-boot restore guard must run before `mu300-hw` (START=12); keep the original
+module available until both USB and fresh SAE client access are confirmed.
+Restore packages, configuration and module from the backup, then reboot, if
+the trial fails. No Android firmware/partition change is needed.
 
-The contribution adds stricter configuration/setup gates, a separately tested
-bounded parser, and private-log suppression. The resulting hostapd source was
-cross-compiled successfully with the same OpenWrt toolchain and integration
-configuration. These source refinements and rebuilt kernel module have not
-been deployed as a fresh image. The SDK helper is tested with fake build
-commands; the SDK APK pipeline and final Docker image still need end-to-end
-build/hardware verification before removing draft status. Local device-linked
-test binaries/libraries are deliberately not distributed as package artifacts.
+A plain reload after changing from OWE once left the tested firmware timing
+out the four-way handshake (reason 15); a complete wpad restart restored it.
+Same-configuration `wifi reload` passed with the final packages. Switching
+between security modes and changing passwords through hot reconfiguration
+have not been exhaustively validated; use a complete Wi-Fi/wpad restart for
+those operations. APK replacement after a later upgrade needs revalidation.
+
+## Validation and limits
+
+The final patch was built through the official OpenWrt 25.12.5 armsr/armv8 SDK
+(GCC 14.3/musl), producing revision 6 `hostapd-common` and
+`wpad-basic-openssl` APKs. The official SDK's base feed is pinned at
+`f0a60eee2fe051741c643ea6118718aae1ef17fb`. SDK download SHA-256:
+`1b0316604a3e820b2b008a1baff3f9dac6716af942bef800930e58c7de98c98b`.
+These packages, plus the official `libopenssl-legacy` dependency, were installed
+on one U30 Air with OpenWrt 25.12.5 and Linux 7.2.9. The private-log-suppressed
+WLAN module was rebuilt against the matching prepared kernel/configuration and
+successfully loaded through a complete Linux reboot. No module versioning was
+enabled on the tested kernel; this local module is not interchangeable with a
+module for another kernel build. Both mainline module sources and the vendor
+kernel's equivalent patch are included; the vendor-kernel variant was not
+hardware-tested in this run.
+
+A Linux NetworkManager client on an independent interface, using a fresh MAC
+and required PMF, completed pure SAE, the WPA four-way handshake and DHCP.
+Router HTTP returned 200 and external HTTPS returned 200 with certificate
+verification (direct curl, no proxy, TLS 1.2). An incorrect password never
+established a connection within the 25-second test window; the correct password
+connected afterwards. Same-configuration Wi-Fi reload, a complete wpad service restart, and fresh
+reconnection passed. External connectivity had transient timeouts; repeated checks over
+Wi-Fi and a router-local comparison returned 200. Original password-log
+markers were absent after the new module boot. Raw device/client logs and
+credentials are not part of this contribution.
+
+Other phones/clients, H2E-only clients, alternate SAE groups and the final Docker
+rootfs assembly have not been independently verified. Delivery here is the
+SDK-built package pair and a tested existing-device installation, rather than
+a flashed replacement image. Full rootfs assembly remains an optional image
+builder path. No claim is made about OWE or SAE client/station mode.
+
+The SAE/parser/SDK tests pass (9 cases), Wi-Fi bring-up tests pass (5), Wi-Fi
+client regressions pass (58), and static tests pass (40). A broad desktop run
+executed 1056 tests with 86 skips and two pre-existing VPN test failures: the
+host has a real `/usr/bin/mihomo`, and its `ls` appends the SELinux mode suffix.
+The SAE branch does not modify either VPN test or implementation. Local UBSan
+was unavailable because this desktop is missing its runtime library; the Linux CI job now
+requires a successful UBSan run rather than silently falling back. These local results
+are not a claim that all CI checks pass.
 
 `tests/test_u30_sae.py` compiles the actual parser from the patch and exercises
 every truncation, exact/duplicate/non-trailing elements and 500 deterministic
 malformed inputs. UBSan is used when its compiler/runtime is available; require
-it in CI with `MU300_TEST_UBSAN=1`. The test also checks SDK recipe pinning,
-matching package collection, and refusal to overwrite a conflicting patch.
+it in CI with `MU300_TEST_UBSAN=1`. The tests also check the official SDK feed layout/revision, missing-feed diagnostics,
+recipe pinning, matching package collection, and refusal to overwrite a
+conflicting patch.
 
 OWE remains unresolved: two independent tests reached association status 43
 even with current userspace support. This SAE fix is not evidence of an OWE
