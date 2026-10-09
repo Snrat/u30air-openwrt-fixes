@@ -9,8 +9,7 @@ Internet Archive instead:
 **https://archive.org/details/zte-f50-mu300-trustos-ZYV1.0.0B09**
 (direct file: https://archive.org/download/zte-f50-mu300-trustos-ZYV1.0.0B09/trustos-F50_FLYMODEM_ZYV1.0.0B09.img)
 
-The Trusty TEE image (`trustos`) as read from a ZTE F50 / MU300 running stock firmware `F50_FLYMODEM_ZYV1.0.0B09`,
-published with ZTE's written permission.
+The Trusty TEE image (`trustos`) as read from a ZTE F50 / MU300 running stock firmware `F50_FLYMODEM_ZYV1.0.0B09`.
 
 | | |
 |---|---|
