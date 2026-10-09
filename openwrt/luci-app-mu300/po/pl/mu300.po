@@ -1466,3 +1466,27 @@ msgstr "Nie udało się ustawić TTL"
 
 msgid "Unknown TTL operation"
 msgstr "Nieznana operacja TTL"
+
+msgid "Lock Linux"
+msgstr "Zablokuj Linuksa"
+
+msgid "Unlock Linux"
+msgstr "Odblokuj Linuksa"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Po pięciu kolejnych nieukończonych uruchomieniach urządzenie znów wróci do Androida."
+
+msgid "Unlock"
+msgstr "Odblokuj"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Urządzenie nigdy samo nie przełączy się na Androida, nawet po nieudanych uruchomieniach: Android tylko z tej strony (Przełącz na Androida) lub poleceniem mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Nowe jądro z aktualizacji i tak najpierw uruchamia się próbnie i blokuje się ponownie, gdy jedno z uruchomień się powiedzie."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Jeśli sam system przestanie się uruchamiać, urządzenie czeka przez USB (telnet), zamiast przejść do Androida."
+
+msgid "Linux locked"
+msgstr "Linux zablokowany"

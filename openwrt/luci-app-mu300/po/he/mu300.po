@@ -1466,3 +1466,27 @@ msgstr "לא ניתן להגדיר את ה-TTL"
 
 msgid "Unknown TTL operation"
 msgstr "פעולת TTL לא ידועה"
+
+msgid "Lock Linux"
+msgstr "נעילת Linux"
+
+msgid "Unlock Linux"
+msgstr "ביטול נעילת Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "אחרי חמש אתחולים רצופים שלא הושלמו, המכשיר חוזר שוב ל-Android."
+
+msgid "Unlock"
+msgstr "ביטול נעילה"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "המכשיר לעולם לא יעבור ל-Android מעצמו, גם לא אחרי אתחולים כושלים: מעבר ל-Android רק מהדף הזה (מעבר ל-Android) או עם mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "ליבה חדשה מעדכון עדיין מבצעת את האתחולים הראשונים בניסיון, וננעלת שוב ברגע שאחד מהם מצליח."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "אם המערכת עצמה כבר לא עולה, המכשיר ממתין דרך USB (telnet) במקום לעבור ל-Android."
+
+msgid "Linux locked"
+msgstr "Linux נעול"

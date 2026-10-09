@@ -1466,3 +1466,27 @@ msgstr "تعذر ضبط TTL"
 
 msgid "Unknown TTL operation"
 msgstr "عملية TTL غير معروفة"
+
+msgid "Lock Linux"
+msgstr "قفل Linux"
+
+msgid "Unlock Linux"
+msgstr "إلغاء قفل Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "بعد خمس عمليات إقلاع متتالية غير مكتملة، يعود الجهاز إلى Android مرة أخرى."
+
+msgid "Unlock"
+msgstr "إلغاء القفل"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "لن ينتقل الجهاز أبدًا إلى Android من تلقاء نفسه، حتى بعد فشل الإقلاع: الانتقال إلى Android فقط من هذه الصفحة (التبديل إلى Android) أو باستخدام mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "النواة الجديدة القادمة من تحديث تبدأ أولًا بإقلاعات تجريبية، ثم يُقفل مجددًا بمجرد نجاح أحدها."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "إذا لم يعد النظام نفسه يبدأ، ينتظر الجهاز عبر USB (telnet) بدلًا من الانتقال إلى Android."
+
+msgid "Linux locked"
+msgstr "Linux مقفل"

@@ -1466,3 +1466,27 @@ msgstr "Δεν ήταν δυνατός ο ορισμός του TTL"
 
 msgid "Unknown TTL operation"
 msgstr "Άγνωστη λειτουργία TTL"
+
+msgid "Lock Linux"
+msgstr "Κλείδωμα Linux"
+
+msgid "Unlock Linux"
+msgstr "Ξεκλείδωμα Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Μετά από πέντε συνεχόμενες ημιτελείς εκκινήσεις, η συσκευή επιστρέφει ξανά στο Android."
+
+msgid "Unlock"
+msgstr "Ξεκλείδωμα"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Η συσκευή δεν θα μεταβεί ποτέ μόνη της στο Android, ούτε μετά από αποτυχημένες εκκινήσεις: στο Android μόνο από αυτή τη σελίδα (Μετάβαση σε Android) ή με mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Ένας νέος πυρήνας από ενημέρωση εξακολουθεί να κάνει τις πρώτες εκκινήσεις δοκιμαστικά και κλειδώνει ξανά μόλις μία πετύχει."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Αν το ίδιο το σύστημα δεν ξεκινά πλέον, η συσκευή περιμένει μέσω USB (telnet) αντί να μεταβεί στο Android."
+
+msgid "Linux locked"
+msgstr "Το Linux κλειδώθηκε"

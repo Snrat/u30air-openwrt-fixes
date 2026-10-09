@@ -959,6 +959,15 @@ and rolls back at 1, so N boots in a row that never reach boot-ok are allowed an
 field is three bits, hence the upper limit. The initramfs counter now reads the same N and fires on the same
 boot, as a backstop.
 
+**Update 2026-10-09: locked Linux.** `mu300-next-boot lock` arms the Linux slot `successful = 1` (byte `0xEF` for
+slot b: prio 15, tries 6, successful). LK never counts a successful slot down, so it never rolls back; the initramfs
+skips its backstop when it sees the bit in misc and `.mu300/boot-lock` on the disk (the bit alone, set by anything
+else, keeps the backstop), and its standalone fallback (no system to start) stays on telnet with `/run/to-android`
+instead of restoring Android's slot. `mu300-update` arms the usual attempts (`--trial`, `0x6F`) before it writes a
+boot image or rolls one back, and `mu300-boot-ok` locks again after the first good boot. Verified on the U30 Air
+(7.2.9): lock -> `ef`; a new boot image -> `6f`; its first boot -> `ef` again; a boot with `.mu300/boot-tries` at 9
+stayed in Linux with `stage=boot-locked (no backstop)`.
+
 * The block is rebuilt at run time from the initramfs' `tries = 2` block, because `mu300-update` does not replace
   the boot image and an older one carries only that block. Byte 14 is slot b's `prio | tries << 4 |
   successful << 7`; the CRC-32 over the first 28 bytes comes from `gzip`, whose stream trailer is the same

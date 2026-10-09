@@ -1466,3 +1466,27 @@ msgstr "TTL تنظیم نشد"
 
 msgid "Unknown TTL operation"
 msgstr "عملیات TTL ناشناخته"
+
+msgid "Lock Linux"
+msgstr "قفل کردن Linux"
+
+msgid "Unlock Linux"
+msgstr "باز کردن قفل Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "پس از پنج راه‌اندازی ناتمام پشت سر هم، دستگاه دوباره به Android برمی‌گردد."
+
+msgid "Unlock"
+msgstr "باز کردن قفل"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "دستگاه هرگز خودبه‌خود به Android نمی‌رود، حتی پس از راه‌اندازی‌های ناموفق: رفتن به Android فقط از همین صفحه (رفتن به Android) یا با mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "هسته‌ی جدیدی که با به‌روزرسانی می‌آید همچنان ابتدا آزمایشی راه‌اندازی می‌شود و پس از موفقیت یکی از آن‌ها دوباره قفل می‌شود."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "اگر خود سیستم دیگر راه‌اندازی نشود، دستگاه به‌جای رفتن به Android از طریق USB (telnet) منتظر می‌ماند."
+
+msgid "Linux locked"
+msgstr "Linux قفل است"

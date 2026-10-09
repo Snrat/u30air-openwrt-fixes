@@ -1466,3 +1466,27 @@ msgstr "TTL kunde inte sättas"
 
 msgid "Unknown TTL operation"
 msgstr "Okänd TTL-åtgärd"
+
+msgid "Lock Linux"
+msgstr "Lås Linux"
+
+msgid "Unlock Linux"
+msgstr "Lås upp Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Efter fem ofullbordade starter i rad faller enheten tillbaka till Android igen."
+
+msgid "Unlock"
+msgstr "Lås upp"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Enheten byter aldrig till Android av sig själv, inte ens efter misslyckade starter: Android bara från den här sidan (Byt till Android) eller med mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "En ny kärna från en uppdatering startar ändå först på prov och låses igen när en start lyckas."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Om själva systemet inte startar längre väntar enheten via USB (telnet) i stället för att gå till Android."
+
+msgid "Linux locked"
+msgstr "Linux låst"

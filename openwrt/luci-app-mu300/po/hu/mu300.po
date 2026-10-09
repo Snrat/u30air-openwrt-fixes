@@ -1466,3 +1466,27 @@ msgstr "A TTL nem állítható be"
 
 msgid "Unknown TTL operation"
 msgstr "Ismeretlen TTL-művelet"
+
+msgid "Lock Linux"
+msgstr "Linux zárolása"
+
+msgid "Unlock Linux"
+msgstr "Linux zárolásának feloldása"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Öt egymást követő befejezetlen indítás után az eszköz ismét visszatér az Androidra."
+
+msgid "Unlock"
+msgstr "Feloldás"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Az eszköz soha nem vált magától Androidra, sikertelen indítások után sem: Androidra csak erről az oldalról (Váltás Androidra) vagy a mu300-next-boot android paranccsal."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Egy frissítésből származó új kernel ettől még először próbaindításokkal indul, és újra zárol, amint az egyik sikerül."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Ha maga a rendszer már nem indul el, az eszköz USB-n (telnet) vár ahelyett, hogy Androidra váltana."
+
+msgid "Linux locked"
+msgstr "Linux zárolva"

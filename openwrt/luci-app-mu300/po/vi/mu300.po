@@ -1466,3 +1466,27 @@ msgstr "Không đặt được TTL"
 
 msgid "Unknown TTL operation"
 msgstr "Thao tác TTL không xác định"
+
+msgid "Lock Linux"
+msgstr "Khóa Linux"
+
+msgid "Unlock Linux"
+msgstr "Mở khóa Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Sau năm lần khởi động liên tiếp không hoàn tất, thiết bị sẽ quay lại Android."
+
+msgid "Unlock"
+msgstr "Mở khóa"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Thiết bị sẽ không bao giờ tự chuyển sang Android, kể cả sau các lần khởi động thất bại: chỉ chuyển sang Android từ trang này (Chuyển sang Android) hoặc bằng mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Kernel mới từ bản cập nhật vẫn khởi động thử trước, và khóa lại ngay khi một lần khởi động thành công."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Nếu chính hệ thống không còn khởi động được, thiết bị sẽ chờ qua USB (telnet) thay vì chuyển sang Android."
+
+msgid "Linux locked"
+msgstr "Linux đã khóa"
