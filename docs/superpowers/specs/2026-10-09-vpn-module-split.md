@@ -93,6 +93,29 @@ prefers the vpn extra's bin.
   requires refused), mu300-update's migration and its refusal without the module, the images without mu300-vpn
   (test_static), the hooks being optional (mobile-data/wifi-client/mu300-power/toolkit with no mu300-vpn).
 
+### As implemented in mu300-linux (what the module must meet)
+
+* The tarball is checked like every extra before it is unpacked and again on disk: plain files and directories
+  only (no symlink, hard link, device, FIFO), names of `[A-Za-z0-9._+-]` not starting with a dot, at most four
+  levels below the top (`service/systemd/mu300-vpn.service` is three), 600 MB unpacked at most. `VERSION` is one line
+  of `[A-Za-z0-9._-]{1,40}`; `bin/mu300-vpn`, `hooks/link` and `hooks/unlink` must be there (vpn-mihomo: a program in
+  `bin/`). A `manifest` (sha256sum lines, `./path`) is checked when there is one. Files are owned by root afterwards,
+  set-id and group/other write bits cleared.
+* `requires` is read as the line `mu300-linux vYYYY.MM.DD`; tags compare as text. A system whose image-version is not
+  a `v…` tag (a build of one's own) is not judged.
+* The hooks run as `MU300_DISK=<disk> MU300_EXTRA_DIR=<disk>/extra/vpn sh hooks/link SYSROOT` (likewise unlink).
+  `mu300-extra install` links every installed system whose release meets `requires` (the running one with SYSROOT
+  "", the others as `$DISK/<os>`); `remove` unlinks every system before the extra is deleted; `link` (boot) links
+  the running system. `mu300-update apply` links the systems it updated, after they are switched.
+* The installed tarball's sha256 is kept in `$DISK/extra/.vpn.sha256`: an online install or an update whose
+  SHA256SUMS lists the same hash downloads nothing.
+* `mu300-update apply` stages: `MU300_VPN_MODULE=FILE|DIR`, else `$DISK/.mu300-update/vpn/` (the tarball and its
+  SHA256SUMS; used up by the update), else the download. The module is installed before the systems are switched,
+  so a module that fails its checks stops a device that needs it while nothing is changed.
+* The host installers push the module as `mu300-extra-vpn.tar.gz` (android-install.sh takes a `name` extra or one
+  with `VERSION` and, for vpn, `bin/mu300-vpn` and the hooks); the systems link it at their first boot.
+* `mu300-extra adopt` is gone (it answers "nothing to adopt" with status 1): the module carries its engines.
+
 ## mu300-linux-vpn side
 
 Layout: `bin/`, `lib/vpn/`, `service/{systemd,procd}/`, `etc/`, `hooks/`, `install.sh`, `tools/` (fetch-*.sh,
