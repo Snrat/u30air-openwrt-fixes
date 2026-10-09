@@ -3135,3 +3135,27 @@ none other.
   client's public address would otherwise not come back; `ndp-learn` routes the /64 to `br-lan` for the same
   reason. The `masq '1'` of the wan zone is IPv4 only (fw4's `masq6` is the v6 one). Plain OpenWrt keeps `extend`
   and neither.
+
+#### 38e. Relay IPv6 after the carrier renumbers (#87)
+
+Reported on a carrier that gives one /64 by RA on `sipa_eth0` (`dhcp.lan` ra and dhcpv6 relay, a second OpenWrt
+relaying behind the device): after the carrier's /64 changes, LAN clients keep addresses from every earlier /64, and
+IPv6 over the relayed public addresses fails (connections hang) while NAT66 from the ULA works; `ifdown`/`ifup` of wan
+brings it back for a while. Read in the code, not measured on a device:
+
+* `ndp-learn` routed one /64 to `br-lan`: the first sipa_eth0 global address `/proc/net/if_inet6` listed. A PDP
+  re-activation that `mu300cell-v6.sh` rides out without an ifdown (+CGEV, `refresh_bearer`) leaves the old SLAAC
+  address on `sipa_eth0` beside the new one (only setup and teardown flush; the carrier measured in `mu300cell.sh`
+  gives infinite lifetimes), so after such a renumber the LAN route could stay on the old /64 while odhcpd relays the
+  new RA and clients SLAAC in the new one: every NAT66 reply to them left by the bearer. A wan restart flushes the old
+  address, which matches the report. Fixed: `ndp-learn` routes every /64 the bearer holds and drops the route of one
+  that left.
+* Nothing withdraws an old /64 from the LAN. odhcpd in relay mode forwards the upstream RA's prefix options with their
+  lifetimes as they are (it only rewrites the L, A and P flags, the source link-layer address, DNS and MTU;
+  `forward_router_advertisement` in `src/router.c`) and keeps no prefix state, and the carrier sends nothing for a
+  prefix of a previous PDP context. Clients keep such addresses for the lifetime the carrier gave, and a client that
+  picks one as its source gets no NAT66 replies once the /64 has left the bearer (no route to `br-lan`). A deprecating
+  RA (preferred lifetime 0) for the old /64 would have to be sent by the device itself; there is no tool on the image
+  for that today. Open, to measure on a device: `ip -6 addr show dev sipa_eth0` and `ip -6 route show dev br-lan`
+  before and after a renumber (with and without a wan restart), and on the LAN `tcpdump -i br-lan -vv icmp6 and
+  ip6[40]=134` for the prefix options and lifetimes the relayed RA carries.
