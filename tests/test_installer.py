@@ -609,3 +609,68 @@ class ChooseSystems(ShellTest):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class VpnModule(ShellTest):
+    """install.sh's fetch_vpn_module: the VPN module's latest release (dikeckaan/mu300-linux-vpn), checked against its
+    SHA256SUMS, or a copy on the computer (MU300_VPN_MODULE)"""
+
+    def setUp(self):
+        super().setUp()
+        src = (TOP / 'install.sh').read_text()
+        m = re.search(r'\nfetch_vpn_module\(\) \{\n.*?\n\}\n', src, re.S)
+        self.assertIsNotNone(m, 'install.sh has no fetch_vpn_module')
+        self.fn = m.group(0)
+        self.server = self.tmp / 'server'
+        self.server.mkdir()
+        (self.server / 'mu300-linux-vpn.tar.gz').write_bytes(b'module v1')
+        self.sums()
+        # curl [-fsSL] -o OUT URL: from the server directory, by the URL's last part
+        self.stub('curl', 'out=; url=; while [ $# -gt 0 ]; do case $1 in -o) out=$2; shift ;; -*) ;; *) url=$1 ;; esac; '
+                          'shift; done; echo "$url" >> "$STUBLOG/urls"; '
+                          f'src="{self.server}/${{url##*/}}"; [ -f "$src" ] || exit 22; cat "$src" > "$out"')
+
+    def sums(self, data=None):
+        import hashlib
+        h = hashlib.sha256(data if data is not None else (self.server / 'mu300-linux-vpn.tar.gz').read_bytes()).hexdigest()
+        (self.server / 'SHA256SUMS').write_text(f'{h}  mu300-linux-vpn.tar.gz\n')
+
+    def run_fetch(self, shell, **env):
+        code = (f'TOP="{TOP}"; . "$TOP/tools/i18n.sh"; MU300_LANG=en; WORK="{self.tmp}/work"; '
+                'say() { :; }; die() { echo "DIE $*"; exit 1; }; '
+                'fetch() { curl -fL -o "$2" "$1"; }\n' + self.fn + '\nfetch_vpn_module; echo "rc=$? EXTRA_VPN=$EXTRA_VPN"')
+        return self.sh(shell, code, **env)
+
+    def test_downloads_and_verifies_the_latest_release(self):
+        for shell in self.each_shell():
+            (self.tmp / 'urls').unlink(missing_ok=True)
+            out = self.run_fetch(shell).stdout
+            self.assertIn(f'EXTRA_VPN={self.tmp}/work/vpn-module/mu300-linux-vpn.tar.gz', out)
+            self.assertEqual((self.tmp / 'work/vpn-module/mu300-linux-vpn.tar.gz').read_bytes(), b'module v1')
+            self.assertIn('https://github.com/dikeckaan/mu300-linux-vpn/releases/latest/download/SHA256SUMS',
+                          (self.tmp / 'urls').read_text())
+            out = self.run_fetch(shell, MU300_VPN_URL='http://10.0.0.2/m').stdout
+            self.assertIn('rc=0', out)
+            self.assertIn('http://10.0.0.2/m/SHA256SUMS', (self.tmp / 'urls').read_text())
+
+    def test_a_bad_checksum_dies(self):
+        self.sums(b'something else')
+        for shell in self.each_shell():
+            out = self.run_fetch(shell).stdout
+            self.assertIn('DIE', out)
+            self.assertIn('checksum mismatch', out)
+
+    def test_a_copy_on_the_computer(self):
+        copy = self.tmp / 'copy'
+        copy.mkdir()
+        (copy / 'mu300-linux-vpn.tar.gz').write_bytes(b'module v1')
+        for shell in self.each_shell():
+            (self.tmp / 'urls').unlink(missing_ok=True)
+            out = self.run_fetch(shell, MU300_VPN_MODULE=copy / 'mu300-linux-vpn.tar.gz').stdout
+            self.assertIn(f'EXTRA_VPN={copy}/mu300-linux-vpn.tar.gz', out)
+            self.assertFalse((self.tmp / 'urls').exists())
+            # checked against a SHA256SUMS next to it
+            (copy / 'SHA256SUMS').write_text('0' * 64 + '  mu300-linux-vpn.tar.gz\n')
+            self.assertIn('DIE', self.run_fetch(shell, MU300_VPN_MODULE=copy / 'mu300-linux-vpn.tar.gz').stdout)
+            (copy / 'SHA256SUMS').unlink()
+            self.assertIn('DIE', self.run_fetch(shell, MU300_VPN_MODULE=copy / 'nosuch.tar.gz').stdout)

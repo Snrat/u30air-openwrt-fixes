@@ -273,8 +273,9 @@ class SdCard(ShellTest):
 
 
 class Extras(ShellTest):
-    """the extras block: pushed mu300-extra-<name>.tar.gz go onto the Linux partition, and an update of a system that
-    uses the VPN with the engines of its (older) image keeps them as the vpn extra"""
+    """the extras block: pushed mu300-extra-<name>.tar.gz go onto the Linux partition (the VPN module of
+    dikeckaan/mu300-linux-vpn as mu300-extra-vpn.tar.gz), and an update of a system that uses the VPN without the
+    module says that its VPN stays off"""
 
     def setUp(self):
         super().setUp()
@@ -288,50 +289,53 @@ class Extras(ShellTest):
         code = 'set -e\nsay() { echo "[device] $*"; }\n' + f'T="{self.tmp}"\nM="{self.m}"\n' + self.fn + f'\n{call}\necho "rc=$?"'
         return self.sh(shell, code)
 
-    def test_pushed_extra_is_installed(self):
-        from test_extra import extra_tarball
+    def test_pushed_module_is_installed(self):
+        from test_extra import extra_tarball, module_tarball
         for shell in self.each_shell():
             shutil.rmtree(self.m / 'extra', ignore_errors=True)
-            extra_tarball(self.tmp / 'mu300-extra-vpn.tar.gz', release='v2026.10.10')
+            module_tarball(self.tmp / 'mu300-extra-vpn.tar.gz', version='v1.0.0')
             r = self.run_fn(shell, 'extra_from_push $M')
             self.assertIn('rc=0', r.stdout, r.stderr)
-            self.assertEqual((self.m / 'extra/vpn/release').read_text().strip(), 'v2026.10.10')
-            self.assertTrue(os.access(self.m / 'extra/vpn/bin/xray', os.X_OK))
+            self.assertIn('extra vpn installed (v1.0.0)', r.stdout)
+            self.assertEqual((self.m / 'extra/vpn/VERSION').read_text().strip(), 'v1.0.0')
+            self.assertTrue(os.access(self.m / 'extra/vpn/bin/mu300-vpn', os.X_OK))
+            self.assertTrue((self.m / 'extra/vpn/hooks/link').is_file())
             self.assertFalse((self.tmp / 'mu300-extra-vpn.tar.gz').exists())
-            # a broken push is skipped, never the install
-            (self.tmp / 'mu300-extra-vpn.tar.gz').write_bytes(b'junk')
+            # a broken push, or the engines alone (an older release's vpn extra), is skipped, never the install
+            for bad in ('junk', 'engines'):
+                if bad == 'junk':
+                    (self.tmp / 'mu300-extra-vpn.tar.gz').write_bytes(b'junk')
+                else:
+                    extra_tarball(self.tmp / 'mu300-extra-vpn.tar.gz', name=None)
+                r = self.run_fn(shell, 'extra_from_push $M')
+                self.assertIn('rc=0', r.stdout, r.stderr)
+                self.assertIn('skipped', r.stdout, bad)
+                self.assertEqual((self.m / 'extra/vpn/VERSION').read_text().strip(), 'v1.0.0', bad)
+            # the extras of mu300-linux's own releases still go in by their ./name
+            extra_tarball(self.tmp / 'mu300-extra-lang.tar.gz', name='lang', bins=())
             r = self.run_fn(shell, 'extra_from_push $M')
-            self.assertIn('rc=0', r.stdout, r.stderr)
-            self.assertIn('skipped', r.stdout)
-            self.assertEqual((self.m / 'extra/vpn/release').read_text().strip(), 'v2026.10.10')
+            self.assertIn('extra lang installed (v2026.10.10)', r.stdout)
             # nothing pushed: nothing happens
             r = self.run_fn(shell, 'extra_from_push $M')
             self.assertIn('rc=0', r.stdout, r.stderr)
 
-    def test_update_keeps_the_engines_of_a_vpn_in_use(self):
+    def test_an_update_says_when_the_vpn_stays_off(self):
+        from test_extra import module_tarball
         old = self.m / 'ubuntu'
-        b = old / 'opt/mu300/bin'
-        b.mkdir(parents=True, exist_ok=True)
-        for e in ('xray', 'hev-socks5-tunnel', 'sing-box'):
-            (b / e).write_text('#!/bin/sh\n')
-            (b / e).chmod(0o755)
-        (old / 'etc/mu300/image-version').write_text('v2026.10.06\n')
         for shell in self.each_shell():
-            for enable, kept in (('0', False), ('1', True)):
+            for enable, module, warned in (('0', False, False), ('1', False, True), ('1', True, False)):
                 shutil.rmtree(self.m / 'extra', ignore_errors=True)
+                if module:
+                    module_tarball(self.tmp / 'mu300-extra-vpn.tar.gz')
+                    self.run_fn(shell, 'extra_from_push $M')
                 (old / 'etc/mu300/vpn.conf').write_text(f'ENABLE={enable}\n')
                 r = self.run_fn(shell, 'extra_keep_vpn $M $M/ubuntu')
                 self.assertIn('rc=0', r.stdout, r.stderr)
-                self.assertEqual((self.m / 'extra/vpn/bin/sing-box').exists(), kept, enable)
-            self.assertEqual((self.m / 'extra/vpn/release').read_text().strip(), 'v2026.10.06')
-            # an extra that is there (pushed, or installed earlier) is not replaced
-            (self.m / 'extra/vpn/release').write_text('v2026.10.10\n')
-            r = self.run_fn(shell, 'extra_keep_vpn $M $M/ubuntu')
-            self.assertEqual((self.m / 'extra/vpn/release').read_text().strip(), 'v2026.10.10')
+                self.assertEqual('mu300-extra install vpn' in r.stdout, warned, (enable, module))
 
     def test_order_in_the_install(self):
         self.assertIn('\nextra_from_push $M\n', SRC)
-        # the engines are taken before the old system is removed
+        # the previous system is looked at before it is removed
         self.assertLess(SRC.index('extra_keep_vpn $M $M/$os'), SRC.index('rm -rf $M/$os && mv $M/$os.new $M/$os'))
 
 def make_tar(path, files):

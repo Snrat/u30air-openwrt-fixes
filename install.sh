@@ -12,7 +12,8 @@
 # the language (MU300_LANG=en|tr|zh skips that).
 #
 # Prebuilt: needs adb, python3, lz4, curl. Downloads the images of the newest release (or $MU300_RELEASE) and checks
-# their sha256.
+# their sha256. The VPN, when wanted, is the module of github.com/dikeckaan/mu300-linux-vpn: its latest release
+# (MU300_VPN_URL: another place with its files and SHA256SUMS; MU300_VPN_MODULE=FILE: a copy on this computer).
 # Build:    needs adb, docker, python3, lz4 and the kernel outputs in $MU300_KERNEL_OUT (default: out/, kernel/build-all.sh).
 # The published images contain no proprietary files: Wi-Fi/Bluetooth firmware and the Android modem/GPU userspace are
 # pulled from *your* device into $MU300_WORK (default: work/), never leave the host except to your device.
@@ -73,6 +74,37 @@ fetch() {
     rm -f "$_o".part*
     echo "  $(t 'parallel download failed, retrying as a single stream')"
     curl -fL --retry 3 --progress-bar -o "$_o" "$_u"
+}
+
+# fetch_vpn_module: the VPN module's latest release (or MU300_VPN_MODULE, a copy on this computer) into $WORK/vpn-module,
+# checked against that release's SHA256SUMS; sets EXTRA_VPN. SHA256SUMS is fetched every time: under releases/latest
+# the same name is a new file with every release of the module.
+fetch_vpn_module() {
+    _vd=$WORK/vpn-module
+    mkdir -p "$_vd"
+    if [ -n "${MU300_VPN_MODULE:-}" ]; then
+        [ -s "$MU300_VPN_MODULE" ] || die "$(t '{1} not found' "$MU300_VPN_MODULE")"
+        _w=$(awk -v f="${MU300_VPN_MODULE##*/}" '$2 == f || $2 == "*" f {print $1; exit}' "$(dirname "$MU300_VPN_MODULE")/SHA256SUMS" 2>/dev/null)
+        _h=$( (shasum -a 256 "$MU300_VPN_MODULE" 2>/dev/null || sha256sum "$MU300_VPN_MODULE") | cut -d' ' -f1)
+        [ -z "$_w" ] || [ "$_h" = "$_w" ] || die "$(t 'checksum mismatch for {1}' "$MU300_VPN_MODULE")"
+        EXTRA_VPN=$MU300_VPN_MODULE
+        return
+    fi
+    _vb=${MU300_VPN_URL:-https://github.com/dikeckaan/mu300-linux-vpn/releases/latest/download}
+    _f=mu300-linux-vpn.tar.gz
+    say "$(t 'Downloading the VPN module')"
+    curl -fsSL -o "$_vd/SHA256SUMS" "$_vb/SHA256SUMS" || die "$(t 'cannot download {1}' "$_vb/SHA256SUMS")"
+    _w=$(awk -v f="$_f" '$2 == f || $2 == "*" f {print $1; exit}' "$_vd/SHA256SUMS")
+    [ -n "$_w" ] || die "$(t '{1} is not part of release {2}' "$_f" "$_vb")"
+    _h=$( (shasum -a 256 "$_vd/$_f" 2>/dev/null || sha256sum "$_vd/$_f" 2>/dev/null) | cut -d' ' -f1)
+    if [ "$_h" != "$_w" ]; then
+        echo "  $_f"
+        fetch "$_vb/$_f" "$_vd/$_f.part" || die "$(t 'download of {1} failed' "$_f")"
+        _h=$( (shasum -a 256 "$_vd/$_f.part" 2>/dev/null || sha256sum "$_vd/$_f.part") | cut -d' ' -f1)
+        [ "$_h" = "$_w" ] || die "$(t 'checksum mismatch for {1}' "$_f")"
+        mv "$_vd/$_f.part" "$_vd/$_f"
+    fi
+    EXTRA_VPN=$_vd/$_f
 }
 
 # adb shell/exec-out read stdin; never let them eat the answers typed (or piped) into this script
@@ -385,10 +417,11 @@ fi
 ask hs "$(t "Copy Android's hotspot name and password to Linux? (yes/no)")" yes  # kept as-is when updating
 IMPORT_HOTSPOT=0; [ "$hs" = yes ] && IMPORT_HOTSPOT=1
 ask gpu "$(t 'Include the Mali GPU (OpenCL) userspace (~90 MiB)? (yes/no)')" yes
-# the VPN engines are not part of the systems: an extra that goes onto the Linux partition only when wanted
-echo "  $(t 'The VPN (mu300-vpn) needs the vpn extra: Xray and sing-box. It can also be added later on the device:')"
+# the VPN is not part of the systems: a module of its own repository, which goes onto the Linux partition (as the vpn
+# extra) only when wanted
+echo "  $(t 'The VPN (mu300-vpn, with Xray and sing-box) is a module of its own: {1}. It can also be added later on the device:' https://github.com/dikeckaan/mu300-linux-vpn)"
 echo "    sudo mu300-extra install vpn"
-ask vx "$(t 'Install the VPN extra (about 40 MB more to download, 120 MB on the device)? (yes/no)')" no
+ask vx "$(t 'Install the VPN module (about 40 MB more to download, 120 MB on the device)? (yes/no)')" no
 EXTRA_VPN=
 KERNEL=5.4
 if [ $MODE = prebuilt ]; then
@@ -487,12 +520,14 @@ curl -fsSL -o "$REL/SHA256SUMS" "$base/SHA256SUMS" || die "$(t 'cannot download 
 files=mu300-kernel.tar.gz
 [ "$KERNEL" = 5.4 ] || files="$files mu300-kernel-$KERNEL.tar.gz"
 for os in $OSES; do files="$files $(rootfs_file $os)"; done
+# the VPN: a release from before the module (its systems carry mu300-vpn) has the engines as its own vpn extra, from the
+# same SHA256SUMS; a newer one has neither, and the module comes from its own repository (below)
+VPN_FROM_MODULE=
 if [ "$vx" = yes ]; then
-    # from the same release and SHA256SUMS; a release from before extras still has the engines in its images
     if awk '$2 == "mu300-extra-vpn.tar.gz" || $2 == "*mu300-extra-vpn.tar.gz" {f = 1} END {exit !f}' "$REL/SHA256SUMS"; then
         files="$files mu300-extra-vpn.tar.gz"; EXTRA_VPN=$REL/mu300-extra-vpn.tar.gz
     else
-        echo "  $(t 'release {1} has no vpn extra: its systems still carry the VPN engines' "$RELEASE")"
+        VPN_FROM_MODULE=1
     fi
 fi
 for f in $files; do
@@ -507,6 +542,7 @@ for f in $files; do
         mv "$REL/$f.part" "$REL/$f"
     fi
 done
+[ -z "$VPN_FROM_MODULE" ] || fetch_vpn_module
 rm -rf "$REL/kernel" && mkdir -p "$REL/kernel" && tar -xzf "$REL/mu300-kernel.tar.gz" -C "$REL/kernel"
 KOUT=$REL/kernel
 [ $DEVICE = f50 ] || [ -d "$KOUT/modules-$DEVICE" ] || die "$(t 'release {1} does not support this device yet; use a newer one' "$RELEASE")"
@@ -541,11 +577,8 @@ docker run --rm -v "$TOP/tools":/src:ro -v "$WORK/tools":/o mu300-kbuild sh -c '
   gcc -O2 -static -o /o/logdw/logdw /src/logdw/logdw.c &&
   gcc -O2 -static -o /o/bt-init/mu300-bt-init /src/bt-init/mu300-bt-init.c &&
   mkdir -p /o/keys && gcc -O2 -static -o /o/keys/mu300-keys /src/keys/mu300-keys.c'
-# the VPN engines: the vpn extra, as tools/make-release.sh builds it (not part of the systems)
-if [ "$vx" = yes ]; then
-    [ -s "$WORK/mu300-extra-vpn.tar.gz" ] || sh "$TOP/tools/make-extra.sh" vpn "$WORK/mu300-extra-vpn.tar.gz"
-    EXTRA_VPN=$WORK/mu300-extra-vpn.tar.gz
-fi
+# the VPN: the module of its own repository, as for prebuilt images (not part of the systems)
+[ "$vx" != yes ] || fetch_vpn_module
 if [ -d "$WORK/android-gpu-subset" ]; then
     L=$(mktemp -d "$WORK/cllibs.XXXX")
     cp "$WORK/android-gpu-subset/vendor/lib64/libOpenCL.so" "$WORK/android-subset/apex/com.android.runtime/lib64/bionic/libc.so" \
@@ -618,7 +651,8 @@ for os in $OSES; do
         adb push "$WORK/mu300-$os.tar.gz" $T/mu300-$os.tar.gz >/dev/null
     fi
 done
-# android-install.sh puts every pushed mu300-extra-<name>.tar.gz onto the Linux partition (extra/<name>)
+# android-install.sh puts every pushed mu300-extra-<name>.tar.gz onto the Linux partition (extra/<name>); the VPN
+# module goes as the vpn extra, and each system links it into itself at its first boot (mu300-extra link)
 [ -z "$EXTRA_VPN" ] || adb push "$EXTRA_VPN" $T/mu300-extra-vpn.tar.gz >/dev/null
 env=$(mktemp)
 write_install_env > "$env"

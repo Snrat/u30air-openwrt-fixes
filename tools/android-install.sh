@@ -17,7 +17,9 @@
 #                      UPDATE=1: the accounts and passwords of the previous installation stay as they are
 #   IMPORT_HOTSPOT=0|1 copy Android's hotspot SSID/passphrase into each system
 #   KERNEL=5.4|6.18|7.2  the kernel in the new boot image; mu300-update keeps installing that one (boot/kernel)
-# Extras pushed as $T/mu300-extra-<name>.tar.gz (the work directory, see below) go to extra/<name> on the Linux partition.
+# Extras pushed as $T/mu300-extra-<name>.tar.gz (the work directory, see below) go to extra/<name> on the Linux partition
+# (the VPN module, github.com/dikeckaan/mu300-linux-vpn, as mu300-extra-vpn.tar.gz; each system links it into itself
+# at its first boot: mu300-extra link runs the module's hooks/link).
 set -e
 # install.sh pushes everything to /data/local/tmp. The Magisk installer runs this as root from a directory only root
 # can write (MU300_DEVICE_WORK): files in /data/local/tmp can be replaced by the shell user after they were checked.
@@ -173,15 +175,25 @@ fi
 
 # --- extra begin
 # Extras (mu300-extra): optional parts on the Linux partition next to the systems, in DISK/extra/<name>.
+extra_ok() {  # extra_ok NAME DIR: DIR (unpacked) is that extra: ./name says so, or it is the VPN module (./VERSION and
+    # its programs; for vpn mu300-vpn and its hooks)
+    [ "$(cat "$2/name" 2>/dev/null)" = "$1" ] && return 0
+    [ -s "$2/VERSION" ] || return 1
+    case $1 in
+        vpn) [ -f "$2/bin/mu300-vpn" ] && [ -f "$2/hooks/link" ] && [ -f "$2/hooks/unlink" ] ;;
+        vpn-mihomo) [ -f "$2/bin/mihomo" ] ;;
+        *) return 1 ;;
+    esac
+}
 extra_from_push() {  # extra_from_push DISK: install the extras install.sh pushed ($T/mu300-extra-<name>.tar.gz)
     for f in $T/mu300-extra-*.tar.gz; do
         [ -f "$f" ] || continue
         n=${f##*/mu300-extra-}; n=${n%.tar.gz}
         x=$1/extra
         rm -rf "$x/.$n.new"; mkdir -p "$x/.$n.new"
-        if tar -xzf "$f" -C "$x/.$n.new" 2>/dev/null && [ "$(cat "$x/.$n.new/name" 2>/dev/null)" = "$n" ]; then
-            rm -rf "$x/$n" && mv "$x/.$n.new" "$x/$n"
-            say "extra $n installed ($(cat "$x/$n/release" 2>/dev/null))"
+        if tar -xzf "$f" -C "$x/.$n.new" 2>/dev/null && extra_ok "$n" "$x/.$n.new"; then
+            rm -rf "$x/$n" "$x/.$n.sha256" && mv "$x/.$n.new" "$x/$n"
+            say "extra $n installed ($(cat "$x/$n/release" 2>/dev/null || cat "$x/$n/VERSION" 2>/dev/null))"
         else
             rm -rf "$x/.$n.new"
             say "extra $n: the pushed file is not usable, skipped (on the device later: mu300-extra install $n)"
@@ -190,21 +202,13 @@ extra_from_push() {  # extra_from_push DISK: install the extras install.sh pushe
     done
     return 0
 }
-extra_keep_vpn() {  # extra_keep_vpn DISK OLDROOT: the system being replaced uses the VPN with the engines of its image
-    # (older images had them in opt/mu300/bin): they stay, as the vpn extra, so the VPN comes back after the reboot
-    [ ! -d "$1/extra/vpn/bin" ] || return 0
+extra_keep_vpn() {  # extra_keep_vpn DISK OLDROOT: the system being replaced uses the VPN. The new images have no
+    # mu300-vpn: it is the VPN module, linked into the system at its first boot. Without the module the VPN does not
+    # come back - say so loudly (the engines of an older image or extra are no use without mu300-vpn).
     grep -q '^ENABLE=1' "$2/etc/mu300/vpn.conf" 2>/dev/null || return 0
-    [ -x "$2/opt/mu300/bin/xray" ] || [ -x "$2/opt/mu300/bin/sing-box" ] || return 0
-    x=$1/extra
-    rm -rf "$x/.vpn.new"; mkdir -p "$x/.vpn.new/bin"
-    for e in xray hev-socks5-tunnel sing-box; do
-        if [ -x "$2/opt/mu300/bin/$e" ]; then cp -p "$2/opt/mu300/bin/$e" "$x/.vpn.new/bin/$e"; fi
-    done
-    echo vpn > "$x/.vpn.new/name"
-    cat "$2/etc/mu300/image-version" > "$x/.vpn.new/release" 2>/dev/null || echo unknown > "$x/.vpn.new/release"
-    echo "taken from the image of the previous system" > "$x/.vpn.new/components"
-    rm -rf "$x/vpn"; mv "$x/.vpn.new" "$x/vpn"
-    say "kept the VPN engines of the previous system as the vpn extra"
+    [ ! -f "$1/extra/vpn/bin/mu300-vpn" ] || return 0
+    say "WARNING: the VPN was on in the previous system, and the VPN module is not installed: the VPN stays off"
+    say "  until it is: on the device, sudo mu300-extra install vpn (github.com/dikeckaan/mu300-linux-vpn)"
 }
 # --- extra end
 extra_from_push $M
