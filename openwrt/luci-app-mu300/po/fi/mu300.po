@@ -1466,3 +1466,27 @@ msgstr "TTL:ää ei voitu asettaa"
 
 msgid "Unknown TTL operation"
 msgstr "Tuntematon TTL-toiminto"
+
+msgid "Lock Linux"
+msgstr "Lukitse Linux"
+
+msgid "Unlock Linux"
+msgstr "Avaa Linuxin lukitus"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Viiden peräkkäisen keskeneräisen käynnistyksen jälkeen laite palaa jälleen Androidiin."
+
+msgid "Unlock"
+msgstr "Avaa lukitus"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Laite ei koskaan vaihda itsestään Androidiin, ei edes epäonnistuneiden käynnistysten jälkeen: Androidiin vain tältä sivulta (Vaihda Androidiin) tai komennolla mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Päivityksen tuoma uusi ydin käynnistyy silti ensin koekäytössä ja lukittuu uudelleen, kun yksi käynnistys onnistuu."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Jos itse järjestelmä ei enää käynnisty, laite odottaa USB:n (telnet) kautta Androidiin siirtymisen sijaan."
+
+msgid "Linux locked"
+msgstr "Linux lukittu"

@@ -1466,3 +1466,27 @@ msgstr "Le TTL n'a pas pu être défini"
 
 msgid "Unknown TTL operation"
 msgstr "Opération TTL inconnue"
+
+msgid "Lock Linux"
+msgstr "Verrouiller Linux"
+
+msgid "Unlock Linux"
+msgstr "Déverrouiller Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Après cinq démarrages consécutifs inachevés, l'appareil revient à nouveau sur Android."
+
+msgid "Unlock"
+msgstr "Déverrouiller"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "L'appareil ne basculera jamais de lui-même vers Android, même après des démarrages ratés : Android uniquement depuis cette page (Passer à Android) ou avec mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Un nouveau noyau issu d'une mise à jour démarre d'abord à l'essai, puis se verrouille à nouveau dès qu'un démarrage réussit."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Si le système lui-même ne démarre plus, l'appareil attend sur USB (telnet) au lieu de passer à Android."
+
+msgid "Linux locked"
+msgstr "Linux verrouillé"

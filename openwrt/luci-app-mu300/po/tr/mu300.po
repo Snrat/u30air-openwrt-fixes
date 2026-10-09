@@ -1466,3 +1466,27 @@ msgstr "TTL ayarlanamadı"
 
 msgid "Unknown TTL operation"
 msgstr "Bilinmeyen TTL işlemi"
+
+msgid "Lock Linux"
+msgstr "Linux'u kilitle"
+
+msgid "Unlock Linux"
+msgstr "Linux kilidini aç"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Üst üste tamamlanmayan beş açılıştan sonra cihaz yeniden Android'e döner."
+
+msgid "Unlock"
+msgstr "Kilidi aç"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Cihaz, başarısız açılışlardan sonra bile kendiliğinden asla Android'e geçmez: Android'e yalnızca bu sayfadan (Android'e geç) ya da mu300-next-boot android ile geçilir."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Bir güncellemeyle gelen yeni kernel ilk açılışlarını yine deneme olarak yapar ve bunlardan biri başarılı olunca yeniden kilitlenir."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Sistemin kendisi artık açılmazsa cihaz Android'e geçmek yerine USB üzerinden (telnet) bekler."
+
+msgid "Linux locked"
+msgstr "Linux kilitli"

@@ -1466,3 +1466,27 @@ msgstr "TTL nelze nastavit"
 
 msgid "Unknown TTL operation"
 msgstr "Neznámá operace TTL"
+
+msgid "Lock Linux"
+msgstr "Zamknout Linux"
+
+msgid "Unlock Linux"
+msgstr "Odemknout Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Po pěti nedokončených spuštěních po sobě se zařízení znovu vrátí do Androidu."
+
+msgid "Unlock"
+msgstr "Odemknout"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Zařízení nikdy samo nepřepne do Androidu, ani po neúspěšných spuštěních: do Androidu jen z této stránky (Přepnout do Androidu) nebo příkazem mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Nové jádro z aktualizace se i tak nejprve spouští zkušebně a znovu se zamkne, jakmile jedno spuštění uspěje."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Pokud se samotný systém přestane spouštět, zařízení čeká přes USB (telnet), místo aby přešlo do Androidu."
+
+msgid "Linux locked"
+msgstr "Linux zamčen"

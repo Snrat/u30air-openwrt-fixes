@@ -1466,3 +1466,27 @@ msgstr "Не вдалося задати TTL"
 
 msgid "Unknown TTL operation"
 msgstr "Невідома операція TTL"
+
+msgid "Lock Linux"
+msgstr "Закріпити Linux"
+
+msgid "Unlock Linux"
+msgstr "Зняти закріплення Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Після п'яти незавершених завантажень поспіль пристрій знову повернеться до Android."
+
+msgid "Unlock"
+msgstr "Зняти закріплення"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Пристрій ніколи не перемкнеться на Android сам, навіть після невдалих завантажень: на Android лише з цієї сторінки (Перемкнутися на Android) або командою mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Нове ядро з оновлення все одно спершу завантажується в пробному режимі й знову закріплюється після першого вдалого завантаження."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Якщо сама система більше не запускається, пристрій чекає через USB (telnet), а не переходить на Android."
+
+msgid "Linux locked"
+msgstr "Linux закріплено"

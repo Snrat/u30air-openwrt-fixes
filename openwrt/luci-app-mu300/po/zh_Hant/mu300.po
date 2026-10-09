@@ -1466,3 +1466,27 @@ msgstr "無法設定 TTL"
 
 msgid "Unknown TTL operation"
 msgstr "未知的 TTL 操作"
+
+msgid "Lock Linux"
+msgstr "鎖定 Linux"
+
+msgid "Unlock Linux"
+msgstr "解除 Linux 鎖定"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "連續五次開機未完成後，裝置將再次回退到 Android。"
+
+msgid "Unlock"
+msgstr "解除鎖定"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "裝置永遠不會自行切換到 Android，即使開機失敗也不會：只能透過本頁面（切換到 Android）或 mu300-next-boot android 進入 Android。"
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "更新帶來的新核心仍會先以試用方式開機，其中一次成功後會再次鎖定。"
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "如果系統本身無法啟動，裝置會透過 USB（telnet）等待，而不是進入 Android。"
+
+msgid "Linux locked"
+msgstr "Linux 已鎖定"

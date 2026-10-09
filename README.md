@@ -288,6 +288,7 @@ eamonxg. The app's own notes are in [`openwrt/luci-app-mu300/README.md`](openwrt
 | Fixed TTL for mobile data (so the operator cannot tell hotspot traffic from the device's own) | `sudo mu300-ttl set 64` (`sudo mu300-ttl off` goes back to the default), `mu300-toolkit` -> Network -> TTL, or LuCI Cellular -> TTL. On the mainline kernels the rule is in tc and flow offloading stays on; on 5.4 it is in nftables and offloading is off while a TTL is set |
 | Switch between OpenWrt and Ubuntu | `sudo mu300-os openwrt` / `sudo mu300-os ubuntu` (`openwrt-luci` for the one with the control panel) |
 | Failed boots in a row before it falls back to Android (1-6, default 5) | `sudo mu300-next-boot attempts N` |
+| Keep Linux for good: never back to Android by itself, only by hand | `sudo mu300-next-boot lock` (or "Lock Linux" on the panel's home page); `unlock` goes back to the attempts. See [Locked Linux](#locked-linux) |
 | Go back to Android | `sudo mu300-next-boot android`, then `sudo reboot` |
 | Return to Linux from Android | `su -c mu300-linux` on the device (see below), or `boot/android-boot-linux.sh work/boot-linux-slotb.img` from a computer |
 | Send all traffic through a VPN | see below (`sudo mu300-extra install vpn` first) |
@@ -357,7 +358,15 @@ step, the installer writes back the block it held before and says whether that w
 
 **Back to Android.** From Linux: `sudo mu300-next-boot android`, then `sudo reboot`. Without doing anything, the device
 falls back to Android after 5 failed boots in a row (1-6, `MU300_BOOT_ATTEMPTS` below, `mu300-next-boot attempts N`
-later) and when Linux does not come up at all.
+later) and when Linux does not come up at all - unless Linux is locked (below).
+
+<a id="locked-linux"></a>**Locked Linux.** `sudo mu300-next-boot lock` (or "Lock Linux" on the panel's home page) keeps
+Linux whatever happens: the device never goes to Android by itself, not after failed boots and not when the system
+does not start (then it waits on USB with a telnet shell at the device's address, where `sh /run/to-android` goes to
+Android). Android is then only by hand: `mu300-next-boot android`, or "Switch to Android" on the panel. The one
+exception is a new kernel: `mu300-update` gives a new boot image its first boots on the usual attempts, so a kernel
+that does not start still falls back, and the first boot that succeeds locks again. `sudo mu300-next-boot unlock`
+goes back. The forgotten-password way out below (unplugging during boot) does not work while Linux is locked.
 
 **Not offered here.** Shrinking `userdata` to make room (the 32 GB variant) rewrites the partition table and erases
 Android's data. It stays with the computer installer (`./install.sh`), where a backup step and a typed `ERASE` come
@@ -778,7 +787,8 @@ only, from the start of each boot, with the kernel's own timestamps; repeating v
 **Websites think you are in another country.** The device has no GPS, so sites guess from the IP address; mobile
 operators and VPN servers often look like a different city.
 
-**I forgot the password, and Linux boots by default.** You do not need to log in to get out:
+**I forgot the password, and Linux boots by default.** You do not need to log in to get out (unless Linux is
+[locked](#locked-linux): then the computer route below, step 2, is the way):
 
 1. **Back to Android:** unplug the device about ten seconds after it powers on, then plug it in again, as many
    times in a row as the failed boots you chose (5 by default; `mu300-next-boot attempts`). The device then sees
