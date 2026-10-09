@@ -149,9 +149,11 @@ The SAE/parser/SDK tests pass (9 cases), Wi-Fi bring-up tests pass (5), Wi-Fi
 client regressions pass (58), and static tests pass (40). A broad desktop run
 executed 1056 tests with 86 skips and two pre-existing VPN test failures: the
 host has a real `/usr/bin/mihomo`, and its `ls` appends the SELinux mode suffix.
-The SAE branch does not modify either VPN test or implementation. Local UBSan
-was unavailable because this desktop is missing its runtime library; the Linux CI job now
-requires a successful UBSan run rather than silently falling back. These local results
+The SAE branch does not modify either VPN test or implementation. The SAE tests also passed with `MU300_TEST_UBSAN=1`. This desktop initially
+lacked the UBSan runtime; the matching signature-verified Fedora library was
+extracted into a private build directory and used without a system installation.
+The Linux CI job now requires a successful UBSan run rather than silently
+falling back. These local results
 are not a claim that all CI checks pass.
 
 `tests/test_u30_sae.py` compiles the actual parser from the patch and exercises
