@@ -21,11 +21,17 @@ msgstr "AT-pääte"
 msgid "Adapter settings"
 msgstr "Sovittimen asetukset"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Laitehallinta"
 
 msgid "Languages"
 msgstr "Kielet"
+
+msgid "Power"
+msgstr "Virta"
 
 msgid "MU300 control center: status dashboard, network locks, AT terminal and SMS"
 msgstr "MU300-ohjauskeskus: tilan yleiskatsaus, verkkolukitukset, AT-pääte ja SMS"
@@ -870,6 +876,120 @@ msgstr "Automaattinen (%d tuettu)"
 msgid "%d locked: %s"
 msgstr "%d lukittu: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Anna kokonaisluku väliltä 0–%d"
+
+msgid "Power status unavailable"
+msgstr "Virran tila ei ole saatavilla"
+
+msgid "Plugged in"
+msgstr "Verkossa"
+
+msgid "On battery"
+msgstr "Akulla"
+
+msgid "Saver"
+msgstr "Säästö"
+
+msgid "Asleep: hotspot off"
+msgstr "Lepotila: hotspot pois päältä"
+
+msgid "Charging boot: press the Wi-Fi key to start"
+msgstr "Latauskäynnistys: aloita painamalla Wi-Fi-näppäintä"
+
+msgid "Awake"
+msgstr "Hereillä"
+
+msgid "forced"
+msgstr "pakotettu"
+
+msgid "automatic, battery under %d %%"
+msgstr "automaattinen, akku alle %d %%"
+
+msgid "automatic"
+msgstr "automaattinen"
+
+msgid "Nobody connected for %d s"
+msgstr "Kukaan ei ole ollut yhteydessä %d s"
+
+msgid "Power source"
+msgstr "Virtalähde"
+
+msgid "Profile"
+msgstr "Profiili"
+
+msgid "Profile in use: %s (%s)"
+msgstr "Käytössä oleva profiili: %s (%s)"
+
+msgid "%d %%, %s, %d mV, %d mA, %.1f °C"
+msgstr "%d %%, %s, %d mV, %d mA, %.1f °C"
+
+msgid "Charger"
+msgstr "Laturi"
+
+msgid "Charger: %s, %s port"
+msgstr "Laturi: %s, %s-portti"
+
+msgid "Charging paused: battery temperature"
+msgstr "Lataus tauolla: akun lämpötila"
+
+msgid "Charging paused: charge limit"
+msgstr "Lataus tauolla: latausraja"
+
+msgid "Sleep now"
+msgstr "Nuku nyt"
+
+msgid "Wake"
+msgstr "Herätä"
+
+msgid "Nobody connected means no Wi-Fi client and no computer on USB. The Wi-Fi key, a computer on USB or the charger wake the device."
+msgstr "Ei yhteyksiä tarkoittaa, ettei Wi-Fi-asiakasta eikä USB:ssä olevaa tietokonetta ole. Wi-Fi-näppäin, USB:ssä oleva tietokone tai laturi herättää laitteen."
+
+msgid "Automatic: plugged in / on battery"
+msgstr "Automaattinen: verkossa / akulla"
+
+msgid "Switch to Saver under %"
+msgstr "Siirry Säästöön alle %"
+
+msgid "Stop charging at"
+msgstr "Lopeta lataus kohdassa"
+
+msgid "80 % keeps the battery healthier on a device that stays plugged in."
+msgstr "80 % säästää akkua laitteessa, joka pysyy verkossa."
+
+msgid "Keep as is"
+msgstr "Jätä ennalleen"
+
+msgid "LTE only (5G off)"
+msgstr "Vain LTE (5G pois)"
+
+msgid "Off"
+msgstr "Pois"
+
+msgid "On"
+msgstr "Päällä"
+
+msgid "Full"
+msgstr "Täysi"
+
+msgid "Eco: big core off"
+msgstr "Eko: iso ydin pois"
+
+msgid "Hotspot off after (min, 0 = never)"
+msgstr "Hotspot pois päältä (min, 0 = ei koskaan)"
+
+msgid "Modem when idle"
+msgstr "Modeemi lepotilassa"
+
+msgid "LEDs when idle"
+msgstr "LEDit lepotilassa"
+
+msgid "CPU"
+msgstr "CPU"
+
+msgid "Ignored lines in power.conf: %s"
+msgstr "Ohitetut rivit tiedostossa power.conf: %s"
+
 msgid "Configure how this plugin connects to the current Unisoc OpenWrt platform. Changes do not require editing the dashboard, AT, locks or SMS pages."
 msgstr "Määritä, miten tämä laajennus liittyy nykyiseen Unisoc OpenWrt -alustaan. Muutokset eivät vaadi yleiskatsaus-, AT-, lukitus- tai SMS-sivujen muokkaamista."
 
@@ -1023,6 +1143,45 @@ msgstr "Minä: %s"
 msgid "Delete"
 msgstr "Poista"
 
+msgid "Current setting"
+msgstr "Nykyinen asetus"
+
+msgid "Fixed at %d"
+msgstr "Kiinteä %d"
+
+msgid "Not changed (default)"
+msgstr "Ei muutettu (oletus)"
+
+msgid "Rule in force"
+msgstr "Voimassa oleva sääntö"
+
+msgid "Flow offloading"
+msgstr "Vuon purku (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "Mobiilidatan TTL"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Jokainen mobiilidatan kautta lähtevä paketti saa tämän TTL:n (IPv6: hop limit). Tukiaseman takana oleva puhelin tai kannettava lähettää 64 (Windows: 128), ja laite välittää sen yhtä pienemmällä arvolla, mistä operaattori voi tunnistaa jaetun liikenteen."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Tässä ytimessä palomuurin pikapolku on pois päältä, kun TTL on asetettu"
+
+msgid "Set %d"
+msgstr "Aseta %d"
+
+msgid "Set"
+msgstr "Aseta"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Anna luku väliltä 1–255"
+
+msgid "Turn off"
+msgstr "Poista käytöstä"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "Arvolla 64 jokainen paketti lähtee kuin laitteen oma liikenne"
+
 msgid "Dashboard info failed"
 msgstr "Yleiskatsauksen tietojen haku epäonnistui"
 
@@ -1131,6 +1290,21 @@ msgstr "Tuntematon USB-asetus"
 msgid "Invalid interface name"
 msgstr "Virheellinen liitännän nimi"
 
+msgid "The power adapter gave no valid reply"
+msgstr "Virtasovitin ei antanut kelvollista vastausta"
+
+msgid "Unknown power operation"
+msgstr "Tuntematon virtatoiminto"
+
+msgid "Unknown power setting"
+msgstr "Tuntematon virta-asetus"
+
+msgid "Invalid power value"
+msgstr "Virheellinen virta-arvo"
+
+msgid "Invalid power request"
+msgstr "Virheellinen virtapyyntö"
+
 msgid "The languages adapter gave no valid reply"
 msgstr "Kielisovitin ei antanut kelvollista vastausta"
 
@@ -1145,6 +1319,12 @@ msgstr "Virheellinen kielipyyntö"
 
 msgid "Unknown source"
 msgstr "Tuntematon lähde"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "TTL-sovitin ei antanut kelvollista vastausta"
+
+msgid "Invalid TTL"
+msgstr "Virheellinen TTL"
 
 msgid "Request too large"
 msgstr "Pyyntö on liian suuri"
@@ -1274,3 +1454,15 @@ msgstr "Lukitusvälimuisti ei käytettävissä"
 
 msgid "No serving cell to lock to"
 msgstr "Ei palvelevaa solua lukittavaksi"
+
+msgid "usage: power get|set KEY VALUE|wake|idle"
+msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "TTL-asetusta ei voitu lukea"
+
+msgid "The TTL could not be set"
+msgstr "TTL:ää ei voitu asettaa"
+
+msgid "Unknown TTL operation"
+msgstr "Tuntematon TTL-toiminto"

@@ -11,7 +11,8 @@ LK (slot b, tries=2) ─► custom 5.4 kernel + vendor_boot DTB
          ├─ load 85 modules in a fixed order (boot/module-order.txt)
          ├─ misc: restore slot a, unless the rootfs says default-boot=linux
          ├─ bind USB gadget: NCM, else ECM (usb0 up immediately) + ACM console; MU300_USBNET="rndis" binds RNDIS as the one configuration with the console, and replaces the other network function (rndis wins in either order of "rndis ncm"; a panel choice of RNDIS asks for "rndis ncm ecm", so a kernel without f_rndis still gets NCM)
-         ├─ losetup -o 27762098176 /dev/mmcblk0 → ext4 "mu300root" (free space after userdata)
+         ├─ an SD card with ext4 "mu300sd", else losetup at the first 2 MiB boundary after the last partition
+         │  (27762098176 on the tested device) → ext4 "mu300root" (free space after userdata)
          └─ switch_root → systemd
                ├─ mu300-vendor   : Android modem_control in a chroot (disarms PM watchdog, boots modem)
                ├─ mu300-lan      : br-lan (usb0 + wlan0) 192.168.77.1 + dnsmasq DHCP/DNS

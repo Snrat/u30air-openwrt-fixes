@@ -21,11 +21,17 @@ msgstr "AT terminalı"
 msgid "Adapter settings"
 msgstr "Adapter parametrləri"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Cihazın idarəsi"
 
 msgid "Languages"
 msgstr "Dillər"
+
+msgid "Power"
+msgstr "Enerji"
 
 msgid "MU300 control center: status dashboard, network locks, AT terminal and SMS"
 msgstr "MU300 idarəetmə mərkəzi: status paneli, şəbəkə kilidləri, AT terminalı və SMS"
@@ -870,6 +876,120 @@ msgstr "Avtomatik (%d dəstəklənir)"
 msgid "%d locked: %s"
 msgstr "%d kilidlənib: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "0 ilə %d arasında tam ədəd daxil edin"
+
+msgid "Power status unavailable"
+msgstr "Enerji vəziyyəti əlçatan deyil"
+
+msgid "Plugged in"
+msgstr "Şəbəkəyə qoşulub"
+
+msgid "On battery"
+msgstr "Batareyada"
+
+msgid "Saver"
+msgstr "Qənaət"
+
+msgid "Asleep: hotspot off"
+msgstr "Yuxu: hotspot söndürülüb"
+
+msgid "Charging boot: press the Wi-Fi key to start"
+msgstr "Şarj yükləməsi: başlatmaq üçün Wi-Fi düyməsini basın"
+
+msgid "Awake"
+msgstr "Oyaq"
+
+msgid "forced"
+msgstr "məcburi"
+
+msgid "automatic, battery under %d %%"
+msgstr "avtomatik, batareya %d %% altında"
+
+msgid "automatic"
+msgstr "avtomatik"
+
+msgid "Nobody connected for %d s"
+msgstr "%d saniyədir heç kim qoşulmayıb"
+
+msgid "Power source"
+msgstr "Enerji mənbəyi"
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Profile in use: %s (%s)"
+msgstr "İstifadə olunan profil: %s (%s)"
+
+msgid "%d %%, %s, %d mV, %d mA, %.1f °C"
+msgstr "%d %%, %s, %d mV, %d mA, %.1f °C"
+
+msgid "Charger"
+msgstr "Şarj cihazı"
+
+msgid "Charger: %s, %s port"
+msgstr "Şarj cihazı: %s, %s portu"
+
+msgid "Charging paused: battery temperature"
+msgstr "Şarj dayandırıldı: batareya temperaturu"
+
+msgid "Charging paused: charge limit"
+msgstr "Şarj dayandırıldı: şarj həddi"
+
+msgid "Sleep now"
+msgstr "İndi yat"
+
+msgid "Wake"
+msgstr "Oyat"
+
+msgid "Nobody connected means no Wi-Fi client and no computer on USB. The Wi-Fi key, a computer on USB or the charger wake the device."
+msgstr "Heç kim qoşulmayıb o deməkdir ki, nə Wi-Fi müştərisi, nə də USB-də kompüter var. Wi-Fi düyməsi, USB-dəki kompüter və ya şarj cihazı cihazı oyadır."
+
+msgid "Automatic: plugged in / on battery"
+msgstr "Avtomatik: şəbəkəyə qoşulu / batareyada"
+
+msgid "Switch to Saver under %"
+msgstr "Bundan aşağı olanda Qənaətə keç %"
+
+msgid "Stop charging at"
+msgstr "Şarjı burada dayandır"
+
+msgid "80 % keeps the battery healthier on a device that stays plugged in."
+msgstr "80 % daim şəbəkədə qalan cihazda batareyanı daha sağlam saxlayır."
+
+msgid "Keep as is"
+msgstr "Olduğu kimi saxla"
+
+msgid "LTE only (5G off)"
+msgstr "Yalnız LTE (5G söndürülüb)"
+
+msgid "Off"
+msgstr "Söndürülüb"
+
+msgid "On"
+msgstr "Aktiv"
+
+msgid "Full"
+msgstr "Tam"
+
+msgid "Eco: big core off"
+msgstr "Eko: böyük nüvə söndürülüb"
+
+msgid "Hotspot off after (min, 0 = never)"
+msgstr "Hotspotu bu müddətdən sonra söndür (dəq, 0 = heç vaxt)"
+
+msgid "Modem when idle"
+msgstr "Boşdayanda modem"
+
+msgid "LEDs when idle"
+msgstr "Boşdayanda LED-lər"
+
+msgid "CPU"
+msgstr "CPU"
+
+msgid "Ignored lines in power.conf: %s"
+msgstr "power.conf-da nəzərə alınmayan sətirlər: %s"
+
 msgid "Configure how this plugin connects to the current Unisoc OpenWrt platform. Changes do not require editing the dashboard, AT, locks or SMS pages."
 msgstr "Bu plaginin cari Unisoc OpenWrt platformasına necə qoşulduğunu konfiqurasiya edin. Dəyişikliklər panel, AT, kilid və ya SMS səhifələrinin redaktəsini tələb etmir."
 
@@ -1023,6 +1143,45 @@ msgstr "Mən: %s"
 msgid "Delete"
 msgstr "Sil"
 
+msgid "Current setting"
+msgstr "Cari ayar"
+
+msgid "Fixed at %d"
+msgstr "%d olaraq sabit"
+
+msgid "Not changed (default)"
+msgstr "Dəyişdirilməyib (standart)"
+
+msgid "Rule in force"
+msgstr "Qüvvədə olan qayda"
+
+msgid "Flow offloading"
+msgstr "Axın yüngülləşdirmə (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "Mobil məlumatın TTL dəyəri"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Mobil məlumat vasitəsilə çıxan hər paket bu TTL dəyərini alır (IPv6: hop limit). Hotspota qoşulan telefon və ya noutbuk 64 (Windows: 128) göndərir, cihaz isə onu bir azı ilə ötürür — operator paylaşılan trafiki bundan tanıya bilər."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Bu nüvədə TTL təyin olunduqca firewall-un sürətli yolu söndürülüdür"
+
+msgid "Set %d"
+msgstr "%d təyin et"
+
+msgid "Set"
+msgstr "Təyin et"
+
+msgid "Enter a number from 1 to 255"
+msgstr "1 ilə 255 arasında rəqəm daxil edin"
+
+msgid "Turn off"
+msgstr "Söndür"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "64 ilə hər paket cihazın öz trafiki kimi çıxır"
+
 msgid "Dashboard info failed"
 msgstr "Panel məlumatını almaq mümkün olmadı"
 
@@ -1131,6 +1290,21 @@ msgstr "Naməlum USB parametri"
 msgid "Invalid interface name"
 msgstr "Yanlış interfeys adı"
 
+msgid "The power adapter gave no valid reply"
+msgstr "Enerji adapteri etibarlı cavab vermədi"
+
+msgid "Unknown power operation"
+msgstr "Naməlum enerji əməliyyatı"
+
+msgid "Unknown power setting"
+msgstr "Naməlum enerji ayarı"
+
+msgid "Invalid power value"
+msgstr "Yanlış enerji dəyəri"
+
+msgid "Invalid power request"
+msgstr "Yanlış enerji sorğusu"
+
 msgid "The languages adapter gave no valid reply"
 msgstr "Dil adapteri etibarlı cavab vermədi"
 
@@ -1145,6 +1319,12 @@ msgstr "Yanlış dil sorğusu"
 
 msgid "Unknown source"
 msgstr "Naməlum mənbə"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "TTL adapteri etibarlı cavab vermədi"
+
+msgid "Invalid TTL"
+msgstr "Yanlış TTL"
 
 msgid "Request too large"
 msgstr "Sorğu çox böyükdür"
@@ -1274,3 +1454,15 @@ msgstr "Kilid keşi əlçatan deyil"
 
 msgid "No serving cell to lock to"
 msgstr "Kilidlənəcək xidmət edən hüceyrə yoxdur"
+
+msgid "usage: power get|set KEY VALUE|wake|idle"
+msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "TTL ayarı oxuna bilmədi"
+
+msgid "The TTL could not be set"
+msgstr "TTL təyin edilə bilmədi"
+
+msgid "Unknown TTL operation"
+msgstr "Naməlum TTL əməliyyatı"

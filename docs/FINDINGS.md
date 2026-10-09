@@ -5,6 +5,99 @@ Android 13, stock kernel `5.4.254-android12-9-g9c6342244991`) during September 2
 Each item lists the symptom, the root cause and the fix, so it can be reused for other
 UMS9620 devices (for example the ZTE U30 Air).
 
+**Update 2026-10-07:** the sections from 31 on were measured in October 2026, on mainline kernels as well as 5.4,
+and on more boards (a second F50, the U30 Air: §33, §34). This is a lab notebook, newest last: a later section can
+correct an earlier one. Where that happened, the earlier text is kept and an **Update** note under it points to
+what replaced it. The table below gives each section's state.
+
+## Contents
+
+| § | Title | Status |
+|---|---|---|
+| 1 | Slot b one-shot trial (never touch boot_a) | partly superseded by §17, §33a and PR #30 (Linux on either slot) |
+| 2 | Boot ramdisk must be LZ4 legacy | current |
+| 3 | Logs without a serial console | current |
+| 4 | USB gadget dependency chain | current (module count: see note) |
+| 5 | The ~290 s power cut (PM co-processor watchdog) | current |
+| 6 | Load average of about 12 is not CPU usage | current (5.4); for 6.18 see §31e, §31g |
+| 7 | Matching source | current |
+| 8 | Build notes | current |
+| 9 | Unused space after userdata | current |
+| 9b | There is no second home for the rootfs | current |
+| 10 | Mounting gotchas | current |
+| 11 | systemd 259 works on 5.4 | current |
+| 12 | USB Ethernet must be up before the host activates ECM | current (NCM is now the default function) |
+| 13 | Userland needing newer syscalls | current (Ubuntu 26.04 offered again, mainline only) |
+| 13b | One reader at a time on the modem's AT tty | current |
+| 13b-2 | The modem stops answering on Linux | superseded: not reproduced since (§13f-1, §31, §35) |
+| 13f | The data call completes and still nothing arrives | current (fixed) |
+| 13f-1 | How it looked while it was open | superseded by §13f |
+| 13g | The same dead downlink, a different cause | current; open: why the watchdog missed it |
+| 13h | Ubuntu never started the delegate at all | current (fixed) |
+| 13e | The mailbox stops sending after one slow delivery | current (fixed) |
+| 13c | Reading this tty needs `read -t` | current |
+| 13d | Memory shared with the modem must not be mapped write-back | current |
+| 14 | Wi-Fi bring-up | current (MAC and warning: superseded by §34, §31g) |
+| 14b | Wi-Fi station mode: decided at boot, and one way only | partly superseded by §31n (interface recreation) |
+| 14c | The Wi-Fi driver can panic the kernel while it is still starting | current (fixed) |
+| 15 | Radio, registration and the data bearer | current |
+| 16 | Rootfs details found while testing data | current |
+| 26b | The tunnel needs sing-box's gvisor stack on this kernel | current |
+| 26c | SMS needs PDU mode | current |
+| 26e | The Xray engine | current (engines now the vpn extra, PR #31) |
+| 17 | Linux as default without losing the Android fallback | current (updated in place; PR #39) |
+| 18 | Services and drivers Android runs that the minimal port lacked | current |
+| 19 | systemd ordering pitfall | current |
+| 20 | Diagnosing early power cuts | current |
+| 20b | Telling a userspace reboot from a power cut | current |
+| 21 | One LAN for USB and Wi-Fi | current (subnet per device: §33b) |
+| 22 | Regulatory database | current |
+| 23 | Only one AP; 5 GHz AP needs the DS Parameter Set element | current |
+| 26 | Modem resets and mobile data recovery | current (address check added: §31c) |
+| 26d | USSD, and the AT lock | current |
+| 27 | Where the missing ~550 MiB of RAM goes | current |
+| 28 | Mali-G57 GPU (OpenCL) without Android | current |
+| 29 | OpenWrt 25.12 next to Ubuntu | current (third system: §35) |
+| 30 | Installer notes | current |
+| 24 | No internal audio hardware | open |
+| 24b | A second board, from a clean install: where the stall actually is | open |
+| 25 | SC2355 Bluetooth on BlueZ | current |
+| 31 | Ubuntu on 6.18, and what it takes | current (kernel now 6.18.55) |
+| 31a | Wi-Fi RX: sync_for_device stopped invalidating | current |
+| 31b | The modem units' ordering cycle | current |
+| 31c | A context that comes back with a new address | current |
+| 31d | Evidence of a failed boot | current |
+| 31e | sipa-set-rps: a thread that never started | current |
+| 31f | The delegate on OpenWrt: -EINPROGRESS taken for a failure | current |
+| 31g | Three warnings on every boot, three vendor bugs | current |
+| 31h | Power-off, and the command line's crutches | current |
+| 31i | A Wi-Fi card that is late at boot panicked the board | current |
+| 31j | SD host under mainline | partly superseded by §31l (mmc numbering) |
+| 31k | The Linux filesystem on the SD card | current; the hang is open in §31m |
+| 31l | The card slot took mmc0 | current |
+| 31m | Hard hangs in the first seconds under 6.18 | open |
+| 31n | Wi-Fi powered off and on at the same time: an Oops in the RX interrupt | current (fixed, PR #41); remaining races open |
+| 31o | KVM, and the module set a router needs | current |
+| 32 | Old kernels, an idle IPA, and an update that ended in Android | current |
+| 32a | The offset in init, replaced by every boot image update | current |
+| 32b | The Magisk installer on a device | partly superseded by PR #40 (passwords in update mode) |
+| 33 | The same board with a battery | partly superseded by §33d, §33f |
+| 33a | misc and boot_b were looked up before the eMMC existed | current |
+| 33b | Two devices on one computer | current (identity extended in §33j) |
+| 33c | Mainline on the U30 Air: the USB PHY waited for a Type-C driver | partly superseded by §33d (battery) |
+| 33d | The U30 Air's battery under mainline | current; open: charger-type detection to be retested |
+| 33e | USB host on the U30 Air | partly superseded by §33d (charger driver) |
+| 33f | The U30 Air's LEDs | current |
+| 33g | The U30 Air's NFC tag | current |
+| 33h | A trial guard that outlived its experiment, again | current |
+| 33i | A reboot "with the hotspot off" that never brought it back | current |
+| 33j | Two devices restored from one backup | current |
+| 33k | Vendor driver fixes from the U30 Air test, measured | current |
+| 34 | LEDs, and the defects from a second board's test | current |
+| 35 | kanoqwq's fixes, measured | current (panel languages: PR #48) |
+| 36 | Power profiles: idle radios, the charging boot, the charge guard | current; power table and device questions open (PR #62) |
+| 37 | System suspend | current (fixes on branch `suspend-drivers`); power not measured |
+
 ## Hardware and firmware facts
 
 | Item | Value |
@@ -18,6 +111,9 @@ UMS9620 devices (for example the ZTE U30 Air).
 | Bootloader | Unisoc LK ("sprdlk"), Trusty TEE, A/B slots |
 | Boot images | boot and vendor_boot are Android header v4, page 4096, LZ4 legacy ramdisks |
 
+**Update 2026-10-07:** the charger entry is the device tree's, not the F50's hardware: nothing answers at the
+charger's address 0x6b on the F50 (§24, §33d). The U30 Air has the chip, an SGM41511 (a bq25601), §33d.
+
 ## Boot chain and safe testing
 
 ### 1. Slot b one-shot trial (never touch boot_a)
@@ -29,6 +125,12 @@ UMS9620 devices (for example the ZTE U30 Air).
   rolls back to slot a.
 * Linux `init` writes the original slot-a block back to `misc` as one of its first steps, so any later
   reboot returns to Android.
+
+  **Update 2026-10-07:** three later changes. In default-Linux mode init does not restore slot a (§17). The
+  restore runs after the vendor modules, once the eMMC exists, about 10 s in (§33a). And since PR #30 Linux can
+  be on slot a, with Android on b (after an OTA, the Magisk installer does this). init takes the booted slot from
+  LK and restores the other one (`linux_slot_detect` in `boot/init`). "boot_b" in this file means the Linux
+  slot's boot partition.
 * The `uboot_log` partition contains LK's ring log. It is the best source for "which slot was chosen" and
   "why did it reset" (`rst_mode`, `charge first poweron reset`, watchdog flags).
 
@@ -57,6 +159,9 @@ The UDC only appears when the whole chain probes, in this order:
 * **`sc27xx_adc` must be loaded before the fuel gauge.** The vendor `sc27xx-fgu` driver returns a hard error
   (not `-EPROBE_DEFER`) when its IIO channel is missing and is never probed again.
 * The exact working order of the 86 modules is in `boot/module-order.txt`.
+
+  **Update 2026-10-07:** the list now has 85 entries. `sipa-dele.ko` left it and is loaded after the modem
+  (§13f).
 
 ### 5. The ~290 s power cut (PM co-processor watchdog)
 * Symptom: Linux runs normally, then the device loses power about 290 s after boot. LK shows
@@ -153,6 +258,10 @@ Asked for often, because a smaller eMMC variant leaves less free space behind `u
 The root filesystem moved from Ubuntu 26.04 to 24.04 LTS: 26.04's userland starts to depend on syscalls newer than
 5.4 (below), 24.04 is supported until 2029 and runs on 5.4 without workarounds.
 
+**Update 2026-10-07:** Ubuntu 26.04 is offered again, as a beta, and only with a mainline kernel (6.18 or 7.2).
+`install.sh` refuses it with 5.4 for the `openat2` reason in §13. Releases ship `mu300-ubuntu-26.04-rootfs.tar.gz`
+next to 24.04 (v2026.10.11).
+
 ### 11. systemd 259 works on 5.4
 5.4 is systemd's minimum baseline; the system boots to `running` with the `old-kernel` taint.
 
@@ -162,6 +271,11 @@ The root filesystem moved from Ubuntu 26.04 to 24.04 LTS: 26.04's userland start
 * Cause: `usb0` was only brought up by a systemd unit a few seconds after the UDC was bound. f_ecm reports the link
   in its first CONNECT notification and macOS' `AppleUserECM` does not pick up a later "connected" notification.
 * Fix: `ifconfig usb0 up` immediately after binding the UDC in the initramfs.
+
+**Update 2026-10-07:** the gadget now offers NCM by default, with ECM only as a fallback. Windows 10 2004+ and 11
+bind their inbox driver to NCM, and Windows has no ECM driver. RNDIS is available on request (§35, K6). See
+`setup_usb_gadget` in `boot/init`. The same applies to §3's "next to ECM". The rule above, bring the link up before
+the host looks, still holds.
 
 ### 13. Userland needing newer syscalls
 * Ubuntu 26.04's GNU `tar` (1.35+dfsg-4ubuntu0.4) fails with `Cannot stat: Function not implemented` for every
@@ -275,7 +389,8 @@ seconds.
 Ruled out by measurement, so that nobody spends another evening on them:
 
 * **Our own boot recorder.** It did write 8 MiB to the eMMC every five seconds and that is worth fixing on its own
-  (§ below), but with it disabled the channel still died.
+  (fixed since: `early-recorder` writes only what it has, not the whole 8 MiB window), but with it disabled the
+  channel still died.
 * **A cached alias of the modem's shared memory.** The vendor device tree marks these reservations without
   `no-map` (only `rebootescrow` has it), so the 5.4 kernel maps them exactly the same way.
 * **The modem power manager.** `sprd_mpm_init_resource_ops()` is never called in the 5.4 tree either, so the NULL
@@ -292,6 +407,12 @@ single shell holding the tty, the channel still went silent (132 s instead of ~9
 The next step is therefore not a kernel one: find what the CP expects from the AP that Android provides and we do
 not - the time-sync channel `refnotify` cannot open is the most concrete lead, followed by running more of the
 vendor modem userspace in the chroot the way `modem_control` already is.
+
+**Update 2026-10-07:** this failure has not been seen since. The modem now answers for whole boots on both kernels:
+SMS and data on 6.18 (§31), and on 20 soft reboots of two devices the RIL handshake and registration worked on every
+boot, with a single `AT+SFUN=4` in the whole run (§35). Which change ended it was not established. The likeliest is
+§13f-1's `AT+CGDATA` timeout: a late `CONNECT` was read as the answer to the next command. The delegate's load order
+(§13f) also changed in this period. Treat this section as history.
 
 ### 13f. The data call completes and still nothing arrives - fixed: the delegate has to come after the modem
 **Fixed.** The downlink works: DNS resolves through the carrier's own resolvers and a TCP handshake to
@@ -321,6 +442,11 @@ Two things that are not this bug, and cost time looking like it:
   `sbtun` rules (prefs 9000-9010, table 2022) nor sing-box itself, so every packet still goes into a tunnel
   with nothing at the other end and every test reads `Operation not permitted`. That is an EPERM from routing,
   not from the modem, and it made a working data path look dead.
+
+  **Update 2026-10-07:** `mu300-vpn off` now removes rules that a dead engine left behind (`routing_cleanup`,
+  prefs 9000-9010 and table 2022), and every exit of the Xray engine takes its routes down (§26e). A service stop
+  still leaves the kill switch up on purpose. Only `ENABLE=0` or `mu300-vpn off` removes it. Since PR #31 the engines
+  are not in the images at all, see §26e.
 * **A resolv.conf left behind by Docker.** Images built before the build fix carry the container's
   `nameserver 192.168.65.7` as a regular file rather than the symlink to `/tmp/resolv.conf`, so every name
   lookup fails while addresses work fine.
@@ -576,8 +702,14 @@ the vendor driver did, brings the modem up: `fail SIZE` goes to 0 and "Modem Ali
 * `rmmod wcn_bsp` crashes the kernel; reboot instead of reloading the Wi-Fi stack.
 * The driver logs `API version not match` for a few command IDs (the realme driver is slightly older than the ZTE
   firmware) and a `WARNING` in `sc2355_free_cmd_buf` (spin_unlock_bh in IRQ context).
+
+  **Update 2026-10-07:** the warning was a real lock bug and is fixed on both kernels
+  (`kernel/patches/wlan_combo-tx-complock-irqsave.patch`, §31g).
 * Verified after the fix: the driver parses `wifi_board_config.ini`, `wlan0` comes up, `iw dev wlan0 scan` lists
   nearby networks and `hostapd` (nl80211, WPA2) reaches `AP-ENABLED`. The MAC address is randomized on each load.
+
+  **Update 2026-10-07:** not any more. The 5.4 driver reads LK's `androidboot.wifimac`, as the mainline port does
+  (`kernel/patches/wlan_combo-bootargs-mac.patch`, §34).
 * A crash right after installing a module can leave a 0-byte `.ko` on ext4; run `sync` after installing files.
 
 ## Mobile data without Android RIL
@@ -593,6 +725,11 @@ The SC2355 can be an access point or a client of somebody else's network, but th
   attached on this board, and the result is `sprd-wlan: failed to power on WCN!` on every later open. A second
   interface does not help either - with the first one still present the firmware answers scans with
   `sc2355_scan_timeout`.
+
+  **Update 2026-10-07:** this was measured on 5.4, recreating a station after the AP. It is not a general rule.
+  Under 6.18, OpenWrt's netifd deletes the driver's station `wlan0` and adds an AP interface on every boot
+  (`iface 'wlan0' deleted`, then `type 3 added`, §31n), and the AP comes up. What went wrong in §31n was a race
+  with the probe's power-off, not the recreation itself.
 
 So the mode belongs to the boot: `mu300-wifi-client.service` runs before `mu300-hotspot.service`, joins the saved
 network while `wlan0` is still a station, and holds `/run/mu300-wifi-client.active`, which the hotspot unit refuses
@@ -686,6 +823,12 @@ Sending picks the encoding from the text - GSM 7-bit while every character fits 
 what makes `ığşçöü ÇĞİÖŞÜ` survive. Verified by sending to the SIM's own number and reading it back intact.
 
 ### 26e. The Xray engine, and a connectivity test that could only say no
+
+**Update 2026-10-07:** since PR #31 the engines (Xray-core, hev-socks5-tunnel, sing-box) are not in the Ubuntu or
+OpenWrt images. They are an optional release asset, `mu300-extra-vpn.tar.gz`, installed with
+`mu300-extra install vpn` or by the installer's question. `mu300-vpn` looks in `extra/vpn/bin` first. Since PR #49,
+Tailscale's own traffic also goes through the tunnel (`TAILSCALE=0` opts out). The engine choice below still
+holds (`mu300-vpn`, `ENGINE` default).
 `mu300-vpn` now defaults to `ENGINE=xray`: Xray-core does VLESS, hev-socks5-tunnel owns a plain kernel TUN (`xtun`)
 and hands each flow to Xray's SOCKS port on loopback. Neither installs routes, so the script does, with sing-box's
 rule prefs and table (9000-9010, table 2022): Xray's own sockets carry mark `0x2d0` and go to `main`, as do the LAN
@@ -794,6 +937,12 @@ verified on the device up to that point, no further.
 * Verified: `mu300-next-boot linux` + reboot returned to Linux and re-armed slot b; `mu300-next-boot android` + reboot
   booted slot a.
 
+**Update 2026-10-07:** the list above is the first version, and the rest of this section replaces three things in
+it. Slot b is re-armed with `tries = N + 1`, not 2. `mu300-boot-ok` waits for the USB network and SSH, not for
+`multi-user.target` (`mu300-boot-ok.service`, still 30 s). Since PR #39, an arm from Android after LK's own fallback
+restarts init's count (`stage=boot-tries-restart`, the `boot-tries` block in `boot/init`). Before that, in exactly that
+case, init counted N + 1 and sent the first boot after `su -c mu300-linux` back to Android.
+
 **One interrupted boot was enough to lose Linux.** Re-arming with `tries = 2` gives Linux exactly one boot that
 may fail. `mu300-boot-ok` runs about a minute after power-on, so pulling the plug once during that minute - or
 a power cut, or a crash - sent the next boot to Android. The initramfs has its own counter meant to allow five
@@ -853,6 +1002,11 @@ there go to Android.
   the first seconds of systemd leaves no log. `mu300-early-recorder.service` keeps writing `dmesg` to the boot_b log area
   for the first five minutes.
 
+  **Update 2026-10-07:** it now writes every 2 s for the first 90 s, then every 10 s (§31d). It runs up to 300 s on
+  Ubuntu (`mu300-early-recorder.service`) and up to 420 s from OpenWrt's preinit
+  (`openwrt/overlay/lib/preinit/05_mu300_early_recorder`). It writes only what it has collected, not the full
+  8 MiB.
+
 ### 20b. Telling a userspace reboot from a power cut, and finding who asked for it
 `/sys/fs/pstore/console-ramoops-0` survives into the next boot and separates the two cases in one line. A power cut or a
 watchdog leaves the log ending mid-sentence; a deliberate reboot ends with the kernel's own
@@ -890,6 +1044,9 @@ would log as "Power down" rather than "Restarting system".
 
 ### 21. One LAN for USB and Wi-Fi
 * `br-lan` (192.168.77.1/24) bridges `usb0` and `wlan0`; one dnsmasq serves both.
+
+  **Update 2026-10-07:** 192.168.77.1 is the F50's default. The U30 Air uses `.78` (`mu300-lan-ip`, §33b), and
+  `lan.conf` or LuCI can change either.
 * cfg80211 refuses to bridge `wlan0` ("Device does not allow enslaving to a bridge") because `IFF_DONT_BRIDGE` stays set:
   the SC2355 driver marks the interface as AP but returns an error from `change_virtual_intf` when tearing down the
   previous firmware mode fails, so cfg80211 skips clearing the flag. `kernel/patches/wlan_combo-allow-bridging-ap.patch`.
@@ -930,6 +1087,9 @@ would log as "Power down" rather than "Restarting system".
 * `mobile-data watch` (`mu300-mobile-data-watch.service`) checks `AT+CGACT?` and the interface address every 30 s and
   runs `up` again after two failed checks; `mobile-data down` sets `/run/mu300-mobile-data-down` so a manual disconnect
   is respected. Verified by switching the radio off: data returned without intervention.
+
+  **Update 2026-10-07:** the check also compares the interface's address with the context's (`AT+CGPADDR`). A
+  context can come back with a new address while `sipa_eth0` keeps the old one (§31c).
 
 ### 26d. USSD, and the AT lock that made the channel look dead
 Three separate traps, and the first one hid the other two for an evening. `mu300-ussd` handles all three.
@@ -990,7 +1150,9 @@ Three separate traps, and the first one hid the other two for an evening. `mu300
 ### 29. OpenWrt 25.12 next to Ubuntu
 * Layout: the ext4 area holds `/openwrt` (and `/ubuntu`, or Ubuntu directly in the root on first installs);
   `/.mu300/boot-os` selects the system and `init` starts `/lib/systemd/systemd` or procd's `/sbin/init`. The disk stays
-  mounted at `/mnt/mu300-disk`; `mu300-os ubuntu|openwrt` switches. `openwrt/build-rootfs.sh` builds the rootfs from the
+  mounted at `/mnt/mu300-disk`; `mu300-os ubuntu|openwrt` switches. (**Update 2026-10-07:** a third system,
+  `openwrt-luci`, OpenWrt with the MU300 control panel, sits next to them (§35). `mu300-os` switches to any system
+  directory on the disk.) `openwrt/build-rootfs.sh` builds the rootfs from the
   official armsr/armv8 tarball (checksum-verified) with apk, our kernel modules flat in `/lib/modules/<release>`
   (ubox kmodloader), the vendor chroot and procd services (`mu300-vendor`, `mu300-hw`, `mu300-post`).
 * Cellular WAN is a netifd protocol (`proto mu300cell`, option `apn`), so LuCI/fw4 handle routing, DNS and NAT;
@@ -1476,6 +1638,9 @@ instead (`vbc_proc_write` -> `dsp_vbc_reg_write`, e.g. `echo 1700eb0 1`); never 
 
 Everything here was measured on the test device (64 GB F50, Vodafone TR, 5G NSA) with 6.18.54 and the
 upstream/ modules, running the release's Ubuntu and OpenWrt images.
+
+**Update 2026-10-07:** the port has been on 6.18.55 since PR #26 (`KV` in `upstream/build.sh`), and it also builds
+against 7.2.9, shipped as `mu300-kernel-7.2.tar.gz`. Sections 31e onwards were mostly measured on 6.18.55 and 7.2.9.
 
 ### 31. Ubuntu on 6.18, and what it takes
 Ubuntu had never been booted on the mainline kernel. With the kernel bundle from `upstream/make-bundle.sh`,
@@ -2071,6 +2236,13 @@ the one in use, was then nowhere on the device. The file now keeps the other sys
 on the filesystem (not after a wipe); on the device, OpenWrt and then Ubuntu again left a file with both, and the
 OpenWrt shadow hash matched the password in it.
 
+**Update 2026-10-07:** since PR #40 an update (keep mode) leaves the system's accounts and passwords as they are.
+No password is generated and no password file is written. A password is made only for a new filesystem, a wipe,
+a system added beside another, or when `MU300_PASSWORD`/`MU300_PASSWORD_RESET=yes` asks for one. The install
+refuses a system that would be left with an empty password or the image's default. See
+`android/magisk/installer/mu300-install.sh` and `tools/android-install.sh`. No device test of that change is
+recorded.
+
 ## ZTE U30 Air
 
 ### 33. The same board with a battery
@@ -2107,6 +2279,10 @@ With them: 93/93 modules, USB network, the hotspot, Bluetooth, mobile data, `/sy
 (capacity, status) and the charger's `usb`/`ac` online flags. The battery LED is the charger's own; the others are
 `gpio-leds` (`pwr_green`, `net_blue`/`net_red`/`net_green`/`net_white`, `wifi_blue`/`wifi_white`), driven by
 `mu300-led`. No `LEDS_TRIGGER_NETDEV` in this kernel, so the Wi-Fi LED follows the hotspot service, not traffic.
+
+**Update 2026-10-07:** that LED list is wrong. Of the GPIO LEDs only `net_blue` is wired. The others are
+LDO-switched camera supplies and the PMIC's keypad backlight sink, and the remaining six `gpio-leds` light nothing
+(§33f).
 
 ### 33a. misc and boot_b were looked up before the eMMC existed
 
@@ -2148,7 +2324,9 @@ Two more things that only show with two devices on one computer: every gadget ha
 
 Under 6.18 and 7.2 the U30 Air has USB, mobile data, the VPN, the hotspot, Bluetooth and its LEDs
 (`CONFIG_LEDS_GPIO`). The battery is not reported: its charger and fuel gauge (the SQC stack and `sc27xx-fgu` on
-the UMP9620) have no mainline drivers (for the charger IC see 33d: it does not charge without one). Kernel bundles now name
+the UMP9620) have no mainline drivers (for the charger IC see 33d: it does not charge without one).
+(**Update 2026-10-07:** both are reported now. Patches 0004-0006 add the UMP9620 fuel gauge, and mainline's
+`bq256xx` drives the charger and switches charging on, which Android had left off (§33d, PR #55).) Kernel bundles now name
 the devices they run on (`./devices`): mu300-update and the installers do not put a bundle from before this onto a
 U30 Air.
 
@@ -2226,7 +2404,39 @@ first build:
 - `sc27xx-fgu/capacity` read 575. The FGU's always-on user area keeps the last capacity across a reboot, and
   Android keeps it in 0.1 %. Until then the status had been Full, and the calibration that runs whenever the
   battery is not charging forced anything above 100 back to 100. Patch 0011 reads and saves that value in 0.1 % on
-  the UMP9620, and clamps the reported capacity to 0-100.
+  the UMP9620, and clamps the reported capacity to 0-100. (Its format was wrong: see 2026-10-07 below.)
+
+2026-10-07, U30 Air under 7.2.9 with 0009-0011: charged from about 60 % (Android said 65 % at 4.04 V under 1.3 A) for
+about 1.5 h at 1.1-1.3 A. Then bq256xx-charger said Full (charge_type Trickle), and the battery rested at 4.146 V with
++2 mA, so it was physically full. `sc27xx-fgu` said status Full and capacity 58, and over the whole charge the capacity
+had read 57.5, 59 and 58. Two faults in the driver, and a third that is still open:
+
+- The user-area format. Unisoc's 5.4 driver (`sc27xx_fgu_save_last_cap()`/`read_last_cap()`, `FCC_PERCENT` 1000)
+  keeps the capacity as whole percent in bits 7:0 and tenths in bits 11:8. That makes 575 (0x23f) 63.2 %, close to
+  Android's 65 %, not 57.5 %. Android's own capacity is in 0.1 % internally (its `sc27xx-fgu` capacity read 615 when `battery` said 65), but that is not
+  what it stores. The 0.1 % that 0011 wrote back would read as something else under Android (580 = 0x244 = 68.2 %).
+  Mainline's arithmetic is in whole percent throughout (`init_cap`, `ocv2cap`, the delta from the coulomb count over
+  `total_cap`), and 0011 had converted at the user area, so the units inside the driver agreed. The value read was
+  the wrong one.
+- No calibration at the end of a charge. Mainline sets 100 % only when the OCV is above the top of the OCV table.
+  The charger ends at VREG 4.208 V, below the top of the table (4.3 V and up for these cells), so with Full and 4.146 V
+  nothing moved the 58. Mainline also writes the user area only on a first power-on, so every boot started again
+  from the value Android had left.
+- Open: the coulomb count should have added about 40 % (1.6-1.8 Ah of a 4050 mAh cell). Its arithmetic matches the
+  vendor's (`clbcnt * 10 / 72 / cur_1000ma_adc` mAh, the same registers, 2 Hz) and does not overflow at these values,
+  and nothing calibrates while the status is Charging. A reboot during the charge would explain the 59 -> 58 step
+  (each boot restarted from the stale saved value), but not the small rise. `charge_now` (uAh) is the raw counter:
+  it should rise by about 1.2 Ah per hour at 1.2 A. If it does not, the UMP9620's counter needs something the
+  driver does not do.
+
+Patch 0011 is replaced (`0011-power-sc27xx-fuel-gauge-UMP9620-saved-capacity-and-full.patch`). On UMP9620 it reads
+the saved value in Android's format and writes whole percent, which is the same number in both formats. A value that
+is not a capacity in that format goes to the OCV. So does a multiple of 10 with tenths, which the first 0011 may have
+written: the OCV table decides it right away with the battery at rest (under 50 mA), and under load the value is taken
+in Android's format. Either way dmesg says `boot capacity N % (saved 0x...)` or `... from the OCV`. The capacity is
+written to the user area whenever its whole percent changes. A Full from a charger driver (not 0006's guess from the
+current) sets 100 % while the OCV table puts the battery at 70 % or more. The reported value stays within 0-100. Built
+for 6.18.55 and 7.2.9. Not yet tested on the device.
 
 ### 33e. USB host on the U30 Air, and a trial guard that outlived its trial
 
@@ -2244,6 +2454,10 @@ before. Two things the vendor stack does elsewhere:
   and turns its watchdog off (REG05 5:4), which would otherwise return it to its defaults 40 s after the write,
   boost included. It refuses host mode while REG08 reports power good (a computer or charger on VBUS), and turns
   the boost off at boot: the chip runs on the battery and keeps its registers across a reboot.
+
+  **Update 2026-10-07:** the charger has a driver under mainline now, `bq256xx` (§33d, PR #55). `mu300-usb` still
+  sets the OTG bit, but through `i2cget`/`i2cset -f` while the driver owns 6-006b. It leaves the chip's watchdog
+  off, because the watchdog would drop the driver's settings.
 
 A Logitech receiver (HID) and a flash drive (FAT, mounted and read) worked through a USB-C adapter under 6.18 and
 7.2. The drive read at ~3 MB/s with or without the PHY's host settings; it is an old stick, not yet compared
@@ -2479,10 +2693,317 @@ Air, ten `ifdown wan; ifup wan` gave the WAN back in
   fix should re-derive it from the LAN).
 * **TTL and the flowtable (K28, R23)**: `mu300-ttl set 64` turned flow offloading off and the sipa_eth0 flowtable
   went (1 -> 0); `off` brought both back.
+* **TTL in tc keeps the flowtable (mainline)**: the nft rule sits in postrouting, which an offloaded flow never
+  reaches: `nf_flow_offload_ip_hook` (ingress of br-lan) rewrites the packet and hands it to `neigh_xmit` ->
+  `dev_queue_xmit` on sipa_eth0. `dev_queue_xmit` still runs clsact's egress hook (`sch_handle_egress`) before the
+  qdisc, for every packet whichever way it came, so a `matchall` filter there with `pedit ex munge ip ttl set N pipe
+  csum ip` (and `ip6 hoplimit set N`) rewrites offloaded and device-own traffic alike, and flow offloading can stay
+  on. Needs `NET_SCH_INGRESS` (clsact), `NET_CLS_ACT`, `NET_CLS_MATCHALL`, `NET_ACT_PEDIT` and `NET_ACT_CSUM`
+  (mu300-mainline.config: the last three are modules, loaded one by one - OpenWrt's kmodloader `modprobe` takes one
+  module per call) and a `tc` that has pedit's `ex` syntax (OpenWrt's `tc-tiny` 6.18, which sqm-scripts brings,
+  does). The 5.4 vendor kernel has no `act_pedit`: there mu300-ttl keeps the nft rule and turns offloading off.
+  matchall cannot replace a filter (`tc filter replace` answers EEXIST once one is there), so `apply` deletes its
+  own (prefs 10 and 11) and adds them again; the filters belong to each sipa_eth* (all 16 get them), and
+  mobile-data's bring-up calls `mu300-ttl apply`. Checked on the U30 Air (7.2.9, openwrt-luci): `set 64` put both
+  filters on every sipa_eth*, the counters grew with traffic (538 packets for a 1 MB download), `flow_offloading`
+  stayed 1 and no nft table was made; `set 65` changed the key to 0x41; the filters removed by hand came back with
+  `ifup wan`; `off` removed them all. The VPN was on during the check, so the forwarded LAN traffic left through
+  xray's own sockets rather than an offloaded flow.
 * **The panel**: every page (Status, Network locks, SMS, AT terminal, Adapter settings, Device management) in a
   browser set to English, German, Turkish and Chinese on both devices: no Chinese in English, German or Turkish, no
   string of the catalogs left in English in Turkish or Chinese, German shows English. Backend refusals (a bad
   number, an over-long SMS) have Turkish and Chinese entries; a radio switch during a dial answers "busy".
+
+  **Update 2026-10-07:** since PR #48 LuCI and the panel have a language switch. English, Turkish and Chinese are
+  in the images, and 46 languages in all come with the `lang` extra (`mu300-extra install lang`, or System >
+  Languages in the panel). German now comes from that extra.
 * **LEDs (K38, K39, K68)**: not ported here. The F50's lamp states were measured with someone watching and are
   implemented by the f50-leds-fixes work (FINDINGS 34); the fork's boot chase, lamp switches and LED page
   follow that branch.
+
+### 36. Power profiles: idle radios, the charging boot, the charge guard
+
+The U30 Air ran flat in a day or two of hotspot use. Two causes, both seen before: the charger IC charged on its
+power-on defaults and was never told anything (33d; the bq256xx driver of PR #55 now drives it, so the guard below has
+a node to write), and a boot that Android's LK started because a charger was plugged in ("charger mode") came up as a
+full hotspot with the modem dialling, in a pocket. `mu300-power` (one `/bin/sh` script, `mu300-power.service` or
+`/etc/init.d/mu300-power`) answers both. Design: `docs/superpowers/specs/2026-10-06-power-profiles-design.md`.
+
+What was built:
+
+* **Profiles** `plugged`, `battery`, `saver`, picked automatically (saver below `SAVER_BELOW` % on battery, by the
+  fuel gauge's `capacity` only) or forced with `mu300-power profile NAME`. Each has four knobs: `WIFI_IDLE` (minutes
+  without a client, 0 never), `RADIO_IDLE` `keep|lte|off`, `LEDS_IDLE` `on|off`, `CPU` `full|eco`. Defaults: plugged
+  `0 keep on full`, battery `10 off off full`, saver `5 off off eco`. A bad value in `/etc/mu300/power.conf` counts as
+  the default and `status` names it.
+* **Idle** is "no Wi-Fi station, no USB host, no key press" for `WIFI_IDLE` minutes. Then the hotspot goes down, the
+  LEDs follow `LEDS_IDLE`, and the modem follows `RADIO_IDLE`: `mobile-data suspend lte` only switches EN-DC off with
+  `AT+SPENDC=2` (the lock adapter's measured "off" value; no stack restart, the data connection is untouched) and
+  `resume` restores `AT+SPENDC=1` only if EN-DC was on before; `suspend off` is the radio off (`AT+SFUN=5`) with data
+  down, and `resume` runs `radio_on` and redials itself; `mobile-data up` refuses to dial while the modem is
+  suspended `off`, except from `resume`. On OpenWrt the daemon runs with `MU300_NETIFD=1`, so `suspend off` is
+  `ifdown wan` before `AT+SFUN=5` and `resume` redials with `ifup wan`: netifd keeps owning the WAN's address,
+  route, firewall, DNS and IPv6. Idle wakes on a key, a computer on USB, a Wi-Fi station, or plugging in (the edge
+  battery -> plugged, not being plugged: idle on the charger, a forced profile and the battery-less F50 stay idle).
+  Every wake brings the hotspot up first, then the LEDs and the CPU, then the modem, whose dial can take minutes.
+* **State** is kept across daemon restarts within a boot. The daemon's TERM trap wakes the radios without a dial
+  (`mobile-data resume nodial`: the radio on, the watcher redials) and does nothing during a shutdown (the held
+  power key and the low-battery poweroff leave `/run/mu300/power/shutdown`; Ubuntu also says `stopping`). The
+  units keep a 150 s stop timeout (`TimeoutStopSec=150`, procd `term_timeout 150`) for the radio lock. A failed
+  action is logged and retried by the following loops.
+* **Charging boot**: `init` writes `/run/mu300/boot-mode` and, in a charger boot, `/run/mu300/charging-boot`. The
+  Ubuntu hotspot and mobile-data units skip on that file; the daemon enters the charging boot only on its first start
+  of a boot, and leaves it only by the Wi-Fi key (`mu300-power wake wifi`; a computer on USB or the power key does
+  not). It powers the device off only unplugged (no charger online, no extcon `USB=1`, the battery not `Charging`),
+  below 5 % for three loops in a row, never on one sample. OpenWrt's early radio warm-up skips a charging boot.
+* **Charge guard**: charging off at battery `temp` above 45.0 C or below 0 C, on again below 40.0 C and above 3.0 C;
+  with `CHARGE_TO=80` off at 80 % and on below 75 %. It writes the bq256xx charger's `charge_type` (`N/A` off,
+  `Fast` on). bq256xx reads `N/A` whenever it is not charging, so `Fast` is written only when the guard itself turned
+  charging off (`/run/mu300/power/charge-off`); the driver resets its switch at probe, so a marker lost with `/run`
+  leaves nothing off. It logs only when that marker changes, and a failed write turns the guard off for the boot
+  with one log line. No reading means no change.
+* **Panel**: System -> Power on `openwrt-luci` (state, profile, knobs, charge limit), catalogs in all 31 languages.
+
+Method for the numbers: `mu300-power log 5 /tmp/power.csv` writes `epoch,mV,mA,mW,capacity,temp,state,profile` every 5 s.
+Each row is a 3-minute run unplugged, the hotspot idle (a client associated, no traffic) unless the row says
+otherwise, `mu300-power set` or the verbs between runs. The fuel gauge's `current_now` is negative when
+discharging; the draw is the mean of the run's mA (and W) after the first 30 s. Android's own idle figure comes from
+`dumpsys battery` / the same gauge on the Android side for the target line.
+
+| Row | What is on | Measured (mean W) | Measured on |
+|---|---|---|---|
+| baseline | everything, as before the profiles | pending | pending |
+| LEDs off | baseline with the LEDs dark (`mu300-led idle`) | pending | pending |
+| hotspot off | modem on, Wi-Fi off | pending | pending |
+| LTE only | EN-DC off (`mobile-data suspend lte`), hotspot on | pending | pending |
+| modem off | `AT+SFUN=5`, hotspot on | pending | pending |
+| all off | idle: hotspot, modem and LEDs off, the floor | pending | pending |
+| eco | `CPU=eco` on the baseline | pending | pending |
+| Android idle | the stock firmware at rest (the target) | pending | pending |
+
+What the defaults rest on: not on these numbers (there are none yet) but on the design. Radios are what drains a
+hotspot with nobody connected, so `battery` and `saver` switch them off after a few minutes; `plugged` keeps
+everything because the supply covers it; saver is the profile with the CPU in `eco`. The thresholds (45/40 C, 0/3 C,
+5 % for three loops) follow the spec; the fuel gauge reports `capacity=100` at 3.88 V today (33d), which is why
+nothing acts on the voltage. The table is filled in by the device series, with the date of each run.
+
+Open questions for the device:
+
+* Does `AT+SPENDC=2` without a stack restart really drop the NR leg (check `AT+SPENDC?` and the band readings), or
+  only after the next attach?
+* Does procd's `term_timeout` apply on this OpenWrt build (that `/etc/init.d/mu300-power stop` waits for the wake
+  rather than being killed at the default timeout)?
+* What the bq256xx `charge_type` node does on writes: `N/A` stops charging, `Fast` resumes it, or the driver
+  rewrites it from its own state.
+* The unit tests ran under dash and bash on the dev host; busybox ash (the shell on OpenWrt) has not run them there.
+
+**The device-test incident (2026-10-07, U30 Air, OpenWrt).** A measurement script took the device down with the raw
+actions while `mu300-power`'s state still said `active`: `mu300-led idle on`, `wifi down`, `mobile-data suspend lte`,
+`mobile-data suspend off`. The last one never returned and the script's later steps never ran; `mu300-power log`
+stopped writing at the same moment. Every key press then did nothing: `mu300-power wake` only left a flag for the
+daemon, which saw `active` and had nothing to do, and `mu300-led wake` lit nothing under the idle flag. Every LED
+dark, no reaction to any key, for hours - a device that looks powered off. xray meanwhile ran out of its 1024
+descriptors (`accept4: too many open files`) with the modem off and needed a restart.
+
+Why `suspend off` did not return, from the code (no device access for the analysis; the steps of `suspend off` after
+`suspend lte`, as of 4e62326): `do_suspend off` first resumes `lte` (`resume` -> `under_radio_lock resume_lte_raw`),
+then `down` (the script ran by hand, so without `MU300_NETIFD=1`: the systemd path, `ip`/`nft` on `sipa_eth0`
+behind netifd's back), then `under_radio_lock suspend_off_raw`, then one line to stderr. Every wait in it is bounded
+but long: the radio lock 120 s twice, each `mu300-at` call up to 90 s for the client lock plus `T + 31` s of budget
+(`AT+SPENDC=1` 126 s, `AT+CGACT=0` 41 s with its 5 s lock wait, `AT+SFUN=5` 131 s) - about 9 minutes at worst, not
+hours. What is not bounded: the direct-tty path when no AT daemon runs (the `open` and `write` of the SIPC tty block
+in the driver; the drain loops of `mobile-data`'s `at()` and of `mu300-at` read for as long as the channel talks);
+`ip`, `nft` and the `disable_ipv6` write, which wait on the RTNL lock behind an OpenWrt `wifi down` (it returns at
+once and netifd tears the AP down afterwards; a Wi-Fi driver stuck in that teardown holds RTNL); and the write of the
+final message to a terminal that is gone. The last fits all three symptoms: the script ran in an SSH session, and an
+SSH session over the hotspot dies with `wifi down` (over the WAN, with `suspend off`). The server side notices only
+when TCP gives up (~15 min of retransmissions with dropbear's defaults), and until then a write that fills the pty
+blocks; then it hangs up, and SIGHUP stops the script and every job of the session - `log` among them - wherever they
+are. A `suspend off` stopped that way leaves the mode file `off` and the "down" flag, so the watcher stands aside
+for good, and nothing else ever looked. The most likely cause is therefore the dead session, with the RTNL wait as
+the second candidate; which one it was can be read on the device next time (`ps` for a `mobile-data` still there,
+its `/proc/PID/stack` and `wchan`; `logread` for the session's end).
+
+What changed (the design: bootability and "a key always shows life" over everything else):
+
+* **Keys always show life.** `mu300-buttons` runs `mu300-led wake` first on every press, before it looks at any
+  state, and `mu300-power wake` after it in the background. `mu300-led wake` lights the LEDs for `LED_TIMEOUT`
+  (a minute when it is 0) under the idle flag too; `sleep --if-due` puts them out again while idle. No daemon is
+  involved.
+* **Wake by inspection.** `mu300-power wake` restores whatever is down by looking, not by the state file, and
+  needs no daemon: the AP down (no `hostapd.wlan0` on ubus / `mu300-hotspot` not active) and wanted -> up; the
+  modem's mode file -> `mobile-data resume`; the LED idle flag -> `mu300-led idle off`; `cpu7` offline -> online,
+  and eco's own 1.5 GHz cap on `policy4` -> `cpuinfo_max_freq` (another cap is the toolkit's or thermal-guard's and
+  is left, and nothing is lifted under thermal-guard's alarm); the VPN if mu300-power stopped it; then `active`.
+  The daemon's own wake is the same function. One idle entry or restore runs at a time (`/run/mu300/power/busy`,
+  a dead or stale holder is taken over); a second wake while one restores returns at once. The panel's wake runs it
+  in the background (rpcd ends a call at 30 s).
+* **Nothing can hang.** Every external step of `mu300-power` runs under a deadline (a background job, a watchdog
+  that kills the job's whole process tree, and a USR1 to the waiting shell for a child stuck in the kernel; busybox
+  has no `timeout` in `/bin`): probes 5 s, LEDs 10 s, wifi/systemctl/VPN 30 s, the modem 90 s, the background LED
+  sync 150 s (`MU300_POWER_*_DEADLINE`). The tree is stopped until a look finds nothing new, then every process
+  any look saw is killed (one reparented between two looks too). `mobile-data suspend|resume` end within
+  `MU300_SUSPEND_DEADLINE` (60 s) whatever the modem does: AT through `mu300-at` with `-t` <= 20, a 10 s
+  client-lock wait and a 22 s budget (`MU300_AT_LOCK_WAIT`, `MU300_AT_BUDGET`), the radio lock 20 s, each external
+  step 15 s; HUP ignored; their output goes through a file and a bounded write. On a failure or a timeout they
+  leave the files consistent - no mode file, no "down" flag of their own - so the watcher restores whatever is off,
+  and they exit non-zero. An `lte` step that failed (also an `AT+SPENDC=1` answered ERROR or not at all: only OK
+  counts, as `mu300-at` exits 0 on ERROR) leaves `/run/mu300-mobile-data.endc-restore` (unless EN-DC was off
+  before): every `resume` sends `AT+SPENDC=1` until it answers OK, and mu300-power's wake and self-check call
+  `resume` while it is there; the watcher ignores it. The Wi-Fi key's toggles run in the background under a
+  deadline too, and the hold's direction (is the hotspot up?) is asked within 5 s
+  (`MU300_BUTTONS_PROBE_DEADLINE`): no answer counts as down, and the key turns it on. On OpenWrt they go through
+  netifd (`ifdown`/`ifup wan`) also when run by hand.
+* **The VPN while the modem is off.** `RADIO_IDLE=off` stops `mu300-vpn` (systemd or procd) once the modem is off,
+  if it was running (`/run/mu300/power/vpn-stopped`; a suspend that keeps failing never touches it, and a Wi-Fi
+  client uplink keeps it), and the wake starts it again before the modem, so a `KILL_SWITCH=0` dial is never ahead
+  of it - unless the service was disabled or `ENABLE=0` meanwhile (asked through `mu300-vpn enabled`, which prints
+  `ENABLE` and touches no network; a probe that fails or times out counts as wanted); a start that failed is
+  retried by the self-check at most every 120 s; `lte` leaves it alone. The service stop keeps the kill switch
+  (`nft table inet mu300_vpn` stays; only `ENABLE=0` and `mu300-vpn off` remove it), and the engine's routes
+  go with the engine: with `KILL_SWITCH=1` nothing unmarked leaves on `sipa_eth*` or the Wi-Fi client while it is
+  stopped; with `KILL_SWITCH=0` nothing holds traffic back, as on any stop, and the bearer is down anyway. Both
+  service definitions raise the descriptor limit to 65536 (`LimitNOFILE`, procd `limits nofile`).
+* **Self-check.** Each loop, while the state says `active`: a modem mode file, or (with `WIFI_IDLE=0`) the hotspot
+  down although nobody turned it off on purpose, is logged and restored. On purpose means the Wi-Fi key's hold
+  (`mu300-buttons` writes `/run/mu300/power/hotspot-off` with the hold's uptime before the wake of that press
+  starts, until the next hold; a marker older than the toggle's deadline + 30 s (180 s) is dropped once the hotspot
+  is seen up), UCI (`wireless.@wifi-iface[0].disabled` or `wireless.@wifi-device[0].disabled` = 1: the panel,
+  `wifi-client`), the unit disabled on Ubuntu, a Wi-Fi client (`/run/mu300-wifi-client.active`) or the scan-mode
+  boot. A hotspot that idle took down (`hotspot-idled`) comes back whatever a hold marker says, but not for a Wi-Fi
+  client or in scan mode. The hotspot is not looked at in the first 120 s of a boot nor within 120 s of any
+  `hotspot on`; one that does not stay up is retried at a doubling interval up to 30 min, logged once per step. A
+  modem left with EN-DC off is resumed too, and a VPN left stopped is started (see above).
+
+For measurements this means: the raw actions by hand are undone by the daemon's next loop (the modem) and by any key.
+Use `mu300-power idle` and the profiles, or stop the daemon first, and run long measurements under `nohup` or
+`setsid` with the output in a file, never through the session the hotspot carries.
+
+### 37. System suspend
+
+Can mainline sleep the way Android idles - the AP asleep, the modem awake? Tested on F50-B (6.18.55, Ubuntu,
+USB-powered, the SIM without service: `+CEREG: 2,8`) on 2026-10-06 with the config change of branch
+`suspend-spike` (`CONFIG_SUSPEND`, `PM_DEBUG`, `PM_ADVANCED_DEBUG`, `PM_SLEEP_DEBUG`, `PM_WAKELOCKS`,
+`PM_AUTOSLEEP` - autosleep built, off - and the tick change below). Short answer: **yes, the firmware does it**;
+what stood in the way was three drivers and one config default (all fixed below, in the follow-up).
+
+**The firmware.** `/sys/kernel/debug/psci` on the release kernel already says `SYSTEM_SUSPEND is supported`
+(PSCI v1.0 under the DT's `arm,psci-0.2`). The vendor 5.4 kernel has no platform suspend driver either; mainline's
+`psci_init_system_suspend()` registers `mem`. With the options: `/sys/power/state` = `freeze mem`,
+`/sys/power/mem_sleep` = `s2idle [deep]`.
+
+**Results** (`rtcwake -s 20`; `pm_test` stages first):
+
+| run | result |
+|---|---|
+| `freeze`, pm_test=freezer / `mem`, pm_test=devices | return after 5 s, everything works afterwards |
+| `mem`, pm_test=processors, **periodic tick** | **panic**: hard lockup on CPU1 after the CPUs came back, board restarted by itself |
+| one CPU offline/online, periodic tick, no suspend | the same panic: the CPU's timers never fire again |
+| `mem` processors / core, **NO_HZ_IDLE + HIGH_RES_TIMERS** | return after 5 s |
+| `freeze` (s2idle), Wi-Fi up | returns at once: the PCIe WAKE# irq calls `pm_wakeup_hard_event()` during noirq suspend |
+| s2idle, Wi-Fi up, PCIe `power/wakeup` disabled | **20 s** (1.08 s, a WAKE# wakeup, back to sleep, 18.97 s), RTC wake through the PMIC irq (23); USB network, Wi-Fi client, AT, Bluetooth all fine |
+| `mem` (PSCI SYSTEM_SUSPEND), Wi-Fi up | **returns after 0.43 s**: Marlin3 pulls WAKE# low right after its L2 entry; USB, Wi-Fi, AT, BT fine |
+| `mem`, Wi-Fi and BT closed | **19.94 s asleep**, RTC wake (IRQ 23); USB, AT, BT fine; **Wi-Fi does not come back** |
+| s2idle, Wi-Fi closed | 20 s; Wi-Fi does not come back either |
+
+So PSCI SYSTEM_SUSPEND enters and returns, the DDR content survives, the CPUs come back, and the modem keeps
+running across it (AT answers at once, `sprd-mpm` sees its channels awake, no modem restart). No callback failed
+(`suspend_stats`: 0 failures in every run) and no `Call trace` outside the two panics.
+
+**The tick.** allnoconfig leaves `HZ_PERIODIC` (250 Hz) without high-resolution timers. cpuidle's power-down
+states stop the local timer, so `cpuidle_register_driver()` puts every CPU into the *periodic* broadcast once
+(`tick_broadcast_mask: ff`, all `arch_sys_timer` shut down, the `sprd_timer` IPIs the tick to all eight CPUs).
+`tick_broadcast_offline()` takes a CPU out of that mask and nothing puts it back when it comes online; without
+`TICK_ONESHOT`, `tick_broadcast_enter()` still lets it into the power-down state, and it never gets a timer
+interrupt again (`arch_timer` count frozen, `taskset -c 7 sleep 1` never returns, the buddy watchdog panics
+~30 s later). Suspend takes CPUs 1-7 down and up, so it hit this every time. `NO_HZ_IDLE` + `HIGH_RES_TIMERS`
+(arm64's defconfig) gives the one-shot broadcast that is armed on every idle entry: hotplug and suspend work.
+It also stops waking all eight CPUs 250 times a second at idle; its effect on idle power was not measured here.
+
+**What broke in the spike** (the PCIe WAKE#, Wi-Fi after a suspend, the PMIC watchdog) was taken apart on
+branch `suspend-drivers` (2026-10-06/07, F50-B, the same kernel plus the changes below; logs in `/root/susp2/`).
+Two of the spike's conclusions were wrong, and the table above reads differently with what was found:
+
+* **WAKE# was the firmware's debug log.** wcn_bsp's `sprd_ep_resume()` sends `at+armlog=1` after every resume
+  (vendor code), and its sysfs default turns the log on at every chip power-on; `wifi-start`'s `at+armlog=0` did
+  not outlive the next power-on (Bluetooth's start powers the chip up again). With the log on, the firmware pulls
+  WAKE# within 0-2 s of every L2 entry to push log packets. Measured with PCIe wakeup enabled and Wi-Fi up:
+  log on, `mem` returned after 1.0-1.3 s (`pm_wakeup_irq` 18, the WAKE# line); `echo 0 > armlog_status`, the
+  full 20 s, woken by the RTC; the next resume turned the log on again and the sleep after it returned after
+  4 s. Fixed in wcn_bsp: the log is off by default and the resume leaves it as it was (`echo 1 >
+  /sys/devices/virtual/misc/wcn/devices/armlog_status` turns it on for debugging). Three `mem` runs in a row
+  with Wi-Fi up and PCIe wakeup enabled then slept the full 20 s.
+* **"Wi-Fi does not come back after a suspend while it was closed" was a suspend while it was *open*.**
+  Without a WoWLAN configuration cfg80211's `wiphy_suspend()` closes every interface (`cfg80211_leave_all`: the
+  P2P device's `CMD_CLOSE`, the station's `CMD_DISCONNECT`), and the WCN PCI function, which suspends
+  asynchronously, had usually taken the bus down by then: both commands were dropped (`send [CMD_CLOSE] fail
+  because bus done`), the firmware kept them open, and the driver thought them closed. Wi-Fi itself reconnected
+  after the resume. The *next close and open of Wi-Fi* - with or without a suspend in between - then got the
+  firmware assert (`WCN Assert in mchn.c line 137 ... get_wcn_bus_ops, chn10`), after which the chip is in
+  "card dump" and only a reboot helps. In the spike the Wi-Fi-up runs came first, so the closed-Wi-Fi runs got
+  the blame. Reproduced on demand: a Wi-Fi-up `mem`, then `ip link set wlan0 down/up` and no second suspend:
+  assert. On a chip with no Wi-Fi-up suspend since its power-on, sleeps with Wi-Fi closed (Bluetooth on) were
+  fine three times out of three (`mem`, s2idle, `mem`), and so was one with the chip off (Wi-Fi and Bluetooth
+  closed). `iw phy phy0 wowlan enable any` before the sleep avoided the assert, which proved the mechanism.
+  Fixed in sprd_wlan_combo: WoWLAN "any" is configured when the wiphy registers, so cfg80211 leaves the
+  interfaces as they are, and the firmware learns about the sleep through the PCIe channel's `power_notify`
+  (`CMD_POWER_SAVE`), as before. The station stays associated across the sleep (no reconnect); a hotspot stays an
+  access point. `iw phy phy0 wowlan disable` brings the old behaviour back. A device link that orders the WCN
+  platform device's suspend before the PCI function's was tried first: the commands then reached the firmware,
+  but the queued disconnect made `power_notify` refuse the suspend (`Q not empty suspend not allowed`, -EBUSY)
+  and the next sleep ended with `CMD_SET_REGDOM` timeouts and an assert; dropped.
+
+**Fixed, measured on F50-B** (6.18.55, these changes; each run `rtcwake`, `pm_wakeup_irq` 23 = the RTC):
+
+| run | result |
+|---|---|
+| idle, release kernel (periodic tick) | arch_timer 0/s, timer broadcast IPIs **1725/s**, sprd_timer 246/s, all IRQs 2162/s (20 s, twice) |
+| idle, NO_HZ_IDLE + HIGH_RES_TIMERS | arch_timer 400-520/s, broadcast IPIs **112-120/s**, sprd_timer 170/s, all IRQs **980-1125/s** |
+| `cpu7` offline/online ×3, then CPUs 1-6 at once | no lockup, `taskset -c N sleep` returns on every CPU (release kernel: panic) |
+| `mem` 20 s, Wi-Fi client up | woken by the modem after 11.5 s (see wake sources); Wi-Fi associated, ping fine |
+| `mem` 90 s, Wi-Fi up, radio off (`AT+CFUN=4`) | **91.1 s asleep, no reset**; the PMIC watchdog counts again afterwards (CTRL 0xa, counter running) |
+| `mem` 120 s, Wi-Fi up | 120.8 s, Wi-Fi associated, ping fine |
+| `mem` ×2, Wi-Fi up, then wlan0 down/up | no `bus done`, no assert, Wi-Fi rejoins |
+| Wi-Fi closed (BT on): `mem` and s2idle, then open | no assert, Wi-Fi rejoins, ping fine |
+| s2idle 20 s, Wi-Fi up | 21.3 s, RTC |
+| `mem` 20 s, hotspot (AP) up | 21.2 s; still an AP on channel 36 with hostapd running (no client was at hand to associate) |
+| `mem`, Wi-Fi up, PCIe `power/wakeup` enabled | woken by WAKE# after ~1 s: with WoWLAN "any" the firmware wakes the host for traffic, as asked |
+
+The rest:
+
+* **The PMIC watchdog** (`ump9620-pmic-wdt`) keeps counting while the AP sleeps. It is now stopped in its
+  `suspend_noirq` callback, if it was running, and loaded with a fresh count and started again in `resume_noirq`
+  - what the vendor's `sprd_wdt` does for the AP watchdog. A hang in the last suspend steps or the first resume
+  steps is not covered; the vendor accepts the same window.
+* **pcie-sprd's WAKE#** is no longer `IRQF_NO_SUSPEND` and wake-armed for good: `pm_wakeup_hard_event()` only when
+  `device_may_wakeup()`, the line is disabled for the sleep like any other and unlazily (`IRQ_DISABLE_UNLAZY`), so
+  that it is masked in the EIC - PSCI SYSTEM_SUSPEND returns on any interrupt that reaches the GIC, whatever the
+  kernel thinks of it - and armed (`enable_irq_wake`) only when `power/wakeup` is enabled. It is off by default:
+  `echo enabled > /sys/devices/platform/soc/26100000.pcie/power/wakeup` makes Wi-Fi traffic wake the device.
+  With it off the firmware's WAKE# request waits for the resume (`wake# value:1, wake down count:N` in the log).
+* `ums9620-ipa-sys-pd: power off maybe failed` on every suspend, harmless; the USB gadget drops for the sleep
+  (`br-lan: port usb0 disabled`) and comes back.
+* The PM debug options cost nothing at runtime: `pm_print_times` and `pm_debug_messages` are 0 by default, so a
+  suspend logs what it logged before; they stay (pm_test).
+
+**Wake sources.** The RTC (PMIC irq 23) every time. **The modem wakes `mem` by itself**: the mailbox irq is
+`IRQF_NO_SUSPEND`, as in the vendor 5.4 driver, and its interrupt reaches the GIC, which ends PSCI
+SYSTEM_SUSPEND; no change was needed. With the radio on, the first sleeps ended after 11.5, 20 and 11.7 s on
+`irq read smsg: dst=5, channel=6, type=4` (the AT channel's sbuf event): the modem's unsolicited `+CSQ`/`+CESQ`
+signal reports on `stty_nr0`, every few seconds, and `mobile-data`'s registration poll (`up`, every 2 s, while
+there is no service). With `AT+CFUN=4` the sleep ran to the alarm. A long sleep with the radio on needs those
+reports off (what Android's RIL does on screen-off) - for `mu300-power`, not the kernel. Not tested yet (needs a
+hand or a SIM with service): the power key (it shares the PMIC irq 23 with the RTC), a USB plug (a PMIC EIC
+line), an incoming SMS (a `+CMTI` URC on the same channel as the reports, so it should).
+
+**What `mu300-power` can rely on:** `mem` with Wi-Fi up, down or the chip off; Wi-Fi as it was afterwards; sleeps
+longer than the PMIC watchdog's 60 s; PCIe wakeup as an opt-in. What it has to arrange: the modem's signal
+reports and the mobile-data poll off before a long sleep, or the modem wakes the device every 10-20 s.
+
+**Not measured:** power. The F50 has no battery; the U30 Air (fuel gauge) is where suspend's saving can be
+measured, unplugged.
+
+Logs of every run stayed on F50-B under `/root/susp/` (the spike: `*.log`, dmesg before/after, `/proc/interrupts`,
+the two panic records) and `/root/susp2/` (the follow-up, with the scripts that ran them). F50-B was left on the
+6.18.55 build of branch `suspend-drivers` (radio on, Wi-Fi client, one more 20 s `mem` checked). The 7.2.9
+build of the branch compiles, kernel and all modules; it has not been booted yet.

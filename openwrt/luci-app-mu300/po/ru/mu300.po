@@ -21,11 +21,17 @@ msgstr "AT-терминал"
 msgid "Adapter settings"
 msgstr "Настройки адаптера"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Управление устройством"
 
 msgid "Languages"
 msgstr "Языки"
+
+msgid "Power"
+msgstr "Питание"
 
 msgid "MU300 control center: status dashboard, network locks, AT terminal and SMS"
 msgstr "Центр управления MU300: панель состояния, фиксация сети, AT-терминал и SMS"
@@ -870,6 +876,120 @@ msgstr "Автоматически (поддерживается: %d)"
 msgid "%d locked: %s"
 msgstr "Зафиксировано %d: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Введите целое число от 0 до %d"
+
+msgid "Power status unavailable"
+msgstr "Состояние питания недоступно"
+
+msgid "Plugged in"
+msgstr "От сети"
+
+msgid "On battery"
+msgstr "От батареи"
+
+msgid "Saver"
+msgstr "Экономия"
+
+msgid "Asleep: hotspot off"
+msgstr "Сон: точка доступа выключена"
+
+msgid "Charging boot: press the Wi-Fi key to start"
+msgstr "Запуск в режиме зарядки: нажмите клавишу Wi-Fi для запуска"
+
+msgid "Awake"
+msgstr "Активно"
+
+msgid "forced"
+msgstr "принудительно"
+
+msgid "automatic, battery under %d %%"
+msgstr "автоматически, заряд ниже %d %%"
+
+msgid "automatic"
+msgstr "автоматически"
+
+msgid "Nobody connected for %d s"
+msgstr "Никто не подключён уже %d с"
+
+msgid "Power source"
+msgstr "Источник питания"
+
+msgid "Profile"
+msgstr "Профиль"
+
+msgid "Profile in use: %s (%s)"
+msgstr "Используемый профиль: %s (%s)"
+
+msgid "%d %%, %s, %d mV, %d mA, %.1f °C"
+msgstr "%d %%, %s, %d mV, %d mA, %.1f °C"
+
+msgid "Charger"
+msgstr "Зарядное устройство"
+
+msgid "Charger: %s, %s port"
+msgstr "Зарядное устройство: %s, порт %s"
+
+msgid "Charging paused: battery temperature"
+msgstr "Зарядка приостановлена: температура батареи"
+
+msgid "Charging paused: charge limit"
+msgstr "Зарядка приостановлена: предел заряда"
+
+msgid "Sleep now"
+msgstr "Усыпить сейчас"
+
+msgid "Wake"
+msgstr "Разбудить"
+
+msgid "Nobody connected means no Wi-Fi client and no computer on USB. The Wi-Fi key, a computer on USB or the charger wake the device."
+msgstr "Никто не подключён означает: нет клиентов Wi-Fi и нет компьютера на USB. Клавиша Wi-Fi, компьютер на USB или зарядное устройство будят устройство."
+
+msgid "Automatic: plugged in / on battery"
+msgstr "Автоматически: от сети / от батареи"
+
+msgid "Switch to Saver under %"
+msgstr "Переходить в Экономию при заряде ниже %"
+
+msgid "Stop charging at"
+msgstr "Прекращать зарядку на"
+
+msgid "80 % keeps the battery healthier on a device that stays plugged in."
+msgstr "80 % берегут батарею устройства, которое постоянно включено в сеть."
+
+msgid "Keep as is"
+msgstr "Не менять"
+
+msgid "LTE only (5G off)"
+msgstr "Только LTE (5G выключен)"
+
+msgid "Off"
+msgstr "Выкл."
+
+msgid "On"
+msgstr "Вкл."
+
+msgid "Full"
+msgstr "Полная"
+
+msgid "Eco: big core off"
+msgstr "Эко: большое ядро выключено"
+
+msgid "Hotspot off after (min, 0 = never)"
+msgstr "Выключать точку доступа через (мин, 0 = никогда)"
+
+msgid "Modem when idle"
+msgstr "Модем в простое"
+
+msgid "LEDs when idle"
+msgstr "Индикаторы в простое"
+
+msgid "CPU"
+msgstr "CPU"
+
+msgid "Ignored lines in power.conf: %s"
+msgstr "Игнорируемые строки в power.conf: %s"
+
 msgid "Configure how this plugin connects to the current Unisoc OpenWrt platform. Changes do not require editing the dashboard, AT, locks or SMS pages."
 msgstr "Настройка подключения этого плагина к текущей платформе Unisoc OpenWrt. Изменения не требуют правки страниц панели, AT, фиксации или SMS."
 
@@ -1023,6 +1143,45 @@ msgstr "Я: %s"
 msgid "Delete"
 msgstr "Удалить"
 
+msgid "Current setting"
+msgstr "Текущая настройка"
+
+msgid "Fixed at %d"
+msgstr "Фиксирован на %d"
+
+msgid "Not changed (default)"
+msgstr "Не изменён (по умолчанию)"
+
+msgid "Rule in force"
+msgstr "Действующее правило"
+
+msgid "Flow offloading"
+msgstr "Разгрузка потоков (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL мобильных данных"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Каждый пакет, уходящий через мобильные данные, получает этот TTL (IPv6: hop limit). Телефон или ноутбук за точкой доступа отправляет 64 (Windows: 128), а устройство пересылает его с уменьшением на единицу — по этому оператор может распознать раздаваемый трафик."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "На этом ядре быстрый путь межсетевого экрана выключен, пока задан TTL"
+
+msgid "Set %d"
+msgstr "Задать %d"
+
+msgid "Set"
+msgstr "Задать"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Введите число от 1 до 255"
+
+msgid "Turn off"
+msgstr "Выключить"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "С 64 каждый пакет уходит как собственный трафик устройства"
+
 msgid "Dashboard info failed"
 msgstr "Ошибка получения данных панели"
 
@@ -1131,6 +1290,21 @@ msgstr "Неизвестная настройка USB"
 msgid "Invalid interface name"
 msgstr "Недопустимое имя интерфейса"
 
+msgid "The power adapter gave no valid reply"
+msgstr "Адаптер питания не дал корректного ответа"
+
+msgid "Unknown power operation"
+msgstr "Неизвестная операция питания"
+
+msgid "Unknown power setting"
+msgstr "Неизвестная настройка питания"
+
+msgid "Invalid power value"
+msgstr "Недопустимое значение питания"
+
+msgid "Invalid power request"
+msgstr "Недопустимый запрос питания"
+
 msgid "The languages adapter gave no valid reply"
 msgstr "Языковой адаптер не вернул корректный ответ"
 
@@ -1145,6 +1319,12 @@ msgstr "Недопустимый языковой запрос"
 
 msgid "Unknown source"
 msgstr "Неизвестный источник"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "Адаптер TTL не дал корректного ответа"
+
+msgid "Invalid TTL"
+msgstr "Недопустимый TTL"
 
 msgid "Request too large"
 msgstr "Слишком большой запрос"
@@ -1274,3 +1454,15 @@ msgstr "Кэш фиксации недоступен"
 
 msgid "No serving cell to lock to"
 msgstr "Нет обслуживающей соты для фиксации"
+
+msgid "usage: power get|set KEY VALUE|wake|idle"
+msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "Не удалось прочитать настройку TTL"
+
+msgid "The TTL could not be set"
+msgstr "Не удалось задать TTL"
+
+msgid "Unknown TTL operation"
+msgstr "Неизвестная операция TTL"

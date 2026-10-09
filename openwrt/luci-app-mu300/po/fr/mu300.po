@@ -21,11 +21,17 @@ msgstr "Terminal AT"
 msgid "Adapter settings"
 msgstr "Paramètres de l'adaptateur"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Gestion de l'appareil"
 
 msgid "Languages"
 msgstr "Langues"
+
+msgid "Power"
+msgstr "Alimentation"
 
 msgid "MU300 control center: status dashboard, network locks, AT terminal and SMS"
 msgstr "Centre de contrôle MU300 : tableau de bord d'état, verrouillages réseau, terminal AT et SMS"
@@ -870,6 +876,120 @@ msgstr "Automatique (%d prises en charge)"
 msgid "%d locked: %s"
 msgstr "%d verrouillées : %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Saisissez un nombre entier de 0 à %d"
+
+msgid "Power status unavailable"
+msgstr "État de l'alimentation indisponible"
+
+msgid "Plugged in"
+msgstr "Branché"
+
+msgid "On battery"
+msgstr "Sur batterie"
+
+msgid "Saver"
+msgstr "Économie"
+
+msgid "Asleep: hotspot off"
+msgstr "En veille : point d'accès éteint"
+
+msgid "Charging boot: press the Wi-Fi key to start"
+msgstr "Démarrage en charge : appuyez sur la touche Wi-Fi pour démarrer"
+
+msgid "Awake"
+msgstr "Éveillé"
+
+msgid "forced"
+msgstr "forcé"
+
+msgid "automatic, battery under %d %%"
+msgstr "automatique, batterie sous %d %%"
+
+msgid "automatic"
+msgstr "automatique"
+
+msgid "Nobody connected for %d s"
+msgstr "Personne n'est connecté depuis %d s"
+
+msgid "Power source"
+msgstr "Source d'alimentation"
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Profile in use: %s (%s)"
+msgstr "Profil utilisé : %s (%s)"
+
+msgid "%d %%, %s, %d mV, %d mA, %.1f °C"
+msgstr "%d %%, %s, %d mV, %d mA, %.1f °C"
+
+msgid "Charger"
+msgstr "Chargeur"
+
+msgid "Charger: %s, %s port"
+msgstr "Chargeur : %s, port %s"
+
+msgid "Charging paused: battery temperature"
+msgstr "Charge suspendue : température de la batterie"
+
+msgid "Charging paused: charge limit"
+msgstr "Charge suspendue : limite de charge"
+
+msgid "Sleep now"
+msgstr "Mettre en veille"
+
+msgid "Wake"
+msgstr "Réveiller"
+
+msgid "Nobody connected means no Wi-Fi client and no computer on USB. The Wi-Fi key, a computer on USB or the charger wake the device."
+msgstr "Personne connecté signifie aucun client Wi-Fi et aucun ordinateur sur l'USB. La touche Wi-Fi, un ordinateur sur l'USB ou le chargeur réveillent l'appareil."
+
+msgid "Automatic: plugged in / on battery"
+msgstr "Automatique : branché / sur batterie"
+
+msgid "Switch to Saver under %"
+msgstr "Passer en économie sous %"
+
+msgid "Stop charging at"
+msgstr "Arrêter la charge à"
+
+msgid "80 % keeps the battery healthier on a device that stays plugged in."
+msgstr "80 % préservent mieux la batterie d'un appareil qui reste branché."
+
+msgid "Keep as is"
+msgstr "Laisser tel quel"
+
+msgid "LTE only (5G off)"
+msgstr "LTE seul (5G désactivée)"
+
+msgid "Off"
+msgstr "Désactivé"
+
+msgid "On"
+msgstr "Activé"
+
+msgid "Full"
+msgstr "Complet"
+
+msgid "Eco: big core off"
+msgstr "Éco : gros cœur désactivé"
+
+msgid "Hotspot off after (min, 0 = never)"
+msgstr "Point d'accès éteint après (min, 0 = jamais)"
+
+msgid "Modem when idle"
+msgstr "Modem au repos"
+
+msgid "LEDs when idle"
+msgstr "LED au repos"
+
+msgid "CPU"
+msgstr "CPU"
+
+msgid "Ignored lines in power.conf: %s"
+msgstr "Lignes ignorées dans power.conf : %s"
+
 msgid "Configure how this plugin connects to the current Unisoc OpenWrt platform. Changes do not require editing the dashboard, AT, locks or SMS pages."
 msgstr "Configurer la façon dont ce plugin se connecte à la plateforme OpenWrt Unisoc actuelle. Les modifications ne nécessitent pas de modifier les pages tableau de bord, AT, verrouillages ou SMS."
 
@@ -1023,6 +1143,45 @@ msgstr "Moi : %s"
 msgid "Delete"
 msgstr "Supprimer"
 
+msgid "Current setting"
+msgstr "Réglage actuel"
+
+msgid "Fixed at %d"
+msgstr "Fixé à %d"
+
+msgid "Not changed (default)"
+msgstr "Inchangé (par défaut)"
+
+msgid "Rule in force"
+msgstr "Règle en vigueur"
+
+msgid "Flow offloading"
+msgstr "Délestage des flux (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL des données mobiles"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Chaque paquet qui sort par les données mobiles reçoit ce TTL (IPv6 : hop limit). Un téléphone ou un portable derrière le point d'accès envoie 64 (Windows : 128) et l'appareil le transmet avec un de moins, ce qui permet à un opérateur de reconnaître le trafic partagé."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Sur ce noyau, le chemin rapide du pare-feu est désactivé tant qu'un TTL est défini"
+
+msgid "Set %d"
+msgstr "Mettre %d"
+
+msgid "Set"
+msgstr "Définir"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Saisissez un nombre de 1 à 255"
+
+msgid "Turn off"
+msgstr "Désactiver"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "Avec 64, chaque paquet sort comme le trafic propre de l'appareil"
+
 msgid "Dashboard info failed"
 msgstr "Échec des informations du tableau de bord"
 
@@ -1131,6 +1290,21 @@ msgstr "Paramètre USB inconnu"
 msgid "Invalid interface name"
 msgstr "Nom d'interface invalide"
 
+msgid "The power adapter gave no valid reply"
+msgstr "L'adaptateur d'alimentation n'a pas donné de réponse valide"
+
+msgid "Unknown power operation"
+msgstr "Opération d'alimentation inconnue"
+
+msgid "Unknown power setting"
+msgstr "Réglage d'alimentation inconnu"
+
+msgid "Invalid power value"
+msgstr "Valeur d'alimentation invalide"
+
+msgid "Invalid power request"
+msgstr "Requête d'alimentation invalide"
+
 msgid "The languages adapter gave no valid reply"
 msgstr "L'adaptateur de langues n'a renvoyé aucune réponse valide"
 
@@ -1145,6 +1319,12 @@ msgstr "Requête de langue invalide"
 
 msgid "Unknown source"
 msgstr "Source inconnue"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "L'adaptateur TTL n'a pas donné de réponse valide"
+
+msgid "Invalid TTL"
+msgstr "TTL invalide"
 
 msgid "Request too large"
 msgstr "Requête trop volumineuse"
@@ -1274,3 +1454,15 @@ msgstr "Cache des verrouillages indisponible"
 
 msgid "No serving cell to lock to"
 msgstr "Aucune cellule de service à verrouiller"
+
+msgid "usage: power get|set KEY VALUE|wake|idle"
+msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "Le réglage du TTL n'a pas pu être lu"
+
+msgid "The TTL could not be set"
+msgstr "Le TTL n'a pas pu être défini"
+
+msgid "Unknown TTL operation"
+msgstr "Opération TTL inconnue"

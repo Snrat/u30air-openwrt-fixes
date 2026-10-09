@@ -21,11 +21,17 @@ msgstr "AT терминалы"
 msgid "Adapter settings"
 msgstr "Адаптер параметрлері"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Құрылғыны басқару"
 
 msgid "Languages"
 msgstr "Тілдер"
+
+msgid "Power"
+msgstr "Қуат"
 
 msgid "MU300 control center: status dashboard, network locks, AT terminal and SMS"
 msgstr "MU300 басқару орталығы: күй тақтасы, желіні бекіту, AT терминалы және SMS"
@@ -870,6 +876,120 @@ msgstr "Автоматты (%d қолдау көрсетіледі)"
 msgid "%d locked: %s"
 msgstr "%d бекітілген: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "0-ден %d-ге дейінгі бүтін санды енгізіңіз"
+
+msgid "Power status unavailable"
+msgstr "Қуат күйі қолжетімсіз"
+
+msgid "Plugged in"
+msgstr "Желіге қосулы"
+
+msgid "On battery"
+msgstr "Батареядан"
+
+msgid "Saver"
+msgstr "Үнемдеу"
+
+msgid "Asleep: hotspot off"
+msgstr "Ұйқы: хотспот өшірулі"
+
+msgid "Charging boot: press the Wi-Fi key to start"
+msgstr "Зарядтау кезіндегі қосылу: бастау үшін Wi-Fi пернесін басыңыз"
+
+msgid "Awake"
+msgstr "Белсенді"
+
+msgid "forced"
+msgstr "мәжбүрлі"
+
+msgid "automatic, battery under %d %%"
+msgstr "автоматты, батарея %d %% төмен"
+
+msgid "automatic"
+msgstr "автоматты"
+
+msgid "Nobody connected for %d s"
+msgstr "%d с бойы ешкім қосылмаған"
+
+msgid "Power source"
+msgstr "Қуат көзі"
+
+msgid "Profile"
+msgstr "Профиль"
+
+msgid "Profile in use: %s (%s)"
+msgstr "Қолданылып тұрған профиль: %s (%s)"
+
+msgid "%d %%, %s, %d mV, %d mA, %.1f °C"
+msgstr "%d %%, %s, %d mV, %d mA, %.1f °C"
+
+msgid "Charger"
+msgstr "Зарядтағыш"
+
+msgid "Charger: %s, %s port"
+msgstr "Зарядтағыш: %s, %s порты"
+
+msgid "Charging paused: battery temperature"
+msgstr "Зарядтау тоқтатылды: батарея температурасы"
+
+msgid "Charging paused: charge limit"
+msgstr "Зарядтау тоқтатылды: заряд шегі"
+
+msgid "Sleep now"
+msgstr "Қазір ұйықтату"
+
+msgid "Wake"
+msgstr "Ояту"
+
+msgid "Nobody connected means no Wi-Fi client and no computer on USB. The Wi-Fi key, a computer on USB or the charger wake the device."
+msgstr "Ешкім қосылмаған дегеніміз Wi-Fi клиенті де, USB-дағы компьютер де жоқ дегенді білдіреді. Wi-Fi пернесі, USB-дағы компьютер немесе зарядтағыш құрылғыны оятады."
+
+msgid "Automatic: plugged in / on battery"
+msgstr "Автоматты: желіге қосулы / батареядан"
+
+msgid "Switch to Saver under %"
+msgstr "Мынадан төмен болғанда Үнемдеуге ауысу %"
+
+msgid "Stop charging at"
+msgstr "Зарядтауды мында тоқтату"
+
+msgid "80 % keeps the battery healthier on a device that stays plugged in."
+msgstr "80 % үнемі желіде тұратын құрылғыда батареяны сақтайды."
+
+msgid "Keep as is"
+msgstr "Өзгеріссіз қалдыру"
+
+msgid "LTE only (5G off)"
+msgstr "Тек LTE (5G өшірулі)"
+
+msgid "Off"
+msgstr "Өшірулі"
+
+msgid "On"
+msgstr "Қосулы"
+
+msgid "Full"
+msgstr "Толық"
+
+msgid "Eco: big core off"
+msgstr "Эко: үлкен ядро өшірулі"
+
+msgid "Hotspot off after (min, 0 = never)"
+msgstr "Хотспотты мына уақыттан кейін өшіру (мин, 0 = ешқашан)"
+
+msgid "Modem when idle"
+msgstr "Бос тұрғандағы модем"
+
+msgid "LEDs when idle"
+msgstr "Бос тұрғандағы жарық диодтары"
+
+msgid "CPU"
+msgstr "CPU"
+
+msgid "Ignored lines in power.conf: %s"
+msgstr "power.conf ішіндегі еленбеген жолдар: %s"
+
 msgid "Configure how this plugin connects to the current Unisoc OpenWrt platform. Changes do not require editing the dashboard, AT, locks or SMS pages."
 msgstr "Бұл плагиннің ағымдағы Unisoc OpenWrt платформасына қалай қосылатынын баптаңыз. Өзгерістер тақта, AT, бекіту немесе SMS беттерін өңдеуді қажет етпейді."
 
@@ -1023,6 +1143,45 @@ msgstr "Мен: %s"
 msgid "Delete"
 msgstr "Жою"
 
+msgid "Current setting"
+msgstr "Ағымдағы баптау"
+
+msgid "Fixed at %d"
+msgstr "%d мәнінде бекітілген"
+
+msgid "Not changed (default)"
+msgstr "Өзгертілмеген (әдепкі)"
+
+msgid "Rule in force"
+msgstr "Қолданыстағы ереже"
+
+msgid "Flow offloading"
+msgstr "Ағындарды жеңілдету (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "Мобильді деректердің TTL мәні"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Мобильді деректер арқылы шығатын әр пакет осы TTL мәнін алады (IPv6: hop limit). Хотспотқа қосылған телефон не ноутбук 64 (Windows: 128) жібереді, ал құрылғы оны бірге кем етіп жібереді — оператор бөлісілген трафикті осыдан танып алады."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Бұл ядрода TTL орнатылып тұрғанда брандмауэрдің жылдам жолы өшірулі"
+
+msgid "Set %d"
+msgstr "%d орнату"
+
+msgid "Set"
+msgstr "Орнату"
+
+msgid "Enter a number from 1 to 255"
+msgstr "1 мен 255 аралығындағы санды енгізіңіз"
+
+msgid "Turn off"
+msgstr "Өшіру"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "64 мәнінде әр пакет құрылғының өз трафигі сияқты шығады"
+
 msgid "Dashboard info failed"
 msgstr "Тақта деректерін алу сәтсіз"
 
@@ -1131,6 +1290,21 @@ msgstr "Белгісіз USB параметрі"
 msgid "Invalid interface name"
 msgstr "Жарамсыз интерфейс атауы"
 
+msgid "The power adapter gave no valid reply"
+msgstr "Қуат адаптері жарамды жауап бермеді"
+
+msgid "Unknown power operation"
+msgstr "Белгісіз қуат әрекеті"
+
+msgid "Unknown power setting"
+msgstr "Белгісіз қуат параметрі"
+
+msgid "Invalid power value"
+msgstr "Жарамсыз қуат мәні"
+
+msgid "Invalid power request"
+msgstr "Жарамсыз қуат сұрауы"
+
 msgid "The languages adapter gave no valid reply"
 msgstr "Тіл адаптері жарамды жауап бермеді"
 
@@ -1145,6 +1319,12 @@ msgstr "Жарамсыз тіл сұрауы"
 
 msgid "Unknown source"
 msgstr "Белгісіз дереккөз"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "TTL адаптері жарамды жауап бермеді"
+
+msgid "Invalid TTL"
+msgstr "Жарамсыз TTL"
 
 msgid "Request too large"
 msgstr "Сұрау тым үлкен"
@@ -1274,3 +1454,15 @@ msgstr "Бекіту кэші қолжетімсіз"
 
 msgid "No serving cell to lock to"
 msgstr "Бекітетін қызмет көрсететін ұяшық жоқ"
+
+msgid "usage: power get|set KEY VALUE|wake|idle"
+msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "TTL баптауын оқу мүмкін болмады"
+
+msgid "The TTL could not be set"
+msgstr "TTL орнату мүмкін болмады"
+
+msgid "Unknown TTL operation"
+msgstr "Белгісіз TTL әрекеті"

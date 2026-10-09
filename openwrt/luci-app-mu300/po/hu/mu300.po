@@ -21,11 +21,17 @@ msgstr "AT-terminál"
 msgid "Adapter settings"
 msgstr "Adapterbeállítások"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Eszközkezelés"
 
 msgid "Languages"
 msgstr "Nyelvek"
+
+msgid "Power"
+msgstr "Energia"
 
 msgid "MU300 control center: status dashboard, network locks, AT terminal and SMS"
 msgstr "MU300 vezérlőközpont: állapot-irányítópult, hálózati zárolások, AT-terminál és SMS"
@@ -870,6 +876,120 @@ msgstr "Automatikus (%d támogatott)"
 msgid "%d locked: %s"
 msgstr "%d zárolva: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Adjon meg egy egész számot 0 és %d között"
+
+msgid "Power status unavailable"
+msgstr "Az energiaállapot nem érhető el"
+
+msgid "Plugged in"
+msgstr "Hálózaton"
+
+msgid "On battery"
+msgstr "Akkumulátoron"
+
+msgid "Saver"
+msgstr "Takarékos"
+
+msgid "Asleep: hotspot off"
+msgstr "Alvó: hotspot kikapcsolva"
+
+msgid "Charging boot: press the Wi-Fi key to start"
+msgstr "Töltési indítás: indításhoz nyomja meg a Wi-Fi gombot"
+
+msgid "Awake"
+msgstr "Ébren"
+
+msgid "forced"
+msgstr "kényszerített"
+
+msgid "automatic, battery under %d %%"
+msgstr "automatikus, akkumulátor %d %% alatt"
+
+msgid "automatic"
+msgstr "automatikus"
+
+msgid "Nobody connected for %d s"
+msgstr "Már %d másodperce nincs csatlakozva senki"
+
+msgid "Power source"
+msgstr "Tápforrás"
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Profile in use: %s (%s)"
+msgstr "Használt profil: %s (%s)"
+
+msgid "%d %%, %s, %d mV, %d mA, %.1f °C"
+msgstr "%d %%, %s, %d mV, %d mA, %.1f °C"
+
+msgid "Charger"
+msgstr "Töltő"
+
+msgid "Charger: %s, %s port"
+msgstr "Töltő: %s, %s port"
+
+msgid "Charging paused: battery temperature"
+msgstr "Töltés szüneteltetve: akkumulátor hőmérséklete"
+
+msgid "Charging paused: charge limit"
+msgstr "Töltés szüneteltetve: töltési korlát"
+
+msgid "Sleep now"
+msgstr "Altatás most"
+
+msgid "Wake"
+msgstr "Ébresztés"
+
+msgid "Nobody connected means no Wi-Fi client and no computer on USB. The Wi-Fi key, a computer on USB or the charger wake the device."
+msgstr "A nincs csatlakozva senki azt jelenti: nincs Wi-Fi kliens és nincs számítógép az USB-n. A Wi-Fi gomb, az USB-n lévő számítógép vagy a töltő felébreszti az eszközt."
+
+msgid "Automatic: plugged in / on battery"
+msgstr "Automatikus: hálózaton / akkumulátoron"
+
+msgid "Switch to Saver under %"
+msgstr "Váltás Takarékosra ez alatt: %"
+
+msgid "Stop charging at"
+msgstr "Töltés leállítása itt"
+
+msgid "80 % keeps the battery healthier on a device that stays plugged in."
+msgstr "A 80 % kíméli az akkumulátort egy folyamatosan hálózaton lévő eszközben."
+
+msgid "Keep as is"
+msgstr "Változatlanul hagyás"
+
+msgid "LTE only (5G off)"
+msgstr "Csak LTE (5G kikapcsolva)"
+
+msgid "Off"
+msgstr "Ki"
+
+msgid "On"
+msgstr "Be"
+
+msgid "Full"
+msgstr "Teljes"
+
+msgid "Eco: big core off"
+msgstr "Takarékos: nagy mag kikapcsolva"
+
+msgid "Hotspot off after (min, 0 = never)"
+msgstr "Hotspot kikapcsolása ennyi idő után (perc, 0 = soha)"
+
+msgid "Modem when idle"
+msgstr "Modem tétlenül"
+
+msgid "LEDs when idle"
+msgstr "LED-ek tétlenül"
+
+msgid "CPU"
+msgstr "CPU"
+
+msgid "Ignored lines in power.conf: %s"
+msgstr "Figyelmen kívül hagyott sorok a power.conf fájlban: %s"
+
 msgid "Configure how this plugin connects to the current Unisoc OpenWrt platform. Changes do not require editing the dashboard, AT, locks or SMS pages."
 msgstr "Annak beállítása, hogyan csatlakozik ez a bővítmény a jelenlegi Unisoc OpenWrt platformhoz. A változtatásokhoz nem kell szerkeszteni az irányítópult, AT, zárolási vagy SMS oldalakat."
 
@@ -1023,6 +1143,45 @@ msgstr "Én: %s"
 msgid "Delete"
 msgstr "Törlés"
 
+msgid "Current setting"
+msgstr "Jelenlegi beállítás"
+
+msgid "Fixed at %d"
+msgstr "Rögzítve: %d"
+
+msgid "Not changed (default)"
+msgstr "Nincs módosítva (alapértelmezett)"
+
+msgid "Rule in force"
+msgstr "Érvényes szabály"
+
+msgid "Flow offloading"
+msgstr "Folyamtehermentesítés (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "A mobiladat TTL-je"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Minden csomag, amely a mobiladaton át távozik, ezt a TTL-t kapja (IPv6: hop limit). A hotspot mögötti telefon vagy laptop 64-et küld (Windows: 128), az eszköz pedig eggyel kevesebbel továbbítja – erről ismerheti fel a szolgáltató a megosztott forgalmat."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "Ezen a kernelen a tűzfal gyorsútja ki van kapcsolva, amíg TTL van beállítva"
+
+msgid "Set %d"
+msgstr "Legyen %d"
+
+msgid "Set"
+msgstr "Beállítás"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Adjon meg egy számot 1 és 255 között"
+
+msgid "Turn off"
+msgstr "Kikapcsolás"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "64 esetén minden csomag úgy távozik, mint az eszköz saját forgalma"
+
 msgid "Dashboard info failed"
 msgstr "Az irányítópult adatai nem érhetők el"
 
@@ -1131,6 +1290,21 @@ msgstr "Ismeretlen USB-beállítás"
 msgid "Invalid interface name"
 msgstr "Érvénytelen csatolónév"
 
+msgid "The power adapter gave no valid reply"
+msgstr "A tápellátás-adapter nem adott érvényes választ"
+
+msgid "Unknown power operation"
+msgstr "Ismeretlen energiaművelet"
+
+msgid "Unknown power setting"
+msgstr "Ismeretlen energiabeállítás"
+
+msgid "Invalid power value"
+msgstr "Érvénytelen energiaérték"
+
+msgid "Invalid power request"
+msgstr "Érvénytelen energiakérés"
+
 msgid "The languages adapter gave no valid reply"
 msgstr "A nyelvi adapter nem adott érvényes választ"
 
@@ -1145,6 +1319,12 @@ msgstr "Érvénytelen nyelvi kérés"
 
 msgid "Unknown source"
 msgstr "Ismeretlen forrás"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "A TTL-adapter nem adott érvényes választ"
+
+msgid "Invalid TTL"
+msgstr "Érvénytelen TTL"
 
 msgid "Request too large"
 msgstr "A kérés túl nagy"
@@ -1274,3 +1454,15 @@ msgstr "A zárolási gyorsítótár nem érhető el"
 
 msgid "No serving cell to lock to"
 msgstr "Nincs kiszolgáló cella a zároláshoz"
+
+msgid "usage: power get|set KEY VALUE|wake|idle"
+msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "A TTL-beállítás nem olvasható"
+
+msgid "The TTL could not be set"
+msgstr "A TTL nem állítható be"
+
+msgid "Unknown TTL operation"
+msgstr "Ismeretlen TTL-művelet"

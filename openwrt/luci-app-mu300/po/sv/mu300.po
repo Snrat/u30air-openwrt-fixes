@@ -21,11 +21,17 @@ msgstr "AT-terminal"
 msgid "Adapter settings"
 msgstr "Adapterinställningar"
 
+msgid "TTL"
+msgstr "TTL"
+
 msgid "Device management"
 msgstr "Enhetshantering"
 
 msgid "Languages"
 msgstr "Språk"
+
+msgid "Power"
+msgstr "Ström"
 
 msgid "MU300 control center: status dashboard, network locks, AT terminal and SMS"
 msgstr "MU300-kontrollcenter: statuspanel, nätverkslås, AT-terminal och SMS"
@@ -870,6 +876,120 @@ msgstr "Automatiskt (%d stöds)"
 msgid "%d locked: %s"
 msgstr "%d låsta: %s"
 
+msgid "Enter a whole number from 0 to %d"
+msgstr "Ange ett heltal från 0 till %d"
+
+msgid "Power status unavailable"
+msgstr "Strömstatus otillgänglig"
+
+msgid "Plugged in"
+msgstr "Inkopplad"
+
+msgid "On battery"
+msgstr "På batteri"
+
+msgid "Saver"
+msgstr "Sparläge"
+
+msgid "Asleep: hotspot off"
+msgstr "Viloläge: hotspot av"
+
+msgid "Charging boot: press the Wi-Fi key to start"
+msgstr "Laddstart: tryck på Wi-Fi-knappen för att starta"
+
+msgid "Awake"
+msgstr "Vaken"
+
+msgid "forced"
+msgstr "påtvingad"
+
+msgid "automatic, battery under %d %%"
+msgstr "automatiskt, batteri under %d %%"
+
+msgid "automatic"
+msgstr "automatiskt"
+
+msgid "Nobody connected for %d s"
+msgstr "Ingen ansluten på %d s"
+
+msgid "Power source"
+msgstr "Strömkälla"
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Profile in use: %s (%s)"
+msgstr "Använd profil: %s (%s)"
+
+msgid "%d %%, %s, %d mV, %d mA, %.1f °C"
+msgstr "%d %%, %s, %d mV, %d mA, %.1f °C"
+
+msgid "Charger"
+msgstr "Laddare"
+
+msgid "Charger: %s, %s port"
+msgstr "Laddare: %s, %s-port"
+
+msgid "Charging paused: battery temperature"
+msgstr "Laddningen pausad: batteritemperatur"
+
+msgid "Charging paused: charge limit"
+msgstr "Laddningen pausad: laddningsgräns"
+
+msgid "Sleep now"
+msgstr "Sov nu"
+
+msgid "Wake"
+msgstr "Väck"
+
+msgid "Nobody connected means no Wi-Fi client and no computer on USB. The Wi-Fi key, a computer on USB or the charger wake the device."
+msgstr "Ingen ansluten betyder ingen Wi-Fi-klient och ingen dator på USB. Wi-Fi-knappen, en dator på USB eller laddaren väcker enheten."
+
+msgid "Automatic: plugged in / on battery"
+msgstr "Automatiskt: inkopplad / på batteri"
+
+msgid "Switch to Saver under %"
+msgstr "Byt till Sparläge under %"
+
+msgid "Stop charging at"
+msgstr "Sluta ladda vid"
+
+msgid "80 % keeps the battery healthier on a device that stays plugged in."
+msgstr "80 % skonar batteriet i en enhet som sitter inkopplad."
+
+msgid "Keep as is"
+msgstr "Lämna som det är"
+
+msgid "LTE only (5G off)"
+msgstr "Endast LTE (5G av)"
+
+msgid "Off"
+msgstr "Av"
+
+msgid "On"
+msgstr "På"
+
+msgid "Full"
+msgstr "Full"
+
+msgid "Eco: big core off"
+msgstr "Eco: stor kärna av"
+
+msgid "Hotspot off after (min, 0 = never)"
+msgstr "Hotspot av efter (min, 0 = aldrig)"
+
+msgid "Modem when idle"
+msgstr "Modem vid inaktivitet"
+
+msgid "LEDs when idle"
+msgstr "LED vid inaktivitet"
+
+msgid "CPU"
+msgstr "CPU"
+
+msgid "Ignored lines in power.conf: %s"
+msgstr "Ignorerade rader i power.conf: %s"
+
 msgid "Configure how this plugin connects to the current Unisoc OpenWrt platform. Changes do not require editing the dashboard, AT, locks or SMS pages."
 msgstr "Ställ in hur detta plugin ansluter till den aktuella Unisoc OpenWrt-plattformen. Ändringar kräver ingen redigering av sidorna för panel, AT, lås eller SMS."
 
@@ -1023,6 +1143,45 @@ msgstr "Jag: %s"
 msgid "Delete"
 msgstr "Radera"
 
+msgid "Current setting"
+msgstr "Aktuell inställning"
+
+msgid "Fixed at %d"
+msgstr "Fast på %d"
+
+msgid "Not changed (default)"
+msgstr "Inte ändrad (standard)"
+
+msgid "Rule in force"
+msgstr "Aktiv regel"
+
+msgid "Flow offloading"
+msgstr "Flödesavlastning (flow offloading)"
+
+msgid "TTL of mobile data"
+msgstr "TTL för mobildata"
+
+msgid "Every packet that leaves through mobile data gets this TTL (IPv6: hop limit). A phone or laptop behind the hotspot sends 64 (Windows: 128) and the device forwards it with one less, which is how an operator can tell tethered traffic apart."
+msgstr "Varje paket som lämnar via mobildata får denna TTL (IPv6: hop limit). En telefon eller bärbar dator bakom surfzonen skickar 64 (Windows: 128) och enheten vidarebefordrar det med ett mindre, vilket är hur en operatör kan känna igen delad trafik."
+
+msgid "On this kernel the firewall fast-path is off while a TTL is set"
+msgstr "På denna kärna är brandväggens snabbväg avstängd medan en TTL är satt"
+
+msgid "Set %d"
+msgstr "Sätt %d"
+
+msgid "Set"
+msgstr "Sätt"
+
+msgid "Enter a number from 1 to 255"
+msgstr "Ange ett tal från 1 till 255"
+
+msgid "Turn off"
+msgstr "Stäng av"
+
+msgid "64 makes every packet leave like the device's own traffic"
+msgstr "Med 64 lämnar varje paket enheten som dess egen trafik"
+
 msgid "Dashboard info failed"
 msgstr "Panelinformation misslyckades"
 
@@ -1131,6 +1290,21 @@ msgstr "Okänd USB-inställning"
 msgid "Invalid interface name"
 msgstr "Ogiltigt gränssnittsnamn"
 
+msgid "The power adapter gave no valid reply"
+msgstr "Strömadaptern gav inget giltigt svar"
+
+msgid "Unknown power operation"
+msgstr "Okänd strömåtgärd"
+
+msgid "Unknown power setting"
+msgstr "Okänd ströminställning"
+
+msgid "Invalid power value"
+msgstr "Ogiltigt strömvärde"
+
+msgid "Invalid power request"
+msgstr "Ogiltig strömbegäran"
+
 msgid "The languages adapter gave no valid reply"
 msgstr "Språkadaptern gav inget giltigt svar"
 
@@ -1145,6 +1319,12 @@ msgstr "Ogiltig språkbegäran"
 
 msgid "Unknown source"
 msgstr "Okänd källa"
+
+msgid "The TTL adapter gave no valid reply"
+msgstr "TTL-adaptern gav inget giltigt svar"
+
+msgid "Invalid TTL"
+msgstr "Ogiltig TTL"
 
 msgid "Request too large"
 msgstr "Begäran för stor"
@@ -1274,3 +1454,15 @@ msgstr "Låscache inte tillgänglig"
 
 msgid "No serving cell to lock to"
 msgstr "Ingen betjänande cell att låsa till"
+
+msgid "usage: power get|set KEY VALUE|wake|idle"
+msgstr "usage: power get|set KEY VALUE|wake|idle"
+
+msgid "The TTL setting could not be read"
+msgstr "TTL-inställningen kunde inte läsas"
+
+msgid "The TTL could not be set"
+msgstr "TTL kunde inte sättas"
+
+msgid "Unknown TTL operation"
+msgstr "Okänd TTL-åtgärd"
