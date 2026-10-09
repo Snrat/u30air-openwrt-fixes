@@ -6,12 +6,13 @@ branch combines their source changes for inspection; it is not a tested release 
 
 | Repair / 修复 | Documentation | Upstream review |
 | --- | --- | --- |
-| Native SIM2 cold boot / 原生卡2冷启动 | [U30AIR-SIM2](docs/U30AIR-SIM2.md) | [PR #73](https://github.com/dikeckaan/mu300-linux/pull/73) |
+| Native dual-SIM boot and live switching / 原生双卡启动及热切换 | [U30AIR-SIM2](docs/U30AIR-SIM2.md) | [PR #73](https://github.com/dikeckaan/mu300-linux/pull/73) |
 | Pure WPA3-SAE firmware integration / 纯 WPA3-SAE | [U30AIR-SAE](docs/U30AIR-SAE.md) | [PR #74](https://github.com/dikeckaan/mu300-linux/pull/74) |
 
-两项均为草稿 PR，等待上游评审和完整镜像回归。基础修复已在一台 U30 Air
-实测；适配最新上游后的源码改动还需重新部署验证。卡2不支持热切换，OWE
-仍未修复。公开提交不包含设备密码、卡号、原始私有日志或设备提取的程序和库。
+双卡补丁已在一台 U30 Air 验证网页热切换、切换成功后保存默认卡、Linux
+重启后直接启动选定卡；完整镜像构建及彻底断电再上电尚未单独验证。SAE
+修复仍待上游评审和完整镜像回归，OWE 尚未修复。公开提交不包含设备密码、
+卡号、原始私有日志或设备提取的程序和库。
 
 The upstream project's original documentation follows.
 
