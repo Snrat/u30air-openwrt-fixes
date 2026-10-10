@@ -685,9 +685,9 @@ report() {
     echo "  $(t 'USB network: {1}   SSH: {2}' "$_ip" "$_users@$_ip")"
     echo "  $(t 'switch systems: mu300-os {1}   back to Android: mu300-next-boot android' "$(echo $_after | tr ' ' '|')")"
     echo "  $(t 'If Linux does not start, the device returns to Android by itself.')"
-    # the zip holds the release's systems and kernel only: the VPN engines are the vpn extra (mu300-extra), a
-    # download of its own (a reinstall over a system that uses the VPN keeps that system's engines: android-install.sh)
-    echo "  $(t 'The VPN (mu300-vpn) needs the vpn extra: Xray and sing-box. It can also be added later on the device:')"
+    # the zip holds the release's systems and kernel only: the VPN is the module of its own repository, which
+    # mu300-extra downloads on the device (one already on the Linux partition stays, and each system links it at boot)
+    echo "  $(t 'The VPN (mu300-vpn, with Xray and sing-box) is a module of its own: {1}. It can also be added later on the device:' https://github.com/dikeckaan/mu300-linux-vpn)"
     echo "    sudo mu300-extra install vpn"
 }
 

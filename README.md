@@ -183,7 +183,7 @@ install.cmd                   # Windows (cmd)
 ![The installer: language, checks, systems and Ubuntu release](docs/images/installer/installer-1-start.png)
 
 It asks a few questions (internal storage or SD card; Ubuntu, OpenWrt or both, and which Ubuntu, which OpenWrt and
-which kernel; which one boots; whether Linux boots by default; a password; the VPN extra), downloads the ready-made images,
+which kernel; which one boots; whether Linux boots by default; a password; the VPN module), downloads the ready-made images,
 copies the Wi-Fi and modem files from your own device, shows exactly what it is about to write, and waits for you to
 type `INSTALL`. Then it reboots into Linux.
 
@@ -292,7 +292,7 @@ eamonxg. The app's own notes are in [`openwrt/luci-app-mu300/README.md`](openwrt
 | Go back to Android | `sudo mu300-next-boot android`, then `sudo reboot` |
 | Return to Linux from Android | `su -c mu300-linux` on the device (see below), or `boot/android-boot-linux.sh work/boot-linux-slotb.img` from a computer |
 | Send all traffic through a VPN | see below (`sudo mu300-extra install vpn` first) |
-| Add or remove optional parts (the VPN engines, more web interface languages) | `mu300-extra list`, `sudo mu300-extra install vpn`, `sudo mu300-extra remove vpn` (`lang` for the languages) |
+| Add or remove optional parts (the VPN module, more web interface languages) | `mu300-extra list`, `sudo mu300-extra install vpn`, `sudo mu300-extra remove vpn` (`lang` for the languages) |
 | Save battery: profiles, radios that go idle when nobody is connected, a charge limit | `mu300-power status`, `sudo mu300-power profile battery` (`plugged`, `saver`, `auto`), `sudo mu300-power set battery.WIFI_IDLE 10`, `mu300-power log 5 /tmp/power.csv`; on `openwrt-luci` the page System -> Power. A boot that started from a charger stays a charging boot (LED blinking, hotspot and modem down) until the Wi-Fi key is pressed; see FINDINGS 36 |
 | Language of the web interface (OpenWrt) | System -> System -> Language and Style; more languages: see Languages below |
 | Find out which LED is which | `sudo mu300-led test` |
@@ -322,7 +322,7 @@ for `openwrt-luci` (the OpenWrt with the control panel): that one comes with `./
 | `mu300-magisk-<tag>-ubuntu-26.04-k6.18.zip` | Ubuntu 26.04 | 6.18 LTS | 124.6 MB |
 | `mu300-magisk-<tag>-ubuntu-26.04-k7.2.zip` | Ubuntu 26.04 | 7.2 | 125.3 MB |
 
-The sizes are those of the v2026.10.11 build. The VPN engines are not in the zips: add them on the device with
+The sizes are those of the v2026.10.11 build. The VPN is not in the zips: add its module on the device with
 `sudo mu300-extra install vpn` (see [VPN](#vpn)). There is no Ubuntu 26.04 zip with kernel 5.4: its programs need system
 calls that kernel does not have, the same rule as for `install.sh`. Check a download with `SHA256SUMS-magisk`.
 
@@ -458,104 +458,30 @@ button that reboots the device into Linux, and `su -c mu300-linux` does the same
 
 ### VPN
 
-The device can send its own traffic **and** everything from connected clients through a VPN server. `mu300-vpn`
-keeps **profiles** - a WireGuard `.conf`, an OpenVPN `.ovpn`, a Clash/mihomo YAML, a VLESS, VMess, Trojan or
-Shadowsocks share link, or a raw Xray or sing-box JSON from a panel - and runs the active one with the engine that
-speaks its protocol. One command for all of them; the kill switch, the routing, DNS and Tailscale are the same
-whatever the type.
+The device can send its own traffic **and** everything from connected clients through a VPN server: `mu300-vpn`
+keeps profiles - a WireGuard `.conf`, an OpenVPN `.ovpn`, a Clash/mihomo YAML, a VLESS, VMess, Trojan or Shadowsocks
+share link, or a raw Xray or sing-box JSON - and runs the active one with a kill switch, Tailscale through the
+tunnel, on Ubuntu and OpenWrt alike. It is a module of its own, developed and released in
+**[dikeckaan/mu300-linux-vpn](https://github.com/dikeckaan/mu300-linux-vpn)** (commands, profiles, settings, the
+security model): the images carry none of it, and mu300-linux keeps the kernel support (TUN, WireGuard, nftables)
+and the places that work with it (mobile data, the Wi-Fi client, power saving, the toolkit, the panel).
 
 ```sh
-sudo mu300-vpn profile import 'vless://...'          # a share link (vless, vmess, trojan, ss)
-sudo mu300-vpn profile import ~/office.conf Office    # a file: wg .conf, .ovpn, Xray/sing-box .json, mihomo .yaml
-cat client.ovpn | sudo mu300-vpn profile import -     # from stdin (ssh: nothing is left on the device's disk)
-mu300-vpn profile list                                # id, type, name; * marks the active one
-sudo mu300-vpn profile use office                     # make it active (a running VPN restarts on it)
-sudo mu300-vpn on                                     # ENABLE=1, starts at boot; off: stops and removes the kill switch
-mu300-vpn status                                      # profile, engine, tunnel, exit IP - never a secret
+sudo mu300-extra install vpn                                # online: the module's latest release, checked against its SHA256SUMS
+sudo mu300-extra install vpn --from mu300-linux-vpn.tar.gz  # offline: a copy brought onto the device (USB, scp)
+sudo mu300-extra install vpn --from /mnt/usb/               # offline, verified: a directory with the tarball and its SHA256SUMS
+sudo mu300-extra install vpn-mihomo                         # mihomo, for Clash/mihomo profiles
+sudo mu300-extra remove vpn                                 # turn the VPN off first
 ```
 
-The type is sniffed from the link's scheme or the file's content; `profile add TYPE NAME SRC` says it outright. A
-profile is checked with its engine when it is imported and again at every start (`mu300-vpn check [ID]` does it
-by hand). `profile show ID` tells name, type, source, date and the server's host and port; `profile edit ID SRC`
-replaces its config, `profile set ID KEY VALUE` sets a per-type option (`TLS_PIN_SHA256`, `MIHOMO_STACK`,
-`OVPN_USER`...), `profile remove ID` removes it (not the active one while the VPN is on), and `profile export ID`
-prints the raw config back - the one command that prints a secret. Everything lives under `/etc/mu300/vpn`
-(profiles and settings, 0600, kept across updates; each system - Ubuntu, OpenWrt - has its own) and
-`/etc/mu300/vpn.conf` holds only the `ENABLE` switch, which `on`/`off` write. A `vpn.conf` written the old way
-(a `VLESS_URI` and the keys next to it) still works: it is moved into the store as the profile `legacy` the first
-time `mu300-vpn` runs, and an edit to it later wins for the keys it changed.
-
-**Settings** (`mu300-vpn settings`, `settings get KEY`, `settings set KEY VALUE`; an empty value is the default; a
-VPN that is on uses a new value from its next `mu300-vpn restart`):
-
-| key | values | default | |
-|---|---|---|---|
-| `KILL_SWITCH` | 0, 1 | 1 | nothing but the tunnel leaves the device, also while the tunnel is down |
-| `TAILSCALE` | 0, 1 | 1 | Tailscale's own traffic through the tunnel (below) |
-| `IPV6` | 0, 1 | 0 | IPv6 through the tunnel as well, when the tunnel has an IPv6 address |
-| `REMOTE_DNS` | an address | 1.1.1.1 | DNS for the device and its clients, through the tunnel |
-| `BOOTSTRAP_DNS` | an address | 1.1.1.1 | for the server's own name, outside the tunnel (sing-box, mihomo) |
-| `LAN_CIDRS` | CIDRs, comma-separated | empty | more networks that stay local (the device's own LAN always does) |
-| `XRAY` `HEV` `SING_BOX` `MIHOMO` `OPENVPN` | a path | empty | another binary for that engine |
-
-**Engines.** Each type runs on its own engine, and `mu300-vpn engines` says which are present and how to get the
-missing ones; `sudo mu300-vpn engines install ENGINE` gets one (the `on` command and the toolkit's menu point to
-it). [Xray](https://github.com/XTLS/Xray-core) behind [hev-socks5-tunnel](https://github.com/heiher/hev-socks5-tunnel)
-on a kernel TUN, and [sing-box](https://github.com/SagerNet/sing-box), are the **vpn extra** (about 40 MB to download, 120 MB on the device);
-[mihomo](https://github.com/MetaCubeX/mihomo) is the **vpn-mihomo extra**; WireGuard is the kernel's, with
-`wireguard-tools` (in the images; the 5.4 vendor kernel has no WireGuard, mainline does); OpenVPN is the system's
-`openvpn` package (`apk add openvpn-openssl` on OpenWrt, `apt-get install openvpn` on Ubuntu), which the service
-never installs by itself - it fails closed and names the command. A VLESS link runs on Xray by default; with the kill
-switch it runs on sing-box, because Xray resolves the server's name and fetches its certificate (Xray 26 has no
-`allowInsecure`: the certificate is fetched once, pinned in the profile, and fetched again when the server renews
-it) before the tunnel exists, and the kill switch would drop both. Other types resolve their server's name through a
-short **resolve window** of the same kind as the download window (only the device's DNS, only for seconds), so they
-all work behind the kill switch.
-
-**The kill switch and every type.** The switch lets only marked traffic out on an uplink, and every engine marks its
-own packets (Xray and sing-box in their configs, mihomo's `routing-mark`, WireGuard's `fwmark`, OpenVPN's `--mark`),
-so no type needs an exception and nothing else leaves the device - with it on, when the tunnel is down, nothing
-goes out; when the engines are missing, it stays up while they are downloaded (only the device itself, only to the
-release hosts, for 15 minutes at most). **Raw configs** (Xray and sing-box JSON, mihomo YAML) are hostile input: a
-panel's export is parsed once, strictly, and the engine runs a new file rebuilt from an allowlist of what a config
-may contain - its outbounds and the servers they reach, its routing rules between them, its DNS servers. The
-inbound is always ours (nothing listens on the LAN or the device), the mark is ours, an API or controller is
-dropped, a key file path or a TLS key log is refused, and anything the allowlist does not know refuses the config
-with the key's name, never its value. What a raw config may do is also its exposure, said plainly: a `direct` or
-`freedom` outbound (or a DNS server that goes through one) sends that traffic out of the tunnel onto the uplink with
-the engine's mark, past the kill switch. Split tunnelling is the config's own choice and the kill switch does not
-override it; a config that routes everything through the tunnel gets everything through the tunnel. An OpenVPN file
-is held the same way: it is parsed with openvpn's own lexical rules into an allowlist of directives and key blocks,
-openvpn reads only the file we write, and a file that wants to run a script is refused.
-
-The extras are not part of the systems: the installer asks for the vpn extra, or on the device
-`sudo mu300-extra install vpn` (`vpn-mihomo` for mihomo) downloads it from the release and checks it against the
-release's SHA256SUMS. Extras live on the Linux partition next to the systems (`/mnt/mu300-disk/extra`), so Ubuntu
-and OpenWrt share one copy and an update or reinstall of a system keeps it; `mu300-update apply` brings them to the
-new release. `mu300-extra list` shows what there is, `mu300-extra status` what is installed, `sudo mu300-extra
-remove vpn` takes it off again (turn the VPN off first; it refuses while the VPN is on). A device that used the VPN
-before the engines became an extra keeps it working: the update installs the vpn extra by itself (or keeps the
-engines of the old system), and `mu300-vpn` fetches it when it finds none.
-
-**Tailscale through the VPN.** Tailscale marks its own connections (WireGuard to peers, DERP relays, the control
-server) and gives them a routing rule of their own (`fwmark 0x80000/0xff0000 lookup main`, pref 5210) that would send
-them past the tunnel straight to the carrier - on a network where only the VPN gets out, Tailscale then never
-connects. When the tunnel comes up, whatever the engine, `mu300-vpn` puts a rule before it (pref 5200, into the
-tunnel's table 2022). Private addresses (the device's LAN, RFC 1918) stay outside the tunnel (pref 5199), so peers on
-the same network are reached directly. The engine's own connection keeps going to the carrier even with a Tailscale
-exit node (pref 5198). The tailnet itself (`100.64.0.0/10`, Tailscale's table 52) works as before. The kill switch
-still drops every Tailscale packet on the cellular interface, so with it on they only leave through the tunnel. With
-the VPN off, or with an engine stopped, the rules have nothing to send packets into and Tailscale goes out directly
-as usual; `mu300-vpn off` and the next start clear them. IPv4 only. `mu300-vpn settings set TAILSCALE 0` turns this
-off.
-
-**What the carrier lets through.** Measured on the U30 Air's SIM (mobile uplink): UDP to a WireGuard port never
-reaches the server - `tcpdump` on `sipa_eth0` shows the marked packets leaving, and the same UDP from a Mac on
-another network arrives - and OpenVPN over TCP connects but its TLS handshake times out, while the same `.ovpn`
-completes from the home network. That carrier drops the UDP and inspects and blocks OpenVPN's TLS; the VLESS
-profile goes through. If a WireGuard or OpenVPN profile never comes up on mobile data while it works on Wi-Fi, this
-is the first thing to suspect: try the same profile with `wifi-client`, or a type the carrier does not touch
-(docs/FINDINGS.md 26f).
+The installer asks for it too. The module lives on the Linux partition (`/mnt/mu300-disk/extra/vpn`), so Ubuntu and
+OpenWrt share one copy; installing it links it into every installed system, and each system links it again at boot.
+`mu300-update apply` brings it to its latest release, and a device that uses the VPN is never updated without it:
+offline, the update stops before it changes anything and says how to stage the module
+(`mu300-linux-vpn.tar.gz` and its `SHA256SUMS` in `/mnt/mu300-disk/.mu300-update/vpn/`, or
+`MU300_VPN_MODULE=FILE mu300-update apply`). An older vpn extra (the engines alone) is replaced by the module. A
+system whose VPN is on with its kill switch and has lost the module fails closed: mobile data and the Wi-Fi client stay
+down until it is installed again (`mu300-extra install vpn`) or the VPN is turned off.
 
 ### Languages
 
@@ -653,8 +579,8 @@ sudo mu300-update kernel 7.2      # another kernel: 5.4 (vendor), 6.18 (LTS) or 
 ```
 
 `mu300-toolkit` offers the same under System -> Software update. Your settings, users, `/usr/local` and the vendor
-files (Wi-Fi firmware, Android modem userspace) and the installed extras are carried over (the extras are brought to
-the new release), and the previous version is kept as `<os>.old` for
+files (Wi-Fi firmware, Android modem userspace) and the installed extras are carried over (the lang extra is brought
+to the new release, the [VPN](#vpn) module to its latest one), and the previous version is kept as `<os>.old` for
 
 a rollback until you run `mu300-update clean`. The new filesystem is unpacked beside the old one and only swapped in
 at the end, so an interrupted download cannot leave a half-updated system.
@@ -726,7 +652,7 @@ Like the installer, it offers to reboot the device from Linux into Android first
 | Wi-Fi client | ✅ WPA2 and WPA2/WPA3 mixed, shared with USB clients; ✗ WPA3-only networks (the driver has no SAE) |
 | USB network + serial console | ✅ `192.168.77.1` (U30 Air `192.168.78.1`), `screen /dev/cu.usbmodem* 115200` |
 | SSH, telnet | ✅ |
-| VPN | ✅ profiles: WireGuard, OpenVPN, VLESS/VMess/Trojan/Shadowsocks links, Clash/mihomo, raw Xray or sing-box JSON; kill switch, Tailscale through the tunnel; the engines are the vpn and vpn-mihomo extras |
+| VPN | ✅ profiles: WireGuard, OpenVPN, VLESS/VMess/Trojan/Shadowsocks links, Clash/mihomo, raw Xray or sing-box JSON; kill switch, Tailscale through the tunnel; the module of [mu300-linux-vpn](https://github.com/dikeckaan/mu300-linux-vpn) |
 | Bluetooth | ✅ BlueZ, scanning works |
 | GPU (Mali-G57) | ✅ OpenCL 3.0, headless |
 | Storage | ✅ about 32 GB in the unused area of the internal eMMC on the 64 GB device; on the 32 GB one you choose the split with Android, or use an SD card (F50) |
@@ -856,10 +782,10 @@ The kernel source used here is mirrored at
   faster USB rebind, the early DHCP lease, RNDIS, the radio-on sequence; on `openwrt-luci` the SMS pool and IPv6
   relay mode), measured in [FINDINGS 35](docs/FINDINGS.md).
 * The Aurora theme (`luci-theme-aurora`) by eamonxg is downloaded at build time, pinned and checked by hash.
-* The vpn extra holds [Xray-core](https://github.com/XTLS/Xray-core) (MPL-2.0),
-  [sing-box](https://github.com/SagerNet/sing-box) (GPL-3.0-or-later) and
-  [hev-socks5-tunnel](https://github.com/heiher/hev-socks5-tunnel) (MIT), downloaded from their releases, pinned and
-  checked by hash.
+* The VPN module ([mu300-linux-vpn](https://github.com/dikeckaan/mu300-linux-vpn)) carries
+  [Xray-core](https://github.com/XTLS/Xray-core) (MPL-2.0), [sing-box](https://github.com/SagerNet/sing-box)
+  (GPL-3.0-or-later), [hev-socks5-tunnel](https://github.com/heiher/hev-socks5-tunnel) (MIT) and, as vpn-mihomo,
+  [mihomo](https://github.com/MetaCubeX/mihomo) (MIT); its releases list them.
 
 * Stock firmware, Android vendor components and bootloaders belong to their owners and are not distributed here.
   The one stock image the project keeps available, the `trustos` (TEE) image for firmware `ZYV1.0.0B09` as a

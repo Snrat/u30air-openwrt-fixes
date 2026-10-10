@@ -183,5 +183,33 @@ if (Get-Command sh -CommandType Application -ErrorAction SilentlyContinue) {
     }
 }
 
+# ---- the VPN question: yes by default over a system whose VPN is on ---------------------------------------------
+$vdefs = $ast.FindAll({ param($n) $n -is [System.Management.Automation.Language.FunctionDefinitionAst] -and @('VpnOnSystems', 'VpnDefault') -contains $n.Name }, $true)
+foreach ($d in $vdefs) { . ([scriptblock]::Create($d.Extent.Text)) }
+$T = '/data/local/tmp'
+function PushUnix($src, $dst) { $true }
+$script:suCmd = ''
+$script:suOut = "ubuntu`r`n"
+function SuDo($cmd) { $script:suCmd = $cmd; $script:suOut }
+Check 'vpn on: ubuntu'          ((VpnOnSystems @('ubuntu', 'openwrt') 'yes' 0 '' 123 456) -join ' ') 'ubuntu'
+Check 'vpn on: default yes'     (VpnDefault @(VpnOnSystems @('ubuntu', 'openwrt') 'yes' 0 '' 123 456)) 'yes'
+Check 'vpn on: read only'       ($script:suCmd -match '^MU300_OFF=123 MU300_SIZE=456 MU300_RO=1 sh /data/local/tmp/android-mount-mu300root.sh ') $true
+Check 'vpn on: no quotes'       ($script:suCmd -match "'") $false
+Check 'vpn on: loop variable'   ($script:suCmd -match 'vpn_killswitch_wanted /data/local/tmp/mu300probe/\$o; then echo \$o:ks;') $true
+Check 'vpn on: orphan lib'      ($script:suCmd -match '\. /data/local/tmp/vpn-orphan\.sh;') $true
+$script:suOut = "ubuntu`nopenwrt:ks`n"
+Check 'vpn on: kill switch'     ((VpnOnSystems @('ubuntu', 'openwrt') 'yes' 0 '' 123 456) -join ' ') 'ubuntu openwrt:ks'
+Check 'vpn ks: default yes'     (VpnDefault @(VpnOnSystems @('openwrt') 'yes' 0 '' 123 456)) 'yes'
+$script:suOut = "ubuntu`r`n"
+$null = VpnOnSystems @('ubuntu') 'yes' 1 '/dev/block/mmcblk1p1' 0 0
+Check 'vpn on: the card'        ($script:suCmd -match '^MU300_SD_DEV=/dev/block/mmcblk1p1 MU300_RO=1 ') $true
+$script:suOut = ''
+Check 'vpn off: default no'     (VpnDefault @(VpnOnSystems @('ubuntu', 'openwrt') 'yes' 0 '' 123 456)) 'no'
+$script:suOut = "openwrt`n"
+Check 'vpn on elsewhere: no'    (VpnDefault @(VpnOnSystems @('ubuntu') 'yes' 0 '' 123 456)) 'no'
+$script:suCmd = ''
+Check 'no install: default no'  (VpnDefault @(VpnOnSystems @('ubuntu') 'no' 0 '' 123 456)) 'no'
+Check 'no install: no probe'    $script:suCmd ''
+
 Write-Host "$script:passed passed, $script:failed failed"
 exit $script:failed

@@ -783,6 +783,12 @@ buffers to the bus and leave when there is no tx context yet.
 * Android's uid `system` (1000) is also Ubuntu's first user, so modem device nodes show up as owned by `ubuntu`.
 
 ### 26b. The tunnel needs sing-box's gvisor stack on this kernel
+**2026-10-09: the VPN moved to its own repository.** `mu300-vpn`, its drivers and engines are the module of
+[dikeckaan/mu300-linux-vpn](https://github.com/dikeckaan/mu300-linux-vpn) now, installed as the `vpn` extra
+(`mu300-extra install vpn`); the images carry none of it. These findings (26b, 26e, 26f) stay here as they were
+written, and are continued in that repository's docs; paths like `/opt/mu300/lib/vpn` are the module's, linked into
+each system by its `hooks/link`.
+
 Everything through the VPN failed while the VPN itself looked healthy: it connected to its server, resolved
 names through the tunnel, and `sbtun` counted the packets going in. Applications got `Connection refused` from
 `nc` and `Failed to send request: Operation not permitted` from `uclient-fetch`, and sing-box logged one line
@@ -827,6 +833,8 @@ Sending picks the encoding from the text - GSM 7-bit while every character fits 
 what makes `ığşçöü ÇĞİÖŞÜ` survive. Verified by sending to the SIM's own number and reading it back intact.
 
 ### 26e. The Xray engine, and a connectivity test that could only say no
+(Now the VPN module of [dikeckaan/mu300-linux-vpn](https://github.com/dikeckaan/mu300-linux-vpn): see 26b.)
+
 
 **Update 2026-10-07:** since PR #31 the engines (Xray-core, hev-socks5-tunnel, sing-box) are not in the Ubuntu or
 OpenWrt images. They are an optional release asset, `mu300-extra-vpn.tar.gz`, installed with
@@ -869,6 +877,8 @@ something that must succeed before believing a failure. To test the bearer while
 address around it: `ip rule add pref 8999 to <addr> lookup main`, test, delete the rule.
 
 ### 26f. One VPN command for every protocol: profiles and engine drivers
+(Now the VPN module of [dikeckaan/mu300-linux-vpn](https://github.com/dikeckaan/mu300-linux-vpn): see 26b.)
+
 `mu300-vpn` spoke one protocol: a VLESS link in `vpn.conf`. People have WireGuard configs, OpenVPN files,
 Clash/mihomo subscriptions and raw Xray/sing-box JSON from their panels, so it now keeps named profiles under
 `/etc/mu300/vpn` (`profile import|add|edit|use|remove|export|show|list`, `settings`, `engines`, `check`) and runs

@@ -3,7 +3,8 @@
 #   arch/build-rootfs.sh [OUT.tar.gz]
 # Inputs are the same optional ones the other builds use (see openwrt/build-rootfs.sh):
 #   out/modules/*.ko  out/modules.builtin*  firmware/  android-subset/  android-gpu-subset/
-#   tools/logdw/logdw  tools/bt-init/mu300-bt-init  tools/gpu/cltest  busybox  sing-box
+#   tools/logdw/logdw  tools/bt-init/mu300-bt-init  tools/gpu/cltest  busybox
+# (the VPN is the module of github.com/dikeckaan/mu300-linux-vpn, engines included: mu300-extra install vpn)
 #
 # Arch Linux ARM ships a generic aarch64 root filesystem and a rolling package set, so the userspace is far newer
 # than the 5.4 kernel this device runs. That works because nothing here needs new kernel features, but it also
@@ -30,7 +31,7 @@ docker run --rm --platform linux/arm64 \
   $(opt out/modules.builtin.modinfo modules.builtin.modinfo) \
   $(opt firmware firmware) $(opt android-subset android-subset) $(opt android-gpu-subset android-gpu-subset) \
   $(opt tools/logdw/logdw logdw) $(opt tools/bt-init/mu300-bt-init bt-init) $(opt tools/gpu/cltest cltest) \
-  $(opt busybox busybox) $(opt sing-box sing-box) -v "$TOP/arch":/out \
+  $(opt busybox busybox) -v "$TOP/arch":/out \
   -e KREL=$KREL -e OUT="$(basename "$OUT")" -e MU300_VERSION="${MU300_VERSION:-dev}" \
   mu300-arch-base:latest /bin/bash -eu -c '
 export LANG=C
@@ -76,10 +77,9 @@ fi
 [ -e /in/cltest ] && { mkdir -p $R/opt/mu300/android/system/bin; install -m755 /in/cltest $R/opt/mu300/android/system/bin/cltest; }
 [ -e /in/logdw ] && install -m755 /in/logdw $R/opt/mu300/bin/logdw
 [ -e /in/bt-init ] && install -m755 /in/bt-init $R/opt/mu300/bin/mu300-bt-init
-[ -f /in/sing-box ] && install -m755 /in/sing-box $R/opt/mu300/bin/sing-box
 [ -e /in/busybox ] && { install -m755 /in/busybox $R/opt/mu300/bin/busybox; mkdir -p $R/opt/mu300/busybox-bin; }
 # on PATH for sudo too (secure_path has no /opt/mu300/bin)
-for c in mu300-toolkit mu300-next-boot mu300-os mu300-update mobile-data mu300-at mu300-vpn wifi-client; do ln -sfn /opt/mu300/bin/$c $R/usr/local/bin/$c; done
+for c in mu300-toolkit mu300-next-boot mu300-os mu300-update mobile-data mu300-at wifi-client; do ln -sfn /opt/mu300/bin/$c $R/usr/local/bin/$c; done
 
 # identity and defaults
 echo mu300 > $R/etc/hostname

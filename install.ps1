@@ -19,6 +19,8 @@
     Only the Linux region (or the SD card), boot_b and 32 bytes of misc are written; boot_a, the GPT and userdata
     stay untouched. With an SD card in the slot it asks where the Linux filesystem goes ($env:MU300_STORAGE =
     'internal' or 'sd' answers without asking).
+    The VPN, when wanted, is the module of github.com/dikeckaan/mu300-linux-vpn: its latest release
+    ($env:MU300_VPN_URL: another place with its files and SHA256SUMS; $env:MU300_VPN_MODULE: a copy on this computer).
 #>
 [CmdletBinding()]
 param(
@@ -301,6 +303,46 @@ function Python { param([Parameter(ValueFromRemainingArguments = $true)][string[
     }
     & $script:PyExe @PyArgs
 }
+# the VPN module's latest release (or $env:MU300_VPN_MODULE, a copy on this computer), checked against that release's
+# SHA256SUMS (fetched every time: under releases/latest the same name is a new file with every release), as $EXTRA_VPN
+function FetchVpnModule {
+    $vd = Join-Path $Work 'vpn-module'
+    New-Item -ItemType Directory -Force -Path $vd | Out-Null
+    if ($env:MU300_VPN_MODULE) {
+        if (-not (Test-Path $env:MU300_VPN_MODULE)) { Die (T '{1} not found' $env:MU300_VPN_MODULE) }
+        $sf = Join-Path (Split-Path $env:MU300_VPN_MODULE) 'SHA256SUMS'
+        if (Test-Path $sf) {
+            $leaf = Split-Path $env:MU300_VPN_MODULE -Leaf
+            foreach ($line in Get-Content $sf) {
+                $p = $line -split '\s+', 2
+                if ($p.Count -eq 2 -and $p[1].TrimStart('*') -eq $leaf -and
+                    (Get-FileHash $env:MU300_VPN_MODULE -Algorithm SHA256).Hash.ToLower() -ne $p[0]) {
+                    Die (T 'checksum mismatch for {1}' $env:MU300_VPN_MODULE)
+                }
+            }
+        }
+        $script:EXTRA_VPN = $env:MU300_VPN_MODULE
+        return
+    }
+    $vb = if ($env:MU300_VPN_URL) { $env:MU300_VPN_URL } else { 'https://github.com/dikeckaan/mu300-linux-vpn/releases/latest/download' }
+    $f = 'mu300-linux-vpn.tar.gz'
+    Say (T 'Downloading the VPN module')
+    try { Invoke-WebRequest "$vb/SHA256SUMS" -OutFile "$vd\SHA256SUMS" -UseBasicParsing } catch { Die (T 'cannot download {1}' "$vb/SHA256SUMS") }
+    $want = $null
+    foreach ($line in Get-Content "$vd\SHA256SUMS") {
+        $p = $line -split '\s+', 2
+        if ($p.Count -eq 2 -and $p[1].TrimStart('*') -eq $f) { $want = $p[0] }
+    }
+    if (-not $want) { Die (T '{1} is not part of release {2}' $f $vb) }
+    $have = if (Test-Path "$vd\$f") { (Get-FileHash "$vd\$f" -Algorithm SHA256).Hash.ToLower() } else { '' }
+    if ($have -ne $want) {
+        Write-Host "  $f"
+        Fetch "$vb/$f" "$vd\$f.part"
+        if ((Get-FileHash "$vd\$f.part" -Algorithm SHA256).Hash.ToLower() -ne $want) { Die (T 'checksum mismatch for {1}' $f) }
+        Move-Item -Force "$vd\$f.part" "$vd\$f"
+    }
+    $script:EXTRA_VPN = "$vd\$f"
+}
 # GitHub's release CDN throttles single connections hard in some regions: pull large files as parallel ranges
 function Fetch($url, $out) {
     $jobs = 8
@@ -486,6 +528,19 @@ function InstallEnvText($v) {
         "INTERNAL_EXISTS=$($v.INTERNAL_EXISTS)", "PWHASH='$($v.PWHASH)'")
     return (($lines -join "`n") + "`n")
 }
+# VpnOnSystems: the systems among $oses of the Linux filesystem already on the device whose VPN is on (ENABLE=1 in
+# etc/mu300/vpn.conf), as "os:ks" when its kill switch is on too - decided on the device by the images'
+# lib/vpn-orphan.sh, pushed along - through a read-only mount taken down again at once (as install.sh's vpn_on_systems).
+# The VPN is a module the new systems do not carry: it is then offered by default, and with the kill switch needed.
+function VpnOnSystems($oses, $existing, $sdMode, $sdDev, $off, $size) {
+    if ($existing -ne 'yes') { return @() }
+    $envs = if ($sdMode -eq 1) { "MU300_SD_DEV=$sdDev" } else { "MU300_OFF=$off MU300_SIZE=$size" }
+    if (-not (PushUnix "$Top\tools\android-mount-mu300root.sh" "$T/android-mount-mu300root.sh")) { return @() }
+    if (-not (PushUnix "$Top\rootfs\overlay\opt\mu300\lib\vpn-orphan.sh" "$T/vpn-orphan.sh")) { return @() }
+    $out = SuDo "$envs MU300_RO=1 sh $T/android-mount-mu300root.sh $T/mu300probe >/dev/null 2>&1 && { . $T/vpn-orphan.sh; for o in $(@($oses) -join ' '); do if vpn_killswitch_wanted $T/mu300probe/`$o; then echo `$o:ks; else case `$(vpn_conf_value $T/mu300probe/`$o/etc/mu300/vpn.conf ENABLE) in 1) echo `$o ;; esac; fi; done; sh $T/android-mount-mu300root.sh -u $T/mu300probe >/dev/null 2>&1; }; true"
+    return @(([string]$out -split "`n") | ForEach-Object { $_.Trim() } | Where-Object { @($oses) -contains ($_ -replace ':ks$', '') })
+}
+function VpnDefault($on) { if (@($on).Count -gt 0) { 'yes' } else { 'no' } }
 function SdExisting {
     $m = (SuDo "dd if=$SD_DEV bs=1 skip=1080 count=2 2>/dev/null | od -An -tx1") -replace '\s', ''
     $l = (SuDo "dd if=$SD_DEV bs=1 skip=1144 count=16 2>/dev/null") -replace '\0', ''
@@ -680,10 +735,21 @@ if ($DEFAULT_LINUX -eq 1) {
 }
 $IMPORT_HOTSPOT = if ((Ask (T "Copy Android's hotspot name and password to Linux? (yes/no)") 'yes') -eq 'yes') { 1 } else { 0 }
 $gpu = Ask (T 'Include the Mali GPU (OpenCL) userspace (~90 MiB)? (yes/no)') 'yes'
-# the VPN engines are not part of the systems: an extra that goes onto the Linux partition only when wanted
-Write-Host ('  ' + (T 'The VPN (mu300-vpn) needs the vpn extra: Xray and sing-box. It can also be added later on the device:'))
+# the VPN is not part of the systems: a module of its own repository, which goes onto the Linux partition (as the vpn
+# extra) only when wanted
+Write-Host ('  ' + (T 'The VPN (mu300-vpn, with Xray and sing-box) is a module of its own: {1}. It can also be added later on the device:' 'https://github.com/dikeckaan/mu300-linux-vpn'))
 Write-Host '    sudo mu300-extra install vpn'
-$vx = Ask (T 'Install the VPN extra (about 40 MB more to download, 120 MB on the device)? (yes/no)') 'no'
+# a system being replaced whose VPN is on keeps it only with the module: then it is the default
+$vpnOn = @(VpnOnSystems $OSES $existing $SD_MODE $SD_DEV $OFF $SIZE)
+$vpnKs = @($vpnOn | Where-Object { $_ -match ':ks$' } | ForEach-Object { $_ -replace ':ks$', '' })
+if ($vpnOn.Count -gt 0) {
+    Write-Host ('  ' + (T 'The VPN is on in the system being replaced ({1}): without the module it stays off after the installation.' (($vpnOn | ForEach-Object { $_ -replace ':ks$', '' }) -join ' ')))
+}
+$vx = Ask (T 'Install the VPN module (about 40 MB more to download, 120 MB on the device)? (yes/no)') (VpnDefault $vpnOn)
+# its kill switch on too: without the module nothing would enforce it (android-install.sh refuses the same, later)
+if ($vx -ne 'yes' -and $vpnKs.Count -gt 0) {
+    Die (T 'The VPN is on with its kill switch in {1}: an update without the VPN module would leave it to nothing. Answer yes to install the module, or turn the VPN off there first (ENABLE=0 in /etc/mu300/vpn.conf).' ($vpnKs -join ' '))
+}
 $EXTRA_VPN = $null
 $KERNEL = $null
 Say (T 'Which kernel?')
@@ -783,10 +849,12 @@ foreach ($line in Get-Content "$REL\SHA256SUMS") {
 }
 $files = @('mu300-kernel.tar.gz') + ($OSES | ForEach-Object { RootfsFile $_ })
 if ($KERNEL -ne '5.4') { $files += "mu300-kernel-$KERNEL.tar.gz" }
+# the VPN: a release from before the module (its systems carry mu300-vpn) has the engines as its own vpn extra, from the
+# same SHA256SUMS; a newer one has neither, and the module comes from its own repository (below)
+$vpnFromModule = $false
 if ($vx -eq 'yes') {
-    # from the same release and SHA256SUMS; a release from before extras still has the engines in its images
     if ($sums.ContainsKey('mu300-extra-vpn.tar.gz')) { $files += 'mu300-extra-vpn.tar.gz'; $EXTRA_VPN = "$REL\mu300-extra-vpn.tar.gz" }
-    else { Write-Host ('  ' + (T 'release {1} has no vpn extra: its systems still carry the VPN engines' $Release)) }
+    else { $vpnFromModule = $true }
 }
 foreach ($f in $files) {
     if (-not $sums.ContainsKey($f)) {
@@ -801,6 +869,7 @@ foreach ($f in $files) {
         Move-Item -Force "$REL\$f.part" "$REL\$f"
     }
 }
+if ($vpnFromModule) { FetchVpnModule }
 Remove-Item -Recurse -Force "$REL\kernel" -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path "$REL\kernel" | Out-Null
 & tar -xzf "$REL\mu300-kernel.tar.gz" -C "$REL\kernel"
@@ -876,7 +945,8 @@ foreach ($os in $OSES) {
     & adb push "$REL\$(RootfsFile $os)" "$T/mu300-$os.tar.gz" | Out-Null
     & adb push "$Work\mu300-vendor-$os.tar.gz" "$T/mu300-vendor-$os.tar.gz" | Out-Null
 }
-# android-install.sh puts every pushed mu300-extra-<name>.tar.gz onto the Linux partition (extra/<name>)
+# android-install.sh puts every pushed mu300-extra-<name>.tar.gz onto the Linux partition (extra/<name>); the VPN
+# module goes as the vpn extra, and each system links it into itself at its first boot (mu300-extra link)
 if ($EXTRA_VPN) { & adb push $EXTRA_VPN "$T/mu300-extra-vpn.tar.gz" | Out-Null }
 $envFile = "$Work\mu300-install.env"
 WriteUnix $envFile (InstallEnvText @{ OFF = $OFF; SIZE = $SIZE; INT_SIZE = $INT_SIZE; FORMAT = $FORMAT; OSES = $OSES
