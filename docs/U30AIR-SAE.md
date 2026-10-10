@@ -86,6 +86,10 @@ The firmware request uses group 19 even if the generator lists more groups.
 
 Keep USB management access and back up the wireless configuration, installed
 Wi-Fi packages/files and original `sprd_wlan_combo.ko` before installation.
+On current mainline sources, also back up `wcn_bsp.ko`. Build/install the
+matching WCN and WLAN module pair against the target kernel: the WLAN recovery
+path added in #100 calls `wcn_mu300_recover`, exported by the updated WCN BSP.
+Do not install a new WLAN module over an older BSP without that export.
 The OpenSSL variant also requires `libopenssl-legacy`; let APK resolve that
 from the official release feed, or download it locally for an offline install.
 Install the matching `hostapd-common` and `wpad-basic-openssl` pair together.
@@ -114,7 +118,20 @@ those operations. APK replacement after a later upgrade needs revalidation.
 
 ## Validation and limits
 
-The final patch was built through the official OpenWrt 25.12.5 armsr/armv8 SDK
+The review update rebases this branch onto main `9d21c77`, including #100's
+Wi-Fi recovery/backoff and rate-limited logging changes. Those changes are
+retained; the SAE hostapd patch and driver privacy filters are unchanged.
+After rebasing, the SAE tests passed again (9, with required UBSan), Wi-Fi
+bring-up passed (5), Wi-Fi client regressions passed (59), and static checks
+passed (40). The rebased `cmdevt.c`, `vendor.c`, `common/iface.c` and WCN
+`platform/wcn_procfs.c` also compiled against the prepared Linux 7.2.9 tree.
+This was an object compilation check, not a complete kernel/module build or
+a hardware test of the new recovery path. The device results below were
+obtained before this rebase, from revision `4d61379`; the updated module pair
+has not been installed on that device. Independent testing of the rebased
+sources is still pending.
+
+The hardware-tested patch was built through the official OpenWrt 25.12.5 armsr/armv8 SDK
 (GCC 14.3/musl), producing revision 6 `hostapd-common` and
 `wpad-basic-openssl` APKs. The official SDK's base feed is pinned at
 `f0a60eee2fe051741c643ea6118718aae1ef17fb`. SDK download SHA-256:
@@ -145,8 +162,9 @@ SDK-built package pair and a tested existing-device installation, rather than
 a flashed replacement image. Full rootfs assembly remains an optional image
 builder path. No claim is made about OWE or SAE client/station mode.
 
-The SAE/parser/SDK tests pass (9 cases), Wi-Fi bring-up tests pass (5), Wi-Fi
-client regressions pass (58), and static tests pass (40). A broad desktop run
+Before the review rebase, the SAE/parser/SDK tests passed (9 cases), Wi-Fi
+bring-up passed (5), Wi-Fi client regressions passed (58), and static tests
+passed (40). A broad desktop run
 executed 1056 tests with 86 skips and two pre-existing VPN test failures: the
 host has a real `/usr/bin/mihomo`, and its `ls` appends the SELinux mode suffix.
 The SAE branch does not modify either VPN test or implementation. The SAE tests also passed with `MU300_TEST_UBSAN=1`. This desktop initially
