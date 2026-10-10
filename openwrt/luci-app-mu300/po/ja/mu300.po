@@ -291,6 +291,24 @@ msgstr "USB アダプタを追加しています…"
 msgid "Add failed: %s"
 msgstr "追加に失敗しました: %s"
 
+msgid "4G only"
+msgstr "4G のみ"
+
+msgid "Network mode: %s"
+msgstr "ネットワークモード: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC オフ"
+
+msgid "NR band lock: %s"
+msgstr "NR バンドロック: %s"
+
+msgid "LTE band lock: %s"
+msgstr "LTE バンドロック: %s"
+
+msgid "Cell lock: %s"
+msgstr "セルロック: %s"
+
 msgid "Modulation DL/UL"
 msgstr "変調方式 DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "デバイスを再起動"
 msgid "Switch to Android"
 msgstr "Android に切り替え"
 
+msgid "Lock Linux"
+msgstr "Linuxをロック"
+
 msgid "Neighbor cells"
 msgstr "隣接セル"
 
@@ -474,11 +495,35 @@ msgstr "OpenWrt に戻るには、Android で mu300-next-boot linux を実行し
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "または何もしなければ、起動が 5 回完了しなかった時点で自動的にフォールバックします。"
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "Android 起動を準備して再起動しています…"
+
 msgid "Switch and reboot"
 msgstr "切り替えて再起動"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "Android 起動を準備して再起動しています…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "自動ではありません: %s。ネットワークモードとバンドロックはモデムに保存され、Android でも有効なままです。ネットワークが合わない場合、Android は「圏外」と表示します。"
+
+msgid "Reset locks and switch"
+msgstr "ロックをリセットして切り替え"
+
+msgid "Unlock Linux"
+msgstr "Linuxのロックを解除"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "完了しない起動が5回続くと、デバイスは再びAndroidに戻ります。"
+
+msgid "Unlock"
+msgstr "ロック解除"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "起動に失敗しても、デバイスが自動でAndroidに切り替わることはありません。Androidへはこのページ（Androidに切り替え）または mu300-next-boot android からのみ切り替えます。"
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "アップデートによる新しいカーネルは最初の起動を試行として行い、いずれかが成功すると再びロックされます。"
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "システム自体が起動しなくなった場合、デバイスはAndroidに切り替わらずUSB（telnet）で待機します。"
 
 msgid "Hide SIM identifiers"
 msgstr "SIM 識別情報を隠す"
@@ -497,6 +542,12 @@ msgstr "バックグラウンドで %s をロックしました。まもなく�
 
 msgid "Lock failed: %s"
 msgstr "ロックに失敗しました: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "ネットワークロックを自動にリセットしています（SFUN 再起動、約 30 秒）…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "ロックのリセットを時間内に確認できませんでした。そのまま切り替えます。"
 
 msgid "Uptime %s"
 msgstr "稼働時間 %s"
@@ -615,6 +666,9 @@ msgstr "オンライン"
 msgid "AT adapter unavailable"
 msgstr "AT アダプタを利用できません"
 
+msgid "Linux locked"
+msgstr "Linuxロック中"
+
 msgid "Saved"
 msgstr "保存しました"
 
@@ -714,9 +768,6 @@ msgstr "LuCI 自体の翻訳は OpenWrt によるものです。このパネル�
 msgid "Automatic"
 msgstr "自動"
 
-msgid "4G only"
-msgstr "4G のみ"
-
 msgid "Serving network"
 msgstr "サービングネットワーク"
 
@@ -759,6 +810,15 @@ msgstr "セルロックを解除"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "適用すると無線スタックが再起動し (SFUN)、セルラーサービスが一時的に中断されます。設定は保存され、「起動時に適用」が有効な場合は AT の準備完了後にプラグインが再適用します。プラットフォームの無線起動前フックがあれば再起動なしで再適用できます。バンドを何も選択せずに適用すると自動モードに戻ります。"
 
+msgid "Back to automatic"
+msgstr "自動に戻す"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "ネットワークモードとバンドロックはモデムに保存され、Android でも有効なままです。不明な場合は、Android に切り替える前にリセットしてください。"
+
+msgid "Reset all to automatic"
+msgstr "すべて自動にリセット"
+
 msgid "Apply “%s”?"
 msgstr "「%s」を適用しますか?"
 
@@ -779,9 +839,6 @@ msgstr "起動時の適用を確認しています…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "バックグラウンドで開始: %s (SFUN 再起動、約 30 秒)。ステータスを読み戻しています…"
-
-msgid "Network mode: %s"
-msgstr "ネットワークモード: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "EN-DC を無効化 (NSA アンカー)"
@@ -807,14 +864,14 @@ msgstr "更新に失敗しました"
 msgid "NR bands: back to automatic"
 msgstr "NR バンド: 自動に戻しました"
 
-msgid "NR band lock: %s"
-msgstr "NR バンドロック: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "LTE バンド: 自動に戻しました"
 
-msgid "LTE band lock: %s"
-msgstr "LTE バンドロック: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "ネットワークモード自動、EN-DC オン、すべての LTE/NR バンド、セルロックなし。保存されたロック設定は消去され、起動時に再適用されません。"
+
+msgid "Reset"
+msgstr "リセット"
 
 msgid "Remove the %s cell lock"
 msgstr "%s のセルロックを解除"
@@ -1466,27 +1523,3 @@ msgstr "TTL を設定できませんでした"
 
 msgid "Unknown TTL operation"
 msgstr "不明な TTL 操作"
-
-msgid "Lock Linux"
-msgstr "Linuxをロック"
-
-msgid "Unlock Linux"
-msgstr "Linuxのロックを解除"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "完了しない起動が5回続くと、デバイスは再びAndroidに戻ります。"
-
-msgid "Unlock"
-msgstr "ロック解除"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "起動に失敗しても、デバイスが自動でAndroidに切り替わることはありません。Androidへはこのページ（Androidに切り替え）または mu300-next-boot android からのみ切り替えます。"
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "アップデートによる新しいカーネルは最初の起動を試行として行い、いずれかが成功すると再びロックされます。"
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "システム自体が起動しなくなった場合、デバイスはAndroidに切り替わらずUSB（telnet）で待機します。"
-
-msgid "Linux locked"
-msgstr "Linuxロック中"

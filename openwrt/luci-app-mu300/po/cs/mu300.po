@@ -291,6 +291,24 @@ msgstr "Přidávání adaptéru USB…"
 msgid "Add failed: %s"
 msgstr "Přidání selhalo: %s"
 
+msgid "4G only"
+msgstr "Pouze 4G"
+
+msgid "Network mode: %s"
+msgstr "Režim sítě: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC vypnuto"
+
+msgid "NR band lock: %s"
+msgstr "Zámek pásem NR: %s"
+
+msgid "LTE band lock: %s"
+msgstr "Zámek pásem LTE: %s"
+
+msgid "Cell lock: %s"
+msgstr "Zámek buňky: %s"
+
 msgid "Modulation DL/UL"
 msgstr "Modulace DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "Restartovat zařízení"
 msgid "Switch to Android"
 msgstr "Přepnout na Android"
 
+msgid "Lock Linux"
+msgstr "Zamknout Linux"
+
 msgid "Neighbor cells"
 msgstr "Sousední buňky"
 
@@ -474,11 +495,35 @@ msgstr "Pro návrat do OpenWrt spusťte v Android mu300-next-boot linux a restar
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "Nebo nedělejte nic: po pěti nedokončených spuštěních dojde k automatickému návratu."
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "Příprava spuštění Android a restart…"
+
 msgid "Switch and reboot"
 msgstr "Přepnout a restartovat"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "Příprava spuštění Android a restart…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "Není automatické: %s. Režim sítě a zámky pásem jsou uloženy v modemu a platí i v Androidu; pokud jim síť neodpovídá, Android ukáže „Žádný signál“."
+
+msgid "Reset locks and switch"
+msgstr "Obnovit zámky a přepnout"
+
+msgid "Unlock Linux"
+msgstr "Odemknout Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Po pěti nedokončených spuštěních po sobě se zařízení znovu vrátí do Androidu."
+
+msgid "Unlock"
+msgstr "Odemknout"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Zařízení nikdy samo nepřepne do Androidu, ani po neúspěšných spuštěních: do Androidu jen z této stránky (Přepnout do Androidu) nebo příkazem mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Nové jádro z aktualizace se i tak nejprve spouští zkušebně a znovu se zamkne, jakmile jedno spuštění uspěje."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Pokud se samotný systém přestane spouštět, zařízení čeká přes USB (telnet), místo aby přešlo do Androidu."
 
 msgid "Hide SIM identifiers"
 msgstr "Skrýt identifikátory SIM"
@@ -497,6 +542,12 @@ msgstr "%s uzamčeno na pozadí; stav se brzy obnoví"
 
 msgid "Lock failed: %s"
 msgstr "Uzamčení selhalo: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "Obnovují se automatická nastavení sítě (restart SFUN, asi 30 sekund)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "Obnovení zámků nebylo včas potvrzeno; přepíná se i tak."
 
 msgid "Uptime %s"
 msgstr "Doba provozu %s"
@@ -615,6 +666,9 @@ msgstr "Online"
 msgid "AT adapter unavailable"
 msgstr "Adaptér AT nedostupný"
 
+msgid "Linux locked"
+msgstr "Linux zamčen"
+
 msgid "Saved"
 msgstr "Uloženo"
 
@@ -714,9 +768,6 @@ msgstr "Vlastní překlady LuCI pocházejí z OpenWrt. Překlady tohoto panelu k
 msgid "Automatic"
 msgstr "Automaticky"
 
-msgid "4G only"
-msgstr "Pouze 4G"
-
 msgid "Serving network"
 msgstr "Obsluhující síť"
 
@@ -759,6 +810,15 @@ msgstr "Odemknout buňku"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "Použití restartuje rádiový stack (SFUN) a krátce přeruší mobilní službu. Nastavení se uloží a plugin je znovu použije, jakmile je AT připraveno, pokud je povoleno Použít při spuštění. Háček platformy spouštěný před rádiem je může použít bez restartu. Použijte bez vybraných pásem pro obnovení automatického režimu."
 
+msgid "Back to automatic"
+msgstr "Zpět na automatické"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "Režim sítě a zámky pásem jsou uloženy v modemu a platí i v Androidu. Pokud si nejste jisti, obnovte je před přepnutím do Androidu."
+
+msgid "Reset all to automatic"
+msgstr "Vše obnovit na automatické"
+
 msgid "Apply “%s”?"
 msgstr "Použít „%s“?"
 
@@ -779,9 +839,6 @@ msgstr "Ověřování použití při spuštění…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "Spuštěno na pozadí: %s (restart SFUN, asi 30 sekund); zpětné čtení stavu…"
-
-msgid "Network mode: %s"
-msgstr "Režim sítě: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "Vypnout EN-DC (kotva NSA)"
@@ -807,14 +864,14 @@ msgstr "Obnovení selhalo"
 msgid "NR bands: back to automatic"
 msgstr "Pásma NR: zpět na automatický režim"
 
-msgid "NR band lock: %s"
-msgstr "Zámek pásem NR: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "Pásma LTE: zpět na automatický režim"
 
-msgid "LTE band lock: %s"
-msgstr "Zámek pásem LTE: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "Režim sítě automaticky, EN-DC zapnuto, všechna pásma LTE a NR, bez zámku buňky. Uložená nastavení zámků se smažou, při startu se nic znovu nepoužije."
+
+msgid "Reset"
+msgstr "Obnovit"
 
 msgid "Remove the %s cell lock"
 msgstr "Odebrat zámek buňky %s"
@@ -1466,27 +1523,3 @@ msgstr "TTL nelze nastavit"
 
 msgid "Unknown TTL operation"
 msgstr "Neznámá operace TTL"
-
-msgid "Lock Linux"
-msgstr "Zamknout Linux"
-
-msgid "Unlock Linux"
-msgstr "Odemknout Linux"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "Po pěti nedokončených spuštěních po sobě se zařízení znovu vrátí do Androidu."
-
-msgid "Unlock"
-msgstr "Odemknout"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "Zařízení nikdy samo nepřepne do Androidu, ani po neúspěšných spuštěních: do Androidu jen z této stránky (Přepnout do Androidu) nebo příkazem mu300-next-boot android."
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "Nové jádro z aktualizace se i tak nejprve spouští zkušebně a znovu se zamkne, jakmile jedno spuštění uspěje."
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "Pokud se samotný systém přestane spouštět, zařízení čeká přes USB (telnet), místo aby přešlo do Androidu."
-
-msgid "Linux locked"
-msgstr "Linux zamčen"

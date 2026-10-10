@@ -291,6 +291,24 @@ msgstr "Menambahkan adaptor USB…"
 msgid "Add failed: %s"
 msgstr "Gagal menambahkan: %s"
 
+msgid "4G only"
+msgstr "Hanya 4G"
+
+msgid "Network mode: %s"
+msgstr "Mode jaringan: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC mati"
+
+msgid "NR band lock: %s"
+msgstr "Kunci band NR: %s"
+
+msgid "LTE band lock: %s"
+msgstr "Kunci band LTE: %s"
+
+msgid "Cell lock: %s"
+msgstr "Kunci sel: %s"
+
 msgid "Modulation DL/UL"
 msgstr "Modulasi DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "Mulai ulang perangkat"
 msgid "Switch to Android"
 msgstr "Beralih ke Android"
 
+msgid "Lock Linux"
+msgstr "Kunci Linux"
+
 msgid "Neighbor cells"
 msgstr "Sel tetangga"
 
@@ -474,11 +495,35 @@ msgstr "Untuk kembali ke OpenWrt, jalankan mu300-next-boot linux di Android lalu
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "Atau biarkan saja: setelah lima boot yang tidak selesai, sistem kembali secara otomatis."
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "Menyiapkan boot Android dan memulai ulang…"
+
 msgid "Switch and reboot"
 msgstr "Beralih dan mulai ulang"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "Menyiapkan boot Android dan memulai ulang…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "Tidak otomatis: %s. Mode jaringan dan kunci band disimpan di modem dan tetap berlaku di Android; jika jaringan tidak cocok, Android menampilkan \"Tidak ada layanan\"."
+
+msgid "Reset locks and switch"
+msgstr "Reset kunci lalu beralih"
+
+msgid "Unlock Linux"
+msgstr "Buka kunci Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Setelah lima kali boot berturut-turut yang tidak selesai, perangkat kembali lagi ke Android."
+
+msgid "Unlock"
+msgstr "Buka kunci"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Perangkat tidak akan pernah beralih ke Android dengan sendirinya, bahkan setelah boot gagal: ke Android hanya dari halaman ini (Beralih ke Android) atau dengan mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Kernel baru dari pembaruan tetap menjalani boot pertamanya sebagai percobaan, lalu terkunci lagi begitu salah satunya berhasil."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Jika sistem itu sendiri tidak lagi berjalan, perangkat menunggu lewat USB (telnet) alih-alih beralih ke Android."
 
 msgid "Hide SIM identifiers"
 msgstr "Sembunyikan pengenal SIM"
@@ -497,6 +542,12 @@ msgstr "%s dikunci di latar belakang; status akan segera disegarkan"
 
 msgid "Lock failed: %s"
 msgstr "Gagal mengunci: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "Mengembalikan kunci jaringan ke otomatis (restart SFUN, sekitar 30 detik)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "Reset kunci tidak terkonfirmasi tepat waktu; tetap beralih."
 
 msgid "Uptime %s"
 msgstr "Waktu aktif %s"
@@ -615,6 +666,9 @@ msgstr "Daring"
 msgid "AT adapter unavailable"
 msgstr "Adaptor AT tidak tersedia"
 
+msgid "Linux locked"
+msgstr "Linux terkunci"
+
 msgid "Saved"
 msgstr "Disimpan"
 
@@ -714,9 +768,6 @@ msgstr "Terjemahan LuCI sendiri berasal dari OpenWrt. Terjemahan panel ini selai
 msgid "Automatic"
 msgstr "Otomatis"
 
-msgid "4G only"
-msgstr "Hanya 4G"
-
 msgid "Serving network"
 msgstr "Jaringan layanan"
 
@@ -759,6 +810,15 @@ msgstr "Buka kunci sel"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "Menerapkan akan memulai ulang stack radio (SFUN) dan memutus layanan seluler sebentar. Pengaturan disimpan dan diterapkan ulang oleh plugin setelah AT siap jika Terapkan saat startup diaktifkan. Hook pra-radio platform dapat menerapkan ulang tanpa memulai ulang. Terapkan tanpa band terpilih untuk mengembalikan mode otomatis."
 
+msgid "Back to automatic"
+msgstr "Kembali ke otomatis"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "Mode jaringan dan kunci band disimpan di modem dan tetap berlaku di Android. Jika ragu, reset sebelum beralih ke Android."
+
+msgid "Reset all to automatic"
+msgstr "Reset semua ke otomatis"
+
 msgid "Apply “%s”?"
 msgstr "Terapkan “%s”?"
 
@@ -779,9 +839,6 @@ msgstr "Memastikan penerapan saat startup…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "Dimulai di latar belakang: %s (mulai ulang SFUN, sekitar 30 detik); membaca kembali status…"
-
-msgid "Network mode: %s"
-msgstr "Mode jaringan: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "Nonaktifkan EN-DC (anchor NSA)"
@@ -807,14 +864,14 @@ msgstr "Gagal menyegarkan"
 msgid "NR bands: back to automatic"
 msgstr "Band NR: kembali ke otomatis"
 
-msgid "NR band lock: %s"
-msgstr "Kunci band NR: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "Band LTE: kembali ke otomatis"
 
-msgid "LTE band lock: %s"
-msgstr "Kunci band LTE: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "Mode jaringan otomatis, EN-DC aktif, semua band LTE dan NR, tanpa kunci sel. Pengaturan kunci yang tersimpan dihapus, jadi tidak ada yang diterapkan ulang saat startup."
+
+msgid "Reset"
+msgstr "Reset"
 
 msgid "Remove the %s cell lock"
 msgstr "Hapus kunci sel %s"
@@ -1466,27 +1523,3 @@ msgstr "TTL tidak dapat diatur"
 
 msgid "Unknown TTL operation"
 msgstr "Operasi TTL tidak dikenal"
-
-msgid "Lock Linux"
-msgstr "Kunci Linux"
-
-msgid "Unlock Linux"
-msgstr "Buka kunci Linux"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "Setelah lima kali boot berturut-turut yang tidak selesai, perangkat kembali lagi ke Android."
-
-msgid "Unlock"
-msgstr "Buka kunci"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "Perangkat tidak akan pernah beralih ke Android dengan sendirinya, bahkan setelah boot gagal: ke Android hanya dari halaman ini (Beralih ke Android) atau dengan mu300-next-boot android."
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "Kernel baru dari pembaruan tetap menjalani boot pertamanya sebagai percobaan, lalu terkunci lagi begitu salah satunya berhasil."
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "Jika sistem itu sendiri tidak lagi berjalan, perangkat menunggu lewat USB (telnet) alih-alih beralih ke Android."
-
-msgid "Linux locked"
-msgstr "Linux terkunci"

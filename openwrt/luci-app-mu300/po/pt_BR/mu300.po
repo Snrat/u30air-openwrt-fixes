@@ -291,6 +291,24 @@ msgstr "Adicionando adaptador USB…"
 msgid "Add failed: %s"
 msgstr "Falha ao adicionar: %s"
 
+msgid "4G only"
+msgstr "Somente 4G"
+
+msgid "Network mode: %s"
+msgstr "Modo de rede: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC desligado"
+
+msgid "NR band lock: %s"
+msgstr "Bloqueio de bandas NR: %s"
+
+msgid "LTE band lock: %s"
+msgstr "Bloqueio de bandas LTE: %s"
+
+msgid "Cell lock: %s"
+msgstr "Bloqueio de célula: %s"
+
 msgid "Modulation DL/UL"
 msgstr "Modulação DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "Reiniciar dispositivo"
 msgid "Switch to Android"
 msgstr "Mudar para Android"
 
+msgid "Lock Linux"
+msgstr "Bloquear Linux"
+
 msgid "Neighbor cells"
 msgstr "Células vizinhas"
 
@@ -474,11 +495,35 @@ msgstr "Para voltar ao OpenWrt, execute mu300-next-boot linux no Android e reini
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "Ou não faça nada: após cinco inicializações que não terminarem, ele volta automaticamente."
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "Preparando a inicialização do Android e reiniciando…"
+
 msgid "Switch and reboot"
 msgstr "Alternar e reiniciar"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "Preparando a inicialização do Android e reiniciando…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "Não automático: %s. O modo de rede e os bloqueios de banda ficam gravados no modem e continuam valendo no Android; se a rede não corresponder, o Android mostra \"Sem serviço\"."
+
+msgid "Reset locks and switch"
+msgstr "Redefinir bloqueios e trocar"
+
+msgid "Unlock Linux"
+msgstr "Desbloquear Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Após cinco inicializações seguidas não concluídas, o dispositivo volta novamente para o Android."
+
+msgid "Unlock"
+msgstr "Desbloquear"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "O dispositivo nunca mudará para o Android sozinho, nem após inicializações com falha: Android apenas por esta página (Mudar para Android) ou com mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Um novo kernel de uma atualização ainda faz as primeiras inicializações em teste e volta a bloquear assim que uma delas tem sucesso."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Se o próprio sistema não iniciar mais, o dispositivo aguarda via USB (telnet) em vez de ir para o Android."
 
 msgid "Hide SIM identifiers"
 msgstr "Ocultar identificadores do SIM"
@@ -497,6 +542,12 @@ msgstr "%s bloqueada em segundo plano; o status será atualizado em breve"
 
 msgid "Lock failed: %s"
 msgstr "Falha ao bloquear: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "Redefinindo os bloqueios de rede para automático (reinício SFUN, cerca de 30 segundos)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "A redefinição dos bloqueios não foi confirmada a tempo; trocando mesmo assim."
 
 msgid "Uptime %s"
 msgstr "Tempo ativo %s"
@@ -615,6 +666,9 @@ msgstr "Online"
 msgid "AT adapter unavailable"
 msgstr "Adaptador AT indisponível"
 
+msgid "Linux locked"
+msgstr "Linux bloqueado"
+
 msgid "Saved"
 msgstr "Salvo"
 
@@ -714,9 +768,6 @@ msgstr "As traduções do próprio LuCI vêm do OpenWrt. As traduções deste pa
 msgid "Automatic"
 msgstr "Automático"
 
-msgid "4G only"
-msgstr "Somente 4G"
-
 msgid "Serving network"
 msgstr "Rede servidora"
 
@@ -759,6 +810,15 @@ msgstr "Desbloquear célula"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "Aplicar reinicia a pilha de rádio (SFUN) e interrompe brevemente o serviço celular. As configurações são salvas e reaplicadas pelo plugin quando o AT estiver pronto, se Aplicar na inicialização estiver ativado. Um hook de pré-rádio da plataforma pode reaplicar sem reinício. Aplique sem nenhuma banda selecionada para restaurar o modo automático."
 
+msgid "Back to automatic"
+msgstr "Voltar ao automático"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "O modo de rede e os bloqueios de banda ficam gravados no modem e continuam valendo no Android. Se não tiver certeza, redefina-os antes de trocar para o Android."
+
+msgid "Reset all to automatic"
+msgstr "Redefinir tudo para automático"
+
 msgid "Apply “%s”?"
 msgstr "Aplicar “%s”?"
 
@@ -779,9 +839,6 @@ msgstr "Confirmando aplicar na inicialização…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "Iniciado em segundo plano: %s (reinício SFUN, cerca de 30 segundos); lendo o status de volta…"
-
-msgid "Network mode: %s"
-msgstr "Modo de rede: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "Desativar EN-DC (âncora NSA)"
@@ -807,14 +864,14 @@ msgstr "Falha ao atualizar"
 msgid "NR bands: back to automatic"
 msgstr "Bandas NR: de volta ao automático"
 
-msgid "NR band lock: %s"
-msgstr "Bloqueio de bandas NR: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "Bandas LTE: de volta ao automático"
 
-msgid "LTE band lock: %s"
-msgstr "Bloqueio de bandas LTE: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "Modo de rede automático, EN-DC ligado, todas as bandas LTE e NR, sem bloqueio de célula. As configurações salvas são apagadas, então nada é reaplicado na inicialização."
+
+msgid "Reset"
+msgstr "Redefinir"
 
 msgid "Remove the %s cell lock"
 msgstr "Remover o bloqueio de célula %s"
@@ -1466,27 +1523,3 @@ msgstr "Não foi possível definir o TTL"
 
 msgid "Unknown TTL operation"
 msgstr "Operação de TTL desconhecida"
-
-msgid "Lock Linux"
-msgstr "Bloquear Linux"
-
-msgid "Unlock Linux"
-msgstr "Desbloquear Linux"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "Após cinco inicializações seguidas não concluídas, o dispositivo volta novamente para o Android."
-
-msgid "Unlock"
-msgstr "Desbloquear"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "O dispositivo nunca mudará para o Android sozinho, nem após inicializações com falha: Android apenas por esta página (Mudar para Android) ou com mu300-next-boot android."
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "Um novo kernel de uma atualização ainda faz as primeiras inicializações em teste e volta a bloquear assim que uma delas tem sucesso."
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "Se o próprio sistema não iniciar mais, o dispositivo aguarda via USB (telnet) em vez de ir para o Android."
-
-msgid "Linux locked"
-msgstr "Linux bloqueado"

@@ -291,6 +291,24 @@ msgstr "Se adaugă adaptorul USB…"
 msgid "Add failed: %s"
 msgstr "Adăugarea a eșuat: %s"
 
+msgid "4G only"
+msgstr "Doar 4G"
+
+msgid "Network mode: %s"
+msgstr "Mod rețea: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC oprit"
+
+msgid "NR band lock: %s"
+msgstr "Blocare benzi NR: %s"
+
+msgid "LTE band lock: %s"
+msgstr "Blocare benzi LTE: %s"
+
+msgid "Cell lock: %s"
+msgstr "Blocare celulă: %s"
+
 msgid "Modulation DL/UL"
 msgstr "Modulație DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "Repornire dispozitiv"
 msgid "Switch to Android"
 msgstr "Comutare la Android"
 
+msgid "Lock Linux"
+msgstr "Blochează Linux"
+
 msgid "Neighbor cells"
 msgstr "Celule vecine"
 
@@ -474,11 +495,35 @@ msgstr "Pentru a reveni la OpenWrt, rulați mu300-next-boot linux în Android ș
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "Sau nu faceți nimic: după cinci porniri care nu se finalizează, revine automat."
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "Se pregătește pornirea Android și se repornește…"
+
 msgid "Switch and reboot"
 msgstr "Comutare și repornire"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "Se pregătește pornirea Android și se repornește…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "Nu este automat: %s. Modul de rețea și blocările de bandă sunt salvate în modem și rămân active și în Android; dacă rețeaua nu se potrivește, Android afișează „Fără serviciu”."
+
+msgid "Reset locks and switch"
+msgstr "Resetează blocările și comută"
+
+msgid "Unlock Linux"
+msgstr "Deblochează Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "După cinci porniri consecutive neterminate, dispozitivul revine din nou la Android."
+
+msgid "Unlock"
+msgstr "Deblochează"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Dispozitivul nu va trece niciodată singur la Android, nici după porniri eșuate: la Android doar din această pagină (Comută la Android) sau cu mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Un kernel nou dintr-o actualizare pornește totuși mai întâi de probă și se blochează din nou când una dintre porniri reușește."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Dacă sistemul însuși nu mai pornește, dispozitivul așteaptă prin USB (telnet) în loc să treacă la Android."
 
 msgid "Hide SIM identifiers"
 msgstr "Ascundere identificatori SIM"
@@ -497,6 +542,12 @@ msgstr "%s blocat în fundal; starea se va reîmprospăta în curând"
 
 msgid "Lock failed: %s"
 msgstr "Blocarea a eșuat: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "Se resetează blocările de rețea la automat (repornire SFUN, circa 30 de secunde)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "Resetarea blocărilor nu a fost confirmată la timp; se comută oricum."
 
 msgid "Uptime %s"
 msgstr "Timp de funcționare %s"
@@ -615,6 +666,9 @@ msgstr "Online"
 msgid "AT adapter unavailable"
 msgstr "Adaptor AT indisponibil"
 
+msgid "Linux locked"
+msgstr "Linux blocat"
+
 msgid "Saved"
 msgstr "Salvat"
 
@@ -714,9 +768,6 @@ msgstr "Traducerile proprii ale LuCI provin din OpenWrt. Traducerile acestui pan
 msgid "Automatic"
 msgstr "Automat"
 
-msgid "4G only"
-msgstr "Doar 4G"
-
 msgid "Serving network"
 msgstr "Rețea de servire"
 
@@ -759,6 +810,15 @@ msgstr "Deblocare celulă"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "Aplicarea repornește stiva radio (SFUN) și întrerupe scurt serviciul celular. Setările sunt salvate și reaplicate de plugin după ce AT este pregătit, dacă Aplicare la pornire este activat. Un hook pre-radio al platformei poate reaplica fără repornire. Aplicați fără benzi selectate pentru a reveni la modul automat."
 
+msgid "Back to automatic"
+msgstr "Înapoi la automat"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "Modul de rețea și blocările de bandă sunt salvate în modem și rămân active și în Android. Dacă nu ești sigur, resetează-le înainte de a comuta la Android."
+
+msgid "Reset all to automatic"
+msgstr "Resetează totul la automat"
+
 msgid "Apply “%s”?"
 msgstr "Aplicați „%s”?"
 
@@ -779,9 +839,6 @@ msgstr "Se confirmă aplicarea la pornire…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "Pornit în fundal: %s (repornire SFUN, aproximativ 30 de secunde); se citește starea…"
-
-msgid "Network mode: %s"
-msgstr "Mod rețea: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "Dezactivare EN-DC (ancoră NSA)"
@@ -807,14 +864,14 @@ msgstr "Reîmprospătarea a eșuat"
 msgid "NR bands: back to automatic"
 msgstr "Benzi NR: înapoi la automat"
 
-msgid "NR band lock: %s"
-msgstr "Blocare benzi NR: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "Benzi LTE: înapoi la automat"
 
-msgid "LTE band lock: %s"
-msgstr "Blocare benzi LTE: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "Mod de rețea automat, EN-DC pornit, toate benzile LTE și NR, fără blocare de celulă. Setările salvate se șterg, așa că nimic nu se reaplică la pornire."
+
+msgid "Reset"
+msgstr "Resetează"
 
 msgid "Remove the %s cell lock"
 msgstr "Eliminare blocare celulă %s"
@@ -1466,27 +1523,3 @@ msgstr "TTL-ul nu a putut fi setat"
 
 msgid "Unknown TTL operation"
 msgstr "Operație TTL necunoscută"
-
-msgid "Lock Linux"
-msgstr "Blochează Linux"
-
-msgid "Unlock Linux"
-msgstr "Deblochează Linux"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "După cinci porniri consecutive neterminate, dispozitivul revine din nou la Android."
-
-msgid "Unlock"
-msgstr "Deblochează"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "Dispozitivul nu va trece niciodată singur la Android, nici după porniri eșuate: la Android doar din această pagină (Comută la Android) sau cu mu300-next-boot android."
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "Un kernel nou dintr-o actualizare pornește totuși mai întâi de probă și se blochează din nou când una dintre porniri reușește."
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "Dacă sistemul însuși nu mai pornește, dispozitivul așteaptă prin USB (telnet) în loc să treacă la Android."
-
-msgid "Linux locked"
-msgstr "Linux blocat"

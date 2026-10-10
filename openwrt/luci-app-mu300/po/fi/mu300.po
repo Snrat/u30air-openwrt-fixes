@@ -291,6 +291,24 @@ msgstr "Lisätään USB-sovitinta…"
 msgid "Add failed: %s"
 msgstr "Lisäys epäonnistui: %s"
 
+msgid "4G only"
+msgstr "Vain 4G"
+
+msgid "Network mode: %s"
+msgstr "Verkkotila: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC pois"
+
+msgid "NR band lock: %s"
+msgstr "NR-kaistalukitus: %s"
+
+msgid "LTE band lock: %s"
+msgstr "LTE-kaistalukitus: %s"
+
+msgid "Cell lock: %s"
+msgstr "Solulukitus: %s"
+
 msgid "Modulation DL/UL"
 msgstr "Modulaatio DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "Käynnistä laite uudelleen"
 msgid "Switch to Android"
 msgstr "Vaihda Androidiin"
 
+msgid "Lock Linux"
+msgstr "Lukitse Linux"
+
 msgid "Neighbor cells"
 msgstr "Naapurisolut"
 
@@ -474,11 +495,35 @@ msgstr "Palaa OpenWrt:hen suorittamalla Androidissa mu300-next-boot linux ja kä
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "Tai älä tee mitään: viiden keskeytyneen käynnistyksen jälkeen palataan automaattisesti."
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "Valmistellaan Android-käynnistystä ja käynnistetään uudelleen…"
+
 msgid "Switch and reboot"
 msgstr "Vaihda ja käynnistä uudelleen"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "Valmistellaan Android-käynnistystä ja käynnistetään uudelleen…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "Ei automaattinen: %s. Verkkotila ja kaistalukitukset tallentuvat modeemiin ja ovat voimassa myös Androidissa; jos verkko ei vastaa niitä, Android näyttää ”Ei palvelua”."
+
+msgid "Reset locks and switch"
+msgstr "Nollaa lukitukset ja vaihda"
+
+msgid "Unlock Linux"
+msgstr "Avaa Linuxin lukitus"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Viiden peräkkäisen keskeneräisen käynnistyksen jälkeen laite palaa jälleen Androidiin."
+
+msgid "Unlock"
+msgstr "Avaa lukitus"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Laite ei koskaan vaihda itsestään Androidiin, ei edes epäonnistuneiden käynnistysten jälkeen: Androidiin vain tältä sivulta (Vaihda Androidiin) tai komennolla mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Päivityksen tuoma uusi ydin käynnistyy silti ensin koekäytössä ja lukittuu uudelleen, kun yksi käynnistys onnistuu."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Jos itse järjestelmä ei enää käynnisty, laite odottaa USB:n (telnet) kautta Androidiin siirtymisen sijaan."
 
 msgid "Hide SIM identifiers"
 msgstr "Piilota SIM-tunnisteet"
@@ -497,6 +542,12 @@ msgstr "%s lukittu taustalla; tila päivittyy pian"
 
 msgid "Lock failed: %s"
 msgstr "Lukitus epäonnistui: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "Verkkolukituksia palautetaan automaattisiksi (SFUN-uudelleenkäynnistys, noin 30 sekuntia)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "Lukitusten nollausta ei vahvistettu ajoissa; vaihdetaan silti."
 
 msgid "Uptime %s"
 msgstr "Käynnissä %s"
@@ -615,6 +666,9 @@ msgstr "Verkossa"
 msgid "AT adapter unavailable"
 msgstr "AT-sovitin ei käytettävissä"
 
+msgid "Linux locked"
+msgstr "Linux lukittu"
+
 msgid "Saved"
 msgstr "Tallennettu"
 
@@ -714,9 +768,6 @@ msgstr "LuCIn omat käännökset tulevat OpenWrt:stä. Tämän paneelin käänn�
 msgid "Automatic"
 msgstr "Automaattinen"
 
-msgid "4G only"
-msgstr "Vain 4G"
-
 msgid "Serving network"
 msgstr "Palveleva verkko"
 
@@ -759,6 +810,15 @@ msgstr "Poista solulukitus"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "Käyttöönotto käynnistää radiopinon uudelleen (SFUN) ja katkaisee matkapuhelinpalvelun hetkeksi. Asetukset tallennetaan, ja laajennus ottaa ne uudelleen käyttöön AT:n ollessa valmis, kun Käytä käynnistyksessä on käytössä. Alustan radiota edeltävä koukku voi ottaa ne käyttöön ilman uudelleenkäynnistystä. Palauta automaattinen tila käyttämällä ilman valittuja kaistoja."
 
+msgid "Back to automatic"
+msgstr "Takaisin automaattiseen"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "Verkkotila ja kaistalukitukset tallentuvat modeemiin ja ovat voimassa myös Androidissa. Jos et ole varma, nollaa ne ennen vaihtoa Androidiin."
+
+msgid "Reset all to automatic"
+msgstr "Palauta kaikki automaattisiksi"
+
 msgid "Apply “%s”?"
 msgstr "Käytetäänkö ”%s”?"
 
@@ -779,9 +839,6 @@ msgstr "Vahvistetaan Käytä käynnistyksessä -asetusta…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "Käynnistetty taustalla: %s (SFUN-uudelleenkäynnistys, noin 30 sekuntia); luetaan tila takaisin…"
-
-msgid "Network mode: %s"
-msgstr "Verkkotila: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "Poista EN-DC käytöstä (NSA-ankkuri)"
@@ -807,14 +864,14 @@ msgstr "Päivitys epäonnistui"
 msgid "NR bands: back to automatic"
 msgstr "NR-kaistat: takaisin automaattiseen"
 
-msgid "NR band lock: %s"
-msgstr "NR-kaistalukitus: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "LTE-kaistat: takaisin automaattiseen"
 
-msgid "LTE band lock: %s"
-msgstr "LTE-kaistalukitus: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "Verkkotila automaattinen, EN-DC päällä, kaikki LTE- ja NR-kaistat, ei solulukitusta. Tallennetut lukitusasetukset poistetaan, joten käynnistyksessä mitään ei oteta uudelleen käyttöön."
+
+msgid "Reset"
+msgstr "Nollaa"
 
 msgid "Remove the %s cell lock"
 msgstr "Poista %s-solulukitus"
@@ -1466,27 +1523,3 @@ msgstr "TTL:ää ei voitu asettaa"
 
 msgid "Unknown TTL operation"
 msgstr "Tuntematon TTL-toiminto"
-
-msgid "Lock Linux"
-msgstr "Lukitse Linux"
-
-msgid "Unlock Linux"
-msgstr "Avaa Linuxin lukitus"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "Viiden peräkkäisen keskeneräisen käynnistyksen jälkeen laite palaa jälleen Androidiin."
-
-msgid "Unlock"
-msgstr "Avaa lukitus"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "Laite ei koskaan vaihda itsestään Androidiin, ei edes epäonnistuneiden käynnistysten jälkeen: Androidiin vain tältä sivulta (Vaihda Androidiin) tai komennolla mu300-next-boot android."
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "Päivityksen tuoma uusi ydin käynnistyy silti ensin koekäytössä ja lukittuu uudelleen, kun yksi käynnistys onnistuu."
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "Jos itse järjestelmä ei enää käynnisty, laite odottaa USB:n (telnet) kautta Androidiin siirtymisen sijaan."
-
-msgid "Linux locked"
-msgstr "Linux lukittu"

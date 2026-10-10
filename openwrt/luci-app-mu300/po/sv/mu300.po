@@ -291,6 +291,24 @@ msgstr "Lägger till USB-adapter…"
 msgid "Add failed: %s"
 msgstr "Tillägg misslyckades: %s"
 
+msgid "4G only"
+msgstr "Endast 4G"
+
+msgid "Network mode: %s"
+msgstr "Nätverksläge: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC av"
+
+msgid "NR band lock: %s"
+msgstr "NR-bandlåsning: %s"
+
+msgid "LTE band lock: %s"
+msgstr "LTE-bandlåsning: %s"
+
+msgid "Cell lock: %s"
+msgstr "Cellås: %s"
+
 msgid "Modulation DL/UL"
 msgstr "Modulering DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "Starta om enheten"
 msgid "Switch to Android"
 msgstr "Byt till Android"
 
+msgid "Lock Linux"
+msgstr "Lås Linux"
+
 msgid "Neighbor cells"
 msgstr "Grannceller"
 
@@ -474,11 +495,35 @@ msgstr "För att återgå till OpenWrt, kör mu300-next-boot linux i Android och
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "Eller gör ingenting: efter fem uppstarter som inte slutförs sker återgången automatiskt."
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "Förbereder Android-uppstart och startar om…"
+
 msgid "Switch and reboot"
 msgstr "Byt och starta om"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "Förbereder Android-uppstart och startar om…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "Inte automatiskt: %s. Nätläge och bandlås sparas i modemet och gäller även i Android; om nätet inte matchar dem visar Android ”Ingen tjänst”."
+
+msgid "Reset locks and switch"
+msgstr "Återställ lås och byt"
+
+msgid "Unlock Linux"
+msgstr "Lås upp Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Efter fem ofullbordade starter i rad faller enheten tillbaka till Android igen."
+
+msgid "Unlock"
+msgstr "Lås upp"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Enheten byter aldrig till Android av sig själv, inte ens efter misslyckade starter: Android bara från den här sidan (Byt till Android) eller med mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "En ny kärna från en uppdatering startar ändå först på prov och låses igen när en start lyckas."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Om själva systemet inte startar längre väntar enheten via USB (telnet) i stället för att gå till Android."
 
 msgid "Hide SIM identifiers"
 msgstr "Dölj SIM-identifierare"
@@ -497,6 +542,12 @@ msgstr "%s låst i bakgrunden; statusen uppdateras strax"
 
 msgid "Lock failed: %s"
 msgstr "Låsning misslyckades: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "Nätverkslåsen återställs till automatiskt (SFUN-omstart, cirka 30 sekunder)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "Återställningen av låsen bekräftades inte i tid; byter ändå."
 
 msgid "Uptime %s"
 msgstr "Drifttid %s"
@@ -615,6 +666,9 @@ msgstr "Online"
 msgid "AT adapter unavailable"
 msgstr "AT-adapter inte tillgänglig"
 
+msgid "Linux locked"
+msgstr "Linux låst"
+
 msgid "Saved"
 msgstr "Sparat"
 
@@ -714,9 +768,6 @@ msgstr "LuCI:s egna översättningar kommer från OpenWrt. Denna panels översä
 msgid "Automatic"
 msgstr "Automatiskt"
 
-msgid "4G only"
-msgstr "Endast 4G"
-
 msgid "Serving network"
 msgstr "Betjänande nät"
 
@@ -759,6 +810,15 @@ msgstr "Lås upp cell"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "Att verkställa startar om radiostacken (SFUN) och avbryter mobiltjänsten kort. Inställningarna sparas och återställs av pluginet när AT är redo, om ”Verkställ vid uppstart” är aktiverat. En pre-radio-hook i plattformen kan återställa dem utan omstart. Verkställ utan valda band för att återgå till automatiskt läge."
 
+msgid "Back to automatic"
+msgstr "Tillbaka till automatiskt"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "Nätläge och bandlås sparas i modemet och gäller även i Android. Om du är osäker, återställ dem innan du byter till Android."
+
+msgid "Reset all to automatic"
+msgstr "Återställ allt till automatiskt"
+
 msgid "Apply “%s”?"
 msgstr "Verkställa ”%s”?"
 
@@ -779,9 +839,6 @@ msgstr "Bekräftar ”Verkställ vid uppstart”…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "Startat i bakgrunden: %s (SFUN-omstart, cirka 30 sekunder); läser tillbaka statusen…"
-
-msgid "Network mode: %s"
-msgstr "Nätverksläge: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "Inaktivera EN-DC (NSA-ankare)"
@@ -807,14 +864,14 @@ msgstr "Uppdateringen misslyckades"
 msgid "NR bands: back to automatic"
 msgstr "NR-band: tillbaka till automatiskt"
 
-msgid "NR band lock: %s"
-msgstr "NR-bandlåsning: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "LTE-band: tillbaka till automatiskt"
 
-msgid "LTE band lock: %s"
-msgstr "LTE-bandlåsning: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "Nätläge automatiskt, EN-DC på, alla LTE- och NR-band, inget cellås. De sparade låsinställningarna rensas, så inget tillämpas igen vid start."
+
+msgid "Reset"
+msgstr "Återställ"
 
 msgid "Remove the %s cell lock"
 msgstr "Ta bort %s-celllåsningen"
@@ -1466,27 +1523,3 @@ msgstr "TTL kunde inte sättas"
 
 msgid "Unknown TTL operation"
 msgstr "Okänd TTL-åtgärd"
-
-msgid "Lock Linux"
-msgstr "Lås Linux"
-
-msgid "Unlock Linux"
-msgstr "Lås upp Linux"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "Efter fem ofullbordade starter i rad faller enheten tillbaka till Android igen."
-
-msgid "Unlock"
-msgstr "Lås upp"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "Enheten byter aldrig till Android av sig själv, inte ens efter misslyckade starter: Android bara från den här sidan (Byt till Android) eller med mu300-next-boot android."
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "En ny kärna från en uppdatering startar ändå först på prov och låses igen när en start lyckas."
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "Om själva systemet inte startar längre väntar enheten via USB (telnet) i stället för att gå till Android."
-
-msgid "Linux locked"
-msgstr "Linux låst"

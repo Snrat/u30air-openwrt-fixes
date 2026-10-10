@@ -291,6 +291,24 @@ msgstr "USB-adapter hozzáadása…"
 msgid "Add failed: %s"
 msgstr "A hozzáadás sikertelen: %s"
 
+msgid "4G only"
+msgstr "Csak 4G"
+
+msgid "Network mode: %s"
+msgstr "Hálózati mód: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC ki"
+
+msgid "NR band lock: %s"
+msgstr "NR-sávzárolás: %s"
+
+msgid "LTE band lock: %s"
+msgstr "LTE-sávzárolás: %s"
+
+msgid "Cell lock: %s"
+msgstr "Cellazár: %s"
+
 msgid "Modulation DL/UL"
 msgstr "Moduláció DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "Eszköz újraindítása"
 msgid "Switch to Android"
 msgstr "Váltás Androidra"
 
+msgid "Lock Linux"
+msgstr "Linux zárolása"
+
 msgid "Neighbor cells"
 msgstr "Szomszédos cellák"
 
@@ -474,11 +495,35 @@ msgstr "Az OpenWrt-hez való visszatéréshez futtassa Androidban a mu300-next-b
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "Vagy ne tegyen semmit: öt be nem fejeződő indítás után automatikusan visszaáll."
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "Android-indítás előkészítése és újraindítás…"
+
 msgid "Switch and reboot"
 msgstr "Váltás és újraindítás"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "Android-indítás előkészítése és újraindítás…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "Nem automatikus: %s. A hálózati mód és a sávzárak a modemben tárolódnak, és Androidon is érvényben maradnak; ha a hálózat nem felel meg nekik, az Android „Nincs szolgáltatás” üzenetet mutat."
+
+msgid "Reset locks and switch"
+msgstr "Zárak visszaállítása és váltás"
+
+msgid "Unlock Linux"
+msgstr "Linux zárolásának feloldása"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Öt egymást követő befejezetlen indítás után az eszköz ismét visszatér az Androidra."
+
+msgid "Unlock"
+msgstr "Feloldás"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Az eszköz soha nem vált magától Androidra, sikertelen indítások után sem: Androidra csak erről az oldalról (Váltás Androidra) vagy a mu300-next-boot android paranccsal."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Egy frissítésből származó új kernel ettől még először próbaindításokkal indul, és újra zárol, amint az egyik sikerül."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Ha maga a rendszer már nem indul el, az eszköz USB-n (telnet) vár ahelyett, hogy Androidra váltana."
 
 msgid "Hide SIM identifiers"
 msgstr "SIM-azonosítók elrejtése"
@@ -497,6 +542,12 @@ msgstr "%s zárolva a háttérben; az állapot hamarosan frissül"
 
 msgid "Lock failed: %s"
 msgstr "A zárolás sikertelen: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "A hálózati zárak visszaállítása automatikusra (SFUN újraindítás, kb. 30 másodperc)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "A zárak visszaállítása nem erősítődött meg időben; a váltás így is megtörténik."
 
 msgid "Uptime %s"
 msgstr "Üzemidő: %s"
@@ -615,6 +666,9 @@ msgstr "Online"
 msgid "AT adapter unavailable"
 msgstr "Az AT-adapter nem érhető el"
 
+msgid "Linux locked"
+msgstr "Linux zárolva"
+
 msgid "Saved"
 msgstr "Mentve"
 
@@ -714,9 +768,6 @@ msgstr "A LuCI saját fordításai az OpenWrt-ből származnak. Ennek a panelnek
 msgid "Automatic"
 msgstr "Automatikus"
 
-msgid "4G only"
-msgstr "Csak 4G"
-
 msgid "Serving network"
 msgstr "Kiszolgáló hálózat"
 
@@ -759,6 +810,15 @@ msgstr "Cellazárolás feloldása"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "Az alkalmazás újraindítja a rádióvermet (SFUN), és rövid időre megszakítja a mobilszolgáltatást. A beállítások mentésre kerülnek, és ha az Alkalmazás indításkor engedélyezve van, a bővítmény újraalkalmazza őket, amint az AT készen áll. Egy rádió előtti platformhook újraindítás nélkül is újraalkalmazhatja őket. Az automatikus mód visszaállításához alkalmazza kiválasztott sávok nélkül."
 
+msgid "Back to automatic"
+msgstr "Vissza automatikusra"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "A hálózati mód és a sávzárak a modemben tárolódnak, és Androidon is érvényben maradnak. Ha nem biztos benne, állítsa vissza őket az Androidra váltás előtt."
+
+msgid "Reset all to automatic"
+msgstr "Minden visszaállítása automatikusra"
+
 msgid "Apply “%s”?"
 msgstr "Alkalmazza: „%s”?"
 
@@ -779,9 +839,6 @@ msgstr "Az indításkori alkalmazás megerősítése…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "Elindítva a háttérben: %s (SFUN-újraindítás, kb. 30 másodperc); az állapot visszaolvasása…"
-
-msgid "Network mode: %s"
-msgstr "Hálózati mód: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "EN-DC letiltása (NSA-horgony)"
@@ -807,14 +864,14 @@ msgstr "A frissítés sikertelen"
 msgid "NR bands: back to automatic"
 msgstr "NR-sávok: vissza automatikusra"
 
-msgid "NR band lock: %s"
-msgstr "NR-sávzárolás: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "LTE-sávok: vissza automatikusra"
 
-msgid "LTE band lock: %s"
-msgstr "LTE-sávzárolás: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "Hálózati mód automatikus, EN-DC be, minden LTE- és NR-sáv, nincs cellazár. A mentett zárbeállítások törlődnek, így indításkor semmi nem kerül újra alkalmazásra."
+
+msgid "Reset"
+msgstr "Visszaállítás"
 
 msgid "Remove the %s cell lock"
 msgstr "A(z) %s cellazárolás eltávolítása"
@@ -1466,27 +1523,3 @@ msgstr "A TTL nem állítható be"
 
 msgid "Unknown TTL operation"
 msgstr "Ismeretlen TTL-művelet"
-
-msgid "Lock Linux"
-msgstr "Linux zárolása"
-
-msgid "Unlock Linux"
-msgstr "Linux zárolásának feloldása"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "Öt egymást követő befejezetlen indítás után az eszköz ismét visszatér az Androidra."
-
-msgid "Unlock"
-msgstr "Feloldás"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "Az eszköz soha nem vált magától Androidra, sikertelen indítások után sem: Androidra csak erről az oldalról (Váltás Androidra) vagy a mu300-next-boot android paranccsal."
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "Egy frissítésből származó új kernel ettől még először próbaindításokkal indul, és újra zárol, amint az egyik sikerül."
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "Ha maga a rendszer már nem indul el, az eszköz USB-n (telnet) vár ahelyett, hogy Androidra váltana."
-
-msgid "Linux locked"
-msgstr "Linux zárolva"

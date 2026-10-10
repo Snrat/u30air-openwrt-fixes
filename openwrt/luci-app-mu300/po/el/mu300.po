@@ -291,6 +291,24 @@ msgstr "Προσθήκη προσαρμογέα USB…"
 msgid "Add failed: %s"
 msgstr "Η προσθήκη απέτυχε: %s"
 
+msgid "4G only"
+msgstr "Μόνο 4G"
+
+msgid "Network mode: %s"
+msgstr "Λειτουργία δικτύου: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC ανενεργό"
+
+msgid "NR band lock: %s"
+msgstr "Κλείδωμα ζωνών NR: %s"
+
+msgid "LTE band lock: %s"
+msgstr "Κλείδωμα ζωνών LTE: %s"
+
+msgid "Cell lock: %s"
+msgstr "Κλείδωμα κυψέλης: %s"
+
 msgid "Modulation DL/UL"
 msgstr "Διαμόρφωση DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "Επανεκκίνηση συσκευής"
 msgid "Switch to Android"
 msgstr "Μετάβαση σε Android"
 
+msgid "Lock Linux"
+msgstr "Κλείδωμα Linux"
+
 msgid "Neighbor cells"
 msgstr "Γειτονικές κυψέλες"
 
@@ -474,11 +495,35 @@ msgstr "Για επιστροφή στο OpenWrt, εκτελέστε mu300-next-
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "Ή μην κάνετε τίποτα: μετά από πέντε εκκινήσεις που δεν ολοκληρώνονται, επιστρέφει αυτόματα."
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "Προετοιμασία εκκίνησης Android και επανεκκίνηση…"
+
 msgid "Switch and reboot"
 msgstr "Αλλαγή και επανεκκίνηση"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "Προετοιμασία εκκίνησης Android και επανεκκίνηση…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "Όχι αυτόματο: %s. Η λειτουργία δικτύου και τα κλειδώματα ζωνών αποθηκεύονται στο μόντεμ και ισχύουν και στο Android· αν το δίκτυο δεν ταιριάζει, το Android δείχνει «Καμία υπηρεσία»."
+
+msgid "Reset locks and switch"
+msgstr "Επαναφορά κλειδωμάτων και εναλλαγή"
+
+msgid "Unlock Linux"
+msgstr "Ξεκλείδωμα Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Μετά από πέντε συνεχόμενες ημιτελείς εκκινήσεις, η συσκευή επιστρέφει ξανά στο Android."
+
+msgid "Unlock"
+msgstr "Ξεκλείδωμα"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Η συσκευή δεν θα μεταβεί ποτέ μόνη της στο Android, ούτε μετά από αποτυχημένες εκκινήσεις: στο Android μόνο από αυτή τη σελίδα (Μετάβαση σε Android) ή με mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Ένας νέος πυρήνας από ενημέρωση εξακολουθεί να κάνει τις πρώτες εκκινήσεις δοκιμαστικά και κλειδώνει ξανά μόλις μία πετύχει."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Αν το ίδιο το σύστημα δεν ξεκινά πλέον, η συσκευή περιμένει μέσω USB (telnet) αντί να μεταβεί στο Android."
 
 msgid "Hide SIM identifiers"
 msgstr "Απόκρυψη αναγνωριστικών SIM"
@@ -497,6 +542,12 @@ msgstr "Το %s κλειδώθηκε στο παρασκήνιο· η κατάσ
 
 msgid "Lock failed: %s"
 msgstr "Το κλείδωμα απέτυχε: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "Επαναφορά των κλειδωμάτων δικτύου σε αυτόματο (επανεκκίνηση SFUN, περίπου 30 δευτερόλεπτα)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "Η επαναφορά των κλειδωμάτων δεν επιβεβαιώθηκε εγκαίρως· γίνεται εναλλαγή ούτως ή άλλως."
 
 msgid "Uptime %s"
 msgstr "Χρόνος λειτουργίας %s"
@@ -615,6 +666,9 @@ msgstr "Σε σύνδεση"
 msgid "AT adapter unavailable"
 msgstr "Ο προσαρμογέας AT δεν είναι διαθέσιμος"
 
+msgid "Linux locked"
+msgstr "Το Linux κλειδώθηκε"
+
 msgid "Saved"
 msgstr "Αποθηκεύτηκε"
 
@@ -714,9 +768,6 @@ msgstr "Οι μεταφράσεις του ίδιου του LuCI προέρχο
 msgid "Automatic"
 msgstr "Αυτόματο"
 
-msgid "4G only"
-msgstr "Μόνο 4G"
-
 msgid "Serving network"
 msgstr "Δίκτυο εξυπηρέτησης"
 
@@ -759,6 +810,15 @@ msgstr "Ξεκλείδωμα κυψέλης"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "Η εφαρμογή επανεκκινεί τη στοίβα ραδιοφώνου (SFUN) και διακόπτει για λίγο την υπηρεσία κινητού δικτύου. Οι ρυθμίσεις αποθηκεύονται και εφαρμόζονται ξανά από το πρόσθετο όταν το AT είναι έτοιμο, εφόσον είναι ενεργή η Εφαρμογή κατά την εκκίνηση. Ένα hook πλατφόρμας πριν από το ραδιόφωνο μπορεί να τις εφαρμόσει χωρίς επανεκκίνηση. Εφαρμόστε χωρίς επιλεγμένες ζώνες για επαναφορά της αυτόματης λειτουργίας."
 
+msgid "Back to automatic"
+msgstr "Επιστροφή σε αυτόματο"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "Η λειτουργία δικτύου και τα κλειδώματα ζωνών αποθηκεύονται στο μόντεμ και ισχύουν και στο Android. Αν δεν είστε σίγουροι, επαναφέρετέ τα πριν μεταβείτε στο Android."
+
+msgid "Reset all to automatic"
+msgstr "Επαναφορά όλων σε αυτόματο"
+
 msgid "Apply “%s”?"
 msgstr "Εφαρμογή «%s»;"
 
@@ -779,9 +839,6 @@ msgstr "Επιβεβαίωση εφαρμογής κατά την εκκίνησ
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "Ξεκίνησε στο παρασκήνιο: %s (επανεκκίνηση SFUN, περίπου 30 δευτερόλεπτα)· ανάγνωση της κατάστασης…"
-
-msgid "Network mode: %s"
-msgstr "Λειτουργία δικτύου: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "Απενεργοποίηση EN-DC (άγκυρα NSA)"
@@ -807,14 +864,14 @@ msgstr "Η ανανέωση απέτυχε"
 msgid "NR bands: back to automatic"
 msgstr "Ζώνες NR: επιστροφή σε αυτόματο"
 
-msgid "NR band lock: %s"
-msgstr "Κλείδωμα ζωνών NR: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "Ζώνες LTE: επιστροφή σε αυτόματο"
 
-msgid "LTE band lock: %s"
-msgstr "Κλείδωμα ζωνών LTE: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "Λειτουργία δικτύου αυτόματη, EN-DC ενεργό, όλες οι ζώνες LTE και NR, χωρίς κλείδωμα κυψέλης. Οι αποθηκευμένες ρυθμίσεις διαγράφονται, οπότε τίποτα δεν εφαρμόζεται ξανά στην εκκίνηση."
+
+msgid "Reset"
+msgstr "Επαναφορά"
 
 msgid "Remove the %s cell lock"
 msgstr "Αφαίρεση κλειδώματος κυψέλης %s"
@@ -1466,27 +1523,3 @@ msgstr "Δεν ήταν δυνατός ο ορισμός του TTL"
 
 msgid "Unknown TTL operation"
 msgstr "Άγνωστη λειτουργία TTL"
-
-msgid "Lock Linux"
-msgstr "Κλείδωμα Linux"
-
-msgid "Unlock Linux"
-msgstr "Ξεκλείδωμα Linux"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "Μετά από πέντε συνεχόμενες ημιτελείς εκκινήσεις, η συσκευή επιστρέφει ξανά στο Android."
-
-msgid "Unlock"
-msgstr "Ξεκλείδωμα"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "Η συσκευή δεν θα μεταβεί ποτέ μόνη της στο Android, ούτε μετά από αποτυχημένες εκκινήσεις: στο Android μόνο από αυτή τη σελίδα (Μετάβαση σε Android) ή με mu300-next-boot android."
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "Ένας νέος πυρήνας από ενημέρωση εξακολουθεί να κάνει τις πρώτες εκκινήσεις δοκιμαστικά και κλειδώνει ξανά μόλις μία πετύχει."
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "Αν το ίδιο το σύστημα δεν ξεκινά πλέον, η συσκευή περιμένει μέσω USB (telnet) αντί να μεταβεί στο Android."
-
-msgid "Linux locked"
-msgstr "Το Linux κλειδώθηκε"
