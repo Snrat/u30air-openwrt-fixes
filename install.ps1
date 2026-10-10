@@ -528,6 +528,19 @@ function InstallEnvText($v) {
         "INTERNAL_EXISTS=$($v.INTERNAL_EXISTS)", "PWHASH='$($v.PWHASH)'")
     return (($lines -join "`n") + "`n")
 }
+# VpnOnSystems: the systems among $oses of the Linux filesystem already on the device whose VPN is on (ENABLE=1 in
+# etc/mu300/vpn.conf), as "os:ks" when its kill switch is on too - decided on the device by the images'
+# lib/vpn-orphan.sh, pushed along - through a read-only mount taken down again at once (as install.sh's vpn_on_systems).
+# The VPN is a module the new systems do not carry: it is then offered by default, and with the kill switch needed.
+function VpnOnSystems($oses, $existing, $sdMode, $sdDev, $off, $size) {
+    if ($existing -ne 'yes') { return @() }
+    $envs = if ($sdMode -eq 1) { "MU300_SD_DEV=$sdDev" } else { "MU300_OFF=$off MU300_SIZE=$size" }
+    if (-not (PushUnix "$Top\tools\android-mount-mu300root.sh" "$T/android-mount-mu300root.sh")) { return @() }
+    if (-not (PushUnix "$Top\rootfs\overlay\opt\mu300\lib\vpn-orphan.sh" "$T/vpn-orphan.sh")) { return @() }
+    $out = SuDo "$envs MU300_RO=1 sh $T/android-mount-mu300root.sh $T/mu300probe >/dev/null 2>&1 && { . $T/vpn-orphan.sh; for o in $(@($oses) -join ' '); do if vpn_killswitch_wanted $T/mu300probe/`$o; then echo `$o:ks; else case `$(vpn_conf_value $T/mu300probe/`$o/etc/mu300/vpn.conf ENABLE) in 1) echo `$o ;; esac; fi; done; sh $T/android-mount-mu300root.sh -u $T/mu300probe >/dev/null 2>&1; }; true"
+    return @(([string]$out -split "`n") | ForEach-Object { $_.Trim() } | Where-Object { @($oses) -contains ($_ -replace ':ks$', '') })
+}
+function VpnDefault($on) { if (@($on).Count -gt 0) { 'yes' } else { 'no' } }
 function SdExisting {
     $m = (SuDo "dd if=$SD_DEV bs=1 skip=1080 count=2 2>/dev/null | od -An -tx1") -replace '\s', ''
     $l = (SuDo "dd if=$SD_DEV bs=1 skip=1144 count=16 2>/dev/null") -replace '\0', ''
@@ -726,7 +739,17 @@ $gpu = Ask (T 'Include the Mali GPU (OpenCL) userspace (~90 MiB)? (yes/no)') 'ye
 # extra) only when wanted
 Write-Host ('  ' + (T 'The VPN (mu300-vpn, with Xray and sing-box) is a module of its own: {1}. It can also be added later on the device:' 'https://github.com/dikeckaan/mu300-linux-vpn'))
 Write-Host '    sudo mu300-extra install vpn'
-$vx = Ask (T 'Install the VPN module (about 40 MB more to download, 120 MB on the device)? (yes/no)') 'no'
+# a system being replaced whose VPN is on keeps it only with the module: then it is the default
+$vpnOn = @(VpnOnSystems $OSES $existing $SD_MODE $SD_DEV $OFF $SIZE)
+$vpnKs = @($vpnOn | Where-Object { $_ -match ':ks$' } | ForEach-Object { $_ -replace ':ks$', '' })
+if ($vpnOn.Count -gt 0) {
+    Write-Host ('  ' + (T 'The VPN is on in the system being replaced ({1}): without the module it stays off after the installation.' (($vpnOn | ForEach-Object { $_ -replace ':ks$', '' }) -join ' ')))
+}
+$vx = Ask (T 'Install the VPN module (about 40 MB more to download, 120 MB on the device)? (yes/no)') (VpnDefault $vpnOn)
+# its kill switch on too: without the module nothing would enforce it (android-install.sh refuses the same, later)
+if ($vx -ne 'yes' -and $vpnKs.Count -gt 0) {
+    Die (T 'The VPN is on with its kill switch in {1}: an update without the VPN module would leave it to nothing. Answer yes to install the module, or turn the VPN off there first (ENABLE=0 in /etc/mu300/vpn.conf).' ($vpnKs -join ' '))
+}
 $EXTRA_VPN = $null
 $KERNEL = $null
 Say (T 'Which kernel?')

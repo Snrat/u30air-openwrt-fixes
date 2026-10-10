@@ -171,3 +171,17 @@ region_dirty() {
     while [ $i -lt 16 ]; do probe="$probe $(( OFF / 1048576 + i * step ))"; i=$((i + 1)); done
     DIRTY=$(su_do "n=0; for s in $probe; do c=\$(dd if=/dev/block/mmcblk0 bs=1048576 skip=\$s count=1 2>/dev/null | tr -d \"\\000\\377\" | wc -c); [ \$c -gt 0 ] && n=\$((n + 1)); done; echo \$n")
 }
+
+# vpn_on_systems "OS...": the systems among OS... of the Linux filesystem already on the device whose VPN is on
+# (ENABLE=1 in etc/mu300/vpn.conf), one per line, as "OS:ks" when its kill switch is on too (the images'
+# lib/vpn-orphan.sh decides, pushed along and sourced on the device - it reads with sed, never sources a setting).
+# Read through a read-only mount (android-mount-mu300root.sh with MU300_RO=1: not even the journal is replayed),
+# taken down again at once. Nothing there, or nothing that mounts: nothing printed. The VPN is a module the new
+# systems do not carry: the installer then offers it by default, and with the kill switch on it is needed.
+vpn_on_systems() {
+    [ "$existing" = yes ] || return 0
+    _env="MU300_OFF=$OFF MU300_SIZE=$SIZE"
+    [ "$SD_MODE" = 1 ] && _env="MU300_SD_DEV=$SD_DEV"
+    adb push "$TOP/tools/android-mount-mu300root.sh" "$TOP/rootfs/overlay/opt/mu300/lib/vpn-orphan.sh" $T/ >/dev/null 2>&1 || return 0
+    su_do "$_env MU300_RO=1 sh $T/android-mount-mu300root.sh $T/mu300probe >/dev/null 2>&1 && { . $T/vpn-orphan.sh; for o in $1; do if vpn_killswitch_wanted $T/mu300probe/\$o; then echo \$o:ks; elif [ \"\$(vpn_conf_value $T/mu300probe/\$o/etc/mu300/vpn.conf ENABLE)\" = 1 ]; then echo \$o; fi; done; sh $T/android-mount-mu300root.sh -u $T/mu300probe >/dev/null 2>&1; }; true"
+}

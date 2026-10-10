@@ -210,8 +210,39 @@ extra_keep_vpn() {  # extra_keep_vpn DISK OLDROOT: the system being replaced use
     say "WARNING: the VPN was on in the previous system, and the VPN module is not installed: the VPN stays off"
     say "  until it is: on the device, sudo mu300-extra install vpn (github.com/dikeckaan/mu300-linux-vpn)"
 }
+# vpn_killswitch_wanted ROOT: the VPN on with its kill switch in the system at ROOT - a copy of the images'
+# lib/vpn-orphan.sh (tests/test_vpn_hooks.py holds the copies to one matrix): ENABLE from vpn.conf, KILL_SWITCH from
+# the store's settings when the store is in use, else vpn.conf; only 0 is off. Read with sed, never sourced.
+vpn_conf_value() {
+    [ -r "$1" ] || return 0
+    sed -n "s/^$2=//p" "$1" 2>/dev/null | tail -n1 | sed "s/[[:space:]]#.*//; s/[\"' ]//g"
+}
+vpn_killswitch_wanted() {
+    [ "$(vpn_conf_value "${1:-}/etc/mu300/vpn.conf" ENABLE)" = 1 ] || return 1
+    if [ -d "${1:-}/etc/mu300/vpn/profiles" ] && [ -r "${1:-}/etc/mu300/vpn/settings" ]; then
+        _vks=$(vpn_conf_value "${1:-}/etc/mu300/vpn/settings" KILL_SWITCH)
+    else
+        _vks=$(vpn_conf_value "${1:-}/etc/mu300/vpn.conf" KILL_SWITCH)
+    fi
+    [ "$_vks" != 0 ]
+}
+extra_vpn_precheck() {  # extra_vpn_precheck DISK: before any system is replaced. An update over a system whose VPN is
+    # on with its kill switch needs the VPN module (the new images have no mu300-vpn): without it the kill switch
+    # would be left to nothing, so nothing is changed, as mu300-update apply does. Kill switch off: a warning later.
+    [ "${UPDATE:-0}" = 1 ] || return 0
+    [ ! -f "$1/extra/vpn/bin/mu300-vpn" ] || return 0
+    for o in $OSES; do
+        [ -d "$1/$o" ] && vpn_killswitch_wanted "$1/$o" || continue
+        say "the VPN is on with its kill switch in the $o being replaced, and the VPN module is not installed: nothing was changed"
+        say "  answer yes to the installer's VPN question (or set MU300_VPN_MODULE=FILE), install it on the device first"
+        say "  (sudo mu300-extra install vpn), or turn the VPN off there first (ENABLE=0 in /etc/mu300/vpn.conf)"
+        exit 1
+    done
+    return 0
+}
 # --- extra end
 extra_from_push $M
+extra_vpn_precheck $M
 
 ssid=; psk=
 if [ "$IMPORT_HOTSPOT" = 1 ]; then

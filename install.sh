@@ -421,7 +421,18 @@ ask gpu "$(t 'Include the Mali GPU (OpenCL) userspace (~90 MiB)? (yes/no)')" yes
 # extra) only when wanted
 echo "  $(t 'The VPN (mu300-vpn, with Xray and sing-box) is a module of its own: {1}. It can also be added later on the device:' https://github.com/dikeckaan/mu300-linux-vpn)"
 echo "    sudo mu300-extra install vpn"
-ask vx "$(t 'Install the VPN module (about 40 MB more to download, 120 MB on the device)? (yes/no)')" no
+# a system being replaced whose VPN is on keeps it only with the module: then it is the default
+vx_default=no
+vpn_on=$(vpn_on_systems "$OSES" | tr -d '\r' | tr '\n' ' ')
+vpn_ks=$(for v in $vpn_on; do case $v in (*:ks) printf '%s ' "${v%:ks}" ;; esac; done)
+vpn_on=$(echo $vpn_on | sed 's/:ks//g')
+if [ -n "$vpn_on" ]; then
+    echo "  $(t 'The VPN is on in the system being replaced ({1}): without the module it stays off after the installation.' "$vpn_on")"
+    vx_default=yes
+fi
+ask vx "$(t 'Install the VPN module (about 40 MB more to download, 120 MB on the device)? (yes/no)')" $vx_default
+# its kill switch on too: without the module nothing would enforce it (android-install.sh refuses the same, later)
+[ "$vx" = yes ] || [ -z "$vpn_ks" ] || die "$(t 'The VPN is on with its kill switch in {1}: an update without the VPN module would leave it to nothing. Answer yes to install the module, or turn the VPN off there first (ENABLE=0 in /etc/mu300/vpn.conf).' "${vpn_ks% }")"
 EXTRA_VPN=
 KERNEL=5.4
 if [ $MODE = prebuilt ]; then

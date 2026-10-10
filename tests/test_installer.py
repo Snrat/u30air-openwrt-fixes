@@ -674,3 +674,82 @@ class VpnModule(ShellTest):
             self.assertIn('DIE', self.run_fetch(shell, MU300_VPN_MODULE=copy / 'mu300-linux-vpn.tar.gz').stdout)
             (copy / 'SHA256SUMS').unlink()
             self.assertIn('DIE', self.run_fetch(shell, MU300_VPN_MODULE=copy / 'nosuch.tar.gz').stdout)
+
+
+class VpnOnInTheReplacedSystem(ShellTest):
+    """install.sh over an installation whose VPN is on: tools/storage.sh's vpn_on_systems finds it through a read-only
+    mount (":ks" when its kill switch is on too), the VPN question's default becomes yes (no otherwise), and "no" with
+    the kill switch on is refused before anything is written"""
+
+    def run_probe(self, shell, existing='yes', on=('ubuntu',), ks=(), sd_mode=0, oses='ubuntu openwrt'):
+        # su_do: the device side - its command line is recorded, and run against a fake mounted filesystem with the
+        # images' lib/vpn-orphan.sh (pushed to /data/local/tmp/ on the device)
+        root = self.tmp / 'probe'
+        for o in ('ubuntu', 'openwrt'):
+            (root / o / 'etc/mu300').mkdir(parents=True, exist_ok=True)
+            (root / o / 'etc/mu300/vpn.conf').write_text(f'ENABLE={1 if o in on else 0}\nKILL_SWITCH={1 if o in ks else 0}\n')
+        lib = TOP / 'rootfs/overlay/opt/mu300/lib/vpn-orphan.sh'
+        self.stub('adb', 'echo "adb $*" >> "$STUBLOG/calls"')
+        code = (f'TOP="{TOP}"; . "$TOP/tools/i18n.sh"; MU300_LANG=en; T=/data/local/tmp; '
+                'say() { :; }; die() { echo "DIE $*"; exit 1; }; '
+                f'su_do() {{ echo "$1" > "{self.tmp}/su"; '
+                f'eval "$(printf "%s" "$1" | sed "s|^.*&& {{|{{|; s|/data/local/tmp/vpn-orphan.sh|{lib}|; '
+                f's|/data/local/tmp/mu300probe|{root}|g; s|sh /data/local/tmp/android-mount-mu300root.sh -u [^;]*;||")"; }}; '
+                f'existing={existing}; OFF=123; SIZE=456; SD_MODE={sd_mode}; SD_DEV=/dev/block/mmcblk1p1; OSES="{oses}"; '
+                '. "$TOP/tools/storage.sh"; echo "probe=[$(vpn_on_systems "$OSES" | tr "\\n" " ")]"')
+        return self.sh(shell, code)
+
+    def test_the_probe(self):
+        for shell in self.each_shell():
+            for on, ks, want in ((('ubuntu',), (), 'probe=[ubuntu ]'), ((), (), 'probe=[]'),
+                                 (('ubuntu', 'openwrt'), ('openwrt',), 'probe=[ubuntu openwrt:ks ]')):
+                r = self.run_probe(shell, on=on, ks=ks)
+                self.assertIn(want, r.stdout, (on, ks, r.stderr))
+                su = (self.tmp / 'su').read_text()
+                self.assertIn('MU300_OFF=123 MU300_SIZE=456 MU300_RO=1 sh /data/local/tmp/android-mount-mu300root.sh', su)
+                self.assertIn('. /data/local/tmp/vpn-orphan.sh', su)
+                self.assertIn('android-mount-mu300root.sh -u /data/local/tmp/mu300probe', su)
+                self.assertNotIn("'", su)                       # su_do wraps the command in single quotes
+            self.assertIn('vpn-orphan.sh', (self.tmp / 'calls').read_text())     # pushed along
+            # only the systems being installed count
+            self.assertIn('probe=[]', self.run_probe(shell, on=('openwrt',), oses='ubuntu').stdout)
+
+    def test_the_card_and_no_installation(self):
+        for shell in self.each_shell():
+            self.run_probe(shell, sd_mode=1)
+            self.assertIn('MU300_SD_DEV=/dev/block/mmcblk1p1 MU300_RO=1', (self.tmp / 'su').read_text())
+            (self.tmp / 'su').unlink()
+            self.assertIn('probe=[]', self.run_probe(shell, existing='no').stdout)
+            self.assertFalse((self.tmp / 'su').exists())          # nothing to look at: nothing mounted
+
+    def question(self, shell, probe, answer):
+        src = (TOP / 'install.sh').read_text()
+        block = src[src.index('vx_default=no\n'):src.index('\nKERNEL=5.4\n')]
+        block = block[:block.index('\nEXTRA_VPN=')]
+        code = (f'TOP="{TOP}"; . "$TOP/tools/i18n.sh"; MU300_LANG=en; OSES="ubuntu openwrt"; '
+                'die() { echo "DIE $*"; exit 1; }; '
+                f'vpn_on_systems() {{ printf "%s" "{probe}" | tr " " "\\n"; }}; '
+                'ask() { printf "ASKED[%s] " "$3"; read -r _a; [ -n "$_a" ] || _a=$3; eval "$1=\\$_a"; }\n'
+                + block + '\necho "vx=$vx"')
+        return self.sh(shell, code, stdin=answer + '\n').stdout
+
+    def test_both_defaults(self):
+        for shell in self.each_shell():
+            out = self.question(shell, '', '')
+            self.assertIn('ASKED[no]', out)
+            self.assertIn('vx=no', out)
+            self.assertNotIn('The VPN is on', out)
+            out = self.question(shell, 'ubuntu', '')
+            self.assertIn('The VPN is on in the system being replaced (ubuntu)', out)
+            self.assertIn('ASKED[yes]', out)
+            self.assertIn('vx=yes', out)
+            # kill switch off: "no" stays possible
+            self.assertIn('vx=no', self.question(shell, 'ubuntu', 'no'))
+
+    def test_no_with_the_kill_switch_on_is_refused(self):
+        for shell in self.each_shell():
+            out = self.question(shell, 'ubuntu openwrt:ks', 'no')
+            self.assertIn('The VPN is on in the system being replaced (ubuntu openwrt)', out)
+            self.assertIn('DIE The VPN is on with its kill switch in openwrt', out)
+            self.assertNotIn('vx=', out)
+            self.assertIn('vx=yes', self.question(shell, 'openwrt:ks', ''))

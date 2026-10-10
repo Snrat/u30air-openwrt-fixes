@@ -479,7 +479,9 @@ OpenWrt share one copy; installing it links it into every installed system, and 
 `mu300-update apply` brings it to its latest release, and a device that uses the VPN is never updated without it:
 offline, the update stops before it changes anything and says how to stage the module
 (`mu300-linux-vpn.tar.gz` and its `SHA256SUMS` in `/mnt/mu300-disk/.mu300-update/vpn/`, or
-`MU300_VPN_MODULE=FILE mu300-update apply`). An older vpn extra (the engines alone) is replaced by the module.
+`MU300_VPN_MODULE=FILE mu300-update apply`). An older vpn extra (the engines alone) is replaced by the module. A
+system whose VPN is on with its kill switch and has lost the module fails closed: mobile data and the Wi-Fi client stay
+down until it is installed again (`mu300-extra install vpn`) or the VPN is turned off.
 
 ### Languages
 

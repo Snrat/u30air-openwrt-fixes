@@ -115,6 +115,28 @@ prefers the vpn extra's bin.
 * The host installers push the module as `mu300-extra-vpn.tar.gz` (android-install.sh takes a `name` extra or one
   with `VERSION` and, for vpn, `bin/mu300-vpn` and the hooks); the systems link it at their first boot.
 * `mu300-extra adopt` is gone (it answers "nothing to adopt" with status 1): the module carries its engines.
+* **Fail closed when the kill switch is orphaned.** `rootfs/overlay/opt/mu300/lib/vpn-orphan.sh` (sourced, POSIX,
+  read with sed, nothing sourced): `vpn_killswitch_orphaned CMD [ROOT]` is true when CMD (`mu300-vpn`) is not
+  executable and the VPN is wanted with its kill switch - `ENABLE` from `vpn.conf` (the last line, quotes and a
+  trailing comment dropped; only 1 is on), `KILL_SWITCH` from `etc/mu300/vpn/settings` when the store is in use (a
+  `profiles` directory and a readable settings file), else from `vpn.conf`; only 0 is off. Then `mobile-data up`
+  keeps the bearer down, `wifi-client connect`/`up` joins nothing and shares nothing, each saying "the VPN's kill
+  switch is on but the VPN module is missing ... (mu300-extra install vpn, or turn the kill switch off)";
+  `dashboard-info` reports `vpn.orphaned`, and the toolkit's VPN page says so and offers the install.
+  `mu300-update` and `tools/android-install.sh` carry the same two functions (they run where the file is not
+  installed); a test holds the copies equal.
+* **Updates and reinstalls over a kill switch.** `mu300-update apply` refuses before switching anything when the
+  module cannot be had or fails its checks; a system the hook could not link after the switch gets a loud warning
+  and fails closed by itself (above). A reinstall from a computer: the installers look at the systems being
+  replaced through a read-only mount; the VPN question defaults to yes when one has its VPN on, and "no" is refused
+  when its kill switch is on too. `android-install.sh` refuses the same on its own (UPDATE=1, no module pushed or
+  installed) before any system is replaced; with the kill switch off it only warns.
+
+Known limitations (accepted 2026-10-09):
+* The installed module's hash (`.vpn.sha256`) is written only by `mu300-extra install` and `mu300-update apply`: a
+  module pushed by an installer or installed with `MU300_EXTRA_FILE` is downloaded once more at the next update.
+* With the VPN on and its kill switch off, a system without the module joins and brings up mobile data in the clear:
+  the VPN simply is not running there (it was the user's choice to allow traffic outside the tunnel).
 
 ## mu300-linux-vpn side
 

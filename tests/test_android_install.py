@@ -333,7 +333,41 @@ class Extras(ShellTest):
                 self.assertIn('rc=0', r.stdout, r.stderr)
                 self.assertEqual('mu300-extra install vpn' in r.stdout, warned, (enable, module))
 
+    def test_an_update_over_a_kill_switch_without_the_module_is_refused(self):
+        # the VPN on with its kill switch in a system being replaced, and no module pushed or installed: nothing is
+        # changed (as mu300-update apply); with the kill switch off, or with the module, it goes on
+        from test_extra import module_tarball
+        old = self.m / 'ubuntu'
+        for shell in self.each_shell():
+            for conf, module, update, refused in (('ENABLE=1\nKILL_SWITCH=1\n', False, '1', True),
+                                                  ('ENABLE=1\n', False, '1', True),          # default: on
+                                                  ("ENABLE='1'\nKILL_SWITCH='1'\n", False, '1', True),
+                                                  ('ENABLE=1\nKILL_SWITCH=0\n', False, '1', False),
+                                                  ('ENABLE=0\nKILL_SWITCH=1\n', False, '1', False),
+                                                  ('ENABLE=1\nKILL_SWITCH=1\n', True, '1', False),
+                                                  ('ENABLE=1\nKILL_SWITCH=1\n', False, '0', False)):   # a fresh install
+                shutil.rmtree(self.m / 'extra', ignore_errors=True)
+                if module:
+                    module_tarball(self.tmp / 'mu300-extra-vpn.tar.gz')
+                    self.run_fn(shell, 'extra_from_push $M')
+                (old / 'etc/mu300/vpn.conf').write_text(conf)
+                code = (f'set -e\nsay() {{ echo "[device] $*"; }}\nT="{self.tmp}"\nM="{self.m}"\nOSES="ubuntu openwrt"\n'
+                        f'UPDATE={update}\n' + self.fn + '\nextra_vpn_precheck $M\necho "rc=$?"')
+                r = self.sh(shell, code)
+                if refused:
+                    self.assertNotEqual(r.returncode, 0, (conf, module, update))
+                    self.assertNotIn('rc=0', r.stdout)
+                    self.assertIn('kill switch in the ubuntu being replaced', r.stdout)
+                    self.assertIn('nothing was changed', r.stdout)
+                    self.assertIn('MU300_VPN_MODULE', r.stdout)
+                    self.assertIn('ENABLE=0', r.stdout)
+                else:
+                    self.assertIn('rc=0', r.stdout, (conf, module, update, r.stderr))
+
     def test_order_in_the_install(self):
+        self.assertIn('\nextra_from_push $M\nextra_vpn_precheck $M\n', SRC)
+        # refused before anything is replaced: the systems come after
+        self.assertLess(SRC.index('\nextra_vpn_precheck $M\n'), SRC.index('rm -rf $M/$os && mv $M/$os.new $M/$os'))
         self.assertIn('\nextra_from_push $M\n', SRC)
         # the previous system is looked at before it is removed
         self.assertLess(SRC.index('extra_keep_vpn $M $M/$os'), SRC.index('rm -rf $M/$os && mv $M/$os.new $M/$os'))
