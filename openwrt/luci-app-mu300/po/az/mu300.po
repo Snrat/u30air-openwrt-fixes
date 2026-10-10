@@ -291,6 +291,24 @@ msgstr "USB adapter əlavə edilir…"
 msgid "Add failed: %s"
 msgstr "Əlavə etmə uğursuz oldu: %s"
 
+msgid "4G only"
+msgstr "Yalnız 4G"
+
+msgid "Network mode: %s"
+msgstr "Şəbəkə rejimi: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC söndürülüb"
+
+msgid "NR band lock: %s"
+msgstr "NR diapazon kilidi: %s"
+
+msgid "LTE band lock: %s"
+msgstr "LTE diapazon kilidi: %s"
+
+msgid "Cell lock: %s"
+msgstr "Hüceyrə kilidi: %s"
+
 msgid "Modulation DL/UL"
 msgstr "Modulyasiya DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "Cihazı yenidən başlat"
 msgid "Switch to Android"
 msgstr "Android-ə keç"
 
+msgid "Lock Linux"
+msgstr "Linux-u kilidlə"
+
 msgid "Neighbor cells"
 msgstr "Qonşu hüceyrələr"
 
@@ -474,11 +495,35 @@ msgstr "OpenWrt-yə qayıtmaq üçün Android-də mu300-next-boot linux icra edi
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "Və ya heç nə etməyin: tamamlanmayan beş açılışdan sonra avtomatik geri qayıdır."
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "Android açılışı hazırlanır və yenidən başladılır…"
+
 msgid "Switch and reboot"
 msgstr "Keç və yenidən başlat"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "Android açılışı hazırlanır və yenidən başladılır…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "Avtomatik deyil: %s. Şəbəkə rejimi və diapazon kilidləri modemdə saxlanılır və Android-də də qüvvədə qalır; şəbəkə onlara uyğun gəlmirsə, Android \"Xidmət yoxdur\" göstərir."
+
+msgid "Reset locks and switch"
+msgstr "Kilidləri sıfırla və keç"
+
+msgid "Unlock Linux"
+msgstr "Linux kilidini aç"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Ardıcıl beş tamamlanmamış açılışdan sonra cihaz yenidən Android-ə qayıdır."
+
+msgid "Unlock"
+msgstr "Kilidi aç"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Cihaz uğursuz açılışlardan sonra belə heç vaxt özbaşına Android-ə keçməyəcək: Android-ə yalnız bu səhifədən (Android-ə keç) və ya mu300-next-boot android ilə keçilir."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Yeniləmədən gələn yeni nüvə yenə də ilk açılışlarını sınaq kimi edir və onlardan biri uğurlu olan kimi yenidən kilidlənir."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Sistemin özü artıq açılmırsa, cihaz Android-ə keçmək əvəzinə USB (telnet) üzərindən gözləyir."
 
 msgid "Hide SIM identifiers"
 msgstr "SIM identifikatorlarını gizlət"
@@ -497,6 +542,12 @@ msgstr "%s arxa planda kilidləndi; status tezliklə yenilənəcək"
 
 msgid "Lock failed: %s"
 msgstr "Kilidləmə uğursuz oldu: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "Şəbəkə kilidləri avtomatikə qaytarılır (SFUN yenidən başlatma, təxminən 30 saniyə)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "Kilidlərin sıfırlanması vaxtında təsdiqlənmədi; yenə də keçilir."
 
 msgid "Uptime %s"
 msgstr "İş müddəti %s"
@@ -615,6 +666,9 @@ msgstr "Onlayn"
 msgid "AT adapter unavailable"
 msgstr "AT adapteri əlçatan deyil"
 
+msgid "Linux locked"
+msgstr "Linux kilidlənib"
+
 msgid "Saved"
 msgstr "Saxlanıldı"
 
@@ -714,9 +768,6 @@ msgstr "LuCI-nin öz tərcümələri OpenWrt-dən gəlir. Bu panelin türk və �
 msgid "Automatic"
 msgstr "Avtomatik"
 
-msgid "4G only"
-msgstr "Yalnız 4G"
-
 msgid "Serving network"
 msgstr "Xidmət edən şəbəkə"
 
@@ -759,6 +810,15 @@ msgstr "Hüceyrə kilidini aç"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "Tətbiq etmək radio stekini (SFUN) yenidən başladır və mobil xidməti qısa müddətə kəsir. Parametrlər saxlanılır və “Açılışda tətbiq et” aktiv olduqda AT hazır olandan sonra plagin tərəfindən təkrar tətbiq edilir. Platformanın radiodan əvvəlki hook-u yenidən başlatmadan tətbiq edə bilər. Avtomatik rejimə qayıtmaq üçün heç bir diapazon seçmədən tətbiq edin."
 
+msgid "Back to automatic"
+msgstr "Avtomatikə qayıt"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "Şəbəkə rejimi və diapazon kilidləri modemdə saxlanılır və Android-də də qüvvədə qalır. Əmin deyilsinizsə, Android-ə keçməzdən əvvəl onları sıfırlayın."
+
+msgid "Reset all to automatic"
+msgstr "Hamısını avtomatikə sıfırla"
+
 msgid "Apply “%s”?"
 msgstr "“%s” tətbiq edilsin?"
 
@@ -779,9 +839,6 @@ msgstr "Açılışda tətbiq təsdiqlənir…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "Arxa planda başladıldı: %s (SFUN yenidən başlatması, təxminən 30 saniyə); status geri oxunur…"
-
-msgid "Network mode: %s"
-msgstr "Şəbəkə rejimi: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "EN-DC-ni söndür (NSA lövbəri)"
@@ -807,14 +864,14 @@ msgstr "Yeniləmə uğursuz oldu"
 msgid "NR bands: back to automatic"
 msgstr "NR diapazonları: avtomatik rejimə qayıdış"
 
-msgid "NR band lock: %s"
-msgstr "NR diapazon kilidi: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "LTE diapazonları: avtomatik rejimə qayıdış"
 
-msgid "LTE band lock: %s"
-msgstr "LTE diapazon kilidi: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "Şəbəkə rejimi avtomatik, EN-DC açıq, bütün LTE və NR diapazonları, hüceyrə kilidi yoxdur. Saxlanmış kilid ayarları silinir, başlanğıcda heç nə yenidən tətbiq olunmur."
+
+msgid "Reset"
+msgstr "Sıfırla"
 
 msgid "Remove the %s cell lock"
 msgstr "%s hüceyrə kilidini götür"
@@ -1466,27 +1523,3 @@ msgstr "TTL təyin edilə bilmədi"
 
 msgid "Unknown TTL operation"
 msgstr "Naməlum TTL əməliyyatı"
-
-msgid "Lock Linux"
-msgstr "Linux-u kilidlə"
-
-msgid "Unlock Linux"
-msgstr "Linux kilidini aç"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "Ardıcıl beş tamamlanmamış açılışdan sonra cihaz yenidən Android-ə qayıdır."
-
-msgid "Unlock"
-msgstr "Kilidi aç"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "Cihaz uğursuz açılışlardan sonra belə heç vaxt özbaşına Android-ə keçməyəcək: Android-ə yalnız bu səhifədən (Android-ə keç) və ya mu300-next-boot android ilə keçilir."
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "Yeniləmədən gələn yeni nüvə yenə də ilk açılışlarını sınaq kimi edir və onlardan biri uğurlu olan kimi yenidən kilidlənir."
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "Sistemin özü artıq açılmırsa, cihaz Android-ə keçmək əvəzinə USB (telnet) üzərindən gözləyir."
-
-msgid "Linux locked"
-msgstr "Linux kilidlənib"

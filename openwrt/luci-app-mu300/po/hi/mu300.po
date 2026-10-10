@@ -291,6 +291,24 @@ msgstr "USB एडेप्टर जोड़ा जा रहा है…"
 msgid "Add failed: %s"
 msgstr "जोड़ना विफल: %s"
 
+msgid "4G only"
+msgstr "केवल 4G"
+
+msgid "Network mode: %s"
+msgstr "नेटवर्क मोड: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC बंद"
+
+msgid "NR band lock: %s"
+msgstr "NR बैंड लॉक: %s"
+
+msgid "LTE band lock: %s"
+msgstr "LTE बैंड लॉक: %s"
+
+msgid "Cell lock: %s"
+msgstr "सेल लॉक: %s"
+
 msgid "Modulation DL/UL"
 msgstr "मॉड्यूलेशन DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "डिवाइस पुनः आरंभ करें"
 msgid "Switch to Android"
 msgstr "Android पर जाएँ"
 
+msgid "Lock Linux"
+msgstr "Linux लॉक करें"
+
 msgid "Neighbor cells"
 msgstr "पड़ोसी सेल"
 
@@ -474,11 +495,35 @@ msgstr "OpenWrt पर लौटने के लिए Android में mu300-
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "या कुछ न करें: पाँच अधूरे बूट के बाद यह अपने आप वापस लौट आता है।"
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "Android बूट तैयार किया जा रहा है और रीबूट हो रहा है…"
+
 msgid "Switch and reboot"
 msgstr "बदलें और रीबूट करें"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "Android बूट तैयार किया जा रहा है और रीबूट हो रहा है…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "स्वचालित नहीं: %s। नेटवर्क मोड और बैंड लॉक मॉडेम में सहेजे जाते हैं और Android में भी लागू रहते हैं; यदि नेटवर्क उनसे मेल नहीं खाता, तो Android \"कोई सेवा नहीं\" दिखाता है।"
+
+msgid "Reset locks and switch"
+msgstr "लॉक रीसेट करें और स्विच करें"
+
+msgid "Unlock Linux"
+msgstr "Linux अनलॉक करें"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "लगातार पाँच अधूरे बूट के बाद डिवाइस फिर से Android पर लौट आता है।"
+
+msgid "Unlock"
+msgstr "अनलॉक करें"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "डिवाइस अपने आप कभी Android पर नहीं जाएगा, असफल बूट के बाद भी नहीं: Android पर केवल इस पेज (Android पर जाएँ) से या mu300-next-boot android से।"
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "अपडेट से आया नया कर्नेल फिर भी पहले परीक्षण के रूप में बूट होता है, और उनमें से एक सफल होते ही फिर से लॉक हो जाता है।"
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "यदि सिस्टम स्वयं शुरू नहीं होता, तो डिवाइस Android पर जाने के बजाय USB (telnet) पर प्रतीक्षा करता है।"
 
 msgid "Hide SIM identifiers"
 msgstr "SIM पहचानकर्ता छिपाएँ"
@@ -497,6 +542,12 @@ msgstr "%s पृष्ठभूमि में लॉक किया गय�
 
 msgid "Lock failed: %s"
 msgstr "लॉक विफल: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "नेटवर्क लॉक स्वचालित पर रीसेट हो रहे हैं (SFUN रीस्टार्ट, लगभग 30 सेकंड)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "लॉक रीसेट समय पर पुष्ट नहीं हुआ; फिर भी स्विच किया जा रहा है।"
 
 msgid "Uptime %s"
 msgstr "अपटाइम %s"
@@ -615,6 +666,9 @@ msgstr "ऑनलाइन"
 msgid "AT adapter unavailable"
 msgstr "AT एडेप्टर उपलब्ध नहीं"
 
+msgid "Linux locked"
+msgstr "Linux लॉक है"
+
 msgid "Saved"
 msgstr "सहेजा गया"
 
@@ -714,9 +768,6 @@ msgstr "LuCI के अपने अनुवाद OpenWrt से आते ह
 msgid "Automatic"
 msgstr "स्वचालित"
 
-msgid "4G only"
-msgstr "केवल 4G"
-
 msgid "Serving network"
 msgstr "सर्विंग नेटवर्क"
 
@@ -759,6 +810,15 @@ msgstr "सेल अनलॉक करें"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "लागू करने से रेडियो स्टैक (SFUN) पुनः आरंभ होता है और सेल्युलर सेवा कुछ देर बाधित होती है। सेटिंग्स सहेजी जाती हैं और “स्टार्टअप पर लागू करें” सक्षम होने पर AT तैयार होने के बाद प्लगइन उन्हें दोबारा लागू करता है। प्लेटफ़ॉर्म का प्री-रेडियो हुक बिना पुनः आरंभ के उन्हें लागू कर सकता है। स्वचालित मोड पर लौटने के लिए बिना कोई बैंड चुने लागू करें।"
 
+msgid "Back to automatic"
+msgstr "स्वचालित पर वापस"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "नेटवर्क मोड और बैंड लॉक मॉडेम में सहेजे जाते हैं और Android में भी लागू रहते हैं। यदि आप निश्चित नहीं हैं, तो Android पर जाने से पहले उन्हें रीसेट करें।"
+
+msgid "Reset all to automatic"
+msgstr "सब कुछ स्वचालित पर रीसेट करें"
+
 msgid "Apply “%s”?"
 msgstr "“%s” लागू करें?"
 
@@ -779,9 +839,6 @@ msgstr "स्टार्टअप पर लागू करने की प�
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "पृष्ठभूमि में शुरू किया गया: %s (SFUN पुनः आरंभ, लगभग 30 सेकंड); स्थिति वापस पढ़ी जा रही है…"
-
-msgid "Network mode: %s"
-msgstr "नेटवर्क मोड: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "EN-DC अक्षम करें (NSA एंकर)"
@@ -807,14 +864,14 @@ msgstr "रीफ़्रेश विफल"
 msgid "NR bands: back to automatic"
 msgstr "NR बैंड: स्वचालित पर वापस"
 
-msgid "NR band lock: %s"
-msgstr "NR बैंड लॉक: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "LTE बैंड: स्वचालित पर वापस"
 
-msgid "LTE band lock: %s"
-msgstr "LTE बैंड लॉक: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "नेटवर्क मोड स्वचालित, EN-DC चालू, सभी LTE और NR बैंड, कोई सेल लॉक नहीं। सहेजी गई लॉक सेटिंग्स मिटा दी जाती हैं, इसलिए स्टार्टअप पर कुछ भी दोबारा लागू नहीं होता।"
+
+msgid "Reset"
+msgstr "रीसेट"
 
 msgid "Remove the %s cell lock"
 msgstr "%s सेल लॉक हटाएँ"
@@ -1466,27 +1523,3 @@ msgstr "TTL सेट नहीं किया जा सका"
 
 msgid "Unknown TTL operation"
 msgstr "अज्ञात TTL कार्रवाई"
-
-msgid "Lock Linux"
-msgstr "Linux लॉक करें"
-
-msgid "Unlock Linux"
-msgstr "Linux अनलॉक करें"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "लगातार पाँच अधूरे बूट के बाद डिवाइस फिर से Android पर लौट आता है।"
-
-msgid "Unlock"
-msgstr "अनलॉक करें"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "डिवाइस अपने आप कभी Android पर नहीं जाएगा, असफल बूट के बाद भी नहीं: Android पर केवल इस पेज (Android पर जाएँ) से या mu300-next-boot android से।"
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "अपडेट से आया नया कर्नेल फिर भी पहले परीक्षण के रूप में बूट होता है, और उनमें से एक सफल होते ही फिर से लॉक हो जाता है।"
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "यदि सिस्टम स्वयं शुरू नहीं होता, तो डिवाइस Android पर जाने के बजाय USB (telnet) पर प्रतीक्षा करता है।"
-
-msgid "Linux locked"
-msgstr "Linux लॉक है"

@@ -291,6 +291,24 @@ msgstr "Đang thêm bộ điều hợp USB…"
 msgid "Add failed: %s"
 msgstr "Thêm thất bại: %s"
 
+msgid "4G only"
+msgstr "Chỉ 4G"
+
+msgid "Network mode: %s"
+msgstr "Chế độ mạng: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC tắt"
+
+msgid "NR band lock: %s"
+msgstr "Khóa băng tần NR: %s"
+
+msgid "LTE band lock: %s"
+msgstr "Khóa băng tần LTE: %s"
+
+msgid "Cell lock: %s"
+msgstr "Khóa cell: %s"
+
 msgid "Modulation DL/UL"
 msgstr "Điều chế DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "Khởi động lại thiết bị"
 msgid "Switch to Android"
 msgstr "Chuyển sang Android"
 
+msgid "Lock Linux"
+msgstr "Khóa Linux"
+
 msgid "Neighbor cells"
 msgstr "Cell lân cận"
 
@@ -474,11 +495,35 @@ msgstr "Để trở lại OpenWrt, chạy mu300-next-boot linux trong Android r�
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "Hoặc không làm gì: sau năm lần khởi động không hoàn tất, hệ thống tự động quay lại."
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "Đang chuẩn bị khởi động Android và khởi động lại…"
+
 msgid "Switch and reboot"
 msgstr "Chuyển và khởi động lại"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "Đang chuẩn bị khởi động Android và khởi động lại…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "Không tự động: %s. Chế độ mạng và khóa băng tần được lưu trong modem và vẫn có hiệu lực trong Android; nếu mạng không khớp, Android hiển thị \"Không có dịch vụ\"."
+
+msgid "Reset locks and switch"
+msgstr "Đặt lại khóa rồi chuyển"
+
+msgid "Unlock Linux"
+msgstr "Mở khóa Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Sau năm lần khởi động liên tiếp không hoàn tất, thiết bị sẽ quay lại Android."
+
+msgid "Unlock"
+msgstr "Mở khóa"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Thiết bị sẽ không bao giờ tự chuyển sang Android, kể cả sau các lần khởi động thất bại: chỉ chuyển sang Android từ trang này (Chuyển sang Android) hoặc bằng mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Kernel mới từ bản cập nhật vẫn khởi động thử trước, và khóa lại ngay khi một lần khởi động thành công."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Nếu chính hệ thống không còn khởi động được, thiết bị sẽ chờ qua USB (telnet) thay vì chuyển sang Android."
 
 msgid "Hide SIM identifiers"
 msgstr "Ẩn mã định danh SIM"
@@ -497,6 +542,12 @@ msgstr "Đã khóa %s trong nền; trạng thái sẽ sớm được làm mới"
 
 msgid "Lock failed: %s"
 msgstr "Khóa thất bại: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "Đang đặt lại khóa mạng về tự động (khởi động lại SFUN, khoảng 30 giây)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "Không xác nhận kịp việc đặt lại khóa; vẫn chuyển."
 
 msgid "Uptime %s"
 msgstr "Thời gian hoạt động %s"
@@ -615,6 +666,9 @@ msgstr "Trực tuyến"
 msgid "AT adapter unavailable"
 msgstr "Bộ điều hợp AT không khả dụng"
 
+msgid "Linux locked"
+msgstr "Linux đã khóa"
+
 msgid "Saved"
 msgstr "Đã lưu"
 
@@ -714,9 +768,6 @@ msgstr "Bản dịch riêng của LuCI đến từ OpenWrt. Các bản dịch c�
 msgid "Automatic"
 msgstr "Tự động"
 
-msgid "4G only"
-msgstr "Chỉ 4G"
-
 msgid "Serving network"
 msgstr "Mạng phục vụ"
 
@@ -759,6 +810,15 @@ msgstr "Mở khóa cell"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "Áp dụng sẽ khởi động lại ngăn xếp radio (SFUN) và làm gián đoạn dịch vụ di động trong giây lát. Cài đặt được lưu và plugin sẽ áp dụng lại sau khi AT sẵn sàng nếu bật “Áp dụng khi khởi động”. Hook trước radio của nền tảng có thể áp dụng lại mà không cần khởi động lại. Áp dụng khi không chọn băng tần nào để trở về chế độ tự động."
 
+msgid "Back to automatic"
+msgstr "Trở về tự động"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "Chế độ mạng và khóa băng tần được lưu trong modem và vẫn có hiệu lực trong Android. Nếu không chắc, hãy đặt lại trước khi chuyển sang Android."
+
+msgid "Reset all to automatic"
+msgstr "Đặt lại tất cả về tự động"
+
 msgid "Apply “%s”?"
 msgstr "Áp dụng “%s”?"
 
@@ -779,9 +839,6 @@ msgstr "Đang xác nhận áp dụng khi khởi động…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "Đã bắt đầu chạy nền: %s (khởi động lại SFUN, khoảng 30 giây); đang đọc lại trạng thái…"
-
-msgid "Network mode: %s"
-msgstr "Chế độ mạng: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "Tắt EN-DC (neo NSA)"
@@ -807,14 +864,14 @@ msgstr "Làm mới thất bại"
 msgid "NR bands: back to automatic"
 msgstr "Băng tần NR: trở về tự động"
 
-msgid "NR band lock: %s"
-msgstr "Khóa băng tần NR: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "Băng tần LTE: trở về tự động"
 
-msgid "LTE band lock: %s"
-msgstr "Khóa băng tần LTE: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "Chế độ mạng tự động, EN-DC bật, mọi băng LTE và NR, không khóa cell. Cài đặt khóa đã lưu bị xóa nên không có gì được áp dụng lại khi khởi động."
+
+msgid "Reset"
+msgstr "Đặt lại"
 
 msgid "Remove the %s cell lock"
 msgstr "Gỡ khóa cell %s"
@@ -1466,27 +1523,3 @@ msgstr "Không đặt được TTL"
 
 msgid "Unknown TTL operation"
 msgstr "Thao tác TTL không xác định"
-
-msgid "Lock Linux"
-msgstr "Khóa Linux"
-
-msgid "Unlock Linux"
-msgstr "Mở khóa Linux"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "Sau năm lần khởi động liên tiếp không hoàn tất, thiết bị sẽ quay lại Android."
-
-msgid "Unlock"
-msgstr "Mở khóa"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "Thiết bị sẽ không bao giờ tự chuyển sang Android, kể cả sau các lần khởi động thất bại: chỉ chuyển sang Android từ trang này (Chuyển sang Android) hoặc bằng mu300-next-boot android."
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "Kernel mới từ bản cập nhật vẫn khởi động thử trước, và khóa lại ngay khi một lần khởi động thành công."
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "Nếu chính hệ thống không còn khởi động được, thiết bị sẽ chờ qua USB (telnet) thay vì chuyển sang Android."
-
-msgid "Linux locked"
-msgstr "Linux đã khóa"

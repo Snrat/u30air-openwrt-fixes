@@ -291,6 +291,24 @@ msgstr "در حال افزودن آداپتور USB…"
 msgid "Add failed: %s"
 msgstr "افزودن ناموفق بود: %s"
 
+msgid "4G only"
+msgstr "فقط 4G"
+
+msgid "Network mode: %s"
+msgstr "حالت شبکه: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC خاموش"
+
+msgid "NR band lock: %s"
+msgstr "قفل باند NR: %s"
+
+msgid "LTE band lock: %s"
+msgstr "قفل باند LTE: %s"
+
+msgid "Cell lock: %s"
+msgstr "قفل سلول: %s"
+
 msgid "Modulation DL/UL"
 msgstr "مدولاسیون DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "راه‌اندازی مجدد دستگاه"
 msgid "Switch to Android"
 msgstr "رفتن به Android"
 
+msgid "Lock Linux"
+msgstr "قفل کردن Linux"
+
 msgid "Neighbor cells"
 msgstr "سلول‌های همسایه"
 
@@ -474,11 +495,35 @@ msgstr "برای بازگشت به OpenWrt، در Android دستور mu300-next-
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "یا کاری نکنید: پس از پنج راه‌اندازی ناتمام، به‌طور خودکار بازمی‌گردد."
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "در حال آماده‌سازی راه‌اندازی Android و راه‌اندازی مجدد…"
+
 msgid "Switch and reboot"
 msgstr "تغییر و راه‌اندازی مجدد"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "در حال آماده‌سازی راه‌اندازی Android و راه‌اندازی مجدد…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "خودکار نیست: %s. حالت شبکه و قفل باندها در مودم ذخیره می‌شوند و در Android هم برقرار می‌مانند؛ اگر شبکه با آن‌ها جور نباشد، Android «بدون سرویس» نشان می‌دهد."
+
+msgid "Reset locks and switch"
+msgstr "بازنشانی قفل‌ها و تغییر"
+
+msgid "Unlock Linux"
+msgstr "باز کردن قفل Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "پس از پنج راه‌اندازی ناتمام پشت سر هم، دستگاه دوباره به Android برمی‌گردد."
+
+msgid "Unlock"
+msgstr "باز کردن قفل"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "دستگاه هرگز خودبه‌خود به Android نمی‌رود، حتی پس از راه‌اندازی‌های ناموفق: رفتن به Android فقط از همین صفحه (رفتن به Android) یا با mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "هسته‌ی جدیدی که با به‌روزرسانی می‌آید همچنان ابتدا آزمایشی راه‌اندازی می‌شود و پس از موفقیت یکی از آن‌ها دوباره قفل می‌شود."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "اگر خود سیستم دیگر راه‌اندازی نشود، دستگاه به‌جای رفتن به Android از طریق USB (telnet) منتظر می‌ماند."
 
 msgid "Hide SIM identifiers"
 msgstr "پنهان کردن شناسه‌های SIM"
@@ -497,6 +542,12 @@ msgstr "%s در پس‌زمینه قفل شد؛ وضعیت به‌زودی تا�
 
 msgid "Lock failed: %s"
 msgstr "قفل ناموفق بود: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "در حال بازگرداندن قفل‌های شبکه به خودکار (راه‌اندازی مجدد SFUN، حدود ۳۰ ثانیه)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "بازنشانی قفل‌ها به‌موقع تأیید نشد؛ به هر حال تغییر انجام می‌شود."
 
 msgid "Uptime %s"
 msgstr "زمان کارکرد %s"
@@ -615,6 +666,9 @@ msgstr "آنلاین"
 msgid "AT adapter unavailable"
 msgstr "آداپتور AT در دسترس نیست"
 
+msgid "Linux locked"
+msgstr "Linux قفل است"
+
 msgid "Saved"
 msgstr "ذخیره شد"
 
@@ -714,9 +768,6 @@ msgstr "ترجمه‌های خود LuCI از OpenWrt می‌آیند. ترجمه
 msgid "Automatic"
 msgstr "خودکار"
 
-msgid "4G only"
-msgstr "فقط 4G"
-
 msgid "Serving network"
 msgstr "شبکهٔ سرویس‌دهنده"
 
@@ -759,6 +810,15 @@ msgstr "باز کردن قفل سلول"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "اعمال، پشتهٔ رادیو را دوباره راه‌اندازی می‌کند (SFUN) و سرویس سلولی را برای مدت کوتاهی قطع می‌کند. وقتی «اعمال هنگام راه‌اندازی» فعال باشد، تنظیمات ذخیره می‌شوند و افزونه پس از آماده شدن AT آن‌ها را دوباره اعمال می‌کند. یک هوک پیش از رادیوی پلتفرم می‌تواند بدون راه‌اندازی مجدد آن‌ها را اعمال کند. برای بازگشت به حالت خودکار، بدون انتخاب هیچ باندی اعمال کنید."
 
+msgid "Back to automatic"
+msgstr "بازگشت به خودکار"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "حالت شبکه و قفل باندها در مودم ذخیره می‌شوند و در Android هم برقرار می‌مانند. اگر مطمئن نیستید، پیش از رفتن به Android آن‌ها را بازنشانی کنید."
+
+msgid "Reset all to automatic"
+msgstr "بازنشانی همه به خودکار"
+
 msgid "Apply “%s”?"
 msgstr "«%s» اعمال شود؟"
 
@@ -779,9 +839,6 @@ msgstr "در حال تأیید اعمال هنگام راه‌اندازی…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "در پس‌زمینه آغاز شد: %s (راه‌اندازی مجدد SFUN، حدود 30 ثانیه)؛ در حال خواندن دوبارهٔ وضعیت…"
-
-msgid "Network mode: %s"
-msgstr "حالت شبکه: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "غیرفعال‌سازی EN-DC (لنگر NSA)"
@@ -807,14 +864,14 @@ msgstr "تازه‌سازی ناموفق بود"
 msgid "NR bands: back to automatic"
 msgstr "باندهای NR: بازگشت به خودکار"
 
-msgid "NR band lock: %s"
-msgstr "قفل باند NR: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "باندهای LTE: بازگشت به خودکار"
 
-msgid "LTE band lock: %s"
-msgstr "قفل باند LTE: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "حالت شبکه خودکار، EN-DC روشن، همه باندهای LTE و NR، بدون قفل سلول. تنظیمات ذخیره‌شده پاک می‌شوند و هنگام راه‌اندازی چیزی دوباره اعمال نمی‌شود."
+
+msgid "Reset"
+msgstr "بازنشانی"
 
 msgid "Remove the %s cell lock"
 msgstr "حذف قفل سلول %s"
@@ -1466,27 +1523,3 @@ msgstr "TTL تنظیم نشد"
 
 msgid "Unknown TTL operation"
 msgstr "عملیات TTL ناشناخته"
-
-msgid "Lock Linux"
-msgstr "قفل کردن Linux"
-
-msgid "Unlock Linux"
-msgstr "باز کردن قفل Linux"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "پس از پنج راه‌اندازی ناتمام پشت سر هم، دستگاه دوباره به Android برمی‌گردد."
-
-msgid "Unlock"
-msgstr "باز کردن قفل"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "دستگاه هرگز خودبه‌خود به Android نمی‌رود، حتی پس از راه‌اندازی‌های ناموفق: رفتن به Android فقط از همین صفحه (رفتن به Android) یا با mu300-next-boot android."
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "هسته‌ی جدیدی که با به‌روزرسانی می‌آید همچنان ابتدا آزمایشی راه‌اندازی می‌شود و پس از موفقیت یکی از آن‌ها دوباره قفل می‌شود."
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "اگر خود سیستم دیگر راه‌اندازی نشود، دستگاه به‌جای رفتن به Android از طریق USB (telnet) منتظر می‌ماند."
-
-msgid "Linux locked"
-msgstr "Linux قفل است"

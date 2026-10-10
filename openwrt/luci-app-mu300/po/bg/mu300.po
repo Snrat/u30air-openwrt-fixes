@@ -291,6 +291,24 @@ msgstr "Добавяне на USB адаптер…"
 msgid "Add failed: %s"
 msgstr "Добавянето е неуспешно: %s"
 
+msgid "4G only"
+msgstr "Само 4G"
+
+msgid "Network mode: %s"
+msgstr "Мрежов режим: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC изключен"
+
+msgid "NR band lock: %s"
+msgstr "Заключване на NR ленти: %s"
+
+msgid "LTE band lock: %s"
+msgstr "Заключване на LTE ленти: %s"
+
+msgid "Cell lock: %s"
+msgstr "Заключване на клетка: %s"
+
 msgid "Modulation DL/UL"
 msgstr "Модулация DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "Рестартиране на устройството"
 msgid "Switch to Android"
 msgstr "Превключване към Android"
 
+msgid "Lock Linux"
+msgstr "Заключи Linux"
+
 msgid "Neighbor cells"
 msgstr "Съседни клетки"
 
@@ -474,11 +495,35 @@ msgstr "За връщане към OpenWrt изпълнете mu300-next-boot li
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "Или не правете нищо: след пет незавършени стартирания системата се връща автоматично."
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "Подготовка на стартиране на Android и рестартиране…"
+
 msgid "Switch and reboot"
 msgstr "Превключване и рестартиране"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "Подготовка на стартиране на Android и рестартиране…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "Не е автоматично: %s. Мрежовият режим и заключванията на ленти се пазят в модема и остават в сила и в Android; ако мрежата не им съответства, Android показва „Няма услуга“."
+
+msgid "Reset locks and switch"
+msgstr "Нулирай заключванията и превключи"
+
+msgid "Unlock Linux"
+msgstr "Отключи Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "След пет поредни незавършени стартирания устройството отново се връща към Android."
+
+msgid "Unlock"
+msgstr "Отключи"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Устройството никога няма да превключи само към Android, дори след неуспешни стартирания: към Android само от тази страница (Превключване към Android) или с mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Ново ядро от обновление пак стартира първо на пробен режим и се заключва отново, щом едно стартиране успее."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Ако самата система вече не стартира, устройството чака през USB (telnet), вместо да премине към Android."
 
 msgid "Hide SIM identifiers"
 msgstr "Скриване на SIM идентификаторите"
@@ -497,6 +542,12 @@ msgstr "%s е заключена във фонов режим; състояни�
 
 msgid "Lock failed: %s"
 msgstr "Заключването е неуспешно: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "Мрежовите заключвания се връщат на автоматично (рестарт на SFUN, около 30 секунди)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "Нулирането на заключванията не се потвърди навреме; превключва се въпреки това."
 
 msgid "Uptime %s"
 msgstr "Време на работа %s"
@@ -615,6 +666,9 @@ msgstr "Онлайн"
 msgid "AT adapter unavailable"
 msgstr "AT адаптерът е недостъпен"
 
+msgid "Linux locked"
+msgstr "Linux е заключен"
+
 msgid "Saved"
 msgstr "Запазено"
 
@@ -714,9 +768,6 @@ msgstr "Собствените преводи на LuCI идват от OpenWrt.
 msgid "Automatic"
 msgstr "Автоматично"
 
-msgid "4G only"
-msgstr "Само 4G"
-
 msgid "Serving network"
 msgstr "Обслужваща мрежа"
 
@@ -759,6 +810,15 @@ msgstr "Отключване на клетка"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "Прилагането рестартира радио стека (SFUN) и за кратко прекъсва мобилната услуга. Настройките се запазват и се прилагат отново от добавката, след като AT е готов, ако Прилагане при стартиране е включено. Платформен hook преди радиото може да ги приложи без рестартиране. Приложете без избрани ленти, за да възстановите автоматичния режим."
 
+msgid "Back to automatic"
+msgstr "Обратно на автоматично"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "Мрежовият режим и заключванията на ленти се пазят в модема и остават в сила и в Android. Ако не сте сигурни, нулирайте ги преди да превключите на Android."
+
+msgid "Reset all to automatic"
+msgstr "Всичко на автоматично"
+
 msgid "Apply “%s”?"
 msgstr "Прилагане на „%s“?"
 
@@ -779,9 +839,6 @@ msgstr "Потвърждаване на прилагането при старт
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "Стартирано във фонов режим: %s (рестартиране на SFUN, около 30 секунди); прочитане на състоянието…"
-
-msgid "Network mode: %s"
-msgstr "Мрежов режим: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "Изключване на EN-DC (NSA котва)"
@@ -807,14 +864,14 @@ msgstr "Опресняването е неуспешно"
 msgid "NR bands: back to automatic"
 msgstr "NR ленти: обратно на автоматично"
 
-msgid "NR band lock: %s"
-msgstr "Заключване на NR ленти: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "LTE ленти: обратно на автоматично"
 
-msgid "LTE band lock: %s"
-msgstr "Заключване на LTE ленти: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "Мрежов режим автоматично, EN-DC включен, всички LTE и NR ленти, без заключване на клетка. Запазените настройки се изтриват, при стартиране нищо не се прилага отново."
+
+msgid "Reset"
+msgstr "Нулиране"
 
 msgid "Remove the %s cell lock"
 msgstr "Премахване на заключването на клетка %s"
@@ -1466,27 +1523,3 @@ msgstr "TTL не можа да бъде зададен"
 
 msgid "Unknown TTL operation"
 msgstr "Неизвестна операция с TTL"
-
-msgid "Lock Linux"
-msgstr "Заключи Linux"
-
-msgid "Unlock Linux"
-msgstr "Отключи Linux"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "След пет поредни незавършени стартирания устройството отново се връща към Android."
-
-msgid "Unlock"
-msgstr "Отключи"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "Устройството никога няма да превключи само към Android, дори след неуспешни стартирания: към Android само от тази страница (Превключване към Android) или с mu300-next-boot android."
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "Ново ядро от обновление пак стартира първо на пробен режим и се заключва отново, щом едно стартиране успее."
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "Ако самата система вече не стартира, устройството чака през USB (telnet), вместо да премине към Android."
-
-msgid "Linux locked"
-msgstr "Linux е заключен"

@@ -291,6 +291,24 @@ msgstr "USB-adapter wordt toegevoegd…"
 msgid "Add failed: %s"
 msgstr "Toevoegen mislukt: %s"
 
+msgid "4G only"
+msgstr "Alleen 4G"
+
+msgid "Network mode: %s"
+msgstr "Netwerkmodus: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC uit"
+
+msgid "NR band lock: %s"
+msgstr "NR-bandvergrendeling: %s"
+
+msgid "LTE band lock: %s"
+msgstr "LTE-bandvergrendeling: %s"
+
+msgid "Cell lock: %s"
+msgstr "Cel-vergrendeling: %s"
+
 msgid "Modulation DL/UL"
 msgstr "Modulatie DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "Apparaat herstarten"
 msgid "Switch to Android"
 msgstr "Overschakelen naar Android"
 
+msgid "Lock Linux"
+msgstr "Linux vergrendelen"
+
 msgid "Neighbor cells"
 msgstr "Buurcellen"
 
@@ -474,11 +495,35 @@ msgstr "Om terug te keren naar OpenWrt voert u in Android mu300-next-boot linux 
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "Of doe niets: na vijf starts die niet voltooien, valt het automatisch terug."
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "Android-start wordt voorbereid en herstart…"
+
 msgid "Switch and reboot"
 msgstr "Wisselen en herstarten"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "Android-start wordt voorbereid en herstart…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "Niet automatisch: %s. Netwerkmodus- en bandvergrendelingen worden in de modem opgeslagen en blijven ook in Android van kracht; past het netwerk er niet bij, dan toont Android \"Geen service\"."
+
+msgid "Reset locks and switch"
+msgstr "Vergrendelingen resetten en wisselen"
+
+msgid "Unlock Linux"
+msgstr "Linux ontgrendelen"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Na vijf onvoltooide opstarts op rij valt het apparaat weer terug op Android."
+
+msgid "Unlock"
+msgstr "Ontgrendelen"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Het apparaat schakelt nooit zelf naar Android, ook niet na mislukte opstarts: naar Android alleen via deze pagina (Overschakelen naar Android) of met mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Een nieuwe kernel uit een update start eerst nog op proef en vergrendelt weer zodra een opstart slaagt."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Start het systeem zelf niet meer, dan wacht het apparaat via USB (telnet) in plaats van naar Android te gaan."
 
 msgid "Hide SIM identifiers"
 msgstr "SIM-identificatoren verbergen"
@@ -497,6 +542,12 @@ msgstr "%s op de achtergrond vergrendeld; de status wordt zo vernieuwd"
 
 msgid "Lock failed: %s"
 msgstr "Vergrendelen mislukt: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "Netwerkvergrendelingen worden op automatisch gezet (SFUN-herstart, ongeveer 30 seconden)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "Het resetten van de vergrendelingen is niet op tijd bevestigd; er wordt toch gewisseld."
 
 msgid "Uptime %s"
 msgstr "Uptime %s"
@@ -615,6 +666,9 @@ msgstr "Online"
 msgid "AT adapter unavailable"
 msgstr "AT-adapter niet beschikbaar"
 
+msgid "Linux locked"
+msgstr "Linux vergrendeld"
+
 msgid "Saved"
 msgstr "Opgeslagen"
 
@@ -714,9 +768,6 @@ msgstr "De eigen vertalingen van LuCI komen van OpenWrt. De vertalingen van dit 
 msgid "Automatic"
 msgstr "Automatisch"
 
-msgid "4G only"
-msgstr "Alleen 4G"
-
 msgid "Serving network"
 msgstr "Serving netwerk"
 
@@ -759,6 +810,15 @@ msgstr "Cel ontgrendelen"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "Toepassen herstart de radiostack (SFUN) en onderbreekt de mobiele dienst kort. Instellingen worden opgeslagen en door de plugin opnieuw toegepast zodra AT gereed is, als „Toepassen bij opstarten” is ingeschakeld. Een pre-radio-hook van het platform kan ze zonder herstart toepassen. Pas toe zonder geselecteerde banden om de automatische modus te herstellen."
 
+msgid "Back to automatic"
+msgstr "Terug naar automatisch"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "Netwerkmodus- en bandvergrendelingen worden in de modem opgeslagen en blijven ook in Android van kracht. Twijfel je, reset ze dan voor je naar Android wisselt."
+
+msgid "Reset all to automatic"
+msgstr "Alles op automatisch zetten"
+
 msgid "Apply “%s”?"
 msgstr "„%s” toepassen?"
 
@@ -779,9 +839,6 @@ msgstr "„Toepassen bij opstarten” wordt bevestigd…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "Op de achtergrond gestart: %s (SFUN-herstart, ongeveer 30 seconden); status wordt teruggelezen…"
-
-msgid "Network mode: %s"
-msgstr "Netwerkmodus: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "EN-DC uitschakelen (NSA-anker)"
@@ -807,14 +864,14 @@ msgstr "Vernieuwen mislukt"
 msgid "NR bands: back to automatic"
 msgstr "NR-banden: terug naar automatisch"
 
-msgid "NR band lock: %s"
-msgstr "NR-bandvergrendeling: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "LTE-banden: terug naar automatisch"
 
-msgid "LTE band lock: %s"
-msgstr "LTE-bandvergrendeling: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "Netwerkmodus automatisch, EN-DC aan, alle LTE- en NR-banden, geen celvergrendeling. De opgeslagen instellingen worden gewist, bij het opstarten wordt niets opnieuw toegepast."
+
+msgid "Reset"
+msgstr "Resetten"
 
 msgid "Remove the %s cell lock"
 msgstr "%s-celvergrendeling verwijderen"
@@ -1466,27 +1523,3 @@ msgstr "De TTL kon niet worden ingesteld"
 
 msgid "Unknown TTL operation"
 msgstr "Onbekende TTL-bewerking"
-
-msgid "Lock Linux"
-msgstr "Linux vergrendelen"
-
-msgid "Unlock Linux"
-msgstr "Linux ontgrendelen"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "Na vijf onvoltooide opstarts op rij valt het apparaat weer terug op Android."
-
-msgid "Unlock"
-msgstr "Ontgrendelen"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "Het apparaat schakelt nooit zelf naar Android, ook niet na mislukte opstarts: naar Android alleen via deze pagina (Overschakelen naar Android) of met mu300-next-boot android."
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "Een nieuwe kernel uit een update start eerst nog op proef en vergrendelt weer zodra een opstart slaagt."
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "Start het systeem zelf niet meer, dan wacht het apparaat via USB (telnet) in plaats van naar Android te gaan."
-
-msgid "Linux locked"
-msgstr "Linux vergrendeld"

@@ -291,6 +291,24 @@ msgstr "USB адаптері қосылуда…"
 msgid "Add failed: %s"
 msgstr "Қосу сәтсіз: %s"
 
+msgid "4G only"
+msgstr "Тек 4G"
+
+msgid "Network mode: %s"
+msgstr "Желі режимі: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC өшірулі"
+
+msgid "NR band lock: %s"
+msgstr "NR жолағын бекіту: %s"
+
+msgid "LTE band lock: %s"
+msgstr "LTE жолағын бекіту: %s"
+
+msgid "Cell lock: %s"
+msgstr "Ұяшық құлпы: %s"
+
 msgid "Modulation DL/UL"
 msgstr "Модуляция DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "Құрылғыны қайта жүктеу"
 msgid "Switch to Android"
 msgstr "Android-ге ауысу"
 
+msgid "Lock Linux"
+msgstr "Linux-ты құлыптау"
+
 msgid "Neighbor cells"
 msgstr "Көрші ұяшықтар"
 
@@ -474,11 +495,35 @@ msgstr "OpenWrt-ге оралу үшін Android-де mu300-next-boot linux ко
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "Немесе ештеңе жасамаңыз: аяқталмаған бес жүктелуден кейін автоматты түрде қайтарылады."
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "Android жүктелуі дайындалып, қайта жүктелуде…"
+
 msgid "Switch and reboot"
 msgstr "Ауысу және қайта жүктеу"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "Android жүктелуі дайындалып, қайта жүктелуде…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "Автоматты емес: %s. Желі режимі мен диапазон құлыптары модемде сақталады және Android-те де күшінде қалады; желі оларға сәйкес келмесе, Android «Қызмет жоқ» көрсетеді."
+
+msgid "Reset locks and switch"
+msgstr "Құлыптарды тастап, ауысу"
+
+msgid "Unlock Linux"
+msgstr "Linux құлпын ашу"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "Қатарынан бес аяқталмаған жүктеуден кейін құрылғы қайтадан Android-ге оралады."
+
+msgid "Unlock"
+msgstr "Құлыпты ашу"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "Құрылғы сәтсіз жүктеулерден кейін де ешқашан өздігінен Android-ге ауыспайды: Android-ге тек осы беттен (Android-ге ауысу) немесе mu300-next-boot android арқылы."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "Жаңартудан келген жаңа ядро бәрібір алғашқы жүктеулерін сынақ ретінде жасайды және біреуі сәтті болғанда қайта құлыпталады."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "Жүйенің өзі іске қосылмаса, құрылғы Android-ге ауыспай, USB (telnet) арқылы күтеді."
 
 msgid "Hide SIM identifiers"
 msgstr "SIM идентификаторларын жасыру"
@@ -497,6 +542,12 @@ msgstr "%s фонда бекітілді; күй жақында жаңартыл
 
 msgid "Lock failed: %s"
 msgstr "Бекіту сәтсіз: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "Желі құлыптары автоматтыға қайтарылуда (SFUN қайта іске қосу, шамамен 30 секунд)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "Құлыптарды тастау уақытында расталмады; бәрібір ауысады."
 
 msgid "Uptime %s"
 msgstr "Жұмыс уақыты %s"
@@ -615,6 +666,9 @@ msgstr "Желіде"
 msgid "AT adapter unavailable"
 msgstr "AT адаптері қолжетімсіз"
 
+msgid "Linux locked"
+msgstr "Linux құлыпталған"
+
 msgid "Saved"
 msgstr "Сақталды"
 
@@ -714,9 +768,6 @@ msgstr "LuCI-дің өз аудармалары OpenWrt-тен алынады. �
 msgid "Automatic"
 msgstr "Автоматты"
 
-msgid "4G only"
-msgstr "Тек 4G"
-
 msgid "Serving network"
 msgstr "Қызмет көрсететін желі"
 
@@ -759,6 +810,15 @@ msgstr "Ұяшық бекітуін алу"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "Қолдану радиостекті (SFUN) қайта іске қосып, ұялы байланысты қысқа уақытқа үзеді. Параметрлер сақталады және «Іске қосылғанда қолдану» қосулы болса, AT дайын болғаннан кейін плагин оларды қайта қолданады. Платформаның радио алдындағы ілгегі оларды қайта іске қосусыз қолдана алады. Автоматты режимге оралу үшін ешбір жолақ таңдамай қолданыңыз."
 
+msgid "Back to automatic"
+msgstr "Автоматтыға қайту"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "Желі режимі мен диапазон құлыптары модемде сақталады және Android-те де күшінде қалады. Сенімді болмасаңыз, Android-ке ауыспас бұрын оларды тастаңыз."
+
+msgid "Reset all to automatic"
+msgstr "Барлығын автоматтыға қайтару"
+
 msgid "Apply “%s”?"
 msgstr "«%s» қолдану керек пе?"
 
@@ -779,9 +839,6 @@ msgstr "Іске қосылғанда қолдану расталуда…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "Фонда іске қосылды: %s (SFUN қайта іске қосылуы, шамамен 30 секунд); күй қайта оқылуда…"
-
-msgid "Network mode: %s"
-msgstr "Желі режимі: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "EN-DC өшіру (NSA тірек ұяшығы)"
@@ -807,14 +864,14 @@ msgstr "Жаңарту сәтсіз"
 msgid "NR bands: back to automatic"
 msgstr "NR жолақтары: қайтадан автоматты"
 
-msgid "NR band lock: %s"
-msgstr "NR жолағын бекіту: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "LTE жолақтары: қайтадан автоматты"
 
-msgid "LTE band lock: %s"
-msgstr "LTE жолағын бекіту: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "Желі режимі автоматты, EN-DC қосулы, барлық LTE және NR диапазондары, ұяшық құлпы жоқ. Сақталған құлып баптаулары өшіріледі, іске қосылғанда ештеңе қайта қолданылмайды."
+
+msgid "Reset"
+msgstr "Тастау"
 
 msgid "Remove the %s cell lock"
 msgstr "%s ұяшық бекітуін алу"
@@ -1466,27 +1523,3 @@ msgstr "TTL орнату мүмкін болмады"
 
 msgid "Unknown TTL operation"
 msgstr "Белгісіз TTL әрекеті"
-
-msgid "Lock Linux"
-msgstr "Linux-ты құлыптау"
-
-msgid "Unlock Linux"
-msgstr "Linux құлпын ашу"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "Қатарынан бес аяқталмаған жүктеуден кейін құрылғы қайтадан Android-ге оралады."
-
-msgid "Unlock"
-msgstr "Құлыпты ашу"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "Құрылғы сәтсіз жүктеулерден кейін де ешқашан өздігінен Android-ге ауыспайды: Android-ге тек осы беттен (Android-ге ауысу) немесе mu300-next-boot android арқылы."
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "Жаңартудан келген жаңа ядро бәрібір алғашқы жүктеулерін сынақ ретінде жасайды және біреуі сәтті болғанда қайта құлыпталады."
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "Жүйенің өзі іске қосылмаса, құрылғы Android-ге ауыспай, USB (telnet) арқылы күтеді."
-
-msgid "Linux locked"
-msgstr "Linux құлыпталған"

@@ -291,6 +291,24 @@ msgstr "جارٍ إضافة محوّل USB…"
 msgid "Add failed: %s"
 msgstr "فشلت الإضافة: %s"
 
+msgid "4G only"
+msgstr "4G فقط"
+
+msgid "Network mode: %s"
+msgstr "وضع الشبكة: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC متوقف"
+
+msgid "NR band lock: %s"
+msgstr "قفل نطاقات NR: %s"
+
+msgid "LTE band lock: %s"
+msgstr "قفل نطاقات LTE: %s"
+
+msgid "Cell lock: %s"
+msgstr "قفل الخلية: %s"
+
 msgid "Modulation DL/UL"
 msgstr "التضمين DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "إعادة تشغيل الجهاز"
 msgid "Switch to Android"
 msgstr "التبديل إلى Android"
 
+msgid "Lock Linux"
+msgstr "قفل Linux"
+
 msgid "Neighbor cells"
 msgstr "الخلايا المجاورة"
 
@@ -474,11 +495,35 @@ msgstr "للعودة إلى OpenWrt، شغّل mu300-next-boot linux في Androi
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "أو لا تفعل شيئاً: بعد خمس عمليات إقلاع لا تكتمل، يعود الجهاز تلقائياً."
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "جارٍ تجهيز إقلاع Android وإعادة التشغيل…"
+
 msgid "Switch and reboot"
 msgstr "التبديل وإعادة التشغيل"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "جارٍ تجهيز إقلاع Android وإعادة التشغيل…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "غير تلقائي: %s. يُحفَظ وضع الشبكة وأقفال النطاقات في المودم وتبقى سارية في Android أيضًا؛ إذا لم تطابقها الشبكة يعرض Android \"لا توجد خدمة\"."
+
+msgid "Reset locks and switch"
+msgstr "إعادة ضبط الأقفال ثم التبديل"
+
+msgid "Unlock Linux"
+msgstr "إلغاء قفل Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "بعد خمس عمليات إقلاع متتالية غير مكتملة، يعود الجهاز إلى Android مرة أخرى."
+
+msgid "Unlock"
+msgstr "إلغاء القفل"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "لن ينتقل الجهاز أبدًا إلى Android من تلقاء نفسه، حتى بعد فشل الإقلاع: الانتقال إلى Android فقط من هذه الصفحة (التبديل إلى Android) أو باستخدام mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "النواة الجديدة القادمة من تحديث تبدأ أولًا بإقلاعات تجريبية، ثم يُقفل مجددًا بمجرد نجاح أحدها."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "إذا لم يعد النظام نفسه يبدأ، ينتظر الجهاز عبر USB (telnet) بدلًا من الانتقال إلى Android."
 
 msgid "Hide SIM identifiers"
 msgstr "إخفاء معرّفات SIM"
@@ -497,6 +542,12 @@ msgstr "تم قفل %s في الخلفية؛ ستُحدَّث الحالة قر�
 
 msgid "Lock failed: %s"
 msgstr "فشل القفل: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "جارٍ إعادة أقفال الشبكة إلى الوضع التلقائي (إعادة تشغيل SFUN، نحو 30 ثانية)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "لم يُؤكَّد إعادة ضبط الأقفال في الوقت المحدد؛ سيتم التبديل على أي حال."
 
 msgid "Uptime %s"
 msgstr "مدة التشغيل %s"
@@ -615,6 +666,9 @@ msgstr "متصل"
 msgid "AT adapter unavailable"
 msgstr "محوّل AT غير متاح"
 
+msgid "Linux locked"
+msgstr "Linux مقفل"
+
 msgid "Saved"
 msgstr "تم الحفظ"
 
@@ -714,9 +768,6 @@ msgstr "ترجمات LuCI نفسها مصدرها OpenWrt. ترجمات هذه �
 msgid "Automatic"
 msgstr "تلقائي"
 
-msgid "4G only"
-msgstr "4G فقط"
-
 msgid "Serving network"
 msgstr "الشبكة الخادمة"
 
@@ -759,6 +810,15 @@ msgstr "إلغاء قفل الخلية"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "يؤدي التطبيق إلى إعادة تشغيل حزمة الراديو (SFUN) ويقطع الخدمة الخلوية لفترة وجيزة. تُحفظ الإعدادات ويعيد الملحق تطبيقها بعد جاهزية AT عند تفعيل «التطبيق عند بدء التشغيل». يمكن لخطّاف ما قبل تشغيل الراديو في المنصة إعادة تطبيقها دون إعادة تشغيل. طبّق دون تحديد أي نطاق لاستعادة الوضع التلقائي."
 
+msgid "Back to automatic"
+msgstr "العودة إلى التلقائي"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "يُحفَظ وضع الشبكة وأقفال النطاقات في المودم وتبقى سارية في Android أيضًا. إن لم تكن متأكدًا فأعد ضبطها قبل التبديل إلى Android."
+
+msgid "Reset all to automatic"
+msgstr "إعادة الكل إلى التلقائي"
+
 msgid "Apply “%s”?"
 msgstr "تطبيق «%s»؟"
 
@@ -779,9 +839,6 @@ msgstr "جارٍ تأكيد التطبيق عند بدء التشغيل…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "بدأ في الخلفية: %s (إعادة تشغيل SFUN، حوالي 30 ثانية)؛ جارٍ قراءة الحالة…"
-
-msgid "Network mode: %s"
-msgstr "وضع الشبكة: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "تعطيل EN-DC (ارتكاز NSA)"
@@ -807,14 +864,14 @@ msgstr "فشل التحديث"
 msgid "NR bands: back to automatic"
 msgstr "نطاقات NR: عودة إلى التلقائي"
 
-msgid "NR band lock: %s"
-msgstr "قفل نطاقات NR: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "نطاقات LTE: عودة إلى التلقائي"
 
-msgid "LTE band lock: %s"
-msgstr "قفل نطاقات LTE: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "وضع الشبكة تلقائي، EN-DC مفعّل، جميع نطاقات LTE وNR، بلا قفل خلية. تُمحى إعدادات الأقفال المحفوظة فلا يُعاد تطبيق شيء عند الإقلاع."
+
+msgid "Reset"
+msgstr "إعادة ضبط"
 
 msgid "Remove the %s cell lock"
 msgstr "إزالة قفل خلية %s"
@@ -1466,27 +1523,3 @@ msgstr "تعذر ضبط TTL"
 
 msgid "Unknown TTL operation"
 msgstr "عملية TTL غير معروفة"
-
-msgid "Lock Linux"
-msgstr "قفل Linux"
-
-msgid "Unlock Linux"
-msgstr "إلغاء قفل Linux"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "بعد خمس عمليات إقلاع متتالية غير مكتملة، يعود الجهاز إلى Android مرة أخرى."
-
-msgid "Unlock"
-msgstr "إلغاء القفل"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "لن ينتقل الجهاز أبدًا إلى Android من تلقاء نفسه، حتى بعد فشل الإقلاع: الانتقال إلى Android فقط من هذه الصفحة (التبديل إلى Android) أو باستخدام mu300-next-boot android."
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "النواة الجديدة القادمة من تحديث تبدأ أولًا بإقلاعات تجريبية، ثم يُقفل مجددًا بمجرد نجاح أحدها."
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "إذا لم يعد النظام نفسه يبدأ، ينتظر الجهاز عبر USB (telnet) بدلًا من الانتقال إلى Android."
-
-msgid "Linux locked"
-msgstr "Linux مقفل"

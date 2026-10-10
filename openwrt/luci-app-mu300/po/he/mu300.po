@@ -291,6 +291,24 @@ msgstr "מוסיף מתאם USB…"
 msgid "Add failed: %s"
 msgstr "ההוספה נכשלה: %s"
 
+msgid "4G only"
+msgstr "4G בלבד"
+
+msgid "Network mode: %s"
+msgstr "מצב רשת: %s"
+
+msgid "EN-DC off"
+msgstr "EN-DC כבוי"
+
+msgid "NR band lock: %s"
+msgstr "נעילת פסי NR: %s"
+
+msgid "LTE band lock: %s"
+msgstr "נעילת פסי LTE: %s"
+
+msgid "Cell lock: %s"
+msgstr "נעילת תא: %s"
+
 msgid "Modulation DL/UL"
 msgstr "אפנון DL/UL"
 
@@ -417,6 +435,9 @@ msgstr "הפעלה מחדש של ההתקן"
 msgid "Switch to Android"
 msgstr "מעבר ל-Android"
 
+msgid "Lock Linux"
+msgstr "נעילת Linux"
+
 msgid "Neighbor cells"
 msgstr "תאים שכנים"
 
@@ -474,11 +495,35 @@ msgstr "כדי לחזור ל-OpenWrt, יש להריץ mu300-next-boot linux ב-A
 msgid "Or do nothing: after five boots that do not finish, it falls back automatically."
 msgstr "או לא לעשות דבר: לאחר חמישה אתחולים שלא הושלמו, ההתקן חוזר אוטומטית."
 
+msgid "Preparing Android boot and rebooting…"
+msgstr "מכין אתחול Android ומאתחל…"
+
 msgid "Switch and reboot"
 msgstr "החלפה ואתחול"
 
-msgid "Preparing Android boot and rebooting…"
-msgstr "מכין אתחול Android ומאתחל…"
+msgid "Not automatic: %s. The network mode and band locks are stored in the modem and stay in force in Android too; if the network does not match them, Android shows No Service."
+msgstr "לא אוטומטי: %s. מצב הרשת ונעילות הפסים נשמרים במודם ונשארים בתוקף גם ב-Android; אם הרשת אינה תואמת להם, Android מציג \"אין שירות\"."
+
+msgid "Reset locks and switch"
+msgstr "איפוס הנעילות ומעבר"
+
+msgid "Unlock Linux"
+msgstr "ביטול נעילת Linux"
+
+msgid "After five boots in a row that do not finish, the device falls back to Android again."
+msgstr "אחרי חמש אתחולים רצופים שלא הושלמו, המכשיר חוזר שוב ל-Android."
+
+msgid "Unlock"
+msgstr "ביטול נעילה"
+
+msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
+msgstr "המכשיר לעולם לא יעבור ל-Android מעצמו, גם לא אחרי אתחולים כושלים: מעבר ל-Android רק מהדף הזה (מעבר ל-Android) או עם mu300-next-boot android."
+
+msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
+msgstr "ליבה חדשה מעדכון עדיין מבצעת את האתחולים הראשונים בניסיון, וננעלת שוב ברגע שאחד מהם מצליח."
+
+msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
+msgstr "אם המערכת עצמה כבר לא עולה, המכשיר ממתין דרך USB (telnet) במקום לעבור ל-Android."
 
 msgid "Hide SIM identifiers"
 msgstr "הסתרת מזהי SIM"
@@ -497,6 +542,12 @@ msgstr "%s ננעל ברקע; המצב יתרענן בקרוב"
 
 msgid "Lock failed: %s"
 msgstr "הנעילה נכשלה: %s"
+
+msgid "Resetting the network locks to automatic (SFUN restart, about 30 seconds)…"
+msgstr "מאפס את נעילות הרשת לאוטומטי (הפעלה מחדש של SFUN, כ-30 שניות)…"
+
+msgid "The lock reset was not confirmed in time; switching anyway."
+msgstr "איפוס הנעילות לא אושר בזמן; עובר בכל זאת."
 
 msgid "Uptime %s"
 msgstr "זמן פעולה %s"
@@ -615,6 +666,9 @@ msgstr "מקוון"
 msgid "AT adapter unavailable"
 msgstr "מתאם AT אינו זמין"
 
+msgid "Linux locked"
+msgstr "Linux נעול"
+
 msgid "Saved"
 msgstr "נשמר"
 
@@ -714,9 +768,6 @@ msgstr "התרגומים של LuCI עצמו מגיעים מ-OpenWrt. התרגו�
 msgid "Automatic"
 msgstr "אוטומטי"
 
-msgid "4G only"
-msgstr "4G בלבד"
-
 msgid "Serving network"
 msgstr "רשת משרתת"
 
@@ -759,6 +810,15 @@ msgstr "ביטול נעילת תא"
 msgid "Applying restarts the radio stack (SFUN) and briefly interrupts cellular service. Settings are saved and replayed by the plugin after AT is ready when Apply at startup is enabled. A platform pre-radio hook can replay without a restart. Apply with no bands selected to restore automatic mode."
 msgstr "ההחלה מפעילה מחדש את מחסנית הרדיו (SFUN) וקוטעת לזמן קצר את השירות הסלולרי. ההגדרות נשמרות, והתוסף מחיל אותן מחדש לאחר ש-AT מוכן כאשר “החלה בעת האתחול” מופעלת. Hook של הפלטפורמה שרץ לפני הרדיו יכול להחיל אותן ללא הפעלה מחדש. החלה ללא בחירת פסים משחזרת את המצב האוטומטי."
 
+msgid "Back to automatic"
+msgstr "חזרה לאוטומטי"
+
+msgid "The network mode and band locks are stored in the modem and stay in force in Android too. If you are not sure, reset them before switching to Android."
+msgstr "מצב הרשת ונעילות הפסים נשמרים במודם ונשארים בתוקף גם ב-Android. אם אינך בטוח, אפס אותם לפני המעבר ל-Android."
+
+msgid "Reset all to automatic"
+msgstr "איפוס הכול לאוטומטי"
+
 msgid "Apply “%s”?"
 msgstr "להחיל את “%s”?"
 
@@ -779,9 +839,6 @@ msgstr "מאשר את ההחלה בעת האתחול…"
 
 msgid "Started in background: %s (SFUN restart, about 30 seconds); reading the status back…"
 msgstr "הופעל ברקע: %s (הפעלה מחדש של SFUN, כ-30 שניות); קורא את המצב בחזרה…"
-
-msgid "Network mode: %s"
-msgstr "מצב רשת: %s"
 
 msgid "Disable EN-DC (NSA anchor)"
 msgstr "השבתת EN-DC (עוגן NSA)"
@@ -807,14 +864,14 @@ msgstr "הרענון נכשל"
 msgid "NR bands: back to automatic"
 msgstr "פסי NR: חזרה לאוטומטי"
 
-msgid "NR band lock: %s"
-msgstr "נעילת פסי NR: %s"
-
 msgid "LTE bands: back to automatic"
 msgstr "פסי LTE: חזרה לאוטומטי"
 
-msgid "LTE band lock: %s"
-msgstr "נעילת פסי LTE: %s"
+msgid "Network mode automatic, EN-DC on, all LTE and NR bands, no cell lock. The saved lock settings are cleared, so nothing is replayed at startup."
+msgstr "מצב רשת אוטומטי, EN-DC פעיל, כל פסי LTE ו-NR, ללא נעילת תא. ההגדרות השמורות נמחקות, כך ששום דבר לא מוחל מחדש בהפעלה."
+
+msgid "Reset"
+msgstr "איפוס"
 
 msgid "Remove the %s cell lock"
 msgstr "הסרת נעילת התא %s"
@@ -1466,27 +1523,3 @@ msgstr "לא ניתן להגדיר את ה-TTL"
 
 msgid "Unknown TTL operation"
 msgstr "פעולת TTL לא ידועה"
-
-msgid "Lock Linux"
-msgstr "נעילת Linux"
-
-msgid "Unlock Linux"
-msgstr "ביטול נעילת Linux"
-
-msgid "After five boots in a row that do not finish, the device falls back to Android again."
-msgstr "אחרי חמש אתחולים רצופים שלא הושלמו, המכשיר חוזר שוב ל-Android."
-
-msgid "Unlock"
-msgstr "ביטול נעילה"
-
-msgid "The device will never switch to Android by itself, not even after failed boots: Android only from this page (Switch to Android) or with mu300-next-boot android."
-msgstr "המכשיר לעולם לא יעבור ל-Android מעצמו, גם לא אחרי אתחולים כושלים: מעבר ל-Android רק מהדף הזה (מעבר ל-Android) או עם mu300-next-boot android."
-
-msgid "A new kernel from an update still gets its first boots on trial, and locks again once one of them succeeds."
-msgstr "ליבה חדשה מעדכון עדיין מבצעת את האתחולים הראשונים בניסיון, וננעלת שוב ברגע שאחד מהם מצליח."
-
-msgid "If the system itself no longer starts, the device waits on USB (telnet) instead of going to Android."
-msgstr "אם המערכת עצמה כבר לא עולה, המכשיר ממתין דרך USB (telnet) במקום לעבור ל-Android."
-
-msgid "Linux locked"
-msgstr "Linux נעול"
