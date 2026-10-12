@@ -135,6 +135,28 @@ fractions), and some pages read the modem inside the request. **Fixed from v2026
 their last readings and say how old they are. On an older release wait it out, or restart `rpcd` and `mu300-atd`.
 [FINDINGS 40](https://github.com/dikeckaan/mu300-linux/blob/main/docs/FINDINGS.md)
 
+## The device restarts on kernel 5.4 when a container stops
+
+Up to v2026.10.20, on 5.4, when two network namespaces were alive at once and one went away (Docker containers, a
+sandbox, `unshare -n`), the kernel could panic while cleaning it up (`xfrm_sysctl_fini` in the trace; issue #103); the
+device restarts, and after a few of those it falls back to Android. **Fixed from v2026.10.21 on**; update. On an older
+release keep to one container at a time, or use 6.18 or 7.2, which never had the bug.
+[FINDINGS 44](https://github.com/dikeckaan/mu300-linux/blob/main/docs/FINDINGS.md)
+
+## The device crashes when the Wi-Fi driver is unloaded (6.18, 7.2)
+
+Up to v2026.10.20, `rmmod sprd_wlan_combo` on 6.18 or 7.2 panicked within a second (`__run_timers`: the driver left a
+timer running in freed memory; issue #146). **Fixed from v2026.10.21 on.** On an older release do not unload the
+module; restart the device instead. [FINDINGS 45](https://github.com/dikeckaan/mu300-linux/blob/main/docs/FINDINGS.md)
+
+## The log is full of `sprd-wlan` errors every few seconds
+
+Lines such as `sc2355_dump_survey, idx 0`, `bssid not found, multicast?` or `data len is 251, skb need 576` at error
+level, every six seconds or so in `dmesg` and `logread` (releases up to v2026.10.20). They describe the driver's
+routine work, not faults (issue #140). **From v2026.10.21 on** they are debug lines, shown only when you ask for them:
+`echo 'module sprd_wlan_combo +p' > /sys/kernel/debug/dynamic_debug/control`. The real errors next to them are still
+logged.
+
 ## The U30 Air charges slowly on a strong USB-C port
 
 The mainline kernels of v2026.10.19 and older took 500 mA from every port. From v2026.10.20 on they read the current

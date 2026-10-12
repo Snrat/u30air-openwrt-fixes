@@ -158,6 +158,21 @@ adb shell su -c id</code></pre><p>设备应该显示为 <code>device</code>（�
 <p>在带控制面板的 OpenWrt 上，直到 v2026.10.18，一条卡住的 AT 命令能让所有页面空白好几分钟，连电池卡片也是，重启之后也一样。从 v2026.10.20 起已修复：页面会保留上一次的读数并说明它们有多旧，OpenWrt 上一条 AT 命令只要 0.13 秒而不是一秒。在旧版本上等它过去，或者重启 <code>rpcd</code> 和 <code>mu300-atd</code>。</p>
 </section>
 
+<section id="netns-panic">
+<h3>5.4 内核上，一个容器停止时设备就重启</h3>
+<p>直到 v2026.10.20，在 5.4 内核上，同时存在两个网络命名空间（network namespace）而其中一个退出时（Docker 容器、沙箱、<code>unshare -n</code>），内核在清理它时可能崩溃（栈里有 <code>xfrm_sysctl_fini</code>；issue #103）；设备随即重启，几次之后就回到 Android。从 v2026.10.21 起已修复；请更新。在旧版本上一次只跑一个容器，或者改用从来没有这个问题的 6.18 或 7.2。</p>
+</section>
+
+<section id="rmmod-panic">
+<h3>卸载 Wi-Fi 驱动时设备崩溃（6.18、7.2）</h3>
+<p>直到 v2026.10.20，在 6.18 或 7.2 上执行 <code>rmmod sprd_wlan_combo</code> 会在一秒内崩溃（<code>__run_timers</code>：驱动在已释放的内存里留下了一个还在跑的定时器；issue #146）。从 v2026.10.21 起已修复。在旧版本上不要卸载这个模块，改为重启设备。</p>
+</section>
+
+<section id="wlan-log-noise">
+<h3>日志里每隔几秒就是一条 <code>sprd-wlan</code> 错误</h3>
+<p><code>dmesg</code> 和 <code>logread</code> 里大约每六秒出现一次错误级别的 <code>sc2355_dump_survey, idx 0</code>、<code>bssid not found, multicast?</code> 或 <code>data len is 251, skb need 576</code> 之类的行（v2026.10.20 及之前的版本）。它们描述的是驱动的日常工作，不是故障（issue #140）。从 v2026.10.21 起它们成了调试行，只有你主动打开才会显示：<code>echo 'module sprd_wlan_combo +p' &gt; /sys/kernel/debug/dynamic_debug/control</code>。旁边真正的错误仍然会记录。</p>
+</section>
+
 <section id="wpa3">
 <h3>Wi-Fi 客户端连不上某个网络</h3>
 <p>只有 WPA3 的网络连不上（Wi-Fi 驱动没有 SAE）；把路由器设成 WPA2/WPA3 混合模式。另外，无线要么当热点要么当客户端，在开机时决定：它正在当热点时，<code>wifi-client connect</code> 会请你重启。</p>

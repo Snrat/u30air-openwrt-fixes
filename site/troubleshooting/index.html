@@ -160,6 +160,21 @@ adb shell su -c id</code></pre><p>The device should be listed as <code>device</c
 <p>On OpenWrt with the control panel, up to v2026.10.18, one stuck AT command could blank every page for minutes, even the battery tile, also after a restart. Fixed from v2026.10.20 on: the pages keep their last readings and say how old they are, and an AT command on OpenWrt takes 0.13 s instead of a second. On an older release wait it out, or restart <code>rpcd</code> and <code>mu300-atd</code>.</p>
 </section>
 
+<section id="netns-panic">
+<h3>The device restarts on kernel 5.4 when a container stops</h3>
+<p>Up to v2026.10.20, on kernel 5.4, when two network namespaces were alive at once and one went away (Docker containers, a sandbox, <code>unshare -n</code>), the kernel could panic while cleaning it up (<code>xfrm_sysctl_fini</code> in the trace; issue #103); the device restarts, and after a few of those it falls back to Android. Fixed from v2026.10.21 on; update. On an older release keep to one container at a time, or use 6.18 or 7.2, which never had the bug.</p>
+</section>
+
+<section id="rmmod-panic">
+<h3>The device crashes when the Wi-Fi driver is unloaded (6.18, 7.2)</h3>
+<p>Up to v2026.10.20, <code>rmmod sprd_wlan_combo</code> on 6.18 or 7.2 panicked within a second (<code>__run_timers</code>: the driver left a timer running in freed memory; issue #146). Fixed from v2026.10.21 on. On an older release do not unload the module; restart the device instead.</p>
+</section>
+
+<section id="wlan-log-noise">
+<h3>The log is full of <code>sprd-wlan</code> errors every few seconds</h3>
+<p>Lines such as <code>sc2355_dump_survey, idx 0</code>, <code>bssid not found, multicast?</code> or <code>data len is 251, skb need 576</code> at error level, every six seconds or so in <code>dmesg</code> and <code>logread</code> (releases up to v2026.10.20). They describe the driver's routine work, not faults (issue #140). From v2026.10.21 on they are debug lines, shown only when you ask for them: <code>echo 'module sprd_wlan_combo +p' &gt; /sys/kernel/debug/dynamic_debug/control</code>. The real errors next to them are still logged.</p>
+</section>
+
 <section id="wpa3">
 <h3>The Wi-Fi client cannot join a network</h3>
 <p>WPA3-only networks do not work (the Wi-Fi driver has no SAE); set the router to WPA2/WPA3 mixed mode. And the radio is either a hotspot or a client, decided at start-up: <code>wifi-client connect</code> asks for a restart while it is the hotspot.</p>

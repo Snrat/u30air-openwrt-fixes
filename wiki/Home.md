@@ -56,6 +56,21 @@ kernels to choose from; 5G/LTE internet shared over Wi-Fi and USB; SSH, and `adb
 SMS and USSD; an optional VPN module; a web panel on Ubuntu too (Cockpit with an MU300 page, optional); a
 `raspi-config`-like menu called `mu300-toolkit`; automatic fallback to Android; updates on the device.
 
+## New in v2026.10.21
+
+The release of 2026-10-21 (a prerelease first, promoted once a board has run it). Mostly fixes. What it changes, and
+where to read on:
+
+* **F50: the internal SIM can be selected** instead of the card in the slot: `mu300-sim select internal` (or the
+  **SIM source** field of the wan interface in LuCI), with that card's own APN. It takes effect at the next boot, the
+  external card stays the default, and nothing is written to the modem or the SIM. [docs/SIM-SELECTION.md](https://github.com/dikeckaan/mu300-linux/blob/main/docs/SIM-SELECTION.md)
+* **Kernel 5.4 no longer panics when a network namespace goes away** (Docker containers, sandboxes; issue #103). [Troubleshooting](Troubleshooting)
+* **The Wi-Fi driver can be unloaded** on 6.18 and 7.2: `rmmod sprd_wlan_combo` used to crash the device (issue #146). [Troubleshooting](Troubleshooting)
+* **Quieter logs:** the Wi-Fi driver's routine lines (`sc2355_dump_survey`, `bssid not found`, `data len is`...) are
+  no longer errors in `dmesg` and `logread`, on every kernel (issue #140). [Troubleshooting](Troubleshooting)
+* **`mu300-update` runs one at a time:** a second run started meanwhile is refused and names the first one's pid. [Updating](Updating)
+* **Kernels:** 5.4 rebuilt with the two fixes above; 6.18.56 and 7.2.10 with rebuilt modules. [Kernels](Kernels)
+
 ## New in v2026.10.20
 
 The release of 2026-10-20 (a prerelease first, promoted once a board has run it). What it adds, and where to read on:

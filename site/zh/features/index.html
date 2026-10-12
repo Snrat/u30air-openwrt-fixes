@@ -112,6 +112,7 @@
 <tr><th scope="row">OpenWrt</th><td>LuCI：网络 &gt; 接口 &gt; wan，或者用 <code>uci</code>（如下）</td></tr>
 </tbody></table></div>
 <pre><code>uci set network.wan.apn='your.apn'; uci commit network; ifup wan</code></pre>
+<p>带内置 SIM 的 F50 可以改用那张卡而不是卡槽里的卡：<code>mu300-sim select internal</code>（或 LuCI 里 wan 接口的 <strong>SIM source</strong> 字段，填上那张卡自己的 APN），然后重启；<code>external</code> 换回去，默认仍是外置卡。</p>
 <h3 id="data-usage">用了多少流量</h3>
 <p>设备按天、按账单周期统计移动数据，上下行都算，算法和运营商一致。你可以设定账单周期从哪天开始，以及带提醒的每月上限；到上限时关闭移动数据是可选的，下个周期开始时会自动恢复。统计在重启和切换系统后都不会丢，也不会重复计数。在带控制面板的 OpenWrt 上，这就是“蜂窝 &gt; 流量统计”（Cellular &gt; Data usage）页面，状态看板（Status dashboard）还会每秒显示当前的下载和上传速度。</p>
 <pre><code>mu300-traffic                       <span class="c"># 今天、本账单周期和上限</span>

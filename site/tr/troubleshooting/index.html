@@ -160,6 +160,21 @@ adb shell su -c id</code></pre><p>Cihaz <code>device</code> olarak listelenmeli 
 <p>Kontrol panelli OpenWrt'de, v2026.10.18'e kadar, takılan tek bir AT komutu bütün sayfaları dakikalarca boş bırakabiliyordu, pil kutusunu bile, yeniden başlattıktan sonra da. v2026.10.20'den beri düzeltildi: sayfalar son değerlerini gösterip kaç saniyelik olduklarını söyler, OpenWrt'de bir AT komutu bir saniye yerine 0.13 s sürer. Eski bir sürümde bekleyin ya da <code>rpcd</code> ile <code>mu300-atd</code>'yi yeniden başlatın.</p>
 </section>
 
+<section id="netns-panic">
+<h3>5.4 çekirdeğinde bir konteyner durunca cihaz yeniden başlıyor</h3>
+<p>v2026.10.20'ye kadar, 5.4 çekirdeğinde, aynı anda iki ağ ad alanı (network namespace) varken biri kapanınca (Docker konteynerleri, bir sandbox, <code>unshare -n</code>) çekirdek onu temizlerken çökebiliyordu (izde <code>xfrm_sysctl_fini</code>; sorun #103); cihaz yeniden başlar, bu birkaç kez tekrarlanınca da Android'e döner. v2026.10.21'den beri düzeltildi; güncelleyin. Eski bir sürümde aynı anda tek konteyner çalıştırın ya da bu hatanın hiç olmadığı 6.18 ya da 7.2'yi kullanın.</p>
+</section>
+
+<section id="rmmod-panic">
+<h3>Wi-Fi sürücüsü kaldırılınca cihaz çöküyor (6.18, 7.2)</h3>
+<p>v2026.10.20'ye kadar 6.18 ya da 7.2'de <code>rmmod sprd_wlan_combo</code> bir saniye içinde çökmeye yol açıyordu (<code>__run_timers</code>: sürücü, boşaltılmış bellekte çalışmaya devam eden bir zamanlayıcı bırakıyordu; sorun #146). v2026.10.21'den beri düzeltildi. Eski bir sürümde modülü kaldırmayın; onun yerine cihazı yeniden başlatın.</p>
+</section>
+
+<section id="wlan-log-noise">
+<h3>Günlük birkaç saniyede bir <code>sprd-wlan</code> hatalarıyla doluyor</h3>
+<p><code>dmesg</code> ve <code>logread</code>'de yaklaşık altı saniyede bir, hata düzeyinde <code>sc2355_dump_survey, idx 0</code>, <code>bssid not found, multicast?</code> ya da <code>data len is 251, skb need 576</code> gibi satırlar (v2026.10.20'ye kadarki sürümler). Bunlar sürücünün olağan işini anlatır, bir arızayı değil (sorun #140). v2026.10.21'den beri bunlar hata ayıklama satırıdır ve ancak siz isterseniz görünür: <code>echo 'module sprd_wlan_combo +p' &gt; /sys/kernel/debug/dynamic_debug/control</code>. Yanlarındaki gerçek hatalar yine günlüğe yazılır.</p>
+</section>
+
 <section id="wpa3">
 <h3>Wi-Fi istemcisi bir ağa katılamıyor</h3>
 <p>Yalnızca WPA3 olan ağlar çalışmaz (Wi-Fi sürücüsünde SAE yok); yönlendiriciyi karma WPA2/WPA3 kipine alın. Ayrıca radyo ya hotspot ya istemcidir ve buna açılışta karar verilir: hotspot iken <code>wifi-client connect</code> yeniden başlatma ister.</p>

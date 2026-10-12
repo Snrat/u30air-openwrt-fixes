@@ -115,6 +115,7 @@ cihaz SIM kartın söylediğini kullanır.</p>
 <tr><th scope="row">OpenWrt</th><td>LuCI: Network &gt; Interfaces &gt; wan, ya da <code>uci</code> ile (aşağıda)</td></tr>
 </tbody></table></div>
 <pre><code>uci set network.wan.apn='your.apn'; uci commit network; ifup wan</code></pre>
+<p>Dahili SIM'i olan bir F50, yuvadaki kart yerine onu kullanabilir: <code>mu300-sim select internal</code> (ya da LuCI'de wan arabirimindeki <strong>SIM source</strong> alanı, o kartın kendi APN'siyle), sonra yeniden başlatın; <code>external</code> geri döndürür, varsayılan harici kart olarak kalır.</p>
 <h3 id="data-usage">Ne kadar veri kullandınız</h3>
 <p>Cihaz mobil veriyi günlük ve fatura dönemi başına, iki yönde de, operatörün saydığı gibi sayar. Dönemin başladığı
 günü ve uyarılı bir aylık kotayı ayarlayabilirsiniz; kotada mobil veriyi kapatmak isteğe bağlıdır ve veri, yeni dönem

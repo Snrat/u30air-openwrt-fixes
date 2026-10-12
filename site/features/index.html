@@ -115,6 +115,7 @@ and the device uses what the SIM card says.</p>
 <tr><th scope="row">OpenWrt</th><td>LuCI: Network &gt; Interfaces &gt; wan, or with <code>uci</code> (below)</td></tr>
 </tbody></table></div>
 <pre><code>uci set network.wan.apn='your.apn'; uci commit network; ifup wan</code></pre>
+<p>An F50 with an internal SIM can use that card instead of the one in the slot: <code>mu300-sim select internal</code> (or <strong>SIM source</strong> on the wan interface in LuCI, with that card's own APN), then restart; <code>external</code> goes back, and the external card stays the default.</p>
 <h3 id="data-usage">How much data you used</h3>
 <p>The device counts its mobile data per day and per billing cycle, in both directions, the way the operator counts
 it. You can set the day the cycle starts and a monthly cap with a warning; turning mobile data off at the cap is

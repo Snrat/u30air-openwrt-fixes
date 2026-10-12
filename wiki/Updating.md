@@ -18,7 +18,8 @@ sudo mu300-update clean           # delete the kept previous version
 ```
 
 On OpenWrt you are already root, so leave out `sudo`. `mu300-toolkit` offers the same under
-**System -> Software update**. Reboot after `apply` to start the new system and kernel.
+**System -> Software update**. Reboot after `apply` to start the new system and kernel. Only one run at a time: a
+second `mu300-update` started while one is going is refused with the first one's pid (from v2026.10.21 on).
 
 The device looks for a new release at boot and every 6 hours and tells you at login and in `mu300-toolkit`. **It
 never installs one by itself.**
