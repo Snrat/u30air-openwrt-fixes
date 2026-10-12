@@ -3620,6 +3620,52 @@ response and non-occupancy handling, implement/verify monitoring after CAC and A
 and teardown/recovery behavior across supported kernels and firmware. A quiet timer or successful command must
 not be used to mark a channel available. Keep the daily non-DFS guard until those requirements are met.
 
+
+#### Listener lifecycle follow-up (2026-10-12)
+
+A failed stop acknowledgement now latches an experimental-driver fault. Further listener starts return `-EIO`,
+and AP starts are refused even on non-DFS channels while that fault is present. There is no writable switch to
+clear it. Recover by restoring the known-good modules and rebooting, not by treating a new interface as evidence
+that firmware stopped monitoring. The fault cases are native tests of the actual callbacks; no firmware failure
+was intentionally induced on the device.
+
+The native-C suite now has 30 tests. Besides negotiation and terminal events, it executes the packed command
+builder and actual `dfs_start`: 20/40/80 MHz width values and little-endian durations, zero-duration stop,
+unsupported APIs, allocation/transport errors, busy and invalid requests, device reference acquisition, lost
+start acknowledgements, fault gating, and absence of duplicate CAC events after a core abort. The 47 static checks
+also passed. Both default-off and private opt-in variants were rebuilt for 7.2.9.
+
+On-device, channel 60/HT40 completed the listener interval with `state=2 result=0 listen_only=1 fault=0`.
+An initial combined 40/80 MHz script counted interface startup inside its listener timeout: the 80 MHz start was
+about 35 seconds late, so the script began restoring Wi-Fi while the listener was still active. An immediate
+`iw` check found no interface, but later captured logs showed the restored AP enabled. This was an inconclusive
+80 MHz trial, not evidence of a firmware or driver failure. The recheck used independent startup and listener
+waits, and polled the restored hostapd status instead of assuming it was ready after a fixed short delay.
+
+The fresh 80 MHz recheck logged `DFS-CAC-START ... seg0=58 ... cac_time=60s`, command width 3 and duration 60000,
+then `DFS-CAC-COMPLETED success=0 ... chan_width=3 cf1=5290 ... radar_detected=0` about 62 seconds later.
+The prototype recorded `state=2 result=0 listen_only=1 fault=0`; Auto/SAE on channel 149/VHT80 returned and SIM2
+WAN stayed up. As with the 20 MHz run, this is firmware command acknowledgement and termination evidence only.
+The original WLAN/WCN modules and wireless configuration were restored and Linux rebooted afterwards.
+
+A read-only copy of this device's WCN firmware contains `WIFI_CMD_DFS_DETECT` and `WIFI_EVENT_RADAR_DETECTED` strings.
+That is corroborating protocol evidence, not a detector implementation specification. No firmware blob was
+modified. Ordinary-device tests cannot determine whether radar pulses are recognized or whether detection remains
+active after the requested interval.
+
+Before writing an operational CAC-to-AP transition, the SC2355-specific firmware contract must establish:
+
+* Whether the duration controls only CAC bookkeeping or automatically stops the RF detector; what enables
+  monitoring during AP transmission, and what acknowledgement/status confirms that it remains enabled.
+* Whether the Merlion two-byte event format, context routing, primary/center channel handling and domain values
+  apply to this firmware, including delayed events during channel changes.
+* How radar notification stops firmware beacon/data transmission and which AP restart or CSA sequence is supported.
+
+Only after that should the normal build advertise operational radar widths and complete CAC. Measured RF testing
+is still needed for detector response, vacating the channel, and non-occupancy behavior; the default-off listener
+cannot substitute for those checks. The current user has no radar test equipment and requested code and ordinary
+device validation first, so the daily non-DFS policy remains in place.
+
 ### 43. adb over USB to Linux: adbd in the gadget, and what FunctionFS does to the rest of it
 
 `mu300-usb adb on|off` (off by default) puts AOSP's adbd into the USB gadget next to the network function and the

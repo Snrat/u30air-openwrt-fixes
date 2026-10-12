@@ -26,6 +26,8 @@ static struct {
 	bool invalid;
 } dfs;
 static unsigned int dfs_status;
+/* A failed stop leaves firmware state unknown. Only reloading the module clears this. */
+static bool dfs_fault;
 /* 0=idle, 1=listening, 2=listen-only aborted, 3=radar, 4=rejected, 5=invalid event */
 static void dfs_result(unsigned int state, int error)
 {
@@ -35,8 +37,8 @@ static int dfs_status_get(char *buf, const struct kernel_param *kp)
 {
 	unsigned int status = READ_ONCE(dfs_status);
 	(void)kp;
-	return scnprintf(buf, PAGE_SIZE, "state=%u result=%d listen_only=1\n",
-			 status & 255, -(int)(status >> 8));
+	return scnprintf(buf, PAGE_SIZE, "state=%u result=%d listen_only=1 fault=%u\n",
+			 status & 255, -(int)(status >> 8), READ_ONCE(dfs_fault));
 }
 static const struct kernel_param_ops dfs_status_ops = { .get = dfs_status_get };
 module_param_cb(dfs_probe_status, &dfs_status_ops, NULL, 0444);
@@ -79,6 +81,8 @@ static void dfs_finish(struct wiphy *wiphy, unsigned int state, bool radar, bool
 	wiphy_work_cancel(wiphy, &dfs.event_work);
 	vif = netdev_priv(ndev);
 	ret = dfs_command(vif, 0);
+	if (ret)
+		WRITE_ONCE(dfs_fault, true);
 	if (radar)
 		cfg80211_radar_event(wiphy, &dfs.chandef, GFP_KERNEL);
 	if (notify && vif->wdev.links[0].cac_started)
@@ -112,6 +116,8 @@ static int dfs_start(struct wiphy *wiphy, struct net_device *ndev,
 	int ret;
 	if (!dfs_experimental || dfs.priv != vif->priv || !sc2355_dfs_api_supported())
 		return -EOPNOTSUPP;
+	if (READ_ONCE(dfs_fault))
+		return -EIO;
 	if (link_id != 0 || !duration || !cfg80211_chandef_valid(chandef) ||
 	    chandef->chan->band != NL80211_BAND_5GHZ ||
 	    !(chandef->chan->flags & IEEE80211_CHAN_RADAR) ||
@@ -209,7 +215,9 @@ void sc2355_dfs_event(struct sprd_vif *vif, const u8 *data, unsigned int len)
 }
 bool sc2355_dfs_block_ap(const struct cfg80211_chan_def *chandef)
 {
-	return dfs_experimental && chandef->chan && (chandef->chan->flags & IEEE80211_CHAN_RADAR);
+	return dfs_experimental &&
+	       (READ_ONCE(dfs_fault) ||
+		(chandef->chan && (chandef->chan->flags & IEEE80211_CHAN_RADAR)));
 }
 #else
 void sc2355_dfs_setup(struct wiphy *wiphy, struct sprd_priv *priv) { }
