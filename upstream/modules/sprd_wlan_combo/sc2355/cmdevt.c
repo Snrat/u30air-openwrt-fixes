@@ -15,6 +15,7 @@
 #include "common/cfg80211.h"
 #include "common/chip_ops.h"
 #include "common/common.h"
+#include "dfs.h"
 #include "common/delay_work.h"
 #include "common/hif.h"
 #include "common/iface.h"
@@ -58,6 +59,8 @@ static const char *cmdevt_cmd2str(u8 cmd)
 	switch (cmd) {
 	case CMD_ERR:
 		return "CMD_ERR";
+	case CMD_RADAR_DETECT:
+		return "RADAR_DETECT";
 	case CMD_GET_INFO:
 		return "CMD_GET_INFO";
 	case CMD_SET_REGDOM:
@@ -245,6 +248,8 @@ static const char *cmdevt_evt2str(u8 evt)
 		return "EVT_REMAIN_CHAN_EXPIRED";
 	case EVT_MIC_FAIL:
 		return "EVT_MIC_FAIL";
+	case EVT_RADAR_DETECTED:
+		return "RADAR_DETECTED";
 	case EVT_NEW_STATION:
 		return "EVT_NEW_STATION";
 	case EVT_CQM:
@@ -652,6 +657,20 @@ struct sprd_msg *sc2355_get_cmdbuf(struct sprd_priv *priv, struct sprd_vif *vif,
 	return msg;
 }
 
+/* Checked only for API negotiation and the experimental radar command. */
+static int sc2355_checked_ack(const struct sprd_cmd_hdr *hdr, u8 cmd_id)
+{
+	if (!hdr || le16_to_cpu(hdr->plen) < sizeof(*hdr))
+		return -EPROTO;
+	if (hdr->status)
+		return -EREMOTEIO;
+	/* Validate before the generic response copy truncates to the caller's buffer. */
+	if (cmd_id == CMD_SYNC_VERSION &&
+	    le16_to_cpu(hdr->plen) != sizeof(*hdr) + sizeof(struct cmd_api_t))
+		return -EPROTO;
+	return 0;
+}
+
 /* msg is released in this function or the realy driver
  * rbuf: the msg after sprd_cmd_hdr
  * rlen: input the length of rbuf
@@ -678,12 +697,15 @@ int sc2355_send_cmd_recv_rsp(struct sprd_priv *priv, struct sprd_msg *msg, u8 *r
 		return -EIO;
 	}
 
+	cmd_id = ((struct sprd_cmd_hdr *)(msg->tran_data + hif->hif_offset))->cmd_id;
 	ret = sc2355_api_version_available_check(priv, msg);
 	if (ret || cmdevt_lock_cmd(cmd, hif)) {
 		sprd_chip_free_msg(&priv->chip, msg);
 		kfree(msg->tran_data);
 		if (rlen)
 			*rlen = 0;
+		if (!ret && (cmd_id == CMD_RADAR_DETECT || cmd_id == CMD_SYNC_VERSION))
+			ret = -EBUSY;
 		if (ret)
 			pr_err("API check fail, return!!\n");
 		goto out;
@@ -699,6 +721,8 @@ int sc2355_send_cmd_recv_rsp(struct sprd_priv *priv, struct sprd_msg *msg, u8 *r
 			sprd_chip_free_msg(&priv->chip, msg);
 			kfree(msg->tran_data);
 			cmdevt_unlock_cmd(cmd, hif);
+			if (cmd_id == CMD_RADAR_DETECT || cmd_id == CMD_SYNC_VERSION)
+				ret = -EBUSY;
 			goto out;
 		}
 	}
@@ -710,6 +734,8 @@ int sc2355_send_cmd_recv_rsp(struct sprd_priv *priv, struct sprd_msg *msg, u8 *r
 			sprd_chip_free_msg(&priv->chip, msg);
 			kfree(msg->tran_data);
 			cmdevt_unlock_cmd(cmd, hif);
+			if (cmd_id == CMD_RADAR_DETECT || cmd_id == CMD_SYNC_VERSION)
+				ret = -EBUSY;
 			goto out;
 		}
 	}
@@ -730,6 +756,16 @@ int sc2355_send_cmd_recv_rsp(struct sprd_priv *priv, struct sprd_msg *msg, u8 *r
 		timeout = CMD_TIMEOUT_DEBUG_LEVEL;
 
 	ret = cmdevt_recv_rsp_timeout(priv, timeout);
+	if (ret != -1 && (cmd_id == CMD_RADAR_DETECT || cmd_id == CMD_SYNC_VERSION)) {
+		spin_lock_bh(&cmd->lock);
+		hdr = cmd->data;
+		ret = sc2355_checked_ack(hdr, cmd_id);
+		spin_unlock_bh(&cmd->lock);
+		if (ret) {
+			cmdevt_unlock_cmd(cmd, hif);
+			return ret;
+		}
+	}
 	if (ret != -1) {
 #ifndef DRV_RESET_SELF
 		if (rbuf && rlen && *rlen) {
@@ -1268,7 +1304,12 @@ int sc2355_sync_version(struct sprd_priv *priv)
 	sc2355_api_version_fill_drv(priv, drv_api);
 
 	ret = send_cmd_recv_rsp(priv, msg, r_buf, &r_len);
-	if (!ret && r_len) {
+	if (!ret) {
+		/* A short reply leaves the remaining stack bytes uninitialized. */
+		if (r_len != sizeof(*fw_api)) {
+			pr_warn("SC2355 API negotiation: incomplete reply (%u bytes)\n", r_len);
+			return -EPROTO;
+		}
 		fw_api = (struct cmd_api_t *)r_buf;
 		/*fill fw api version to priv got from firmware*/
 		sc2355_api_version_fill_fw(priv, fw_api);
@@ -3986,6 +4027,9 @@ unsigned short sc2355_rx_evt_process(struct sprd_priv *priv, u8 *msg)
 		break;
 	case EVT_REMAIN_CHAN_EXPIRED:
 		cmdevt_report_remain_on_channel_evt(vif, data, len);
+		break;
+	case EVT_RADAR_DETECTED:
+		sc2355_dfs_event(vif, data, len);
 		break;
 	case EVT_NEW_STATION:
 		cmdevt_report_new_station_evt(vif, data, len);

@@ -10,6 +10,7 @@
 */
 
 #include "acs.h"
+#include "sc2355/dfs.h"
 #include "cfg80211.h"
 #include "chip_ops.h"
 #include "cmd.h"
@@ -391,6 +392,7 @@ int sprd_cfg80211_del_iface(struct wiphy *wiphy, struct wireless_dev *wdev)
 		if (&vif->wdev == wdev) {
 			list_del(&vif->vif_node);
 			spin_unlock_bh(&priv->list_lock);
+			sc2355_dfs_abort(vif);
 			return sprd_del_iface(priv, vif);
 		}
 	}
@@ -413,6 +415,7 @@ int sprd_cfg80211_change_iface(struct wiphy *wiphy, struct net_device *ndev,
 		return -ENODEV;
 	}
 
+	sc2355_dfs_abort(vif);
 	old_type = vif->wdev.iftype;
 	hif = &vif->priv->hif;
 	if (!hif) {
@@ -561,6 +564,9 @@ int sprd_cfg80211_start_ap(struct wiphy *wiphy, struct net_device *ndev,
 	u8 ds_channel = 0;
 	int ret;
 
+	if (sc2355_dfs_block_ap(&settings->chandef))
+		return -EOPNOTSUPP;
+
 	if (!settings->ssid) {
 		netdev_err(ndev, "%s invalid SSID!\n", __func__);
 		return -EINVAL;
@@ -661,6 +667,7 @@ int sprd_cfg80211_stop_ap(struct wiphy *wiphy, struct net_device *ndev)
 {
 	struct sprd_priv *priv = wiphy_priv(wiphy);
 	netdev_info(ndev, "%s\n", __func__);
+	sc2355_dfs_abort(netdev_priv(ndev));
 	sprd_fcc_reset_bo(priv);
 
 	return 0;

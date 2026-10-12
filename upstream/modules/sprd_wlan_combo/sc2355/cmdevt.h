@@ -322,6 +322,8 @@ enum sniffer_band {
 };
 
 /*CMD SYNC_VERSION struct*/
+bool sc2355_dfs_api_supported(void);
+
 struct cmd_api_t {
 	u32 main_ver;
 	u8 api_map[256];

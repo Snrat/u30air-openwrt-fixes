@@ -3537,7 +3537,8 @@ channel 149 works.
   `merlion` driver, another chip, implements `start_radar_detection` over the same command number 77, in `11h.c`; a
   port to the sc2355 would need its CAC and radar events measured against real radar before it could be offered.)
   Android's SoftAP never uses these channels either: its ACS list is 36-48 and 149-165 (§23).
-* **Decision.** The hotspot never goes onto a DFS channel; nothing tries to make DFS work. Every layer that picks or
+* **Daily configuration.** The hotspot never goes onto a DFS channel. The disabled listener experiment below
+  does not change this policy. Every layer that picks or
   writes the channel keeps it off them, and a DFS channel is replaced, never refused, so the hotspot does not stay
   down:
   * `opt/mu300/lib/wifi-channels.sh` (shared by the tools below): the firmware's channels a country allows without
@@ -3572,8 +3573,52 @@ channel 149 works.
   `mu300-wifi-band` with a stub `uci`, and again with the real `uci` and ash of the v2026.10.18 `openwrt-luci`
   rootfs; and, with `MU300_WRT_IMAGE` naming an OpenWrt 25.12 image, the patch applied to the feed's wifi-scripts
   (OpenWrt 25.12.5, ImmortalWrt 25.12.2 and the v2026.10.18 rootfs) and the hostapd configuration they generate for
-  a fake wiphy with and without radar detection. Not yet on a device: the hotspot on 36 after LuCI was set to 60,
-  and ACS (`auto` in LuCI) on this driver.
+  a fake wiphy with and without radar detection. Device verification is recorded below.
+
+
+#### U30 Air hardware follow-up (2026-10-12)
+
+The installed image did not yet contain `wifi-scripts-no-dfs.patch`. A guarded channel-60/VHT80 test reproduced
+`DFS-CAC-START` followed by `start_dfs_cac() failed, -1`. After applying the existing upstream patch and checking
+`hostapd.uc` as an imported ucode module, the same request selected channel 36/VHT80 and enabled the AP. Restoring
+Auto/VHT80 selected channel 149. This fixes an unavailable hotspot by selecting a supported channel; it does not
+add radar detection.
+
+A read-only `dfs_fw_api` module parameter now records a complete, successful SC2355 API negotiation. This device
+reported `last_negotiated=1 command=1 event=1` for command 77 and event 161. The getter sends no commands. Empty,
+short and oversized negotiation replies are rejected instead of reading an incompletely initialized stack buffer.
+A version declaration is not evidence of a working RF detector.
+
+The **default-off, listen-only** `dfs_experimental` prototype is confined to Linux 7.2 or newer. It connects
+`start_radar_detection`/`end_cac`, command 77, and event 161 for protocol investigation. The candidate packed
+request (channel, width, little-endian duration in milliseconds) and two-byte event format come from
+[the pinned vendor Merlion implementation](https://github.com/realme-kernel-opensource/realme_C51_C53_Narzo-N53-AndroidT-kernel-source/blob/4381465ccaf87fcf3215b9cd42f4a685df40e5e0/kernel_modules/kernel5.4/wcn/wlan/wlan_combo/merlion/11h.c).
+That is another chip's contract, so this remains an experiment. It permits only one interface and requires
+negotiated v1 command/event APIs. Command submission failures, missing acknowledgements and firmware status
+errors propagate to the caller. The timer reports **CAC_ABORTED**, never CAC_FINISHED; malformed candidate events
+also abort. A candidate radar event reports the channel unavailable and aborts. The prototype explicitly refuses
+AP transmission on radar channels even when userspace tries to start it. Normal builds leave it disabled and do
+not advertise radar detection widths.
+
+On the owned U30 Air, a private opt-in build negotiated v1, then accepted channel 60/20 MHz NOHT and a 60,000 ms
+listening request. The hostapd log showed `DFS-CAC-START`; the prototype logged listening with no AP TX. At expiry,
+the stop command returned zero and hostapd reported `DFS-CAC-COMPLETED success=0 ... radar_detected=0`. This verifies
+command acknowledgement and controlled termination only. No radar waveform or actual firmware radar event was
+observed or tested. The original WLAN and WCN modules were restored and Linux rebooted afterwards; the Wi-Fi
+configuration was restored too. No Android partition or firmware blob was modified.
+
+Tests execute the actual negotiation function, candidate event parser, and terminal listener callbacks with
+recorded kernel operations: truncated/oversized replies, parser boundaries, timer/stop failure, one-shot cleanup,
+radar and malformed events. Fourteen new tests and 47 existing static checks passed; the channel guard suite ran 19 tests with one optional
+image-dependent test skipped. Both private modules built for
+the running 7.2.9 kernel and loaded on the device; the prepared kernel's incomplete `Module.symvers` required
+`KBUILD_MODPOST_WARN=1`, with added imports checked separately against the running kernel and matching source.
+This is development build evidence, not a production release build.
+
+**Still required before operational DFS:** confirm the SC2355 event format with measured RF stimuli, test radar
+response and non-occupancy handling, implement/verify monitoring after CAC and AP start, channel evacuation/CSA,
+and teardown/recovery behavior across supported kernels and firmware. A quiet timer or successful command must
+not be used to mark a channel available. Keep the daily non-DFS guard until those requirements are met.
 
 ### 43. adb over USB to Linux: adbd in the gadget, and what FunctionFS does to the rest of it
 

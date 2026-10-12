@@ -16,6 +16,7 @@
 #include "common/chip_ops.h"
 #include "common/common.h"
 #include "qos.h"
+#include "dfs.h"
 #include "scan.h"
 #include "txrx.h"
 
@@ -414,6 +415,8 @@ void sc2355_setup_wiphy(struct wiphy *wiphy, struct sprd_priv *priv)
 	if (priv->fw_capa & SPRD_CAPA_LL_STATS)
 		pr_info("\tLink layer stats supported\n");
 
+	sc2355_dfs_setup(wiphy, priv);
+
 	wiphy->max_sched_scan_reqs = 1;
 	wiphy_ext_feature_set(wiphy,
 			      NL80211_EXT_FEATURE_SCHED_SCAN_RELATIVE_RSSI);
@@ -443,6 +446,7 @@ int sc2355_set_rekey(struct wiphy *wiphy, struct net_device *ndev,
 
 void sc2355_ops_update(struct cfg80211_ops *ops)
 {
+	sc2355_dfs_ops(ops);
 	ops->abort_scan = sc2355_abort_scan;
 	ops->set_rekey_data = sc2355_set_rekey;
 }

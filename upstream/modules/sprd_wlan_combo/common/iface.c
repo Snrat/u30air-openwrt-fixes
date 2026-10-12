@@ -17,6 +17,7 @@
 #include <linux/miscdevice.h>
 
 #include "cfg80211.h"
+#include "sc2355/dfs.h"
 #include "chip_ops.h"
 #include "cmd.h"
 #include "common.h"
@@ -1930,6 +1931,7 @@ static int iface_core_deinit(struct sprd_priv *priv)
 #ifdef DRV_RESET_SELF
 	sprd_cancel_reset_work(priv);
 #endif
+	sc2355_dfs_remove(priv);
 	iface_del_all_ifaces(priv);
 	sprd_vendor_deinit(priv, priv->wiphy);
 	wiphy_unregister(priv->wiphy);

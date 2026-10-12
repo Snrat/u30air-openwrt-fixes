@@ -74,6 +74,7 @@ SC2332_SDIO_WLAN := sc2332/sdio.o
 SC2355_WLAN := \
 		sc2355/acs.o \
 		sc2355/api_version.o \
+		sc2355/dfs.o \
 		sc2355/cmdevt.o \
 		sc2355/defrag.o \
 		sc2355/hw_param.o \

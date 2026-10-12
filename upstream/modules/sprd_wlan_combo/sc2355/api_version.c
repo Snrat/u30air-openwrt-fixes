@@ -9,9 +9,43 @@
 * as published by the Free Software Foundation.
 */
 
+#include <linux/moduleparam.h>
+
 #include "cmdevt.h"
 #include "common/cmd.h"
 #include "common/common.h"
+
+/* Read only the last successful API negotiation, never send a radar command here.
+ * A nonzero version is a protocol declaration, not proof of radar detection.
+ * Publish both byte-sized versions in one snapshot so a sysfs read cannot mix replies.
+ */
+static unsigned int dfs_fw_api_snapshot;
+
+static int sc2355_dfs_fw_api_get(char *buffer, const struct kernel_param *kp)
+{
+	unsigned int snapshot = READ_ONCE(dfs_fw_api_snapshot);
+
+	(void)kp;
+	if (!(snapshot & BIT(31)))
+		return scnprintf(buffer, PAGE_SIZE, "last_negotiated=0\n");
+
+	return scnprintf(buffer, PAGE_SIZE,
+			 "last_negotiated=1 command=%u event=%u\n",
+			 snapshot & 0xff, (snapshot >> 8) & 0xff);
+}
+
+static const struct kernel_param_ops sc2355_dfs_fw_api_ops = {
+	.get = sc2355_dfs_fw_api_get,
+};
+module_param_cb(dfs_fw_api, &sc2355_dfs_fw_api_ops, NULL, 0444);
+MODULE_PARM_DESC(dfs_fw_api,
+		"Last negotiated SC2355 radar command/event API versions; read-only, not DFS capability");
+
+bool sc2355_dfs_api_supported(void)
+{
+	unsigned int snapshot = READ_ONCE(dfs_fw_api_snapshot);
+	return (snapshot & BIT(31)) && (snapshot & 0xffff) == 0x0101;
+}
 
 struct sprd_api_version_t api_array[] = {
 	[0]{	/*ID:0*/
@@ -409,6 +443,7 @@ void sc2355_api_version_fill_drv(struct sprd_priv *priv,
 {
 	int count;
 	struct sprd_api_version_t *p;
+	WRITE_ONCE(dfs_fw_api_snapshot, 0);
 	/*init priv sync_api struct*/
 	priv->sync_api.main_drv = MAIN_DRV_VERSION;
 	priv->sync_api.compat = DEFAULT_COMPAT;
@@ -443,6 +478,9 @@ void sc2355_api_version_fill_fw(struct sprd_priv *priv,
 			     count, p->drv_version, p->fw_version);
 		}
 	}
+	WRITE_ONCE(dfs_fw_api_snapshot, BIT(31) |
+		   (unsigned int)fw_api->api_map[CMD_RADAR_DETECT] |
+		   ((unsigned int)fw_api->api_map[EVT_RADAR_DETECTED] << 8));
 }
 
 int sc2355_api_version_available_check(struct sprd_priv *priv,
