@@ -294,6 +294,37 @@ require the full restart described above. APK replacement after a later upgrade 
 
 ## Validation and limits
 
+The 2026-10-13 follow-up starts from the maintainer's `707be31`, including
+v2026.10.24 main and the recovery guard. Local SAE/parser/guard/SDK/privacy,
+static, Wi-Fi-client and band checks completed successfully (135 cases, one
+optional OpenWrt-container configuration case skipped); all five Wi-Fi startup
+checks passed too. The parser ran with required UBSan. The hostapd and vendor
+logging patches and SDK recipe are unchanged from the previously built r9 pair.
+
+On the connected OpenWrt 25.12.5/7.2.9 U30 Air, the exact guard from `707be31`
+was copied to `/tmp` and run over USB with the installed r9 package pair. The
+real configuration had the offload option and the AP was ENABLED. Both
+`precheck` and `verify` returned without changing the wireless configuration
+(the before/after hashes matched). The AT owner PIDs stayed unchanged, and the
+final public SIM status reported active/default SIM2 with RF ready and WAN up.
+The OpenWrt-first/five-failed-boots policy also remained unchanged.
+
+Eight additional cases ran on that device's real `/sbin/uci` and BusyBox ash,
+with **both the UCI configuration and delta directories isolated under `/tmp`**
+and a synthetic passphrase. `ubus`, `wifi`, `logger` and the wpad service were
+stubs; they did not stop or reconfigure the real radio. Stock-hostapd precheck
+and missing-AP verification removed only the offload list entry, preserved the
+other entry and passphrase, selected WPA2, removed the SAE/PMF options and
+saved a byte-identical mode-0600 backup. Missing-AP verification recorded the
+expected `wifi down`, `wpad restart`, `wifi up` order. Healthy, disabled,
+client/scan/key-off marker and no-opt-in cases left the fixture unchanged.
+
+This checks the normal guard path on the real AP and the recovery mutations
+using real UCI. It does not establish recovery from an actual firmware
+rejection, the original r8/new-module outage, or a boot with a replaced wpad
+package. No packages/modules were replaced or services restarted in this run,
+and no new APK build is claimed. The PMK trust finding below remains open.
+
 The maintainer recovered the #165 test device to its stock Wi-Fi stack and
 updated it to v2026.10.21. The original r8 live-add trace was lost after a
 power cycle; the surviving removal trace had four beacon-parameter failures,
