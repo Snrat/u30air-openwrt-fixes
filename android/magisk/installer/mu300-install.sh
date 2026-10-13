@@ -13,6 +13,15 @@
 # there can be replaced between the check and the use. A settings file on /sdcard is read, but it can only choose
 # what destroys nothing (see conf_load).
 #
+# Another caller than Magisk's customize.sh (tools/android-web.sh, for the web installer, runs this as root over adb)
+# sets two things in the environment:
+#   MU300_ANSWERS=FILE  the settings of this run come from FILE alone - one only root can change, or the run is
+#                       refused - and no mu300-install.conf on /sdcard or in /data/adb is read (conf_read)
+#   MU300_PROGRESS=1    lines a program can follow, beside the messages for people (step, plan_machine):
+#                         MU300-STEP <n>/<of> <name>     a stage begins; the names are STEPS below
+#                         MU300-PLAN <key>=<value>       the plan, one value per line, after the plan for people
+# and may put extras beside the scripts (extras_find): mu300/extras/mu300-extra-<name>.tar.gz.
+#
 # MU300_LIB=1 defines the functions and runs nothing (tests/, which also set MU300_DIR to a directory laid out like
 # the zip's mu300/). The MU300_* paths below point at a fake device there.
 set -eu
@@ -52,6 +61,16 @@ MU300_LANG=${MU300_LANG:-}
 say() { echo "- $*"; }
 warn() { echo "! $*"; }
 die() { echo "! $*"; exit 1; }
+# The stages of a run, in order, for a caller that draws them (MU300_PROGRESS=1). Names, not messages: they are never
+# translated and do not change with the wording. Nothing is written to the eMMC or the card before "systems"; the
+# Linux slot's boot image is written in "boot", and "arm" is the 32 bytes of misc.
+STEPS='check unpack plan vendor image systems boot arm done'
+step() {  # step NAME
+    [ "${MU300_PROGRESS:-}" = 1 ] || return 0
+    _sn=0 _st=0
+    for _s in $STEPS; do _st=$((_st + 1)); [ "$_s" != "$1" ] || _sn=$_st; done
+    echo "MU300-STEP $_sn/$_st $1"
+}
 gib() { awk -v b="$1" 'BEGIN { printf "%.1f GiB", b / 1073741824 }'; }
 # Android's own shell and toolbox, never Magisk's standalone busybox: its mke2fs makes ext2 only and its losetup has
 # no -S. su -c sh gives install.sh exactly this environment. MU300_DEVICE_WORK tells android-install.sh where its files are.
@@ -74,13 +93,14 @@ android_lang() {  # the language of the Android locale: tr, zh or en
 #   untrusted  /sdcard/mu300-install.conf or /sdcard/Download/mu300-install.conf (first found): any app with
 #              storage access can write these, so they choose only what destroys nothing and reveals nothing
 # Trusted values win.
-CONF_KEYS='MU300_STORAGE MU300_SD_ERASE MU300_REGION_OVERWRITE MU300_MODE MU300_BOOT_OS MU300_BOOT MU300_BOOT_ATTEMPTS MU300_HOTSPOT MU300_GPU MU300_PASSWORD MU300_PASSWORD_RESET MU300_PASSWORD_FILE MU300_DEVICE MU300_LANG MU300_DRY_RUN MU300_SYNC_BOOTCHAIN'
+CONF_KEYS='MU300_STORAGE MU300_SD_ERASE MU300_REGION_OVERWRITE MU300_MODE MU300_BOOT_OS MU300_BOOT MU300_BOOT_ATTEMPTS MU300_HOTSPOT MU300_GPU MU300_PASSWORD MU300_PASSWORD_RESET MU300_PASSWORD_FILE MU300_DEVICE MU300_LANG MU300_DRY_RUN MU300_SYNC_BOOTCHAIN MU300_ADB_KEY'
 CONF_SET=
 conf_find() { for _f in "$SDCARD/mu300-install.conf" "$SDCARD/Download/mu300-install.conf"; do [ -f "$_f" ] && { echo "$_f"; return 0; }; done; return 0; }
 # erasing, formatting, overriding the model check and the password: only from a trusted file
 conf_trusted_only() {  # conf_trusted_only KEY VALUE
     case $1 in
         MU300_SD_ERASE|MU300_REGION_OVERWRITE|MU300_PASSWORD|MU300_PASSWORD_RESET|MU300_PASSWORD_FILE|MU300_DEVICE) return 0 ;;
+        MU300_ADB_KEY) return 0 ;;               # whoever holds that key gets a root shell in Linux
         MU300_MODE) [ "$2" = wipe ] ;;
         *) return 1 ;;
     esac
@@ -107,6 +127,7 @@ conf_load() {  # conf_load FILE [trusted]
                 [ -n "$_v" ] || continue
                 if ! conf_valid "$_k" "$_v"; then
                     [ "$_k" != MU300_PASSWORD ] || die "$(t 'mu300-install.conf: MU300_PASSWORD must have at least 6 characters')"
+                    [ "$_k" != MU300_ADB_KEY ] || _v=$(printf '%s' "$_v" | cut -c1-16)...
                     die "$(t 'mu300-install.conf: {1}={2} is not valid' "$_k" "$_v")"
                 fi
                 if [ "$_tr" != trusted ] && conf_trusted_only "$_k" "$_v"; then
@@ -130,6 +151,15 @@ conf_load() {  # conf_load FILE [trusted]
     CONF_SET="$CONF_SET$_set"
 }
 conf_read() {  # every settings file there is, the untrusted ones first so that trusted values win
+    # MU300_ANSWERS (the environment of a caller that is root already): that file and no other. Somebody is watching
+    # this run on another screen and has just confirmed its plan: a file left on /sdcard or in /data/adb must not
+    # change it. The rule for a file that may erase is the same as for the one in /data/adb.
+    if [ -n "${MU300_ANSWERS:-}" ]; then
+        conf_trusted "$MU300_ANSWERS" ||
+            die "$(t '{1} is not a file that only root can change; nothing was changed' "$MU300_ANSWERS")"
+        conf_load "$MU300_ANSWERS" trusted
+        return 0
+    fi
     conf_load "$(conf_find)"
     _adb=
     if [ -e "$TRUSTED_CONF" ]; then
@@ -156,6 +186,14 @@ conf_valid() {  # conf_valid KEY VALUE: VALUE is exactly one this installer know
         MU300_LANG) case $2 in en|tr|zh) return 0 ;; esac ;;
         MU300_DRY_RUN) [ "$2" = 1 ] && return 0 ;;
         MU300_SYNC_BOOTCHAIN) case $2 in 0|1) return 0 ;; esac ;;
+        # an adb public key as storage.sh's adb_pubkey takes it from adbkey.pub: 700 base64 characters ("QAAAA"
+        # first, "=" last), one blank, a name of [A-Za-z0-9@._:-]. It goes into mu300-install.env in single quotes.
+        MU300_ADB_KEY)
+            _ak=${2%% *}; _an=${2#* }
+            [ "$_ak $_an" = "$2" ] && [ ${#_ak} -eq 700 ] && [ "${_ak%=}" != "$_ak" ] || return 1
+            case ${_ak%=} in QAAAA*[!A-Za-z0-9+/]*) return 1 ;; QAAAA*) ;; *) return 1 ;; esac
+            case $_an in ''|*[!A-Za-z0-9@._:-]*) return 1 ;; esac
+            [ ${#_an} -le 64 ] && return 0 ;;
         # any characters: it only ever goes to mkpasswd on stdin, never into a path or a command line
         MU300_PASSWORD) [ ${#2} -ge 6 ] && return 0 ;;
     esac
@@ -166,6 +204,7 @@ conf_check() {  # every answer, from a file or the environment, has a value this
         eval "_v=\${$_k:-}"
         [ -z "$_v" ] || conf_valid "$_k" "$_v" && continue
         [ "$_k" != MU300_PASSWORD ] || die "$(t 'mu300-install.conf: MU300_PASSWORD must have at least 6 characters')"
+        [ "$_k" != MU300_ADB_KEY ] || _v=$(printf '%s' "$_v" | cut -c1-16)...
         die "$(t 'mu300-install.conf: {1}={2} is not valid' "$_k" "$_v")"
     done
 }
@@ -449,14 +488,36 @@ plan_choices() {
     KEEP_PW=0
     if [ "$UPDATE" = 1 ] && [ "${HAVE_ACCOUNTS:-0}" = 1 ] && [ -z "${MU300_PASSWORD:-}" ] &&
         [ "${MU300_PASSWORD_RESET:-}" != yes ]; then KEEP_PW=1; fi
+    # adb over USB to Linux for one key (MU300_ADB_KEY, trusted only): android-install.sh turns it on and authorises
+    # the key in the system it installs. Without it nothing about adb changes (an update keeps what was set).
+    ADB=0 ADB_KEY=
+    if [ -n "${MU300_ADB_KEY:-}" ]; then ADB=1; ADB_KEY=$MU300_ADB_KEY; fi
     # an if, not an && list: the last command's status is the function's, and set -e would stop main on it
     WIPE_LEGACY=0; if [ "$OS" = ubuntu ] && [ "$FORMAT" = 0 ]; then WIPE_LEGACY=1; fi
+}
+# The extras a caller put beside the scripts, mu300/extras/mu300-extra-<name>.tar.gz (the VPN module as vpn, the
+# web panel as panel): android-install.sh installs every mu300-extra-<name>.tar.gz of its work directory onto the
+# Linux partition (extra/<name>) and checks what it unpacks. Only these names, and only regular files: D is as
+# trusted as the scripts in it. EXTRAS: the names found.
+EXTRA_NAMES='vpn panel'
+extras_find() {
+    EXTRAS=
+    for _n in $EXTRA_NAMES; do
+        _f=$D/extras/mu300-extra-$_n.tar.gz
+        if [ -f "$_f" ] && [ ! -L "$_f" ] && [ -s "$_f" ]; then EXTRAS="$EXTRAS $_n"; fi
+    done
+    EXTRAS=${EXTRAS# }
+}
+extras_take() {  # into W, for android-install.sh
+    for _n in $EXTRAS; do
+        cp "$D/extras/mu300-extra-$_n.tar.gz" "$W/mu300-extra-$_n.tar.gz" || die "$(t 'could not copy the installer files')"
+    done
 }
 # The Linux slot gets the boot chain of Android's slot - uboot, sml, teecfg, trustos and vbmeta, one firmware build on
 # both slots (issue #86): android-bootchain.sh decides and checks here, android-install.sh copies it before it installs
 # anything, with a backup on the Linux filesystem (.mu300/bootchain). MU300_SYNC_BOOTCHAIN=0 skips that, for experts.
 plan_bootchain() {
-    SYNC_BOOTCHAIN=1; BC_LINE=; BC_REFUSED=
+    SYNC_BOOTCHAIN=1; BC_LINE=; BC_REFUSED=; BC_NAMES=
     if [ "${MU300_SYNC_BOOTCHAIN:-1}" = 0 ]; then
         SYNC_BOOTCHAIN=0; BC_LINE=$(t 'boot chain:     not synced (MU300_SYNC_BOOTCHAIN=0)'); return 0
     fi
@@ -465,6 +526,8 @@ plan_bootchain() {
         SYNC_BOOTCHAIN=0; BC_LINE=$(t 'boot chain:     not synced (the model is not recognised)'); return 0
     fi
     _bco=$(asw MU300_BY_NAME="$BY" "$ANDROID_SH" "$D/android-bootchain.sh" check 2>&1) || true
+    # the names that differ between the slots (BOOTCHAIN-PLAN <android slot> <linux slot> [names]), for plan_machine
+    BC_NAMES=$(printf '%s\n' "$_bco" | sed -n 's/^BOOTCHAIN-PLAN [ab] [ab] *//p' | head -n1)
     bootchain_line "$_bco" ||
         die "$(t 'the boot chain cannot be copied to the Linux slot: {1}' "$BC_REFUSED")
 $(t 'Nothing was changed. Experts can skip this step with MU300_SYNC_BOOTCHAIN=0.')"
@@ -494,8 +557,26 @@ plan_print() {
     else
         echo "  $(t 'password:       none: root logs in without one until one is set with passwd or in LuCI, System > Administration ({1} in {2} sets one now)' "MU300_PASSWORD" "$TRUSTED_CONF")"
     fi
+    [ -z "$EXTRAS" ] || echo "  $(t 'extras:         {1}' "$EXTRAS")"
+    [ "$ADB" = 0 ] || echo "  $(t 'adb to Linux:   {1}' "$(t 'on, for {1}' "${ADB_KEY#* }")")"
     echo "  $(t 'writes:         {1}, boot_{2}, 32 bytes of misc (boot_{3}, the partition table and userdata are not touched)' "$([ "$SD_MODE" = 1 ] && echo "$SD_DEV" || t 'the Linux region')" "$LINUX_SLOT" "$ANDROID_SLOT")"
     echo "  $BC_LINE"
+    plan_machine
+}
+# The same plan for a program (MU300_PROGRESS=1): one "MU300-PLAN key=value" per line. Values are the installer's own
+# words and numbers (no translated text, never a password or a key); a list is separated by blanks.
+plan_machine() {
+    [ "${MU300_PROGRESS:-}" = 1 ] || return 0
+    _pw=image
+    if [ "$KEEP_PW" = 1 ]; then _pw=kept; elif [ -n "${MU300_PASSWORD:-}" ]; then _pw=given; fi
+    for _l in "tag=$TAG" "system=$SYSTEM" "os=$OS" "ubuntu=$UBUNTU" "kernel=$KERNEL" "device=$DEVICE" \
+        "storage=$([ "$SD_MODE" = 1 ] && echo sd || echo internal)" "sd_dev=$([ "$SD_MODE" != 1 ] || echo "$SD_DEV")" \
+        "offset=$INT_OFF" "size=$TARGET_SIZE" "format=$FORMAT" "update=$UPDATE" "have=${HAVE_SYSTEMS# }" \
+        "boot_os=$BOOT_OS" "default_linux=$DEFAULT_LINUX" "boot_attempts=$BOOT_ATTEMPTS" "hotspot=$IMPORT_HOTSPOT" \
+        "gpu=$GPU" "password=$_pw" "extras=$EXTRAS" "adb=$ADB" "linux_slot=$LINUX_SLOT" "android_slot=$ANDROID_SLOT" \
+        "sync_bootchain=$SYNC_BOOTCHAIN" "bootchain=$BC_NAMES" "dry_run=${MU300_DRY_RUN:-0}"; do
+        echo "MU300-PLAN $_l"
+    done
 }
 # Every setting, what it does and the value this run used (or would have: a refused run writes it too, with what
 # was known by then), so nobody has to type it from a README. Any app can write $SDCARD, so it is never opened by
@@ -548,6 +629,8 @@ write_example() {
         echo "#MU300_DRY_RUN=1"
         echo "# 0: leave the Linux slot's boot chain (uboot, sml, teecfg, trustos, vbmeta) as it is; experts only"
         echo "#MU300_SYNC_BOOTCHAIN=1"
+        echo "# (root) adb over USB to Linux for one computer: the line of its ~/.android/adbkey.pub (it gets a root shell)"
+        echo "#MU300_ADB_KEY="
     } > "$_new" ) 2>/dev/null &&
         [ -f "$_new" ] && [ ! -L "$_new" ] && rm -f "$_ex" && mv -f "$_new" "$_ex" 2>/dev/null
     rm -f "$_new" 2>/dev/null
@@ -641,6 +724,7 @@ install_env() {
 install_systems() {
     say "$(t 'Installing {1} (this takes a few minutes)' "$OS")"
     cp "$D/android-install.sh" "$D/android-mount-mu300root.sh" "$D/android-bootchain.sh" "$W/" || die "$(t 'could not copy the installer files')"
+    extras_take
     install_env
     asw "$ANDROID_SH" "$W/android-install.sh" 2>&1 | tee "$W/device-install.log"
     _keep=$WORK_PARENT/mu300-device-install.log
@@ -785,6 +869,7 @@ main() {
     conf_valid MU300_LANG "$MU300_LANG" || MU300_LANG=en      # it is part of a file name in t()
     manifest_load "$D/manifest"
     echo "MU300 Linux $TAG"
+    step check
     conf_read
     conf_check
     env_check
@@ -793,20 +878,29 @@ main() {
     slot_setup
     work_setup
     misc_save
+    step unpack
     payload_unpack
+    step plan
     plan_storage
     inspect_target
     plan_choices
+    extras_find
     plan_bootchain
     plan_print
     if [ "${MU300_DRY_RUN:-}" = 1 ]; then say "$(t 'Dry run: nothing was written.')"; exit 3; fi
+    step vendor
     build_vendor
+    step image
     build_boot
     build_password
     save_password
+    step systems
     install_systems
+    step boot
     install_boot
+    step arm
     arm_linux
+    step done
     report || true
 }
 [ -z "${MU300_LIB:-}" ] || return 0

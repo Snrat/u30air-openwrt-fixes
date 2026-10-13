@@ -130,7 +130,11 @@ what replaced it. The table below gives each section's state.
 | 65 | An APN with a user name and a password (`AT+CGPCO`), and what else kanoqwq's APN page does | current (unit tests only; never sent to a modem) |
 | 66 | The OpenWrt image build tries a package download again | current (unit tests only; no image built with it) |
 | 70 | adb to Linux on by default and open to every computer: the owner's decision, the exposure, and the state that decides it | current (unit tests; nothing of it measured on a device: the checklist is in the section) |
-| 80 | WPA3 on the U30 Air's access point: the SC2355 firmware does SAE itself (PR #74, Snrat) | experimental, opt-in build recipe (7.2.9 only); PMK provenance open; the WPA2 fallback not yet run on a device |
+| 72 | The web installer: adb over WebUSB, how the release files reach the device, WebUSB per platform, and what a closed tab leaves | current; nothing of it has run on a device yet (protocol: docs/web-installer.md) |
+| 74 | The U30 Air's second SIM: what two units showed, and the selector built on it (PR #73/#166, #194) | current (the maintainer's U30 Air on 7.2.10 and the contributor's on 7.2.9); two working cards, kernel 5.4 and an F50 not run |
+| 80 | WPA3 on the U30 Air's access point: the SC2355 firmware does SAE itself (PR #74, Snrat) | experimental, opt-in build recipe (7.2.9; 7.2.10 without a client); PMK provenance open; the WPA2 fallback measured on the U30 Air |
+| 81 | An update that brought another mu300-update ended with "another mu300-update is running": the lock was held by the first half's own keep-alive | current (fixed; found on the F50 updating v2026.10.23 to v2026.10.24) |
+| 82 | adb on by default, and no OpenWrt had it after a boot: the service gave up 13 s after power-on, before FunctionFS could be had | current (fixed; measured on the F50, openwrt-luci, 7.2.10) |
 
 ## Hardware and firmware facts
 
@@ -5228,6 +5232,318 @@ carries the change). `S` is the device's serial in `adb devices`, the computer a
     the same with `install.ps1 -Check` on Windows. With `adb auth keys` and no key of that computer: over SSH as
     before.
 
+### 81. An update that brought another mu300-update ended with "another mu300-update is running"
+
+Found on the first device update to the v2026.10.24 pre-release (F50, Ubuntu 24.04, v2026.10.23 installed):
+
+    $ sudo mu300-update apply
+    another mu300-update is running (pid 33187)
+
+and nothing was updated. No other run existed, and 33187 was the run itself. `apply` takes the release's own
+`mu300-update` when it differs from the installed one, replaces the installed file and execs the new one: the same
+process, which then takes the lock again (`exec 9>>lock; flock -n 9`). The descriptor it replaces was the lock's
+holder, so that should succeed - but the dispatch starts the keep-alive after `lock_take`, a background loop of
+`ping` and `sleep 3` that inherits descriptor 9, and `keepalive_stop` ends the loop's shell, not the ping or sleep it
+is waiting for. For up to three seconds one of them still holds the lock, and the continued run's `flock -n` fails
+with its own process id in the message. It is a race: an update whose release has the same updater never execs
+(v2026.10.22 to v2026.10.23 on the same device went through), and one that does can win it. A second `mu300-update
+apply` always works, because the installed updater is the release's by then.
+
+The updater that leaves the stragglers behind is the installed one, which no release can change; the one that
+meets them is the release's. So the fix is in what meets them: when `flock` fails in a run that was continued
+(`MU300_SELF_UPDATED`) and the lock file names this process, the lock is this run's; it waits up to ten seconds for
+the descriptor to come free and goes on either way. Any other holder is refused as before. And the keep-alive now
+runs without the lock's descriptor (`9>&-`), so no later updater leaves this behind. Measured: the tests reproduce
+the failure with the old lock code under dash, bash and busybox sh on Linux (macOS has no `flock`; the pid-directory
+lock always knew a continued run by its pid). Devices that took the v2026.10.24 pre-release's updater are not
+affected by it again: their next update meets the fixed one.
+
+### 82. adb on by default, and no OpenWrt had it after a boot
+
+The v2026.10.24 pre-release on an F50, openwrt-luci, kernel 7.2.10: `mu300-usb adb status` said `adb: on`, `auth:
+open`, and `gadget: without adb`; no adbd ran, and the computer saw no adb device. `/etc/init.d/mu300-adbd start` by
+hand brought it up at once. On Ubuntu, same device and kernel, adb was there after every boot (section 70).
+
+The service's own trace at boot (its command wrapped in `sh -x` into a file, because the log ring had already
+turned over): it ran 13 s after power-on (S19), FunctionFS was not in `/proc/filesystems`, not built in, and
+`mkdir functions/ffs.adb` failed - which the script takes for "this kernel has no FunctionFS", logs, and exits 0.
+procd does not start a service again that ended by itself. Some seconds later the same `mkdir` works (the module
+is loaded on demand then; what is not ready at second 13 was not looked into). Under systemd the unit starts later
+and never met this. Until adb was on by default nobody saw it: `mu300-usb adb on` starts the service long after
+the boot, and the 5.4 kernel has FunctionFS built in.
+
+`mu300-adbd run` now asks again once a second for a minute (`MU300_ADB_WAIT`) before it believes the no and logs
+it. Measured after the change: adb in `adb devices` 38 s after power-on, `mu300-device --json` answering over it,
+mobile data up. Not measured: OpenWrt on 6.18 and on 5.4, the U30 Air.
+
+## The web installer
+
+### 72. The web installer: adb over WebUSB, how the release files reach the device, WebUSB per platform, and what a closed tab leaves
+
+`site/web-installer/` installs, manages and removes Linux from Chrome or Edge over USB, with nothing on the computer
+but the browser. The design is in `docs/web-installer.md`; this section is what was measured for it on 2026-10-13, and
+what was not. **None of it has run on a device**: every test device was in use, and a browser's USB chooser cannot be
+driven by a script. The page says so (beta), and the protocol for the first run on an F50 is in that document.
+
+**1. The adb client: our own, about 900 lines, no dependency.** The candidate was ya-webadb / Tango (`@yume-chan/adb`
+2.6.4 with `adb-daemon-webusb`, MIT, maintained). It is TypeScript in a dozen packages with bare imports
+(`@yume-chan/async`, `event`, `struct`, `no-data-view`, `stream-extra`; 609 kB unpacked for `adb` alone), so the site
+would need a bundler in CI or a vendored bundle to keep in step by hand, on a page that writes to boot partitions.
+What we need of adb is small and fixed: the handshake with RSA authentication, shell v2 with exit codes, sync push,
+pull and stat, reboot. `site/assets/web-installer/adb/` is that, as plain ES modules the browser and Node load as
+they are. Two things were taken from reading ya-webadb's WebUSB backend and AOSP's `usb_linux.cpp` (facts, no code):
+adbd sends a packet as two USB transfers, so the header is read with a request of one endpoint packet and the payload
+with a request of exactly its length; and a write whose length is a whole number of endpoint packets must be
+followed by a zero-length packet.
+* *The signature.* adb signs the device's 20-byte token as if it were a SHA-1 digest (PKCS#1 v1.5). WebCrypto's
+  `sign()` always hashes first and cannot make that signature, so the key is generated with WebCrypto, exported, and
+  the private operation is a BigInt `modPow` (about 10 ms for RSA-2048 in Node 26). The key therefore lives as
+  numbers in IndexedDB, not as a non-extractable CryptoKey; it is not constant time. Checked: the public key line
+  our code derives from a key made by `adb keygen` (platform-tools 37) is byte for byte the `adbkey.pub` adb wrote
+  for it, and Node's OpenSSL accepts the signature as adbd would (`tests/web/adb.test.mjs`).
+* *Against a real adbd.* Ubuntu 26.04's `adbd` package (AOSP 34.0.5; it needs no key and listens on TCP 5555, which
+  is why §43 could not use it) in a container, the client over a TCP transport: handshake and features, shell v2 with
+  stdout, stderr and the exit status apart, stdin, a timeout that ends the command, push/pull/stat of 0 to 5 MB with
+  equal SHA-256 at the 64 KiB chunk boundaries, refused files, an abort in the middle of a push
+  (`tests/web/interop.test.mjs`, 3 tests, run by hand: `MU300_ADBD_TCP=host:port`). Stock adbd gives a pushed file
+  the owner's mode bits for group and others too (0640 arrived as 0666): the page never relies on the mode of a
+  pushed file, and a password does not travel in a file (below).
+* *Not measured:* the USB transport against a device (framing and the zero-length packet are tested against a fake
+  USBDevice only), authentication against an adbd that asks for a key, the Android "allow USB debugging" prompt
+  with a browser's key, the adbd of MU300 Linux. The WebUSB transport takes a `USBDevice` as the WebUSB API defines
+  it, so the same client runs in Node with the `usb` package's `webusb` object (`docs/web-installer.md`); that is the
+  way to try it on a device without a browser.
+
+**2. How the release files reach the device: the user downloads, the page pushes; or the device downloads.**
+A page cannot read a release asset. Measured with `curl -I -H 'Origin: https://kaandikec.com'`:
+
+| request | answer | CORS |
+|---|---|---|
+| `github.com/.../releases/download/v2026.10.23/SHA256SUMS` | 302 to `release-assets.githubusercontent.com` | no `Access-Control-Allow-Origin` on the 302 |
+| the redirect target | 200, `application/octet-stream` | none |
+| `api.github.com/repos/.../releases/latest` | 200 | `Access-Control-Allow-Origin: *` (60 requests an hour without an account) |
+| `api.github.com/repos/.../releases/assets/ID` with `Accept: application/octet-stream` | 302 with `Access-Control-Allow-Origin: *` | the target it redirects to has none, so `fetch()` fails at the second hop |
+
+So `fetch()` gets the release *list* and nothing of the files. The list is enough for integrity: since 2025 the API
+gives every asset a `digest` (`sha256:...`); all 24 assets of v2026.10.23 have one. Publishing the files a second
+time with CORS was ruled out: GitHub Pages allows 1 GB per site and the 11 zips of one release are 890 MB (41 to
+130 MB each).
+* *Primary:* the page links the zip (an ordinary download, which no CORS rule stops), the user picks the downloaded
+  file, the page reads the zip's directory and `mu300/manifest` in the browser (right system, kernel and release, and
+  an installer that knows this caller), pushes it with adb sync, and the **device** computes its SHA-256 after root
+  has moved it to `/data/adb/mu300-web` - compared with the digest from the API. What is checked is the file the
+  installer will read, after the transfer.
+* *Fallback:* `android-web.sh run fetch NAME SIZE`: the device downloads the zip itself with the root manager's
+  busybox `wget`, from an address the script builds from the zip's name (this project's release of the tag in the
+  name; the page cannot name another), then the same check. It costs the device's mobile data. *Not measured:*
+  whether Magisk's busybox `wget` does TLS and follows GitHub's redirect on these devices (toybox has no `wget`).
+  The page offers it as "let the device download it" and says that not every device's tools can.
+* The Magisk zip is the unit, not the separate assets: it holds the installer of its own release, and its payload is
+  stored uncompressed, so nothing is unpacked twice. Two systems are two zips, one after the other, as in the Magisk
+  app.
+
+**3. WebUSB per platform.** Chromium only (Chrome, Edge, Opera, Brave; not Firefox, not Safari), on https or
+localhost. In a headless Chromium the page finds `navigator.usb` and runs under its Content-Security-Policy with
+no violation; `fetch()` to another host than `api.github.com` is refused by that policy (checked).
+* *Any system:* one program at a time can claim the adb interface. A running adb server has it: `claimInterface`
+  fails with `NetworkError`, which the page reports as "another program is using the device" with `adb kill-server`.
+* *Windows:* WebUSB needs the interface bound to WinUSB. AOSP's adbd carries the Microsoft OS descriptor that asks
+  for it (compatible ID `WINUSB` in its FunctionFS descriptors), and our Linux adbd announces the same (§43), so a
+  stock Windows 10/11 should bind it without a driver. **Unknown:** whether ZTE's firmware leaves OS descriptors on
+  in its gadget, and whether a ZTE driver package claims the interface first; no Windows host was available.
+  Google's USB driver is WinUSB and works with WebUSB; Zadig can bind WinUSB to the one interface. `open()` then
+  fails with `SecurityError`/`NetworkError`, which the page explains per platform.
+* *Linux:* the device node is root's unless a udev rule says otherwise (distributions' `android-udev` rules cover
+  known vendor ids, not necessarily this one). The page shows a rule that matches the adb interface by class
+  (ff/42) with `uaccess`. A snap or flatpak browser may need its own USB permission.
+* *macOS:* nothing to install; only another program holding the device is in the way.
+* *Android Chrome* has WebUSB as well, so a phone with an OTG adapter could run the page. Not built for and not
+  tried: the phone would have to power a battery-less F50 for the whole installation.
+* *Not measured anywhere:* the chooser listing an F50 or U30 Air, and what their Android answers to a browser's key.
+  Whether these devices' bootloaders set `ro.boot.verifiedbootstate`, `ro.boot.flash.locked` or
+  `ro.boot.vbmeta.device_state` is not known either: the page shows "not reported" when none is set.
+
+**4. What a closed tab or a pulled cable leaves.** The installation is not the page's: it is the Magisk zip's own
+installer (`mu300/install.sh`), started by `tools/android-web.sh` as a job in a session of its own (`setsid`, output
+to a file, HUP ignored). The page only watches (`follow`), and a watcher that goes away - tab closed, cable pulled on
+a U30 Air, computer asleep - changes nothing; a new connection reads the same log from its start
+(`tests/test_android_web.py`: a job whose watcher is killed finishes; `tests/web/e2e-android.mjs`: the page's own
+code loses its connection at "systems" and a second connection sees the job end). On an F50 a pulled cable is a
+power cut, as it is for the installer for computers. What is left, by stage (the installer prints the stage,
+`MU300-STEP n/9 name`, and the page shows this sentence beside it):
+
+| stage | written so far | the device then |
+|---|---|---|
+| check, unpack, plan, vendor, image | nothing on the eMMC or the card (files in `/data/adb` only) | boots Android; `clean` removes the files |
+| systems | the Linux filesystem, unfinished | boots Android: boot partitions and misc untouched. Run it again |
+| boot | the Linux slot's boot partition, never Android's | boots Android: the image is written, read back from the medium (`boot_readback`, §50) and only then is misc armed |
+| arm | 32 bytes of misc, read back; the old block is written back when they do not verify | Android's block or the trial block |
+| done | Linux armed for a trial | a Linux that does not finish starting falls back to Android (§17) |
+
+The order and the checks are the Magisk installer's, unchanged; the page adds no write of its own to a block
+device (it composes no `dd`: `tests/test_web_installer.py`). The window in which a cut matters is the installer's
+own, and shorter than install.sh's in one respect: nothing between "boot image verified" and "misc armed" crosses
+the cable. Cancelling is offered only before "systems". The uninstaller (`android-web.sh`, in uninstall.sh's order:
+misc, then the boot partition, then the erase) is safe to cut anywhere for the same reason. *Not measured:* that a
+job really outlives its adb connection under Magisk's `su` on the device (it is its own session; `su`'s daemon may
+still end it), and the stall guards of §50 through this path.
+
+**The device side, for a caller that is not Magisk** (in every zip from the next release on): `MU300_ANSWERS=FILE`
+(the settings of the run from that file alone, which must be root's), `MU300_PROGRESS=1` (`MU300-STEP`, `MU300-PLAN
+key=value`), `mu300/extras/` (the VPN module), `MU300_ADB_KEY` (trusted only). Zips of v2026.10.23 and older do not
+have them, and the page refuses those releases. For Linux the page needs no key since §70 (adb on and open by
+default); it reads `mu300-device --json` (docs/ADB-INTERFACE.md) and offers "only this browser" as a choice, off by
+default, which sets the installed system to authorised keys with the browser's key.
+
+**Privacy.** The page reads ten named properties and never a serial number property; serials come from the USB
+descriptor and are shown masked. Every line a device prints is masked where it enters the page (`device.js`,
+`privacy.js`: serials, 14-20 digit numbers, phone numbers, MAC addresses, values named password/PSK/SSID/IMEI,
+password hashes, keys), on screen and in the saved log. The backup takes the Linux slot's boot image and boot chain,
+misc and the partition table; `android-web.sh` refuses NV, calibration and identity partitions by name. A password
+goes to the device on the stdin of a root command, never in a command line or a file the adb user can read. The
+page's policy (CSP) allows connections to this site and `api.github.com` only, and it loads no web fonts.
+* **Tested** (no device): `tests/web/*.test.mjs` (88 tests: the adb client against a scripted adbd with garbled
+  packets, refused files and a pulled cable; the wizard's rules; the device classes with a device that prints
+  serials, IMEIs and passwords, and with hostile names), `tests/test_android_web.py` (42: android-web.sh on the fake
+  device under busybox, and the page's code end to end through a scripted adbd), `tests/test_magisk_installer.py`
+  (`WebCaller`, 11), `tests/test_web_installer.py` (strings in three languages, the pages' policy, the staged site).
+  In a browser without a device: the three pages and the whole wizard with made-up answers (`?demo=android`,
+  `installed`, `small`, `linux`).
+### 74. The U30 Air's second SIM: what two units showed, and the selector built on it (PR #73/#166, issue #194)
+
+PR #73 (Snrat) brought a cold start of either card and a live switch between them, worked out on one U30 Air with
+two cards (OpenWrt 25.12.5, Linux 7.2.9; its SIM1 without data service, its SIM2 working). #166 is that work with
+the review's fixes, merged with #72's shared selector. On 2026-10-13 it ran on the maintainer's U30 Air (OpenWrt
+25.12.5, v2026.10.23, Linux 7.2.10), which turned out to have a second card too, the other way round: SIM1 with
+data, and in position 2 a card that registers for emergency service only. `docs/U30AIR-SIM2.md` is the user's
+page; this section is what was measured and what was decided from it. Not run on kernel 5.4, on an F50 or on an M3.
+
+**What the modem does**
+
+| | maintainer's unit (7.2.10) | contributor's unit (7.2.9) |
+|---|---|---|
+| channels | slot 0: nr0 (URCs) / nr1 (commands) / nr2 (data), bearer `sipa_eth0`; slot 1: nr3 / nr4 / nr5, `sipa_eth8`; nr6/nr7 belong to slot 0's panel pool | the same |
+| the second group's ttys | exist before they work: `spipe_open` gives `ENODEV` until `/dev/sipc_sbuf` (the driver's seqfile) shows `sbuf_5_006, state: 1,`. All four owners wait for that line, inside their procd instances | found there |
+| `AT+CPIN?` on nr4 at a cold boot | `+CME ERROR: 10`, at every boot, for ten seconds of asking. One second after `AT+SPACTCARD=1;+SFUN=2` (the card's SIM power): `+CPIN: READY`, a CCID of its own, an IMSI. With SIM1's data up meanwhile: SIM1 noticed nothing (`+CFUN: 1`, both contexts active). `AT+SPACTCARD=1;+SFUN=3` puts the position back to `+CME ERROR: 10` | `READY` at once |
+| what `+CME ERROR: 10` therefore means | "no card, **or SIM power off**". The modem seems to power at boot the cards Android had in use; this unit only ever used SIM1 | (after `SFUN=5`/`3` an inserted card says the same there) |
+| `AT+SPACTCARD` | `AT+SPACTCARD?` answers the channel's own card: 0 on nr1/nr2, 1 on nr4/nr5. `AT+SPACTCARD=<n>;+<command>` addresses the command of that line. A line with `AT+SPACTCARD=0` or `=1` alone changes nothing: the answer to `?` stays, and so does the card the channel reads (compared by CCID, never printed) | sent `AT+SPACTCARD=0` alone "to reset the channel" |
+| work modes | `+SPTESTMODE: 134,134,0,19,3,1` (mode of slot 0, of slot 1, primary). The Locks page writes the first | assumed `134,134` |
+| the data route | `AT+SPSWDATA` on a card's data channel gives it the packet-data route, `AT+SPSWDATA?` answers `+SPSWDATA: 0` or `1`. After a SIM2 boot (route 1) and a Linux restart into SIM1 it read 0 again: this firmware does not keep it over a restart | not read |
+| cold start of SIM2 | 16.2 s `AT+SMMSWAP=0`, 20.8 s SIM power, 22.3 s `AT+SPTESTMODEM=134,134`, 23.3 s `AT+SPSWDATA` (read back: SIM2), 23.6 s `AT+SFUN=4`, **24.2 s `+CFUN: 1`**. Then `+CEREG: 2,8` (emergency service only), `+CGATT: 0`, no bearer | CFUN=1 at about 21 s, WAN on `sipa_eth8` |
+| cold start of SIM1 through the same path (live switching on) | `+CFUN: 1` at 21.2 s, data at 26.5 s | at about 22 s |
+| live switch, the target's radio on first (the factory's order, the PR's first sequence) | **does not work**: `AT+SPACTCARD=1;+SFUN=2` OK, then `AT+SFUN=4` on nr4 never answered (8, 12 and 30 s waited), SIM1 lost its radio meanwhile (`+CFUN: 0` on nr1), and after the way back nr4 did not read `+CFUN: 0`, so the result could not be verified | worked in both directions |
+| live switch, the card in use off first | works, both directions, every command answered within a second: `AT+SPACTCARD=0;+SFUN=5`, `;+SFUN=3` (SIM1 off, 1 s), `AT+SPACTCARD=1;+SFUN=2`, `AT+SPSWDATA` on nr5, `AT+SFUN=4` on nr5 (SIM2 `+CFUN: 1` 3 s after the start); the same back, SIM1 registered 5 s later, `ifup wan` up in 2 s | not tried |
+
+**What was decided**
+
+* **One model: one card's radio on at a time.** kanoqwq's fork (clean-tf-7.2 `25f8d0ce`: `mu300-dual-radio`,
+  `mu300-data-sim`) powers both stacks at boot and moves only the data route (`AT+SPSWDATA`, about 1.4 s, no
+  restart). Its boot step fails when the second card is absent or locked, and then neither card gets a radio; its
+  own test unit's SIM2 was unpaid, so data over `sipa_eth8` that way is unproven; here the second radio would not
+  even come on beside the first. Taken from it: the read-back of `AT+SPSWDATA?` as the verification of the route,
+  the work modes read and written back instead of invented, a card named in every command
+  (`AT+SPACTCARD=<n>;+...`), and the three commands kept out of the panel's AT terminal (below).
+* **The live switch is "the card in use off, then the other one on".** It is the cold start's situation, one card
+  coming on while the other is off, which both units have shown; the factory's order needs something this unit
+  does not have. On the contributor's unit the new order has not been run.
+* **`+CME ERROR: 10` is not believed before the SIM power has been on.** The cold start and the live switch both
+  switch it on to ask (`AT+SPACTCARD=<n>;+SFUN=2`), and off again (`;+SFUN=3`) when no card answers or it is locked.
+  The live switch asks before it touches the connection in use: an empty or locked target is refused in a second,
+  the WAN never down.
+* **The work modes are the modem's own**, read (`AT+SPTESTMODE?`) and written back as they are
+  (`AT+SPTESTMODEM=<m0>,<m1>`): a network mode locked on the Locks page is not replaced by a start. `134,134` only
+  when the modem does not say.
+* **Every failure ends on SIM1 with AT, by itself.** The table below. Two of the ways out are a restart of the
+  device, because nothing else brings the data back: a radio that was told to start the other card and did not, and
+  a radio left in an unknown state. A restart lands on the saved boot default, which no failure ever leaves on the
+  card that failed. `network.wan.sim_restart '0'` turns the restarts off (the state then says "reboot required").
+* **A second card has to show data once.** The first time SIM2 is the boot's card it gets
+  `network.wan.sim_data_wait` seconds (300; `0`: no check) from the radio coming on to have an address on
+  `sipa_eth8`. With data it is written to `/etc/mu300/sim-data-seen` and never checked again: an outage is not the
+  card's failure. Without, the settings go back to SIM1 (reason `no-data`) and the device restarts. Whether SIM1
+  has data is not asked. The reason: a card chosen over the device's own mobile data (ours is reached through a VPN
+  over it) that registers and gets no data would keep the device off the network until somebody walked up to it;
+  and a user whose SIM1 has no data either is at the device, reads the reason on the page, and loses a restart.
+  No verdict on a card nobody was dialling: the wan taken down by hand, switched off in the settings, or suspended
+  by the power profile. "Taken down" is netifd's word (`autostart: false`), not `mobile-data`'s marker
+  `/run/mu300-mobile-data-down`: every failed dial goes through a teardown that leaves that marker for a moment, and
+  a check that looked in that moment kept a card without data (measured, on the second of two identical boots).
+* **Issue #194's unit** (two built-in cards, SIM1 China Telecom registered without a data plan, SIM2 China Mobile
+  working, kernel 5.4). "SIM1 is there" is never taken for "SIM1 is usable": a boot with SIM2 chosen does not touch
+  SIM1's stack at all, a SIM2 that gets data is remembered and from then on kept through any outage, and nothing
+  ever moves the device to SIM1 because SIM2 "has no data right now". In the live switch the same distinction is
+  made at the moment of switching: a target without data sends the radio back only when the card in use *had* data;
+  when it had none either, the target stays (`no_data_kept`), netifd keeps dialling it, and the boot default is not
+  saved on a card that showed no data. Our unit is that unit mirrored, and both branches ran on it.
+* **A dial that waits for a card the radio is leaving ends at once** (`wait_registered` looks at the switch
+  marker). Measured before: it held the bring-up lock for its 60 s, and the card the radio went back to stayed
+  without data for 32 s after the switch was over. And netifd's first dial of a dual-SIM boot **waits for the cold
+  start** instead of failing and coming back 20 s later (data 39 s into the boot before, 26.5 s after).
+
+**Failures, and where the device ends** (U: measured on the maintainer's unit; T: unit tests only)
+
+| what goes wrong | reason on the page | where it ends | |
+|---|---|---|---|
+| the settings cannot be read, the marker cannot be written, bash is missing | `invalid-*`, `not-startable` | a SIM1 boot, at once: `init.d/mu300-atd` never returns without AT owners | T |
+| the readiness line never appears (another kernel's seqfile) | `brokers-missing` | this boot: gives up at 104 s, the AT service starts over as SIM1's, radio on at 127 s, data at 132 s | U (the line's text changed by hand) |
+| no card answers with its SIM power on; a PIN; a card that is not the recorded one | `no-sim`, `sim-pin`, `wrong-card` | this boot: SIM1's ordinary warm-up through the owner of nr1 that is already there (10 s later than a plain boot) | T; U with the earlier rule, which took the unpowered card for none |
+| the radio was told to start SIM2 and does not come on | `no-radio`, `data-route`, `modem-refused` | restart into SIM1 (not before 120 s of uptime, so that the boot was marked good) | T |
+| the cold start dies, the device loses power in it | `unconfirmed` | the next boot is SIM1's (the pending marker) | T |
+| SIM2's radio is on, no data within the time, never had any | `no-data` | restart into SIM1: with 150 s set, 174 s into the boot (with 60 s: decided at 86 s, restarted at 120 s); SIM1's data 31.4 to 31.8 s into the next one, the VPN's exit address back | U, twice |
+| the same, but the connection was off (taken down, suspended, disabled) | - | nothing: no verdict on a card nobody was dialling | T; netifd's flag read by hand on the unit |
+| live: the target has no data, the card in use had | result `no_data` | back on the card in use: 3.5 s to switch, 60 s of waiting, 4 s back, WAN up 2 s later; default unchanged | U |
+| live: no data on either | `no_data_kept` | stays on the target; its data came 6 s later by itself; default unchanged until `switch` is asked again | U |
+| live: a command is refused half way | `rolled_back` | back on the card in use | T |
+| live: the channel or the radio lock is busy | `failed` | nothing was sent; WAN up again | T |
+| live: the way back cannot be verified, the modem is silent, the deadline (300 s) | `restarting` | restart into the saved default, 20 s later: data back about 75 s after the failed switch | U (with the first sequence) |
+| live: the controller is killed (`SIGKILL`) | `restarting` | its guard declares the radio unknown within 5 s; restart; data 26.5 s into the next boot | U |
+
+**Who else talks to the modem meanwhile.** The switch holds a kernel `flock` on `/run/mu300/sim-control.lock`
+(gone with its holder: no stale lock; a second request answers "SIM control is busy" at once), runs its commands
+under `mobile-data`'s radio lock (the dial's radio-on, the watchdog, the Locks page's SFUN restart), and while they
+run `mu300-at` tells every other client "busy" in the words they already handle (SMS, USSD, the panel's terminal
+and collectors): `/run/mu300/sim-sequence`, believed only while the lock is held, so a killed switch closes nothing
+(measured: `AT` answered 5 s after the kill). Lock writes, the modem reset and suspend are refused in a dual-SIM
+boot. Nothing from a caller reaches an AT command: the arguments are one of six fixed pairs, and every command is
+built from the two slot numbers; the work modes read from the modem go back out only as two numbers of at most
+three digits.
+
+**The panel's AT terminal** refuses `AT+SPACTCARD=`, `AT+SMMSWAP=` and `AT+SPSWDATA` (its `?` forms pass), on every
+device and in any spelling, as kanoqwq's does: they move the data route under a connection that then answers
+`CONNECT` and loses every packet. `AT+SPTESTMODEM=` asks for confirmation like `AT+SPTESTMODE=`.
+
+**What is written into the modem.** Nothing else is sent.
+
+| command | what it changes | kept by the modem | put back |
+|---|---|---|---|
+| `AT+SMMSWAP=0` (nr1) | the RIL handshake | the same command every boot sends on the SIM1 path | nothing to put back |
+| `AT+SPTESTMODEM=<m0>,<m1>` (the card's data channel, cold start only) | the two work modes: the values just read, so nothing; `134,134` only when they cannot be read | yes (NV) | not needed; with unreadable modes the earlier ones are not known |
+| `AT+SPSWDATA` (the card's data channel) | which card carries packet data | not over a restart (measured) | by the cold start or switch for SIM1; and a plain SIM1 dial asks `AT+SPSWDATA?` and takes it back while `/etc/mu300/sim-data-route-2` exists (left when the route was given to SIM2). Without that mark nothing is asked |
+| `AT+SPACTCARD=<n>;+SFUN=2` / `3` / `5`, `AT+SFUN=4` | SIM power and radio of one card | no | by the next boot; the switch and the cold start switch off what they switched on and could not use |
+
+Nothing writes a PIN, an IMSI, a band or a cell lock. A dual-SIM boot does not replay the Locks page's settings
+(they stay in the modem's NV; only the replay's own restart is left out).
+
+**Nobody who does not use it.** `init.d/mu300-atd` reads the settings on a U30 Air only; with the default (slot 0,
+live switching off) it starts the same three instances as before, and a boot with the branch's files had the
+handshake at 24.6 s and data at 31.7 s (24.1 and 31.2 before). `mu300-sim active`, which every AT client asks
+before every command, answers a pinned 0 from one file read again (2.8 ms; with the library and the device's name
+read first it was 6.7 ms). `mobile-data` asks the modem for the data route only where the mark is. `mu300-at`'s gate
+is one file test. The WAN's teardown now takes the bearer's name from netifd (`ifdown`/`ifup` on SIM1: address gone,
+up again in 5 s).
+
+**Privacy.** The cold start reads the CCID to compare it with `/etc/mu300/sim2-iccid` (a file only the owner
+creates) and never prints it; the logs (`/run/mu300/sim2-cold-start.log`, `sim-switch.log`, mode 600) hold the
+commands sent and no answer; status, the page and the fallback reason carry words from a fixed list.
+`/etc/mu300/sim-data-seen` holds slot numbers.
+
+**Not verified.** Data on `sipa_eth8` under this tree's dial on our hardware (our second card has no service; the
+contributor saw it on his unit with the earlier revision). The new switch order on a unit with two working cards.
+Kernel 5.4, which issue #194's unit runs: whether its `/dev/sipc_sbuf` reads the same line (the same vendor driver;
+if not, the `brokers-missing` row above is what happens). A truly empty position and a PIN-locked card with the
+current rule, on hardware. The restart after `no-radio` (the `no-data` restart, which is the same code, ran). The
+F50: unit tests, and the default path on the U30 Air. An M3.
+
 ### 80. WPA3 on the U30 Air's access point: the SC2355 firmware does SAE itself (PR #74, Snrat)
 The AP side of 14b's station finding. `docs/U30AIR-SAE.md` has the recipe and the open question; what the hardware
 showed, on one U30 Air (OpenWrt 25.12.5, Linux 7.2.9):
@@ -5284,8 +5600,34 @@ showed, on one U30 Air (OpenWrt 25.12.5, Linux 7.2.9):
   `openwrt-wifi-sae-guard` (does nothing without the option) looks before the first `wifi up` whether the installed
   hostapd has the option, and about two minutes after boot whether the access point is `ENABLED`; if not, the BSS
   becomes `psk2` with the same passphrase, the file as it was is kept in `/etc/mu300/wireless.sae-offload`, and
-  `mu300-wifi` logs one error line. WPA2 because hostapd's own SAE cannot work on this driver (first point). Unit
-  tests only (stub `uci`/`ubus`, dash, bash, busybox ash); not yet run on a device.
+  `mu300-wifi` logs one error line. WPA2 because hostapd's own SAE cannot work on this driver (first point).
+* **Measured on the U30 Air, 2026-10-13** (OpenWrt 25.12.5, 7.2.10, r9 built with the helper, this branch's
+  `sprd_wlan_combo.ko`; no Wi-Fi client at hand, so no association with SAE was tried):
+  * Without the option the guard changes nothing: `AP-ENABLED` at 40.1 / 41.5 / 43.3 / 43.4 s before, 41.2 / 41.3 /
+    43.3 s with it; silent, the configuration byte-identical, a WPA2 client back by itself.
+  * netifd starts the radio once before `mu300-hw` does (15 to 23 s after power-on; `AP-DISABLED` under the world
+    regulatory domain). So the stock hostapd does see the option once and logs `unknown configuration item`; the
+    guard acts before `mu300-hw`'s `wifi down; wifi up` at about 37 s, and the hotspot was up as WPA2 at 39.9 s, the
+    configuration byte-identical to the one before the opt-in, the saved file mode 600.
+  * A mode r9 refuses (`sae-mixed`; a second BSS): fallback 136 s after power-on, `AP-ENABLED` at 139.5 and 139.7 s.
+    Off on purpose (the key's marker, interface or radio disabled): untouched.
+  * **The log loses the guard's line.** 128 KiB, about 1300 lines, and one Wi-Fi restart writes hundreds: 135 s
+    after the fallback the line was gone. It is now also in `/etc/mu300/wireless.sae-offload.why`, with its time.
+  * r9 with the option: `U30 SAE: firmware runtime parameters configured`, `vendor_set_sae_password type : 8/6/7`,
+    no `firmware not support softap wpa3`, `AP-ENABLED` 5 s after `wifi up`, 41.6 s after power-on; the generated
+    file has `wpa_key_mgmt=SAE`, `ieee80211w=2`, `sae_pwe=0`, `u30_sae_offload=1`. A synthetic passphrase, as text
+    and as hex: 0 lines in `dmesg` and `logread`; none of the removed prints. Option off again: `WPA-PSK`, no line.
+  * The module with the removals booted and ran every step above (its `wcn_bsp` is section-identical to the
+    installed one; `sprd_wlan_combo` 352 bytes of code shorter). The module in v2026.10.25 prints the passphrase
+    with `pr_info`, not at `L_DBG` as the point above says: it holds the four format strings. It was not run with
+    the option, so that print was not seen in a log.
+  * `apk add` of the r9 pair next to `wpad-basic-mbedtls` is refused (conflict): `apk del` the stock one first.
+    This `iw` prints no "Supported commands", and `iw dev wlan0 station dump` on this driver prints no station
+    fields, so neither can serve as a check.
+  * Not measured: any client (WPA3 join, WPA2 refused on the SAE BSS, wrong passphrase, throughput, the PMK
+    probe), kernel 5.4, the F50. After the SAE steps and the original WPA2 configuration back, the WPA2 client that
+    had rejoined earlier did not come back within 4 minutes, nor after the device was all stock again: it had
+    most likely left, and a WPA2 join after SAE in one boot is not shown.
 * **Built, 2026-10-13:** `sprd_wlan_combo` with these removals for 7.2.10 and 6.18.56 (with `wcn_bsp`; the five touched
   files warn only where the vendor's code always did, none of the removed format strings is in the module);
   for 5.4 the twelve `wlan_combo-*.patch` apply in the build's order on the pristine vendor driver and all 69 objects

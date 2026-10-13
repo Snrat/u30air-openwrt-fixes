@@ -569,6 +569,7 @@ update - would wipe or erase again. For another erase, put the line back.
 | `MU300_LANG` | `en`, `tr`, `zh` | either | The language of the Android locale |
 | `MU300_DRY_RUN` | `1` | either | Not set |
 | `MU300_SYNC_BOOTCHAIN` | `0`, `1` | either | `1`: the Linux slot gets the boot chain of Android's slot where it differs (backed up first). `0`: left as it is, for experts |
+| `MU300_ADB_KEY` | the line of a computer's `~/.android/adbkey.pub` | `/data/adb` only | adb over USB to the installed Linux, on, for that one key (whoever holds it gets a root shell). Without it nothing about adb changes |
 
 Examples. Install to the card, formatting it (everything on it is erased), with a password of your own, from
 `adb shell` as root:

@@ -41,12 +41,12 @@ flowchart TD
   7.2.10) carry BTF and the BPF JIT. 5.4 cannot run it. kprobes are left out on purpose: with them 7.2 failed 2 boots
   in 36, so `dae trace` is not available.
 
-## The versions in v2026.10.23
+## The versions in v2026.10.25
 
 | kernel | version | notes |
 |---|---|---|
-| 5.4 | 5.4.254 | Unisoc's vendor kernel with the project's patches; rebuilt in v2026.10.23 with `NFT_QUEUE` (nftables' `queue` verdict, for userspace packet tools); since v2026.10.21 it no longer panics when a network namespace goes away (#103), and the Wi-Fi driver's routine lines are no longer errors (#140) |
-| 6.18 | 6.18.56 | longterm; BTF, BPF JIT, FunctionFS (for adb); v2026.10.23 adds the `mu300_thermal` module (the board's temperature as a thermal zone); since v2026.10.22 the F50's SD slot has real card detect (the EIC controller's six banks mapped), so an empty slot is no longer polled and no `mmc1` register dumps fill the log (#181); since v2026.10.21 the Wi-Fi driver can be unloaded (#146) and is quieter (#140) |
+| 5.4 | 5.4.254 | Unisoc's vendor kernel with the project's patches, unchanged since v2026.10.23, which added `NFT_QUEUE` (nftables' `queue` verdict, for userspace packet tools); since v2026.10.21 it no longer panics when a network namespace goes away (#103), and the Wi-Fi driver's routine lines are no longer errors (#140) |
+| 6.18 | 6.18.56 | longterm; BTF, BPF JIT, FunctionFS (for adb); rebuilt in v2026.10.25: the U30 Air's charger is also looked for at 0x1a (an SGM41513, #102); v2026.10.23 added the `mu300_thermal` module (the board's temperature as a thermal zone); since v2026.10.22 the F50's SD slot has real card detect (the EIC controller's six banks mapped), so an empty slot is no longer polled and no `mmc1` register dumps fill the log (#181); since v2026.10.21 the Wi-Fi driver can be unloaded (#146) and is quieter (#140) |
 | 7.2 | 7.2.10 | stable; the same additions, the same card-detect fix, the same modules |
 
 The point releases bring, among others, a DWC3 USB fix for an IRQ storm that could panic the board, netfilter

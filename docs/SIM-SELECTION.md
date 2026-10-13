@@ -48,9 +48,10 @@ On systemd installations, `mu300-sim select` stores the choice in
 `/etc/mu300/sim-slot`; configure the selected carrier in the existing
 `/etc/mu300/mobile-data.conf`. The two-profile LuCI editor is OpenWrt-specific.
 
-## Devices without slot 1 (the U30 Air)
+## Devices without a supported slot-1 backend
 
-Slot 1 was validated on the F50 only, and `mu300-sim` accepts it there only: on any other detected device
+The F50 boot path and the U30 Air/OpenWrt native backend are separate implementations. On a device without a
+supported backend (including U30 Air outside OpenWrt),
 `mu300-sim select internal` refuses, `mu300-sim status --json` says `slot1_supported: 0`, and a saved
 `network.wan.sim_slot=1` is ignored for the boot (`mu300-sim: ignoring unsupported slot 1; using external slot 0`),
 so every reader - the WAN, the AT daemons, the dashboard - stays on the external card.
@@ -67,8 +68,12 @@ card's operator with no hint why):
 - The home page's connection card gets a **SIM source** row only when the card asked for is not the one in use:
   "not supported on this device: the external SIM is in use", or on the F50 "in use after a reboot".
 
-The U30 Air's second SIM is a different piece of work (its own channel layout and a live switch), in progress as
-PR #166; nothing above enables it.
+The U30 Air/OpenWrt backend has its own channel layout and broker-only cold start/live switch (PR #166).
+Its version-1 status retains `slot1_supported: 1` for these existing pages, alongside the separate
+`capabilities.boot_selection` and `capabilities.live_switch` fields. A failed/unknown current-card observation stays
+`active: null`; the dashboard does not turn the runtime routing pin into a confirmed active card. F50 retains its
+boot-only path. `docs/U30AIR-SIM2.md` is that backend's page (how to choose the second card, what happens when it
+does not start, the live switch); `docs/FINDINGS.md` 74 has what two units showed.
 
 ## Why the data-route command is needed
 

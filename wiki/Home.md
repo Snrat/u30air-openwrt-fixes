@@ -58,6 +58,36 @@ SMS and USSD; an optional VPN module; a web panel on Ubuntu too (Cockpit with an
 
 **Follow the project:** releases and news are announced on the Telegram channel, [t.me/mu300project](https://t.me/mu300project).
 
+## New in v2026.10.25
+
+The release of 2026-10-25 (a prerelease first, promoted once a board has run it; v2026.10.24 stayed a prerelease:
+its updater could stop with "another mu300-update is running", and its OpenWrt came up without adb). What it
+changes, and where to read on:
+
+* **adb to Linux is on by default, for every computer.** Plug the cable in and `adb shell` is a root shell, no key
+  needed; the graphical and web installers rely on it. **Anyone who can plug a cable into the device gets that
+  shell**, also after you set passwords. A device that never touched adb becomes open with this update; one where
+  you ran `mu300-usb adb off`, or turned adb on with a key, stays as it was. To close it: `mu300-usb adb auth keys`
+  (only authorised keys) or `mu300-usb adb off`. [Installation](Installation#adb-to-linux), [FAQ](FAQ)
+* **A web installer (beta):** [kaandikec.com/mu300-linux/web-installer](https://kaandikec.com/mu300-linux/web-installer/)
+  installs from Chrome or Edge over USB, with nothing to install on the computer. It has not been run against a
+  device yet by us; the text installer stays the supported way. [Installation](Installation)
+* **SMS forwarding: a service's own error counts.** "The answer must contain" (`errcode=0`, `code=0`, `ok=true`...)
+  makes an HTTP 200 with an error in it a failed delivery, and the delivery log has a Clear button (issue #171).
+  [SMS](SMS)
+* **Long SMS** from one sender under a reused reference number are no longer mixed or left in parts. [SMS](SMS)
+* **An APN with a user name and a password** (`AT+CGPCO`), on OpenWrt (`network.wan.username`/`password`/`auth`) and
+  on Ubuntu (`mobile-data.conf`). [Mobile Data and APN](Mobile-Data-and-APN)
+* **The panel's saved band and cell locks survive an update** (they were dropped; the modem kept the lock and the
+  panel showed none).
+* **Windows: the installer can make room** on a unit whose `userdata` fills the eMMC, as `install.sh` does, and says
+  the figures when it refuses (issue #32). [Installation](Installation)
+* **U30 Air, firmware variant ABSSV:** the mainline kernels look for the charger at a second address (an SGM41513
+  at 0x1a) when nothing answers at the first (issue #102; not confirmed on such a unit yet). [Kernels](Kernels)
+* **`mu300-update`** no longer stops with "another mu300-update is running" when the release brings a newer
+  updater. [Updating](Updating)
+* **Kernels:** 5.4 unchanged; 6.18.56 and 7.2.10 rebuilt with the charger change. [Kernels](Kernels)
+
 ## New in v2026.10.23
 
 The release of 2026-10-23 (a prerelease first, promoted once a board has run it). What it changes, and where to read

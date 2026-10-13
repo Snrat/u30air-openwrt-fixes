@@ -508,7 +508,7 @@ if ($linuxFirst -or (AdbState) -notmatch 'device') {
     Write-Host ('  ' + (T 'Android is up'))
 }
 # whatever its serial number says: a root shell of our Linux must never be taken for a rooted Android
-if (([string](Quiet { adb shell 'ls -d /opt/mu300/bin 2>/dev/null' })).Trim()) {
+if (("" + (Quiet { adb shell 'ls -d /opt/mu300/bin 2>/dev/null' })).Trim()) {
     Die ((T 'The device is running MU300 Linux, not Android') + ': ' + (T 'boot Android yourself (on the device: sudo mu300-next-boot android && sudo reboot)'))
 }
 # an Android that is still starting answers adb before su and storage are ready: the pulls then failed

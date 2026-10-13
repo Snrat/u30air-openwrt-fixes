@@ -216,9 +216,9 @@ section { scroll-margin-top: 5rem; }
   border: 1px solid var(--line); border-radius: var(--radius-s); padding: .3rem .8rem; cursor: pointer;
 }
 
-/* Below this width the longest menu (Turkish, about 1150 px with the logo and the theme button) no longer fits on
+/* Below this width the longest menu (Turkish, about 1260 px with the logo and the theme button) no longer fits on
    one row, so every language switches to the menu button instead of wrapping. */
-@media (max-width: 1180px) {
+@media (max-width: 1290px) {
   .site-header .wrap { flex-wrap: wrap; }
   .site-nav { flex-wrap: wrap; }   /* without JavaScript the links simply wrap */
   .js .menu-btn { display: inline-block; margin-left: 0; }

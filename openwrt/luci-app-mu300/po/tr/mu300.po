@@ -9,6 +9,10 @@ msgstr "Durum paneli"
 msgid "Cellular"
 msgstr "Hücresel"
 
+# Dual SIM controls.
+msgid "Dual SIM"
+msgstr "Çift SIM"
+
 msgid "Network locks"
 msgstr "Ağ kilitleri"
 
@@ -1689,6 +1693,104 @@ msgstr "Yalnızca ana panonun yenileme hızını kontrol eder; 0,5–60 saniye. 
 msgid "Persistent state directory"
 msgstr "Kalıcı durum dizini"
 
+# Dual SIM controls.
+msgid "Switching SIM. Mobile data will disconnect briefly."
+msgstr "SIM değiştiriliyor. Mobil veri kısa süreliğine kesilecek."
+
+# Dual SIM controls.
+msgid "SIM switch failed; check SIM readiness and hot switching."
+msgstr "SIM geçişi başarısız; SIM durumunu ve canlı geçiş ayarını kontrol edin."
+
+# Dual SIM controls.
+msgid "Ready"
+msgstr "Ready"
+
+# Dual SIM controls.
+msgid "Switching SIM"
+msgstr "SIM değiştiriliyor"
+
+# Dual SIM controls.
+msgid "SIM switched; saved as boot default"
+msgstr "SIM değiştirildi ve başlatma varsayılanı olarak kaydedildi"
+
+# Dual SIM controls.
+msgid "Switch failed; previous SIM restored"
+msgstr "Geçiş başarısız; önceki SIM geri yüklendi"
+
+msgid "The target SIM got no mobile data; the previous SIM is restored and the saved boot preference is unchanged."
+msgstr "Hedef SIM mobil veri alamadı; önceki SIM geri yüklendi ve kayıtlı açılış tercihi değişmedi."
+
+msgid "The target SIM has no mobile data yet, and the previous SIM had none either: the device stays on the target. The saved boot preference is unchanged."
+msgstr "Hedef SIM henüz mobil veri alamadı, önceki SIM de alamıyordu: cihaz hedef SIM'de kalıyor. Kayıtlı açılış tercihi değişmedi."
+
+# Dual SIM controls.
+msgid "Radio state unknown; reboot required"
+msgstr "Radyo durumu bilinmiyor; yeniden başlatma gerekiyor"
+
+msgid "Radio state unknown; the device is restarting."
+msgstr "Radyo durumu bilinmiyor; cihaz yeniden başlatılıyor."
+
+msgid "Dual SIM control is only for the U30 Air on OpenWrt."
+msgstr "Çift SIM denetimi yalnızca OpenWrt çalıştıran U30 Air içindir."
+
+msgid "The chosen SIM could not be started at the last boot (no card, PIN, or the modem refused it)."
+msgstr "Seçilen SIM son açılışta başlatılamadı (kart yok, PIN gerekli ya da modem reddetti)."
+
+msgid "No card answered in the chosen SIM position at the last boot."
+msgstr "Son açılışta seçilen SIM konumunda hiçbir kart yanıt vermedi."
+
+msgid "The chosen SIM is locked by its PIN."
+msgstr "Seçilen SIM, PIN koduyla kilitli."
+
+msgid "The chosen SIM got no mobile data within the time at its first boot."
+msgstr "Seçilen SIM ilk açılışında süre içinde mobil veri alamadı."
+
+msgid "The second SIM's modem channels did not come up at the last boot."
+msgstr "İkinci SIM'in modem kanalları son açılışta gelmedi."
+
+msgid "The last dual-SIM boot never confirmed itself."
+msgstr "Son çift SIM açılışı kendini hiç doğrulamadı."
+
+msgid "A live switch saves the target as the next boot default only after it gets mobile data. Without data, the previous SIM is restored and the saved boot preference is unchanged. Each SIM uses its own APN/PDP profile from the WAN settings."
+msgstr "Canlı geçiş, hedef SIM mobil veri aldıktan sonra onu sonraki açılış için kaydeder. Veri yoksa önceki SIM geri yüklenir ve kayıtlı açılış tercihi değişmez. Her SIM, WAN ayarlarındaki kendi APN/PDP profilini kullanır."
+
+# Dual SIM controls.
+msgid "Active SIM"
+msgstr "Etkin SIM"
+
+# Dual SIM controls.
+msgid "Cold-boot default"
+msgstr "Soğuk başlatma varsayılanı"
+
+# Dual SIM controls.
+msgid "SIM control unavailable"
+msgstr "SIM denetimi kullanılamıyor"
+
+msgid "The device is back on SIM1 without live switching; choose again below to try once more."
+msgstr "Cihaz canlı geçiş kapalı olarak SIM1'e döndü; yeniden denemek için aşağıdan tekrar seçin."
+
+msgid "Waiting for the first mobile data on SIM2: %d s left. Without data the device goes back to SIM1 and restarts."
+msgstr "SIM2'de ilk mobil veri bekleniyor: %d sn kaldı. Veri gelmezse cihaz SIM1'e döner ve yeniden başlar."
+
+# Dual SIM controls.
+msgid "Enable hot switching"
+msgstr "Canlı SIM geçişini etkinleştir"
+
+msgid "This device supports next-boot SIM selection only; live switching is unavailable."
+msgstr "Bu cihaz yalnızca sonraki açılışın SIM seçimini destekler; canlı geçiş kullanılamaz."
+
+# Dual SIM controls.
+msgid "Reboot after enabling hot switching to prepare both SIM channels."
+msgstr "İki SIM kanalını hazırlamak için canlı geçişi etkinleştirdikten sonra yeniden başlatın."
+
+# Dual SIM controls.
+msgid "Switch to SIM%d"
+msgstr "SIM%d kartına geç"
+
+# Dual SIM controls.
+msgid "Use SIM%d at next boot"
+msgstr "Sonraki başlatmada SIM%d kullan"
+
 msgid "Recipient: number, e.g. 10086 or +86..."
 msgstr "Alıcı: numara, ör. 10086 veya +86..."
 
@@ -2529,8 +2631,8 @@ msgstr "Yenileme, adı değişmeyen profilleri korur, yenileri ekler ve kalkanla
 msgid "Dashboard info failed"
 msgstr "Gösterge paneli bilgisi alınamadı"
 
-msgid "Applying network locks: no live signal right now"
-msgstr "Ağ kilitleri uygulanıyor: şu anda canlı sinyal yok"
+msgid "The modem is restarting (network locks or a SIM switch): no live signal right now"
+msgstr "Modem yeniden başlıyor (ağ kilitleri ya da SIM geçişi): şu an canlı sinyal yok"
 
 msgid "Live signal read failed"
 msgstr "Canlı sinyal okunamadı"
@@ -2562,8 +2664,11 @@ msgstr "\";\" ile komut zincirleme yapılamaz"
 msgid "Denied: this command wedges the AT port until a reboot"
 msgstr "Reddedildi: bu komut AT bağlantı noktasını yeniden başlatmaya kadar kilitler"
 
-msgid "Applying network locks: the modem is restarting (about half a minute), try again shortly"
-msgstr "Ağ kilitleri uygulanıyor: modem yeniden başlıyor (yaklaşık yarım dakika), birazdan yeniden deneyin"
+msgid "Denied: this command moves the SIM selection or the data route; the SIM settings do that"
+msgstr "Reddedildi: bu komut SIM seçimini veya veri yolunu değiştirir; bunu SIM ayarları yapar"
+
+msgid "The modem is restarting (network locks or a SIM switch, about half a minute), try again shortly"
+msgstr "Modem yeniden başlıyor (ağ kilitleri ya da SIM geçişi, yaklaşık yarım dakika), biraz sonra tekrar deneyin"
 
 msgid "A long AT command is still running in the background; try again when it has finished"
 msgstr "Uzun bir AT komutu hâlâ arka planda çalışıyor; bittiğinde yeniden deneyin"
@@ -2705,6 +2810,18 @@ msgstr "Paket bağdaştırıcısı geçerli bir yanıt vermedi"
 
 msgid "Invalid packages operation"
 msgstr "Geçersiz paket işlemi"
+
+# Dual SIM controls.
+msgid "Invalid SIM setting"
+msgstr "Geçersiz SIM ayarı"
+
+# Dual SIM controls.
+msgid "Enable hot switching; reboot if channels are unavailable or wait until idle"
+msgstr "Canlı SIM geçişini etkinleştirin; kanallar hazır değilse yeniden başlatın veya işlem bitene kadar bekleyin."
+
+# Dual SIM controls.
+msgid "SIM control failed"
+msgstr "SIM denetimi başarısız"
 
 msgid "Request too large"
 msgstr "İstek çok büyük"
@@ -2858,6 +2975,10 @@ msgstr "Satır sayısı 1 ile 1000 arasında olmalı"
 
 msgid "The log could not be read"
 msgstr "Günlük okunamadı"
+
+# Dual SIM controls.
+msgid "Use SIM control or reboot for managed dual-SIM radio"
+msgstr "Yönetilen çift SIM radyosu için SIM denetimini kullanın veya yeniden başlatın."
 
 msgid "Radio did not come up"
 msgstr "Radyo açılmadı"

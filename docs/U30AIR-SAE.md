@@ -20,7 +20,8 @@ a device that does not opt in on both counts.
   sends `CMD_SET_SAE_PARAM` to the chip) and the IE buffer of the `NEW_STATION` event.
 - **Kernels.** One driver source serves 5.4 (the vendor tree plus
   `kernel/patches/wlan_combo-*.patch`) and 6.18/7.2 (`upstream/modules/sprd_wlan_combo`),
-  and the vendor command is in both. Measured only on 7.2.9. On 5.4 and 6.18 the
+  and the vendor command is in both. Measured on 7.2.9, and on 7.2.10 up to
+  `AP-ENABLED` (no client). On 5.4 and 6.18 the
   driver builds with these changes and the option has never been run.
 - **Devices.** The switch is the option, not a check of the device. The driver
   refuses the vendor command unless the firmware reports soft-AP WPA3
@@ -69,9 +70,12 @@ patch rejects (mixed mode, optional PMF, a second BSS).
 `/opt/mu300/bin/openwrt-wifi-sae-guard` is in every OpenWrt image and does nothing
 unless a `wifi-iface` has `u30_sae_offload=1` in its `hostapd_bss_options`:
 
-- **At boot, before the first `wifi up`** (`mu300-hw`): the installed hostapd does
-  not have the option (its name is not in the binary). The option is taken out
-  before hostapd ever sees it.
+- **At boot, before `mu300-hw`'s own `wifi down; wifi up`** (the start that brings
+  the hotspot up, about 37 s after power-on): the installed hostapd does not have
+  the option (its name is not in the binary). netifd has tried once by then, some
+  15 s after power-on, and that hostapd has logged `unknown configuration item
+  'u30_sae_offload'`; the hotspot is up at its usual time all the same (measured:
+  39.9 s, against 40 to 43 s without the option).
 - **About two minutes after boot** (`mu300-post`, after its one `wifi up` retry and
   a further 60 s of waiting, long enough for automatic channel selection): the
   access point is still not `ENABLED` in `ubus call hostapd.wlan0 get_status`.
@@ -80,7 +84,10 @@ In both cases the BSS becomes `encryption psk2` with the same passphrase,
 `ieee80211w` and `sae_pwe` are deleted, the file as it was is kept in
 `/etc/mu300/wireless.sae-offload` (root only), and `logread` has one line from
 `mu300-wifi`: `WPA3 hotspot (U30 SAE offload): ... The hotspot is back on WPA2 with
-the same password`. WPA2 and not hostapd's own SAE: without the offload a WPA3-only
+the same password`. The log does not keep that line for long (128 KiB, and the
+driver's lines of one Wi-Fi restart fill it: on the test device it was gone two
+minutes later), so the same line, with its time, is also in
+`/etc/mu300/wireless.sae-offload.why`. WPA2 and not hostapd's own SAE: without the offload a WPA3-only
 BSS on this driver lets nobody in. The price is the one WPA3 was chosen to avoid:
 a captured WPA2 handshake can be attacked offline, so use a long passphrase.
 
@@ -100,7 +107,20 @@ What this means in practice:
   `uci del_list wireless.ap0.hostapd_bss_options='u30_sae_offload=1'; uci set wireless.ap0.encryption=psk2; uci -q delete wireless.ap0.ieee80211w; uci -q delete wireless.ap0.sae_pwe; uci commit wireless; wifi down; /etc/init.d/wpad restart; wifi up`.
 
 The guard is tested with stub `uci`/`ubus` under dash, bash and busybox ash
-(`tests/test_u30_sae.py`); it has not run on a device yet.
+(`tests/test_u30_sae.py`), and ran on a U30 Air on 2026-10-13 (OpenWrt 25.12.5,
+kernel 7.2.10, r9 pair built with the helper, this branch's `sprd_wlan_combo`):
+
+| Case | Result |
+|---|---|
+| No option (every image): four boots without and three with the guard | `AP-ENABLED` 40.1 / 41.5 / 43.3 / 43.4 s without, 41.2 / 41.3 / 43.3 s with; no output, no log line, `/etc/config/wireless` byte-identical; a WPA2 client rejoined |
+| Option on, stock `wpad-basic-mbedtls` (the update case), reboot | WPA2 at 39.9 s, the configuration byte-identical to the one before the opt-in, saved file mode 600, one error line, a WPA2 client joined; unchanged after another reboot |
+| Option on, r9, `encryption sae-mixed`, reboot | `U30 SAE: requires pure SAE ...`, fallback at 136 s, `AP-ENABLED` at 139.5 s; unchanged after another reboot |
+| Option on, r9, a second (WPA2) BSS, reboot | `U30 SAE: supports a single BSS only` three times, `AP not up, retrying` at 61 s, both BSSs up as WPA2 at 139.7 s |
+| Hotspot off on purpose (the Wi-Fi key's marker, the `wifi-iface` or the radio disabled) | left alone, no line |
+| Option on, r9, pure SAE | `U30 SAE: firmware runtime parameters configured`, `AP-ENABLED` 5 s after `wifi up` and 41.6 s after power-on; the guard does nothing |
+
+No Wi-Fi client was available in that run: nothing above says a client can join
+the SAE hotspot with r9 on 7.2.10 (Snrat's record below is for 7.2.9).
 
 ## Outstanding PMK trust boundary (why this stays experimental)
 
@@ -269,7 +289,12 @@ path added in #100 calls `wcn_mu300_recover`, exported by the updated WCN BSP.
 Do not install a new WLAN module over an older BSP without that export.
 The OpenSSL variant also requires `libopenssl-legacy`; let APK resolve that
 from the official release feed, or download it locally for an offline install.
-Install the matching `hostapd-common` and `wpad-basic-openssl` pair together.
+Install the matching `hostapd-common` and `wpad-basic-openssl` pair together,
+after removing the stock variant: `apk add` of the pair next to
+`wpad-basic-mbedtls` ends with a conflict and changes nothing
+(`apk del wpad-basic-mbedtls; apk add --allow-untrusted hostapd-common-*-r9.apk
+wpad-basic-openssl-*-r9.apk`; the way back is `apk del wpad-basic-openssl
+hostapd-common; apk add wpad-basic-mbedtls`).
 Do not leave an earlier standalone `hostapd` binary in front of the package's
 `hostapd -> wpad` symlink. Trust only packages you built or whose origin and
 checksums you verified; locally built APKs are not signed by OpenWrt's release

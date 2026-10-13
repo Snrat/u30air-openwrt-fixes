@@ -19,6 +19,15 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kaandikec.com/mu300-linux/install/"/>
   </url>
   <url>
+    <loc>https://kaandikec.com/mu300-linux/web-installer/</loc>
+    <lastmod>2026-10-13</lastmod>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kaandikec.com/mu300-linux/web-installer/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://kaandikec.com/mu300-linux/tr/web-installer/"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://kaandikec.com/mu300-linux/zh/web-installer/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kaandikec.com/mu300-linux/web-installer/"/>
+  </url>
+  <url>
     <loc>https://kaandikec.com/mu300-linux/choose/</loc>
     <lastmod>2026-10-12</lastmod>
     <priority>0.7</priority>

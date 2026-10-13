@@ -212,7 +212,7 @@ if ($linuxFirst -or (AdbState) -notmatch 'device') {
     if ((AdbState) -notmatch 'device') { Die 'the device did not come back as Android' }
 }
 # whatever its serial number says: a root shell of our Linux must never be taken for a rooted Android
-if (([string](Quiet { adb shell 'ls -d /opt/mu300/bin 2>/dev/null' })).Trim()) {
+if (("" + (Quiet { adb shell 'ls -d /opt/mu300/bin 2>/dev/null' })).Trim()) {
     Die 'The device is running MU300 Linux, not Android: boot Android yourself (in Linux: sudo mu300-next-boot android && sudo reboot)'
 }
 if ((SuDo 'id -u') -ne '0') { Die 'su does not work on the device' }

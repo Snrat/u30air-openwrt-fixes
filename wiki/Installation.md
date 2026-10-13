@@ -234,6 +234,25 @@ The device shows up in `adb devices` as `MU300LINUX-...`. In keys mode a compute
 with FunctionFS: 5.4, or the mainline kernels of v2026.10.20 or newer; it is not there while a U30 Air's port is a
 USB host.
 
+## Installing from the browser: the web installer (beta)
+
+https://kaandikec.com/mu300-linux/web-installer/ installs, updates and removes Linux from **Chrome or Edge** over
+USB, with no adb, Python or script on the computer. It is **experimental**: its parts are tested without a device,
+but it has not yet been run end to end on an F50 or U30 Air, so the installers above stay the supported way.
+
+* It needs a device rooted with **Magisk 26 or newer**, USB debugging on, and a release newer than `v2026.10.23`.
+  It shows whether the device is rooted and what its bootloader says about its lock, and changes neither.
+* The browser downloads the release's Magisk zip as an ordinary download and you hand it to the page (GitHub does
+  not let a page read release files); the device checks it against the release's checksum. The page then starts the
+  **zip's own installer** on the device with your answers and shows its progress. Closing the tab does not stop it.
+* It can back up what an installation writes (not the IMEI/calibration partitions: use `tools/backup-device.sh` for
+  those), uninstall, and manage a device that runs Linux with adb on (updates, kernel, restart, logs).
+* It does not shrink `userdata` on the 32 GB variant.
+* If the browser cannot open the device: stop a running adb server (`adb kill-server`); on Windows the adb
+  interface needs the WinUSB driver; on Linux a udev rule. The page says which, and has the details.
+
+How it is built and how to test it: [docs/web-installer.md](https://github.com/dikeckaan/mu300-linux/blob/main/docs/web-installer.md).
+
 ## Installing from Android with a Magisk zip (no computer)
 
 If the device runs a rooted Android with **Magisk 26 or newer**, Linux can be installed from the device itself. Each
