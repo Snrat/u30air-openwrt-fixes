@@ -60,7 +60,9 @@ class WifiStart(ShellTest):
 
 class HwBringup(unittest.TestCase):
     def test_wifi_restarted_once_after_country(self):
-        s = HW.read_text()
+        # The boot-order comment also names wifi down/up; only command lines count.
+        s = '\n'.join(line for line in HW.read_text().splitlines()
+                      if not line.lstrip().startswith('#'))
         down, up = s.index('wifi down'), s.index('wifi up')
         self.assertLess(s.index('iw reg set'), down)
         self.assertLess(down, up)

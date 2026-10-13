@@ -1,9 +1,11 @@
 # U30 Air SC2355 firmware SAE offload (opt-in, experimental)
 
-**What a normal build from this branch includes.** Normal image builds include only
-the driver side of this work: `sprd_wlan_combo` no longer prints passphrases,
+**What a normal build from this branch includes.** Normal image builds include
+the driver log removals: `sprd_wlan_combo` no longer prints passphrases,
 station PSKs or raw command/event payloads (the same removals exist as
 `kernel/patches/wlan_combo-sae-private-logs.patch` for the vendor kernel).
+They also include the startup recovery guard described below, which is inert
+without the offload option.
 The hostapd patch is **not** included by a normal image build: it exists as a build
 recipe (`openwrt/build-u30-sae.sh`, `MU300_SAE_APK_DIR` for `build-rootfs.sh`)
 and does nothing until `u30_sae_offload=1` is set on a BSS. Nothing changes for
@@ -159,7 +161,10 @@ covered by the measured result.
 After a successful AP setup, hostapd sends OUI `0x001374`, subcommand `43` with
 nested vendor data containing the passphrase (attribute 8), group 19 (6), and
 ACT `0xffffffff` (7). This sets runtime firmware state and does not flash WCN
-firmware. Configuration requires pure SAE, mandatory PMF, `sae_pwe=0`, firmware
+firmware. The driver currently forwards only the passphrase: it does not
+increment `group_count`, and `0xffffffff` is its "not set" ACT value. Group 19
+and anti-clogging behavior are firmware defaults, not parameters this request
+successfully sets. Configuration requires pure SAE, mandatory PMF, `sae_pwe=0`, firmware
 AP SME, and one 8–63 byte passphrase. Per-station SAE passwords are unsupported.
 
 The SC2355 firmware reports the derived 32-byte PMK and 16-byte PMKID in a
@@ -277,7 +282,8 @@ list hostapd_bss_options 'u30_sae_offload=1'
 Set your own passphrase with OpenWrt's existing wireless settings. Inspect the
 generated hostapd configuration locally and confirm `wpa_key_mgmt=SAE`,
 `ieee80211w=2`, `sae_pwe=0` and `u30_sae_offload=1`. Do not publish that file.
-The firmware request uses group 19 even if the generator lists more groups.
+The tested firmware uses group 19 by default; the driver does not forward the
+group list even if the generator lists more groups.
 
 ## Installation and rollback
 
@@ -318,6 +324,54 @@ a second BSS or changing security mode/password by reload; those operations
 require the full restart described above. APK replacement after a later upgrade needs revalidation.
 
 ## Validation and limits
+
+### Later 2026-10-13 run: current guard and real recovery
+
+This follow-up retains the maintainer's `1a5b72db` guard and merges main
+`4106772a`. The Wi-Fi startup test now ignores comment-only lines: the new boot
+ordering comment mentions `wifi down/up` and made the earlier string-count
+test fail despite unchanged commands. The protocol and opt-in sections now
+agree with the maintainer's finding that the driver forwards neither the group
+list nor the ACT sentinel. No hostapd patch, SDK recipe or module change is
+made by this follow-up; no new APK or module build is claimed.
+
+Local checks completed: 157 SAE/parser/guard/SDK/privacy/static/Wi-Fi-client,
+channel and startup tests, 155 passing and two optional OpenWrt-container cases
+skipped. The parser ran with required UBSan. Shell syntax and source whitespace
+checks passed.
+
+The U30 Air ran a locally assembled OpenWrt 25.12.5 rootfs from main
+`37bc95a`, retaining Linux 7.2.9, the previously installed module pair and r9
+hostapd pair. An independent Linux managed interface joined the single
+5 GHz/80 MHz AP with SAE and required PMF, got DHCP, and returned HTTP 200 from
+the router and certificate-verified TLS 1.2 HTTPS 200 through the Wi-Fi link.
+The AP logged `auth_alg=sae`, the firmware PMK handoff and completed four-way
+handshake. The computer's home Wi-Fi remained the default route; the test
+interface had no default route or DNS changes.
+
+The exact `1a5b72db` guard first passed the healthy-AP check and eight isolated
+real-UCI/BusyBox ash cases over USB. Recovery saved the mode-0600 configuration
+backup and a timestamped `.why` file with no test passphrase. Those negative
+cases stubbed ubus and service calls.
+
+There was then a separate **real radio test**, with a timed restore over USB:
+the single AP was changed to unsupported `sae-mixed` with the option retained,
+using a full restart. Calling the installed guard's `verify` with a 10-second
+wait recovered an ENABLED WPA2 AP, preserved the password and saved the reason
+in `/etc/mu300/wireless.sae-offload.why`. The independent client joined with
+WPA-PSK and returned router HTTP 200. The original wireless configuration was
+then restored byte-for-byte with another full restart; a fresh SAE connection
+and router HTTP 200 passed. The latest guard remains installed, and the test's
+fallback files were removed after their private capture. Final state was SAE,
+AP ENABLED, active/default SIM2 and WAN up, with Linux first and five failed
+boots before Android unchanged.
+
+This does not add a client test on 7.2.10, a new-module trial, a replacement-wpad
+boot, throughput comparison, the original r8 outage reproduction or the PMK
+provenance probe. The guard restores access; it does not establish key origin.
+Raw USB captures and configurations remain private.
+
+### Earlier 2026-10-13 run: healthy AP and isolated UCI
 
 The 2026-10-13 follow-up starts from the maintainer's `707be31`, including
 v2026.10.24 main and the recovery guard. Local SAE/parser/guard/SDK/privacy,
