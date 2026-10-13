@@ -10,24 +10,45 @@
 #   status [deep]        MU300-WEB-STATUS {json}: the device, its slots, the free region, the SD card, what is on the
 #                        Linux slot, a running job. deep also samples the free region and looks into an existing
 #                        Linux filesystem (mounted read-only, no journal replay). Writes to no partition.
-#   take NAME SHA256     the zip pushed as in/NAME: checked against SHA256, moved to where only root can write,
-#                        its installer unpacked. MU300-WEB-ZIP {json}: its manifest, and whether its installer knows
-#                        this caller (web=1).
+#   take NAME SHA256     the zip pushed as in/NAME (or downloaded by "run fetch"): moved to where only root can
+#                        write, checked there against SHA256, its installer unpacked. MU300-WEB-ZIP {json}: its
+#                        manifest, and whether its installer knows this caller (web=1).
 #   extra vpn|panel FILE SHA256   an extra pushed as in/FILE, checked the same way, for the next install
-#   run fetch NAME SIZE  the other way to get a zip onto the device: the device downloads it itself, as a job, into
-#                        in/NAME (then "take NAME SHA256" as for a pushed one). The address is made here from NAME
-#                        - this project's release of the tag in the name - and from nothing the page says. It uses
-#                        the device's own internet connection (mobile data), and needs a wget that does https.
+#   net [NAME]           MU300-WEB-NET {json}: can the device reach GitHub (the release file NAME) right now, and over
+#                        what (mobile data, Wi-Fi). Asks for headers only.
+#   run fetch NAME SIZE  the device downloads a release's zip itself, as a job, into in/NAME (then "take NAME SHA256"
+#                        as for a pushed one). The address is made here from NAME - this project's release of the
+#                        tag in the name - and from nothing the page says. It uses the device's own internet
+#                        connection (mobile data). A broken connection is continued where it broke, also by the next
+#                        "run fetch" of the same name. The job's exit status says why it failed: 10 no connection,
+#                        11 sent on to a host that is not GitHub's, 12 failed, 13 not the release's size.
 #   answers              in/answers.conf becomes the answers file of the next run (root's, mode 600)
 #   password             one line on stdin: the password of the next run, added to the answers file. It is never an
 #                        argument (ps would show it) nor a file the adb user can read.
-#   run plan|install NAME   start the zip's installer as a job (plan: MU300_DRY_RUN=1). MU300-WEB-JOB started
+#   run plan|install NAME [more]   start the zip's installer as a job (plan: MU300_DRY_RUN=1). MU300-WEB-JOB started.
+#                        more: the page means to install another system after this one; the job's record says so
+#                        ("more":1 in status), for a page that finds the job without the one that started it
 #   run uninstall WIPE SDWIPE   start the uninstaller as a job: WIPE secure|quick|keep, SDWIPE erase|keep
 #   follow               the job's output from its start, as it comes; ends with MU300-WEB-EXIT <status>
 #   cancel               end a job that has not started writing the systems yet
 #   boot-linux [dry]     arm Linux for one boot and reboot (the Magisk module's switch.sh; dry: write nothing)
-#   backup               copies of what an installation writes, for the page to pull: MU300-WEB-FILE lines
-#   clean [all]          remove the pushed files, the copies for a backup and what a killed run left (all: the zips too)
+#   backup               copies of what an installation writes, in root's directory: MU300-WEB-FILE lines
+#   cat NAME             one of those copies, as base64 on stdout, for the page to keep
+#   clean [all]          remove the copies for a backup and what a killed run left (all: the zips and a download too)
+#
+# Where root writes. /data/local/tmp/mu300-web is the adb user's: the page pushes its files there, and whoever can
+# write there could put a link where a file is expected. So root never creates, writes, truncates, chmods or
+# deletes anything in it. A pushed file is an input: it is moved (a rename takes the name as it is and follows no
+# link) into /data/adb/mu300-web, which only root can enter, and looked at there - a regular file, of a bounded
+# size, with the checksum that was asked for - before anything reads it. Downloads, the copies for a backup, the
+# answers, logs and the job's state live in root's directory only. What is left in the adb user's directory is
+# removed by the page's own, unprivileged, adb session.
+#
+# How much root writes. /data is Android's own: filling it can stop Android from starting. A download is refused
+# before it starts when it would leave less than 512 MiB free (the reserve the Magisk installer insists on, too),
+# cannot write past the size the release names (the downloader's own file size limit, and a watch that ends it),
+# and ends after an hour whatever the other end does. A zip is unpacked only when what it says its installer
+# files hold fits a bound; a job's log stops growing at 8 MiB.
 #
 # A job runs in a session of its own (setsid) with its output in a file: closing the browser tab or pulling the cable
 # ends the page's view of it, not the job. Nothing here is faster or slower for being watched, and "follow" after
@@ -91,10 +112,32 @@ sha_of() { sha256sum "$1" 2>/dev/null | cut -d' ' -f1; }
 # a string as a JSON string: control characters dropped, backslash and quote escaped
 js() { printf '"%s"' "$(printf '%s' "$1" | tr -d '\000-\037' | sed 's/\\/\\\\/g; s/"/\\"/g')"; }
 num() { case ${1:-} in ''|*[!0-9]*) echo "${2:-0}" ;; *) echo "$1" ;; esac; }
+DATA_RESERVE=${MU300_DATA_RESERVE:-536870912}     # what a download or a copy must leave free on /data
+ZIP_MAX=${MU300_ZIP_MAX:-314572800}               # no release zip is larger than 124 MB
+EXTRA_MAX=${MU300_EXTRA_MAX:-104857600}           # the VPN module is 41 MB
+UNPACK_MAX=${MU300_UNPACK_MAX:-67108864}          # the installer's own files in a zip are 4 MB
+JOB_LOG_MAX=${MU300_JOB_LOG_MAX:-8388608}
 root_dir() {
-    mkdir -p "$R" && chmod 700 "$R" || fail no-root-dir
-    # only ever root's: a directory someone else made here first is not used
-    [ -d "$R" ] && [ ! -L "$R" ] || fail no-root-dir
+    # root's own, in a place only root can write (/data/adb): a real directory of mode 700 that the caller owns.
+    # A name that is there as anything else - a link, someone else's directory - is not used.
+    [ ! -L "$R" ] || fail no-root-dir
+    [ -d "$R" ] || mkdir -p "$R" 2>/dev/null || fail no-root-dir
+    chmod 700 "$R" 2>/dev/null
+    [ -d "$R" ] && [ ! -L "$R" ] && [ "$(stat -c %u "$R" 2>/dev/null)" = "$(id -u)" ] && [ "$(stat -c %a "$R" 2>/dev/null)" = 700 ] || fail no-root-dir
+}
+data_free() { df -Pk "$1" 2>/dev/null | awk 'NR == 2 { printf "%.0f", $4 * 1024 }'; }
+# bring NAME DEST MAX: the file the page pushed as in/NAME becomes DEST, in root's directory. Returns 1 when there
+# is no such file, 2 when it is larger than MAX. It is moved, never opened or copied where the adb user can write:
+# a rename takes the name as it is. What arrived is judged afterwards, where nobody else can change it.
+bring() {
+    [ ! -L "$S" ] && [ ! -L "$S/in" ] || return 1
+    _b=$R/incoming
+    rm -rf "$_b"
+    mv "$S/in/$1" "$_b" 2>/dev/null || return 1
+    if [ -L "$_b" ] || [ ! -f "$_b" ]; then rm -rf "$_b"; return 1; fi
+    if [ "$(fsize "$_b")" -gt "$3" ]; then rm -f "$_b"; return 2; fi
+    chown 0:0 "$_b" 2>/dev/null
+    chmod 600 "$_b" && rm -rf "$2" && mv "$_b" "$2"
 }
 name_ok() {  # a file name of a release: letters, digits, . _ - and no ".."
     case $1 in ''|*[!0-9A-Za-z._-]*|*..*|.*|-*) return 1 ;; esac
@@ -151,14 +194,16 @@ boot_now() { cat "${MU300_BOOT_ID:-/proc/sys/kernel/random/boot_id}" 2>/dev/null
 job_step() { sed -n 's/^MU300-STEP \([0-9]*\)\/.*/\1/p' "$JOB/log" 2>/dev/null | tail -n1; }
 job_json() {
     _js=$(job_state)
-    printf '{"state":"%s","kind":%s,"arg":%s,"rc":%s,"step":%s}' "$_js" "$(js "$(cat "$JOB/kind" 2>/dev/null)")" \
-        "$(js "$(cat "$JOB/arg" 2>/dev/null)")" "$(num "$(cat "$JOB/rc" 2>/dev/null)" -1)" "$(num "$(job_step)" 0)"
+    printf '{"state":"%s","kind":%s,"arg":%s,"rc":%s,"step":%s,"more":%s}' "$_js" "$(js "$(cat "$JOB/kind" 2>/dev/null)")" \
+        "$(js "$(cat "$JOB/arg" 2>/dev/null)")" "$(num "$(cat "$JOB/rc" 2>/dev/null)" -1)" "$(num "$(job_step)" 0)" \
+        "$([ -f "$JOB/more" ] && echo 1 || echo 0)"
 }
 job_start() {  # job_start KIND ARG...: the job in a session of its own, its output in $JOB/log
     root_dir
     case $(job_state) in running) fail job-running "$(cat "$JOB/kind")" ;; esac
     rm -rf "$JOB"; mkdir -p "$JOB" || fail no-root-dir
     echo "$1" > "$JOB/kind"; echo "${2:-}" > "$JOB/arg"; boot_now > "$JOB/boot"; : > "$JOB/log"
+    [ -z "${JOB_MORE:-}" ] || : > "$JOB/more"
     if command -v setsid >/dev/null 2>&1; then _ss=setsid; else _ss=; fi
     MU300_WEB_BB=$BB $_ss "$BB" sh "$0" _job "$@" </dev/null >/dev/null 2>&1 &
     # the job writes its own pid; wait for it so that "follow" and "status" see a running job at once
@@ -170,17 +215,31 @@ job_main() {  # _job KIND ARG...: runs inside the session; HUP never ends it (th
     trap '' HUP
     echo $$ > "$JOB/pid"
     _k=$1; shift
-    (
-        case $_k in
-            fetch) fetch_zip "$@" ;;
-            plan) zip_run "$1" plan ;;
-            install) zip_run "$1" install ;;
-            uninstall) uninstall "$@" ;;
-            *) echo "! unknown job $_k"; exit 2 ;;
-        esac
-    ) >> "$JOB/log" 2>&1
-    _rc=$?
-    echo "$_rc" > "$JOB/rc.tmp" && mv "$JOB/rc.tmp" "$JOB/rc"
+    # The log has an end: past JOB_LOG_MAX bytes the lines are read and dropped (never refused: a job whose output
+    # nobody takes any more would be stopped by it in the middle of its work).
+    {
+        (
+            case $_k in
+                fetch) fetch_zip "$@" ;;
+                plan) zip_run "$1" plan ;;
+                install) zip_run "$1" install ;;
+                uninstall) uninstall "$@" ;;
+                *) echo "! unknown job $_k"; exit 2 ;;
+            esac
+        ) 2>&1
+        echo $? > "$JOB/rc.tmp"
+    } | {
+        # line by line, in the shell itself: each line is in the file the moment it was said (a watcher follows it)
+        _n=0
+        while IFS= read -r _l || [ -n "$_l" ]; do
+            [ "$_n" -lt "$JOB_LOG_MAX" ] || continue
+            printf '%s\n' "$_l" >> "$JOB/log"
+            _n=$((_n + ${#_l} + 1))
+            [ "$_n" -lt "$JOB_LOG_MAX" ] || echo "! the log is full; the job goes on, its further lines are not kept" >> "$JOB/log"
+        done
+    }
+    [ -s "$JOB/rc.tmp" ] || echo 1 > "$JOB/rc.tmp"
+    mv "$JOB/rc.tmp" "$JOB/rc"
     # the answers held a password: they go with the run that used them
     rm -f "$R/answers.conf"
 }
@@ -312,15 +371,27 @@ zip_dir() { echo "$R/x/${1%.zip}"; }
 take() {  # take NAME SHA256
     name_ok "${1:-}" && case $1 in mu300-magisk-*.zip) ;; *) false ;; esac || fail bad-name
     sha_ok "${2:-}" || fail bad-sha
-    [ -f "$S/in/$1" ] && [ ! -L "$S/in/$1" ] || fail no-file
     root_dir
     case $(job_state) in running) fail job-running ;; esac
     mkdir -p "$R/zips" "$R/x" || fail no-root-dir
-    # moved first, checked after: what is checked is the file only root can change
-    rm -f "$R/zips/$1"
-    mv "$S/in/$1" "$R/zips/$1" && chown 0:0 "$R/zips/$1" 2>/dev/null; chmod 600 "$R/zips/$1" || fail no-root-dir
+    # moved first, checked after: what is checked is the file only root can change. A pushed file counts before one
+    # the device downloaded (which is in root's directory already).
+    rm -rf "$R/zips/$1"
+    bring "$1" "$R/zips/$1" "$ZIP_MAX"
+    case $? in
+        0) rm -f "$R/dl/$1" ;;
+        2) fail too-large ;;
+        *) [ -f "$R/dl/$1" ] && [ ! -L "$R/dl/$1" ] && mv "$R/dl/$1" "$R/zips/$1" && chmod 600 "$R/zips/$1" || fail no-file ;;
+    esac
     _h=$(sha_of "$R/zips/$1")
     if [ "$_h" != "$2" ]; then rm -f "$R/zips/$1"; fail sha-mismatch "$_h"; fi
+    # what is unpacked is the installer and the switch module, a few megabytes. A zip that says they hold more than
+    # that, or more than /data can take with its reserve, is not unpacked at all.
+    _u=$(unzip -l "$R/zips/$1" 'mu300/*' module.prop action.sh switch.sh bootchain.sh 'system/*' 2>/dev/null |
+        awk 'NF >= 4 && $1 ~ /^[0-9]+$/ { s += $1 } END { printf "%.0f", s }')
+    _u=$(num "$_u" 0)
+    if [ "$_u" -gt "$UNPACK_MAX" ]; then rm -f "$R/zips/$1"; fail too-large "$_u"; fi
+    [ $(( $(num "$(data_free "$R")" 0) - _u )) -ge "$DATA_RESERVE" ] || fail no-space
     _x=$(zip_dir "$1")
     rm -rf "$_x"; mkdir -p "$_x" || fail no-root-dir
     unzip -o -q "$R/zips/$1" 'mu300/*' module.prop action.sh switch.sh bootchain.sh 'system/*' -d "$_x" >/dev/null 2>&1 ||
@@ -330,57 +401,210 @@ take() {  # take NAME SHA256
     _mf() { sed -n "s/^$1=//p" "$_x/mu300/manifest" | head -n1; }
     out "ZIP {\"name\":$(js "$1"),\"web\":$_web,\"tag\":$(js "$(_mf TAG)"),\"system\":$(js "$(_mf SYSTEM)"),\"os\":$(js "$(_mf OS)"),\"ubuntu\":$(js "$(_mf UBUNTU)"),\"kernel\":$(js "$(_mf KERNEL)")}"
 }
-# fetch_zip NAME SIZE: a release's Magisk zip, downloaded by the device. The tag is the one in the name
-# (mu300-magisk-<tag>-<system>-k<kernel>.zip), the address this project's release of that tag: nothing else can be
-# asked for. Whatever arrives is only a file in in/ until "take" has checked it against the release's checksum.
+# ---- the device downloads a release's Magisk zip itself (run fetch NAME SIZE, net [NAME])
+# The tag is the one in the name (mu300-magisk-<tag>-<system>-k<kernel>.zip), the address this project's release of
+# that tag: nothing else can be asked for. Whatever arrives is only a file in in/ until "take" has checked it
+# against the release's checksum, which the page read from GitHub's API over the browser's own (verified) TLS.
+#
+# That check is what the download rests on, because the downloader cannot be trusted with it: Magisk's busybox wget
+# (1.36.1) does TLS and follows GitHub's redirect, but says "TLS certificate validation not implemented" and takes a
+# self-signed or a wrong-host certificate without a word (FINDINGS 72), and Android on these devices has no curl,
+# no openssl and no wget of its own. So: the file must have exactly the size the release names, it is accepted only
+# with the release's SHA-256, and wget's own redirects are watched - a connection to anything but github.com and
+# its object hosts (*.githubusercontent.com), on port 443, ends the download.
 REPO_URL=${MU300_REPO_URL:-https://github.com/dikeckaan/mu300-linux/releases/download}
-zip_tag() {  # the tag in a zip's name, or nothing
-    printf '%s\n' "$1" | sed -n 's/^mu300-magisk-\(v[0-9][0-9A-Za-z._]*\)-\(openwrt\|openwrt-luci\|ubuntu-2[46]\.04\)-k\(5\.4\|6\.18\|7\.2\)\.zip$/\1/p'
+FETCH_TRIES=${MU300_FETCH_TRIES:-5}
+# the job's exit status says why a download failed, for the page (device.js: FETCH_FAILURES)
+FETCH_NO_NETWORK=10; FETCH_BAD_HOST=11; FETCH_FAILED=12; FETCH_BAD_SIZE=13; FETCH_NO_SPACE=14
+zip_tag() {  # the tag in a release zip's name, or nothing
+    # in the shell's own patterns: the sed of a busybox built for Android (bionic's regex) knows no \| in a basic
+    # expression, so the sed that did this on a computer said "not a release zip" to every name on a device
+    case $1 in mu300-magisk-v[0-9]*.zip) ;; *) return 0 ;; esac
+    _zt=${1#mu300-magisk-}; _zt=${_zt%.zip}
+    case $_zt in *-k5.4|*-k6.18|*-k7.2) _zt=${_zt%-k*} ;; *) return 0 ;; esac
+    case $_zt in
+        *-openwrt-luci) _zt=${_zt%-openwrt-luci} ;;
+        *-openwrt) _zt=${_zt%-openwrt} ;;
+        *-ubuntu-24.04|*-ubuntu-26.04) _zt=${_zt%-ubuntu-2?.04} ;;
+        *) return 0 ;;
+    esac
+    case $_zt in ''|*[!0-9A-Za-z._]*|*..*) return 0 ;; esac
+    echo "$_zt"
 }
-fetch_zip() {
-    _tag=$(zip_tag "$1")
-    [ -n "$_tag" ] || { echo "! not the name of a release zip: $1"; return 1; }
-    _size=$(num "${2:-}" 0)
-    mkdir -p "$S/in" || return 1
-    _f=$S/in/$1
-    rm -f "$_f"
-    say "the device downloads $1 itself (its own internet connection)"
-    ${MU300_WGET:-wget} -q -T 60 -O "$_f" "$REPO_URL/$_tag/$1" &
-    _wp=$!
-    while kill -0 "$_wp" 2>/dev/null; do
-        sleep "${MU300_WEB_POLL:-1}"
-        [ ! -f "$_f" ] || echo "MU300-PROGRESS $(fsize "$_f") $_size"
+# wget_strangers LOG: the hosts busybox wget said it connected to ("Connecting to HOST (ADDRESS:PORT)") that are
+# not GitHub's, or not on port 443. Nothing printed: every connection so far was one of the expected ones.
+wget_strangers() {
+    sed -n 's/^Connecting to \([^ ]*\) (.*:\([0-9]*\))[[:space:]]*$/\1 \2/p' "$1" 2>/dev/null | while read -r _h _p; do
+        case $_h in github.com|*.githubusercontent.com) [ "$_p" = 443 ] || echo "$_h:$_p" ;; *) echo "$_h" ;; esac
     done
-    wait "$_wp"; _rc=$?
-    if [ $_rc != 0 ] || [ ! -s "$_f" ]; then
-        rm -f "$_f"
-        echo "! the download failed (wget status $_rc): no connection, or this wget cannot do https. Download the file on the computer instead."
-        return 1
+}
+wget_connected() { grep -q '^Connecting to ' "$1" 2>/dev/null; }
+# why a wget that brought nothing failed: there is no way out (no address for the name, no route, nobody answers)
+wget_no_network() { grep -q -i -E 'bad address|unreachable|can.t connect|timed out|Connection re(fused|set)|closed prematurely|Temporary failure|No address' "$1" 2>/dev/null; }
+wget_last() { tr '\r' '\n' < "$1" 2>/dev/null | grep -i '^wget:' | grep -v 'validation not implemented' | tail -n1 | tr -d '\000-\037' | cut -c1-160; }
+uplink_kind() {  # Android's default network: mobile, wifi, ethernet, other, or none
+    _dc=$(asw dumpsys connectivity 2>/dev/null)
+    _dn=$(printf '%s\n' "$_dc" | sed -n 's/^Active default network: *//p' | head -n1 | tr -d ' \r')
+    case $_dn in ''|none|*[!0-9]*) echo none; return 0 ;; esac
+    case $(printf '%s\n' "$_dc" | grep "NetworkAgentInfo{network{$_dn}" | head -n1) in
+        *CELLULAR*|*MOBILE*) echo mobile ;; *WIFI*) echo wifi ;; *ETHERNET*) echo ethernet ;; *) echo other ;;
+    esac
+}
+# net [NAME]: can this device download from GitHub right now? A request for the headers of the release file NAME
+# (or of github.com), with the same watch on where it connects. MU300-WEB-NET {json}; writes nothing but a log.
+net() {
+    _url=https://github.com/
+    if [ -n "${1:-}" ]; then
+        _tag=$(zip_tag "$1"); name_ok "$1" && [ -n "$_tag" ] || fail bad-name
+        _url=$REPO_URL/$_tag/$1
     fi
-    chmod 644 "$_f"
-    say "downloaded $(fsize "$_f") bytes; not checked yet"
+    root_dir
+    _l=$R/fetch.log; : > "$_l"
+    _ok=0; _why=
+    # the timeout of wget is for a connection that says nothing; one that says a little for ever is ended here
+    ${MU300_WGET:-wget} -T "${MU300_NET_TIMEOUT:-10}" --spider "$_url" > "$_l" 2>&1 &
+    _wp=$!; _n=0
+    while kill -0 "$_wp" 2>/dev/null; do
+        if [ "$_n" -ge "${MU300_NET_MAX_SECONDS:-30}" ]; then kill "$_wp" 2>/dev/null; echo "wget: no answer in time" >> "$_l"; break; fi
+        sleep 1; _n=$((_n + 1))
+    done
+    if wait "$_wp"; then
+        if [ -n "$(wget_strangers "$_l")" ]; then _why=host
+        elif ! wget_connected "$_l"; then _why=tool
+        else _ok=1; fi
+    elif wget_no_network "$_l" || ! wget_connected "$_l"; then _why=no-network
+    else _why=failed; fi
+    out "NET {\"ok\":$_ok,\"why\":\"$_why\",\"uplink\":\"$(uplink_kind)\",\"detail\":$(js "$(wget_last "$_l")")}"
+    rm -f "$_l"
+}
+fetch_zip() {  # fetch_zip NAME SIZE
+    _tag=$(zip_tag "$1")
+    [ -n "$_tag" ] || { echo "! not the name of a release zip: $1"; return $FETCH_FAILED; }
+    _size=$(num "${2:-}" 0)
+    [ "$_size" -gt 0 ] || { echo "! no size for $1"; return $FETCH_FAILED; }
+    [ "$_size" -le "$ZIP_MAX" ] || { echo "! $_size bytes is more than any release zip has"; return $FETCH_BAD_SIZE; }
+    # into root's own directory, never the adb user's (and a directory root made there would refuse the page's next
+    # push: "couldn't create file: Permission denied")
+    mkdir -p "$R/dl" || return $FETCH_FAILED
+    _f=$R/dl/$1; _l=$R/fetch.log
+    [ ! -L "$_f" ] || rm -f "$_f"
+    # the start of this very file from an earlier try is continued (wget -c); anything else starts again
+    _have=0; [ ! -f "$_f" ] || _have=$(fsize "$_f")
+    if [ "$_have" -ge "$_size" ]; then rm -f "$_f"; _have=0; fi
+    # /data is Android's own: what is still to come must leave the reserve free, or nothing is started
+    _free=$(num "$(data_free "$R")" 0)
+    if [ $((_free - (_size - _have))) -lt "$DATA_RESERVE" ]; then
+        echo "! Android's storage has $((_free / 1048576)) MiB free; this download needs $(( (_size - _have) / 1048576 )) MiB and must leave $((DATA_RESERVE / 1048576)) MiB"
+        return $FETCH_NO_SPACE
+    fi
+    say "the device downloads $1 itself, over its own internet connection"
+    [ "$_have" = 0 ] || say "continuing after the $_have bytes that are here already"
+    _try=0; _t0=$(date +%s)
+    while :; do
+        _try=$((_try + 1))
+        : > "$_l"
+        # The file cannot grow past the size the release names: the downloader's own limit (in blocks of 512 bytes;
+        # the kernel refuses the write that would cross it), and the watch below for a shell without one.
+        (
+            ulimit -f $(( (_size + 511) / 512 )) 2>/dev/null
+            exec ${MU300_WGET:-wget} -c -T "${MU300_FETCH_TIMEOUT:-30}" -O "$_f" "$REPO_URL/$_tag/$1"
+        ) > "$_l" 2>&1 &
+        _wp=$!
+        while kill -0 "$_wp" 2>/dev/null; do
+            sleep "${MU300_WEB_POLL:-1}"
+            _bad=$(wget_strangers "$_l")
+            if [ -n "$_bad" ]; then
+                kill "$_wp" 2>/dev/null; wait "$_wp" 2>/dev/null
+                rm -f "$_f" "$_l"
+                echo "! the download was sent on to $(echo $_bad | cut -c1-120), which is not GitHub: stopped, nothing kept"
+                return $FETCH_BAD_HOST
+            fi
+            _got=0; [ ! -f "$_f" ] || _got=$(fsize "$_f")
+            if [ "$_got" -gt "$_size" ]; then
+                kill "$_wp" 2>/dev/null; wait "$_wp" 2>/dev/null
+                rm -f "$_f" "$_l"
+                echo "! more arrived than the release's file holds ($_size bytes): stopped, nothing kept"
+                return $FETCH_BAD_SIZE
+            fi
+            # an end to it whatever the other end does: a connection that sends a little for ever, a log that grows
+            if [ $(( $(date +%s) - _t0 )) -gt "${MU300_FETCH_MAX_SECONDS:-3600}" ] || [ "$(fsize "$_l")" -gt 1048576 ]; then
+                kill "$_wp" 2>/dev/null; wait "$_wp" 2>/dev/null
+                rm -f "$_l"
+                echo "! the download did not finish in time; $_got of $_size bytes are here and the next try continues from there"
+                return $FETCH_FAILED
+            fi
+            [ ! -f "$_f" ] || echo "MU300-PROGRESS $_got $_size"
+        done
+        wait "$_wp"; _rc=$?
+        _bad=$(wget_strangers "$_l")
+        if [ -n "$_bad" ]; then
+            rm -f "$_f" "$_l"
+            echo "! the download was sent on to $(echo $_bad | cut -c1-120), which is not GitHub: nothing kept"
+            return $FETCH_BAD_HOST
+        fi
+        _got=0; [ ! -f "$_f" ] || _got=$(fsize "$_f")
+        echo "MU300-PROGRESS $_got $_size"
+        if [ "$_got" -gt "$_size" ]; then
+            rm -f "$_f" "$_l"
+            echo "! the file that arrived is larger than the release's ($_got bytes, not $_size): nothing kept"
+            return $FETCH_BAD_SIZE
+        fi
+        if [ "$_got" = "$_size" ]; then
+            # where it came from must have been said: a wget that names no host cannot be watched
+            if ! wget_connected "$_l"; then
+                rm -f "$_f" "$_l"
+                echo "! this wget does not say where it connects; the download cannot be watched and was not kept"
+                return $FETCH_FAILED
+            fi
+            break
+        fi
+        _last=$(wget_last "$_l")
+        if [ "$_got" -le "$_have" ]; then
+            # this try brought nothing: there is no connection (or the release has no such file)
+            if wget_no_network "$_l" || ! wget_connected "$_l"; then
+                echo "! the device has no connection to GitHub${_last:+ ($_last)}"
+                [ "$_got" -gt 0 ] || rm -f "$_f"
+                rm -f "$_l"
+                return $FETCH_NO_NETWORK
+            fi
+            echo "! the download failed${_last:+: $_last}"
+            [ "$_got" -gt 0 ] || rm -f "$_f"
+            rm -f "$_l"
+            return $FETCH_FAILED
+        fi
+        if [ "$_try" -ge "$FETCH_TRIES" ]; then
+            echo "! the connection broke $FETCH_TRIES times; $_got of $_size bytes are here and the next try continues from there"
+            rm -f "$_l"
+            return $FETCH_FAILED
+        fi
+        say "the connection broke at $_got of $_size bytes${_last:+ ($_last)}; continuing"
+        _have=$_got
+    done
+    rm -f "$_l"
+    chmod 600 "$_f"
+    say "downloaded $_size bytes; not checked yet"
 }
 extra() {  # extra NAME FILE SHA256
     case ${1:-} in vpn|panel) ;; *) fail bad-name ;; esac
     name_ok "${2:-}" || fail bad-name
     sha_ok "${3:-}" || fail bad-sha
-    [ -f "$S/in/$2" ] && [ ! -L "$S/in/$2" ] || fail no-file
     root_dir
     mkdir -p "$R/extras" || fail no-root-dir
     _e=$R/extras/mu300-extra-$1.tar.gz
-    rm -f "$_e"
-    mv "$S/in/$2" "$_e" && chown 0:0 "$_e" 2>/dev/null; chmod 600 "$_e" || fail no-root-dir
+    bring "$2" "$_e" "$EXTRA_MAX"
+    case $? in 0) ;; 2) fail too-large ;; *) fail no-file ;; esac
     _h=$(sha_of "$_e")
     if [ "$_h" != "$3" ]; then rm -f "$_e"; fail sha-mismatch "$_h"; fi
     out "EXTRA $1"
 }
 answers() {
-    [ -f "$S/in/answers.conf" ] && [ ! -L "$S/in/answers.conf" ] || fail no-file
     root_dir
     rm -f "$R/answers.conf"
-    # a copy made by root under umask 077 (a moved file would keep the adb user as its owner), no password in it yet
-    ( umask 077; grep -v '^[[:space:]]*MU300_PASSWORD[[:space:]]*=' "$S/in/answers.conf" > "$R/answers.conf" ) || true
-    rm -f "$S/in/answers.conf"
+    bring answers.conf "$R/answers.in" 65536
+    case $? in 0) ;; 2) fail too-large ;; *) fail no-file ;; esac
+    # a copy made by root under umask 077 from the file in root's directory, no password in it yet
+    ( umask 077; grep -v '^[[:space:]]*MU300_PASSWORD[[:space:]]*=' "$R/answers.in" > "$R/answers.conf" ) || true
+    rm -f "$R/answers.in"
     [ -f "$R/answers.conf" ] && chmod 600 "$R/answers.conf" || fail no-root-dir
     out "ANSWERS ok"
 }
@@ -563,9 +787,12 @@ un_card() {  # un_card WIPE erase|keep: the card's mu300sd, and the marker a kep
 un_cleanup() {
     # what the installer for computers left in /data/local/tmp; never through a Linux filesystem still mounted there
     _t=${MU300_LOCAL_TMP:-/data/local/tmp}
-    mounted_under "$_t/mu300root" || rm -rf "$_t/mu300root"
-    for _f in "$_t"/mu300-*; do [ ! -f "$_f" ] || rm -f "$_f"; done
-    rm -f "$_t/android-install.sh" "$_t/android-mount-mu300root.sh" "$_t/android-bootchain.sh"
+    # (the adb user can write there: single names only, a link goes as a link, and no tree is ever walked)
+    mounted_under "$_t/mu300root" || { [ -L "$_t/mu300root" ] && rm -f -- "$_t/mu300root"; rmdir "$_t/mu300root" 2>/dev/null; }
+    for _f in "$_t"/mu300-*; do
+        if [ -L "$_f" ] || [ -f "$_f" ]; then rm -f -- "$_f"; fi
+    done
+    rm -f -- "$_t/android-install.sh" "$_t/android-mount-mu300root.sh" "$_t/android-bootchain.sh"
     # the on-device switch would point at a slot that holds Android again: Magisk removes a module with this marker
     if [ -d "$MODULES/mu300_linux_switch" ]; then
         : > "$MODULES/mu300_linux_switch/remove"
@@ -585,7 +812,7 @@ uninstall() {  # uninstall secure|quick|keep erase|keep
     say "Done. The device boots Android; restart it once to check."
 }
 
-# ---- backup: what an installation writes, copied to where the adb user can read it, for the page to pull
+# ---- backup: what an installation writes, copied into root's directory; the page reads each copy with "cat"
 BACKUP_PARTS='boot uboot sml teecfg trustos vbmeta'      # of the Linux slot; plus misc and the partition table
 backup_allowed() {  # never a partition with the unit's identity or calibration, whatever the list says
     case $1 in *nv*|prodnv|miscdata|persist|*cali*|isedata|ztecfg|ztepersist|super|userdata|metadata|*modem*|*phy*|pm_sys) return 1 ;; esac
@@ -596,10 +823,12 @@ backup() {
     detect
     slots_ok || fail no-slots
     region_probe || fail no-partition-table
-    _o=$S/out
-    rm -rf "$_o"; mkdir -p "$_o" && chmod 755 "$_o" || fail no-space
+    root_dir
+    _o=$R/out
+    rm -rf "$_o"; mkdir -p "$_o" || fail no-space
+    # the copies are about 80 MB on an F50 (the boot partition is 64); with the reserve of /data
+    [ "$(num "$(data_free "$R")" 0)" -ge $((DATA_RESERVE + 134217728)) ] || { rm -rf "$_o"; fail no-space; }
     _emit() {  # _emit FILE: one line for the page
-        chmod 644 "$_o/$1"
         out "FILE $1 $(fsize "$_o/$1") $(sha_of "$_o/$1")"
     }
     for _p in $BACKUP_PARTS; do
@@ -623,6 +852,20 @@ backup() {
     _emit partitions.txt
     out "BACKUP android_slot=$ANDROID_SLOT linux_slot=$LINUX_SLOT"
 }
+backup_file() {  # the names backup gives its copies, and no other
+    case $1 in
+        boot_[ab].img|uboot_[ab].img|sml_[ab].img|teecfg_[ab].img|trustos_[ab].img|vbmeta_[ab].img) return 0 ;;
+        misc-head.bin|gpt-head.bin|gpt-tail.bin|partitions.txt) return 0 ;;
+    esac
+    return 1
+}
+# cat NAME: one copy of the backup, as base64 (text survives a shell that puts the command on a terminal; the adb
+# user cannot read root's directory, and root writes nothing where the adb user can)
+backup_cat() {
+    backup_file "${1:-}" || fail bad-name
+    [ -f "$R/out/$1" ] && [ ! -L "$R/out/$1" ] || fail no-file
+    base64 "$R/out/$1" || fail read-failed "$1"
+}
 
 # ---- clean
 mounted_under() {  # something is mounted on DIR or below it (also when the mount table cannot be read)
@@ -630,9 +873,11 @@ mounted_under() {  # something is mounted on DIR or below it (also when the moun
     awk -v p="$1" '$2 == p || index($2, p "/") == 1 { f = 1 } END { exit !f }' "$MOUNTS"
 }
 clean() {
-    rm -rf "$S/in" "$S/out"
+    # root's directory only. What the page pushed into the adb user's directory, the page removes itself.
+    [ -d "$R" ] && [ ! -L "$R" ] || { out "CLEAN ok"; return 0; }
+    rm -rf "$R/out" "$R/incoming"
     case $(job_state) in running) out "CLEAN job-running"; return 0 ;; esac
-    rm -f "$R/answers.conf" "$R/bc.bin"
+    rm -f "$R/answers.conf" "$R/answers.in" "$R/bc.bin" "$R/fetch.log"
     rm -rf "$R/extras"
     # what a killed run of the installer left in /data/adb: its work directories, never one with a filesystem
     # still mounted in it (rm -rf into a mounted mu300root would delete the installed systems)
@@ -641,7 +886,7 @@ clean() {
         mounted_under "$_w" || rm -rf "$_w"
     done
     if [ "${1:-}" = all ]; then
-        mounted_under "$R" || rm -rf "$R/zips" "$R/x" "$R/job"
+        mounted_under "$R" || rm -rf "$R/zips" "$R/x" "$R/job" "$R/dl"
     fi
     out "CLEAN ok"
 }
@@ -654,12 +899,14 @@ case ${1:-} in
     extra) extra "${2:-}" "${3:-}" "${4:-}" ;;
     answers) answers ;;
     password) password ;;
+    net) net "${2:-}" ;;
     run)
         case ${2:-} in
             plan|install)
                 name_ok "${3:-}" || fail bad-name
                 [ -f "$(zip_dir "$3")/mu300/install.sh" ] || fail no-zip
                 [ -f "$R/answers.conf" ] || fail no-answers
+                case ${4:-} in '') JOB_MORE= ;; more) JOB_MORE=1 ;; *) fail bad-argument ;; esac
                 job_start "$2" "$3" ;;
             fetch)
                 name_ok "${3:-}" && [ -n "$(zip_tag "$3")" ] || fail bad-name
@@ -681,6 +928,7 @@ case ${1:-} in
         if [ "${2:-}" = dry ]; then exec "$BB" sh "$S/switch.sh" --dry-run; fi
         exec "$BB" sh "$S/switch.sh" ;;
     backup) backup ;;
+    cat) backup_cat "${2:-}" ;;
     clean) clean "${2:-}" ;;
     *) fail bad-command ;;
 esac

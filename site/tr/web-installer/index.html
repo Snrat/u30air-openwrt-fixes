@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- This page talks to a device over USB. Its policy: scripts and styles from this site only, and no connection
      to anything but this site and GitHub's API. (The hash is the theme script below; no web fonts here.) -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-OMJkqZr7SKqxdIEl/JawS5rmqBdCOZaNDw1i12YqLwg='; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.github.com; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-OMJkqZr7SKqxdIEl/JawS5rmqBdCOZaNDw1i12YqLwg='; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.github.com https://raw.githubusercontent.com; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <script>try{var t=localStorage.getItem("mu300-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-<title>Web kurucu: ZTE F50 / U30 Air'e Linux'u tarayıcıdan kurun ve yönetin (beta)</title>
-<meta name="description" content="Deneysel: root'lu bir ZTE F50 / MU300 ya da U30 Air'e Ubuntu veya OpenWrt'yi Chrome ya da Edge'den USB üzerinden kurun; bilgisayarda adb, Python ya da betik gerekmez.">
+<title>Web kurucu: ZTE F50 / U30 Air'e Linux'u tarayıcıdan kurun ve yönetin</title>
+<meta name="description" content="Root'lu bir ZTE F50 / MU300 ya da U30 Air'e Ubuntu veya OpenWrt'yi Chrome ya da Edge'den USB üzerinden kurun; bilgisayarda adb, Python ya da betik gerekmez.">
 <link rel="canonical" href="https://kaandikec.com/mu300-linux/tr/web-installer/">
 <link rel="alternate" hreflang="en" href="https://kaandikec.com/mu300-linux/web-installer/">
 <link rel="alternate" hreflang="tr" href="https://kaandikec.com/mu300-linux/tr/web-installer/">
@@ -17,8 +17,8 @@
 <link rel="alternate" hreflang="x-default" href="https://kaandikec.com/mu300-linux/web-installer/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MU300 Linux">
-<meta property="og:title" content="Web kurucu: ZTE F50 / U30 Air'e Linux'u tarayıcıdan kurun ve yönetin (beta)">
-<meta property="og:description" content="Deneysel: root'lu bir ZTE F50 / MU300 ya da U30 Air'e Ubuntu veya OpenWrt'yi Chrome ya da Edge'den USB üzerinden kurun; bilgisayarda adb, Python ya da betik gerekmez.">
+<meta property="og:title" content="Web kurucu: ZTE F50 / U30 Air'e Linux'u tarayıcıdan kurun ve yönetin">
+<meta property="og:description" content="Root'lu bir ZTE F50 / MU300 ya da U30 Air'e Ubuntu veya OpenWrt'yi Chrome ya da Edge'den USB üzerinden kurun; bilgisayarda adb, Python ya da betik gerekmez.">
 <meta property="og:url" content="https://kaandikec.com/mu300-linux/tr/web-installer/">
 <meta property="og:locale" content="tr_TR">
 <meta property="og:image" content="https://kaandikec.com/mu300-linux/assets/img/og-image.png">
@@ -64,11 +64,12 @@
 <header class="page-head">
 <div class="prose">
 <nav class="crumbs" aria-label="Breadcrumb"><a href="../">Ana sayfa</a> <span aria-hidden="true">/</span> <span aria-current="page">Web kurucu</span></nav>
-<h1>Web kurucu <span class="wi-beta">beta</span></h1>
+<h1>Web kurucu</h1>
 <p class="lede">Linux'u bu sayfadan, USB üzerinden, Chrome ya da Edge ile kurun, güncelleyin ve kaldırın. Bilgisayara kurulacak bir şey yok.</p>
-<div class="callout warn">
-<strong>Deneysel: henüz desteklenen yol değil</strong>
-<p>Bu sayfa yeni. Parçaları cihaz olmadan ve benzetilmiş bir cihazda gerçek cihaz betikleriyle test edildi, ama proje onu henüz bir F50 ya da U30 Air üzerinde baştan sona çalıştırmadı. O yapılana kadar desteklenen yollar <a href="../install/">bilgisayar kurucusu</a> ve <a href="../install/#magisk">Magisk zip'leridir</a>. Denerseniz günlüğü saklayın (sayfa kaydedebilir) ve ne olduğunu <a href="https://github.com/dikeckaan/mu300-linux/issues">bize bildirin</a>.</p>
+<div class="callout wi-tested">
+<strong>Bir F50 üzerinde, macOS'ta Chrome ile test edildi</strong>
+<p>Bu sayfa 2026-10-13'te bir ZTE F50 (64 GB, Android 13, Magisk 30.6) üzerinde, macOS'ta Chrome 155 ile ve v2026.10.25 sürümüyle baştan sona çalıştırıldı: bir ve iki sistem kurma (cihaz sürümü kendisi indirerek ve elle seçilen bir dosyayla), kurulumun ortasında kapatılan bir sekme, Linux'u başlatma, yönetme, Android'e dönme ve kaldırma.</p>
+<p><strong>Henüz test edilmedi:</strong> Windows (orada adb arayüzü WinUSB sürücüsü ister) ve bilgisayarın sistemi olarak Linux (aşağıdaki udev kuralını ister); U30 Air; hedef olarak SD kart; Magisk dışındaki root yöneticileri; ve cihazın gerçek mobil veri üzerinden kendi indirmesi (test cihazının Android'inde internet yoktu; indirmesi GitHub'a test bilgisayarı üzerinden ulaştı). Bunlar için test edilmiş yollar <a href="../install/">bilgisayar kurucusu</a> ve <a href="../install/#magisk">Magisk zip'leridir</a>. Burada bir şey ters giderse günlüğü saklayın (sayfa kaydedebilir) ve <a href="https://github.com/dikeckaan/mu300-linux/issues">bize bildirin</a>.</p>
 </div>
 </div>
 </header>
@@ -97,7 +98,8 @@
 <ul>
 <li><strong>Magisk 26 ya da daha yenisiyle zaten root'lanmış</strong> bir ZTE F50 / MU300 ya da U30 Air. Sayfa cihazın root'lu olup olmadığını ve bootloader'ının kilidi hakkında ne dediğini gösterir, hiçbirini değiştirmez: cihaz root'lamaz ve bootloader kilidi açmaz.</li>
 <li><strong>Windows, macOS ya da Linux'ta Chrome, Edge ya da başka bir Chromium tarayıcısı.</strong> Firefox ve Safari'de WebUSB yoktur.</li>
-<li>Android'de USB hata ayıklama açık, cihaz takılı ve onu tutan başka bir program yok. Çalışan bir adb sunucusu cihazı tutar: <code>adb kill-server</code> ile durdurun.</li>
+<li>Android'de USB hata ayıklama açık, cihaz takılı ve onu tutan başka bir program yok. Çalışan bir adb sunucusu cihazı tutar (<code>adb kill-server</code> ile durdurun); bu sayfayı açmış ve cihaza bağlanmış başka bir tarayıcı penceresi de tutar.</li>
+<li>En iyisi cihazda internet bağlantısı olmasıdır (mobil verili bir SIM): o zaman cihaz sürümü kendisi indirir. Yoksa dosyayı siz indirip sayfaya verirsiniz.</li>
 <li><code>v2026.10.23</code>'ten sonraki bir sürüm: daha eski sürümlerin Magisk zip'leri bu sayfayı tanımaz.</li>
 </ul>
 
@@ -109,12 +111,13 @@
 <li>Kurulumun yazdıklarını <strong>yedekleme</strong> ve <strong>kaldırma</strong>.</li>
 </ul>
 <p>32 GB'lık modelde Android'in veri bölümünü küçültmez (rakamları gösterir ve <a href="../install/#variant-32gb">bilgisayar kurucusuna</a> yönlendirir) ve geri büyütmez.</p>
-<p>Sürüm dosyalarını tarayıcı sıradan indirmeler olarak indirir, sonra sayfaya verirsiniz: GitHub bir web sayfasının onları okumasına izin vermez. Cihaz her dosyayı GitHub'ın onun için yayımladığı sağlama toplamıyla karşılaştırır.</p>
+<p>Sistemi, çekirdeği ve sürümü siz seçersiniz; sayfa bu seçime ait dosyanın adını ve boyutunu söyler ve siz hiçbir şey indirmeden dosyayı cihaza ulaştırır: <strong>cihazdan dosyayı kendisinin indirmesini</strong> ister (projenin GitHub'daki sürümlerinden, cihazın kendi internet bağlantısıyla) ve ne kadar ilerlediğini gösterir. Kesilen bir indirme kaldığı yerden sürer. Bu, cihazın mobil verisinden dosyanın boyutu kadar (sistem başına 39 ile 124 MB) harcar; operatör bunu kullanıma göre ücretlendirebilir. Cihazın bağlantısı yoksa sayfa bunu söyler ve <strong>dosyayı bu bilgisayar indirir</strong>: projenin GitHub'daki sürüm yansısından alır ve kabloyla gönderir (GitHub bir web sayfasının sürümün kendi dosyalarını okumasına izin vermez; bu yüzden proje, bir sayfanın okuyabildiği yerde bir kopya tutar). Son yol olarak dosyayı kendiniz indirip seçersiniz.</p>
+<p>Dosya hangi yoldan gelirse gelsin, cihaz onu yalnızca GitHub'ın sürüm için yayımladığı sağlama toplamına sahipse kullanır; tarayıcı bu toplamı doğrudan GitHub'dan okur. Dosyanın bütünlüğü geldiği bağlantıdan değil, bu sabit sağlama toplamından gelir: cihazdaki indirici (Magisk'in busybox'ı) GitHub'ın sertifikasını doğrulayamaz; bu yüzden hiçbir şeye, nereden geliyor göründüğü için güvenilmez. Sayfa ayrıca indirmeyi sürümün bildirdiği boyutla sınırlar ve GitHub dışında bir yere yönlendirilen indirmeyi durdurur.</p>
 
 <h2 id="cannot-open">Tarayıcı cihazı açamıyorsa</h2>
 <div class="qa"><p><strong>Her yerde</strong></p>
-<p>Çalışan bir adb sunucusu (Android Studio, terminalde <code>adb</code>, bazı telefon araçları) cihazı sahiplenmiş.</p>
-<div><code>adb kill-server</code>, o programları kapatın, yeniden bağlanın.</div></div>
+<p>Çalışan bir adb sunucusu (Android Studio, terminalde <code>adb</code>, scrcpy, bazı telefon araçları) cihazı sahiplenmiş ya da başka bir tarayıcı penceresi bu sayfayı açmış ve cihaza bağlanmış. Cihazla aynı anda yalnızca bir program konuşabilir.</p>
+<div><code>adb kill-server</code>, o programları ve diğer pencereyi ya da sekmeyi kapatın, yeniden bağlanın. Neden buysa sayfa “cihazı başka bir program kullanıyor” der.</div></div>
 <div class="qa"><p><strong>Windows</strong></p>
 <p>Tarayıcı yalnızca <strong>WinUSB</strong> sürücüsü olan bir arayüzü kullanabilir. Android'in adb arayüzü çoğu cihazda bunu Windows'tan kendisi ister; F50 ve U30 Air'in isteyip istemediği ölçülmedi. Yerinde üreticinin kendi adb sürücüsü varsa tarayıcı engellenir.</p>
 <div>Aygıt Yöneticisi'nde cihazın “ADB Interface” girdisine bakın. Başka bir sürücüsü varsa ya da hiç yoksa Google'ın USB sürücüsünü kurun (WinUSB'dir) ya da Zadig ile o arayüze WinUSB bağlayın. Yalnızca adb arayüzünü değiştirin; ağ ya da modem arayüzlerini değil.</div></div>
@@ -149,7 +152,7 @@ sudo mu300-usb adb on</code></pre>
 
 <h2 id="privacy">Sayfa neyi görür ve saklar</h2>
 <ul>
-<li>Sürüm listesi için <strong>GitHub'ın API'sine</strong>, kendi dosyaları için bu siteye bağlanır. Başka hiçbir yere: analitik yok, başka sitelerden yazı tipi ya da betik yok.</li>
+<li>Sürüm listesi için <strong>GitHub'ın API'sine</strong>, kendi dosyaları için bu siteye bağlanır. Başka hiçbir yere: analitik yok, başka sitelerden yazı tipi ya da betik yok. Sürümün kendisini, seçiminize göre, cihaz GitHub'dan ya da tarayıcı projenin <code>raw.githubusercontent.com</code> üzerindeki yansısından indirir.</li>
 <li>Cihazdan IMEI, IMSI, ICCID ya da telefon numarasını asla istemez; cihazın kimliğini ve radyo kalibrasyonunu taşıyan bölümleri asla okumaz.</li>
 <li>Seri numaraları maskeli gösterilir. Günlükte, ekranda ve kaydedebildiğiniz dosyada seri numaraları, kimlik numaraları, telefon numaraları, MAC adresleri, parolalar ve anahtarlar maskelenir.</li>
 <li>Tarayıcının bu site için ayırdığı depoda tek bir şey tutar: bu tarayıcının adb anahtarı.</li>

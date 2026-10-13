@@ -3,6 +3,8 @@ Magisk installer). What it tells the page is JSON and marked lines; a zip is che
 before it is used; an installation is the zip's own installer, run as a job that does not need its watcher; the
 uninstaller writes misc, then the boot partition, then erases, each verified; a backup never takes a partition with
 the unit's identity."""
+import base64
+import hashlib
 import json
 import os
 import shutil
@@ -188,7 +190,7 @@ class Status(WebCase):
         self.assertEqual(s['region'], {'off': start * 512, 'size': (end - start) * 512, 'existing': 'no', 'dirty': -1})
         self.assertEqual(s['parts'], [['userdata', 2048, 8 << 21]])
         self.assertEqual(s['sd'], {'dev': '', 'bytes': 0, 'small': 0, 'existing': 'no'})
-        self.assertEqual(s['job'], {'state': 'none', 'kind': '', 'arg': '', 'rc': -1, 'step': 0})
+        self.assertEqual(s['job'], {'state': 'none', 'kind': '', 'arg': '', 'rc': -1, 'step': 0, 'more': 0})
         self.assertEqual((s['magiskboot'], s['root_kind'], s['module'], s['stalled']), (1, 'magisk', 0, 0))
         self.assertGreater(s['data_free'], 0)
         self.assertNotIn('linux', s)
@@ -316,7 +318,7 @@ class Take(WebCase):
         self.assertIn('MU300-WEB-ERROR no-file', self.web('take', name, sha(target)).stdout)
         self.assertTrue(target.exists())
         # not a zip of this project
-        (self.stage / 'in' / name).unlink()
+        (self.stage / 'in' / name).unlink(missing_ok=True)      # (the link went with the move, as a link)
         with zipfile.ZipFile(self.stage / 'in' / name, 'w') as z:
             z.writestr('hello.txt', 'hi')
         r = self.web('take', name, sha(self.stage / 'in' / name))
@@ -379,12 +381,26 @@ class Jobs(WebCase):
         self.assertIn('MU300-PLAN dry_run=1', out)
         self.assertEqual(self.parts(), before)
         s = self.status()
-        self.assertEqual(s['job'], {'state': 'done', 'kind': 'plan', 'arg': name, 'rc': 3, 'step': 3})
+        self.assertEqual(s['job'], {'state': 'done', 'kind': 'plan', 'arg': name, 'rc': 3, 'step': 3, 'more': 0})
         # the answers went with the run that used them, and the installer left no work directory
         self.assertFalse((self.root() / 'answers.conf').exists())
         self.assertEqual(self.work_dirs(), [])
         # the same log again for a page that comes back later
         self.assertEqual(self.follow()[1], out)
+
+    def test_a_run_that_another_system_was_to_follow_says_so_to_whoever_finds_it(self):
+        # two systems are two zips, and only the page can send the second: when the page is gone, the job's record
+        # tells the next one that the installation it finds finished is not all that was asked for
+        name = self.taken()
+        self.answers()
+        self.assertIn('MU300-WEB-ERROR bad-argument', self.web('run', 'plan', name, 'more;id').stdout)
+        self.assertEqual(self.web('run', 'plan', name, 'more').stdout.strip(), 'MU300-WEB-JOB started plan')
+        self.follow()
+        self.assertEqual(self.status()['job']['more'], 1)
+        self.answers()
+        self.web('run', 'plan', name)
+        self.follow()
+        self.assertEqual(self.status()['job']['more'], 0)
 
     def test_an_installation_with_an_extra_and_the_switch_module(self):
         name = self.taken()
@@ -687,12 +703,19 @@ class Backup(WebCase):
         files = {l.split()[1]: l.split()[2:] for l in r.stdout.splitlines() if l.startswith('MU300-WEB-FILE ')}
         self.assertEqual(sorted(files), ['boot_b.img', 'gpt-head.bin', 'gpt-tail.bin', 'misc-head.bin', 'partitions.txt',
                                          'sml_b.img', 'teecfg_b.img', 'trustos_b.img', 'uboot_b.img', 'vbmeta_b.img'])
-        out = self.stage / 'out'
+        # the copies are root's: nothing was made where the adb user can write
+        self.assertFalse((self.stage / 'out').exists())
+        out = self.root() / 'out'
         self.assertEqual(sorted(p.name for p in out.iterdir()), sorted(files))
         for name, (size, digest) in files.items():
             self.assertEqual(int(size), (out / name).stat().st_size, name)
             self.assertEqual(digest, sha(out / name), name)
-            self.assertEqual((out / name).stat().st_mode & 0o777, 0o644)
+            # ... and the page reads each one as text
+            c = self.web('cat', name)
+            self.assertEqual(c.returncode, 0, c.stderr)
+            self.assertEqual(hashlib.sha256(base64.b64decode(c.stdout)).hexdigest(), digest, name)
+        for bad in ('../answers.conf', 'answers.conf', 'boot_c.img', 'prodnv.img', '/etc/passwd', 'boot_b.img/../../x', '', 'job'):
+            self.assertIn('MU300-WEB-ERROR bad-name', self.web('cat', bad).stdout, bad)
         self.assertEqual(files['boot_b.img'][1], sha(by / 'boot_b'))
         self.assertEqual(int(files['misc-head.bin'][0]), 4096)
         self.assertEqual((int(files['gpt-head.bin'][0]), int(files['gpt-tail.bin'][0])), (34 * 512, 33 * 512))
@@ -700,6 +723,11 @@ class Backup(WebCase):
         self.assertIn('MU300-WEB-BACKUP android_slot=a linux_slot=b', r.stdout)
         for p in out.iterdir():
             self.assertNotIn(b'IMEI', p.read_bytes())
+        # a name of the list that is a link there (nobody but root could have made it) is not read through
+        (out / 'boot_a.img').symlink_to(by / 'prodnv')
+        r = self.web('cat', 'boot_a.img')
+        self.assertIn('MU300-WEB-ERROR no-file', r.stdout)
+        self.assertNotIn(base64.b64encode(b'IMEI 123456789012345').decode(), r.stdout)
 
     def test_identity_and_calibration_partitions_are_refused_by_name(self):
         r = subprocess.run([BUSYBOX, 'sh', '-c', f'MU300_LIB=1; MU300_WEB_STAGE="{self.stage}"; . "{self.stage}/android-web.sh"; '
@@ -734,10 +762,14 @@ class Clean(WebCase):
             (w / 'mu300root/ubuntu').mkdir(parents=True)
             (w / 'mu300root/ubuntu/precious').write_text('a user file')
         (self.fake.root / 'mounts').write_text(f'/dev/block/loop7 {alive}/mu300root ext4 rw 0 0\n')
+        (self.root() / 'out').mkdir()
+        (self.root() / 'out/boot_b.img').write_text('x')
         r = self.web('clean')
         self.assertEqual(r.stdout.strip(), 'MU300-WEB-CLEAN ok')
-        self.assertFalse((self.stage / 'out').exists())
-        self.assertFalse((self.stage / 'in').exists())
+        # root's own copies go; the adb user's directory is the page's to clean, root deletes nothing in it
+        self.assertFalse((self.root() / 'out').exists())
+        self.assertTrue((self.stage / 'out/boot_b.img').exists())
+        self.assertTrue((self.stage / 'in/half-pushed.zip').exists())
         self.assertFalse((self.root() / 'answers.conf').exists())
         self.assertFalse(dead.exists())
         self.assertEqual((alive / 'mu300root/ubuntu/precious').read_text(), 'a user file')
@@ -770,49 +802,421 @@ class BootLinux(WebCase):
         self.assertEqual(self.parts(), before)
 
 
-class Fetch(WebCase):
-    """the other way to get a zip onto the device: the device downloads it, from an address made of the zip's name"""
+class FetchCase(WebCase):
+    """what the tests of the device's own download share: a wget that is a script, and the job around it"""
 
     NAME = 'mu300-magisk-v2026.11.01-openwrt-k6.18.zip'
+    # what busybox wget prints while it follows GitHub's redirect (measured on an F50, FINDINGS 72)
+    SAYS = ('echo "Connecting to github.com (140.82.121.3:443)" >&2; echo "wget: note: TLS certificate validation not implemented" >&2; '
+            'echo "Connecting to release-assets.githubusercontent.com (185.199.108.133:443)" >&2; ')
+    OUT = 'for a in "$@"; do [ "$p" = -O ] && out=$a; p=$a; done; '
 
     def wget(self, body):
         self.stub('fake-wget', body)
         return self.stubs / 'fake-wget'
 
-    def test_the_address_is_this_projects_release_of_the_tag_in_the_name(self):
+    def served(self):
         name, digest = self.full_zip(name=self.NAME)
         src = self.tmp / 'served.zip'
         shutil.move(self.stage / 'in' / name, src)
-        w = self.wget(f'echo "$@" > "$STUBLOG/wget-args"; while [ "$1" != -O ]; do shift; done; sleep 0.5; cp "{src}" "$2"')
-        r = self.web('run', 'fetch', name, src.stat().st_size, MU300_WGET=w)
-        self.assertEqual(r.stdout.strip(), 'MU300-WEB-JOB started fetch', r.stderr)
-        rc, out = self.follow()
+        return name, digest, src
+
+    def fetch(self, w, size, name=None, **env):
+        r = self.web('run', 'fetch', name or self.NAME, size, MU300_WGET=w, **env)
+        self.assertEqual(r.stdout.strip(), 'MU300-WEB-JOB started fetch', r.stdout + r.stderr)
+        return self.follow()
+
+
+class Fetch(FetchCase):
+    """the device downloads a release's zip itself: from an address made of the zip's name, watched (busybox wget
+    cannot check a certificate: where it connects is read from what it prints), continued where it broke, and with
+    an exit status that says why it failed"""
+
+    def test_the_address_is_this_projects_release_of_the_tag_in_the_name(self):
+        name, digest, src = self.served()
+        size = src.stat().st_size
+        shutil.rmtree(self.stage / 'in')                  # as after "clean": the download makes the directory itself
+        w = self.wget(f'echo "$@" > "$STUBLOG/wget-args"; {self.SAYS}{self.OUT}sleep 0.5; cp "{src}" "$out"')
+        rc, out = self.fetch(w, size)
         self.assertEqual(rc, '0', out)
-        self.assertIn(f'MU300-PROGRESS {src.stat().st_size} {src.stat().st_size}', out)
+        self.assertIn(f'MU300-PROGRESS {size} {size}', out)
         args = (self.tmp / 'wget-args').read_text().split()
         self.assertEqual(args[-1], f'https://github.com/dikeckaan/mu300-linux/releases/download/v2026.11.01/{name}')
+        self.assertIn('-c', args)                         # a start that is there is continued
+        # the download is root's: nothing was made in the adb user's directory (a directory root made there
+        # refused the page's next push on a device)
+        self.assertFalse((self.stage / 'in').exists())
+        self.assertNotIn('--no-check-certificate', args)
         # only a file until it is checked: a wrong checksum deletes it, the right one takes it
         self.assertIn('sha-mismatch', self.web('take', name, '0' * 64).stdout)
-        self.assertFalse((self.stage / 'in' / name).exists())
-        self.web('run', 'fetch', name, 1, MU300_WGET=w)
-        self.follow()
+        self.assertFalse((self.root() / 'dl' / name).exists())
+        self.fetch(w, size)
         self.assertIn('MU300-WEB-ZIP', self.web('take', name, digest).stdout)
+        self.assertFalse((self.root() / 'fetch.log').exists())
+
+    def test_every_name_a_release_has_is_one_the_devices_own_shell_takes(self):
+        # in the shell's own patterns: Android's busybox (bionic's regex) has no \| in a basic expression, and the
+        # sed that parsed the name refused every release zip on a device
+        text = WEB.read_text()
+        tag = text[text.index('zip_tag() {'):text.index('# wget_strangers LOG')]
+        code = '\n'.join(l for l in tag.splitlines() if not l.lstrip().startswith('#'))
+        self.assertNotIn('sed', code)
+        self.assertNotIn(r'\|', code)
+        w = self.wget(f'{self.SAYS}exit 1')
+        for system in ('openwrt', 'openwrt-luci', 'ubuntu-24.04', 'ubuntu-26.04'):
+            for k in ('5.4', '6.18', '7.2'):
+                for t in ('v2026.10.25', 'v2026.11.01_2', 'v1'):
+                    r = self.web('run', 'fetch', f'mu300-magisk-{t}-{system}-k{k}.zip', 10, MU300_WGET=w)
+                    self.assertEqual(r.stdout.strip(), 'MU300-WEB-JOB started fetch', f'{t} {system} {k}: {r.stdout}')
+                    self.follow()
 
     def test_names_that_are_not_a_release_zip_are_never_downloaded(self):
         w = self.wget('echo called >> "$STUBLOG/wget-args"')
         for bad in ('mu300-magisk-v1-openwrt-k5.4.zip/../x', 'evil.zip', 'mu300-magisk-v1-arch-k5.4.zip', 'mu300-magisk-v1-openwrt-k9.9.zip',
-                    'mu300-magisk-x-openwrt-k5.4.zip', 'mu300-magisk-v1-openwrt-k5.4.zip?x=1', 'mu300-magisk-v1/evil-openwrt-k5.4.zip', ''):
+                    'mu300-magisk-x-openwrt-k5.4.zip', 'mu300-magisk-v1-openwrt-k5.4.zip?x=1', 'mu300-magisk-v1/evil-openwrt-k5.4.zip', '',
+                    'mu300-magisk-v1-evil-openwrt-k5.4.zip', 'mu300-magisk-v1..2-openwrt-k5.4.zip', 'mu300-magisk-v1-ubuntu-25.04-k5.4.zip',
+                    'mu300-magisk-v1-openwrt-k5.4.zip.zip', 'mu300-magisk--openwrt-k5.4.zip', 'mu300-magisk-v1-openwrt-luci-luci-k5.4.zip'):
             self.assertIn('MU300-WEB-ERROR bad-name', self.web('run', 'fetch', bad, 10, MU300_WGET=w).stdout, bad)
+            if bad:
+                self.assertIn('MU300-WEB-ERROR bad-name', self.web('net', bad, MU300_WGET=w).stdout, bad)
         self.assertIn('MU300-WEB-ERROR bad-argument', self.web('run', 'fetch', self.NAME, '1;id', MU300_WGET=w).stdout)
         self.assertFalse((self.tmp / 'wget-args').exists())
 
-    def test_a_failed_download_leaves_no_file_and_says_so(self):
-        w = self.wget('while [ "$1" != -O ]; do shift; done; echo partial > "$2"; exit 4')
-        self.web('run', 'fetch', self.NAME, 100, MU300_WGET=w)
+    def test_a_download_that_breaks_is_continued_where_it_stopped(self):
+        name, digest, src = self.served()
+        size = src.stat().st_size
+        # the first call brings the first 3000 bytes and fails; the next one must be asked to continue, and does
+        w = self.wget(f'{self.SAYS}{self.OUT}echo "$@" >> "$STUBLOG/wget-args"; '
+                      f'if [ ! -s "$out" ]; then head -c 3000 "{src}" > "$out"; echo "wget: connection closed prematurely" >&2; exit 1; fi; '
+                      f'tail -c +3001 "{src}" >> "$out"')
+        rc, out = self.fetch(w, size)
+        self.assertEqual(rc, '0', out)
+        self.assertIn(f'- the connection broke at 3000 of {size} bytes (wget: connection closed prematurely); continuing', out)
+        self.assertEqual(len((self.tmp / 'wget-args').read_text().splitlines()), 2)
+        self.assertIn('MU300-WEB-ZIP', self.web('take', name, digest).stdout)
+
+    def test_a_start_left_by_an_earlier_run_is_continued_by_the_next(self):
+        name, digest, src = self.served()
+        size = src.stat().st_size
+        broke = self.wget(f'{self.SAYS}{self.OUT}n=$(cat "$out" 2>/dev/null | wc -c); tail -c +$((n + 1)) "{src}" | head -c 5000 >> "$out"; '
+                          'echo "wget: connection closed prematurely" >&2; exit 1')
+        rc, out = self.fetch(broke, size, MU300_FETCH_TRIES='2')
+        self.assertEqual(rc, '12', out)                   # failed, not "no connection": bytes did arrive
+        self.assertIn('! the connection broke 2 times; 10000 of', out)
+        self.assertEqual((self.root() / 'dl' / name).stat().st_size, 10000)
+        rest = self.wget(f'{self.SAYS}{self.OUT}tail -c +10001 "{src}" >> "$out"')
+        rc, out = self.fetch(rest, size)
+        self.assertEqual(rc, '0', out)
+        self.assertIn('- continuing after the 10000 bytes that are here already', out)
+        self.assertIn('MU300-WEB-ZIP', self.web('take', name, digest).stdout)
+
+    def test_no_connection_is_said_as_that(self):
+        for says in ("wget: bad address 'github.com'", "wget: can't connect to remote host (140.82.121.3): Network is unreachable",
+                     'Connecting to github.com (140.82.121.3:443)\nwget: download timed out',
+                     'Connecting to github.com (140.82.121.3:443)\nwget: error getting response: Connection reset by peer'):
+            w = self.wget(f'cat >&2 <<\'EOF\'\n{says}\nEOF\nexit 1')
+            rc, out = self.fetch(w, 100)
+            self.assertEqual(rc, '10', says + out)
+            self.assertIn('! the device has no connection to GitHub (wget: ', out)
+            self.assertFalse((self.root() / 'dl' / self.NAME).exists())
+            n = json.loads(self.web('net', self.NAME, MU300_WGET=w).stdout.split('MU300-WEB-NET ', 1)[1])
+            self.assertEqual((n['ok'], n['why']), (0, 'no-network'), says)
+            self.assertTrue(n['detail'].startswith('wget: '), n)
+        # the release has no such file: a failure, but not "no connection"
+        w = self.wget(f'{self.SAYS}echo "wget: server returned error: HTTP/1.1 404 Not Found" >&2; exit 1')
+        rc, out = self.fetch(w, 100)
+        self.assertEqual(rc, '12', out)
+        self.assertIn('! the download failed: wget: server returned error: HTTP/1.1 404 Not Found', out)
+
+    def test_a_download_sent_on_to_another_host_is_stopped_and_nothing_is_kept(self):
+        # busybox wget cannot check a certificate, so where it connects is the one thing that can be watched
+        for where in ('Connecting to evil.example (203.0.113.9:443)', 'Connecting to githubusercontent.com.evil.example (203.0.113.9:443)',
+                      'Connecting to evilgithubusercontent.com (203.0.113.9:443)', 'Connecting to release-assets.githubusercontent.com (203.0.113.9:80)',
+                      'Connecting to github.com:8443 (203.0.113.9:8443)', 'Connecting to 203.0.113.9 (203.0.113.9:443)'):
+            w = self.wget(f'echo "Connecting to github.com (140.82.121.3:443)" >&2; echo "{where}" >&2; {self.OUT}echo payload > "$out"; sleep 3; echo late >> "$STUBLOG/late"')
+            rc, out = self.fetch(w, 8)
+            self.assertEqual(rc, '11', where + out)
+            self.assertIn('which is not GitHub', out)
+            self.assertFalse((self.root() / 'dl' / self.NAME).exists(), where)
+            self.assertFalse((self.tmp / 'late').exists(), 'the download went on after it was sent elsewhere')
+            n = json.loads(self.web('net', self.NAME, MU300_WGET=self.wget(f'echo "{where}" >&2')).stdout.split('MU300-WEB-NET ', 1)[1])
+            self.assertEqual((n['ok'], n['why']), (0, 'host'), where)
+        # ... also when the whole file was there before anyone looked
+        w = self.wget(f'echo "Connecting to evil.example (203.0.113.9:443)" >&2; {self.OUT}printf 12345678 > "$out"')
+        rc, out = self.fetch(w, 8)
+        self.assertEqual(rc, '11', out)
+        self.assertFalse((self.root() / 'dl' / self.NAME).exists())
+        # a wget that does not say where it connects cannot be watched: its file is not kept
+        w = self.wget(f'{self.OUT}printf 12345678 > "$out"')
+        rc, out = self.fetch(w, 8)
+        self.assertEqual(rc, '12', out)
+        self.assertIn('does not say where it connects', out)
+        self.assertFalse((self.root() / 'dl' / self.NAME).exists())
+
+    def test_a_file_of_another_size_is_not_kept(self):
+        w = self.wget(f'{self.SAYS}{self.OUT}printf 123456789012 > "$out"')
+        rc, out = self.fetch(w, 8)
+        self.assertEqual(rc, '13', out)
+        self.assertIn('nothing kept', out)
+        self.assertFalse((self.root() / 'dl' / self.NAME).exists())
+        # short and no more comes: a failure that keeps the start for the next try
+        w = self.wget(f'{self.SAYS}{self.OUT}[ -s "$out" ] || printf 1234 > "$out"')
+        rc, out = self.fetch(w, 8)
+        self.assertEqual(rc, '12', out)
+        self.assertEqual((self.root() / 'dl' / self.NAME).read_text(), '1234')
+
+    def test_net_says_whether_github_answers_and_over_what(self):
+        ok = self.wget(f'echo "$@" > "$STUBLOG/wget-args"; {self.SAYS}')
+        for dumpsys, kind in (('Active default network: none', 'none'),
+                              ('Active default network: 100\n  NetworkAgentInfo{network{100}  handle{432902426637}  ni{MOBILE[LTE] CONNECTED extra: internet} nc{[ Transports: CELLULAR Capabilities: INTERNET]}}', 'mobile'),
+                              ('NetworkAgentInfo{network{101} ni{WIFI CONNECTED} nc{[ Transports: WIFI ]}}\nActive default network: 101', 'wifi'),
+                              ('Active default network: 102\nNetworkAgentInfo{network{102} nc{[ Transports: ETHERNET ]}}', 'ethernet'),
+                              ('Active default network: 7\nNetworkAgentInfo{network{7} nc{[ Transports: VPN ]}}', 'other'),
+                              ('Active default network: 5; rm -rf /', 'none'), ('', 'none')):
+            self.stub('dumpsys', f"cat <<'EOF'\n{dumpsys}\nEOF")
+            r = self.web('net', self.NAME, MU300_WGET=ok, MU300_ANDROID_PATH=f"{self.stubs}:{os.environ['PATH']}")
+            n = json.loads(r.stdout.split('MU300-WEB-NET ', 1)[1])
+            self.assertEqual(n, {'ok': 1, 'why': '', 'uplink': kind, 'detail': ''}, dumpsys)
+        args = (self.tmp / 'wget-args').read_text().split()
+        self.assertIn('--spider', args)                   # headers only: nothing is downloaded to ask
+        self.assertEqual(args[-1], f'https://github.com/dikeckaan/mu300-linux/releases/download/v2026.11.01/{self.NAME}')
+        self.assertFalse((self.root() / 'dl' / self.NAME).exists())
+        self.assertFalse((self.root() / 'fetch.log').exists())
+        self.web('net', MU300_WGET=ok)
+        self.assertEqual((self.tmp / 'wget-args').read_text().split()[-1], 'https://github.com/')
+
+    def test_the_page_can_cancel_a_download_and_what_arrived_stays(self):
+        w = self.wget(f'{self.SAYS}{self.OUT}printf 1234 > "$out"; sleep 30')
+        self.web('run', 'fetch', self.NAME, 8, MU300_WGET=w)
+        time.sleep(0.5)
+        self.assertIn('MU300-WEB-JOB cancelled', self.web('cancel').stdout)
+        self.assertEqual(self.status()['job']['state'], 'done')
+        self.assertEqual((self.root() / 'dl' / self.NAME).read_text(), '1234')
+
+
+class Bounds(FetchCase):
+    """/data is Android's own: what root writes there has an end, set before it starts - a download cannot grow
+    past the release's size or run for ever, a zip is not unpacked beyond a bound, a job's log stops growing"""
+
+    def test_a_server_that_sends_more_than_the_release_names_cannot_fill_the_storage(self):
+        # 5 MB for a file of 100 000 bytes: the downloader's own file size limit stops the write, and what the file
+        # had grown to when the stub looked is at most the size rounded up to a block
+        w = self.wget(f'{self.SAYS}{self.OUT}head -c 5000000 /dev/zero >> "$out" 2>/dev/null; wc -c < "$out" > "$STUBLOG/grew"')
+        t0 = time.time()
+        rc, out = self.fetch(w, 100000)
+        self.assertEqual(rc, '13', out)
+        self.assertIn('nothing kept', out)
+        self.assertFalse((self.root() / 'dl' / self.NAME).exists())
+        self.assertLessEqual(int((self.tmp / 'grew').read_text()), 100000 + 512)
+        self.assertLess(time.time() - t0, 20)
+
+    def test_a_server_that_never_ends_is_ended(self):
+        # more and more, slowly, for ever: ended when it passes the size (here by the watch), nothing kept
+        w = self.wget(f'{self.SAYS}{self.OUT}while :; do printf "%0200d" 0 >> "$out" || exit 1; echo beat >> "$STUBLOG/beat"; sleep 0.05; done')
+        t0 = time.time()
+        rc, out = self.fetch(w, 1000)
+        self.assertEqual(rc, '13', out)
+        self.assertFalse((self.root() / 'dl' / self.NAME).exists())
+        self.assertLess(time.time() - t0, 20)
+        beats = (self.tmp / 'beat').stat().st_size
+        time.sleep(0.5)
+        self.assertEqual((self.tmp / 'beat').stat().st_size, beats, 'the downloader went on after the job ended')
+        # a little, and then nothing for ever, under the size: ended by the clock; what arrived stays for the next try
+        w = self.wget(f'{self.SAYS}{self.OUT}printf 1234 > "$out"; sleep 60')
+        t0 = time.time()
+        rc, out = self.fetch(w, 1000, MU300_FETCH_MAX_SECONDS='1')
+        self.assertEqual(rc, '12', out)
+        self.assertIn('did not finish in time; 4 of 1000 bytes are here', out)
+        self.assertLess(time.time() - t0, 20)
+        self.assertEqual((self.root() / 'dl' / self.NAME).read_text(), '1234')
+        # the question "can you reach GitHub" has an end as well
+        w = self.wget(f'{self.SAYS}sleep 60')
+        t0 = time.time()
+        n = json.loads(self.web('net', self.NAME, MU300_WGET=w, MU300_NET_MAX_SECONDS='2').stdout.split('MU300-WEB-NET ', 1)[1])
+        self.assertEqual(n['ok'], 0)
+        self.assertLess(time.time() - t0, 20)
+
+    def test_a_download_that_would_not_leave_the_reserve_free_is_not_started(self):
+        w = self.wget('echo called >> "$STUBLOG/wget-args"')
+        rc, out = self.fetch(w, 1000, MU300_DATA_RESERVE=str(1 << 60))
+        self.assertEqual(rc, '14', out)
+        self.assertIn("! Android's storage has", out)
+        self.assertFalse((self.tmp / 'wget-args').exists())
+        # a size no release zip has is not asked for at all
+        rc, out = self.fetch(w, 400 * 1024 * 1024)
+        self.assertEqual(rc, '13', out)
+        self.assertFalse((self.tmp / 'wget-args').exists())
+        # the reserve is the 512 MiB the Magisk installer insists on
+        self.assertIn('DATA_RESERVE=${MU300_DATA_RESERVE:-536870912}', WEB.read_text())
+
+    def test_a_zip_is_not_unpacked_beyond_a_bound_and_a_pushed_file_has_a_largest_size(self):
+        name, digest = self.full_zip()
+        r = self.web('take', name, digest, MU300_UNPACK_MAX='1000')
+        self.assertIn('MU300-WEB-ERROR too-large', r.stdout)
+        self.assertFalse((self.root() / 'zips' / name).exists())
+        self.assertFalse((self.root() / 'x' / name[:-4]).exists())
+        name, digest = self.full_zip()
+        self.assertIn('MU300-WEB-ERROR no-space', self.web('take', name, digest, MU300_DATA_RESERVE=str(1 << 60)).stdout)
+        self.assertFalse((self.root() / 'x' / name[:-4]).exists())
+        name, digest = self.full_zip()
+        self.assertIn('MU300-WEB-ERROR too-large', self.web('take', name, digest, MU300_ZIP_MAX='1000').stdout)
+        self.assertEqual(list((self.root()).glob('incoming*')), [])
+        (self.stage / 'in/answers.conf').write_text('X=1\n' * 30000)
+        self.assertIn('MU300-WEB-ERROR too-large', self.web('answers').stdout)
+        self.assertFalse((self.root() / 'answers.conf').exists())
+
+    def test_a_jobs_log_stops_growing_and_the_job_goes_on(self):
+        name = self.taken()
+        self.answers('MU300_BOOT_ATTEMPTS=3\n')
+        self.web('run', 'plan', name, MU300_JOB_LOG_MAX='600')
         rc, out = self.follow()
-        self.assertEqual(rc, '1', out)
-        self.assertIn('! the download failed (wget status 4)', out)
-        self.assertFalse((self.stage / 'in' / self.NAME).exists())
+        self.assertEqual(rc, '3', out)                     # the plan ran to its end
+        log = (self.root() / 'job/log').read_text()
+        self.assertLess(len(log), 1000)
+        self.assertIn('! the log is full; the job goes on', log)
+        self.assertNotIn('Dry run: nothing was written', log)
+
+
+class Links(WebCase):
+    """the adb user's directory is not root's: whoever can write there can put a link where a file is expected. Root
+    moves a pushed file out of it by its name (a rename follows no link) and judges it in its own directory, and
+    never creates, writes, chmods or deletes anything there. A link planted at every name root touches: the target
+    is untouched, and the run refuses or ignores it."""
+
+    def setUp(self):
+        super().setUp()
+        self.victim = self.tmp / 'victim'
+        self.victim.mkdir()
+        (self.victim / 'secret').write_text('MU300_PASSWORD=root-only\n')
+        (self.victim / 'keep').write_text('precious')
+        self.before = self.snapshot()
+
+    def snapshot(self):
+        return {str(p.relative_to(self.victim)): (p.read_bytes(), p.stat().st_mode) for p in sorted(self.victim.rglob('*')) if p.is_file()}
+
+    def untouched(self, why=''):
+        self.assertEqual(self.snapshot(), self.before, why)
+        self.assertEqual(self.victim.stat().st_mode & 0o777, self.victim.stat().st_mode & 0o777)
+
+    def test_a_link_where_a_pushed_file_is_expected(self):
+        name, digest = self.full_zip()
+        real = self.tmp / 'real.zip'
+        shutil.move(self.stage / 'in' / name, real)
+        for what, target in (('a file', self.victim / 'secret'), ('a directory', self.victim), ('the right zip, elsewhere', real),
+                             ('nothing', self.tmp / 'missing')):
+            (self.stage / 'in' / name).symlink_to(target)
+            r = self.web('take', name, digest)
+            self.assertIn('MU300-WEB-ERROR no-file', r.stdout, what)
+            self.assertFalse((self.root() / 'zips' / name).exists(), what)
+            self.assertFalse((self.root() / 'incoming').exists(), what)
+            self.untouched(what)
+            self.assertTrue(real.exists())
+            (self.stage / 'in' / name).unlink(missing_ok=True)
+        # a directory under the file's name is not a file either
+        (self.stage / 'in' / name).mkdir()
+        ((self.stage / 'in' / name) / 'x').write_text('x')
+        self.assertIn('MU300-WEB-ERROR no-file', self.web('take', name, digest).stdout)
+        self.assertFalse((self.root() / 'zips' / name).exists())
+        # the answers and an extra: the same
+        for target in (self.victim / 'secret', self.victim):
+            (self.stage / 'in/answers.conf').symlink_to(target)
+            self.assertIn('MU300-WEB-ERROR no-file', self.web('answers').stdout)
+            # root's answers never hold what the link pointed at
+            self.assertFalse((self.root() / 'answers.conf').exists())
+            (self.stage / 'in/answers.conf').unlink(missing_ok=True)
+            (self.stage / 'in/extra-vpn.tar.gz').symlink_to(target)
+            self.assertIn('MU300-WEB-ERROR no-file', self.web('extra', 'vpn', 'extra-vpn.tar.gz', '0' * 64).stdout)
+            self.assertEqual(list((self.root() / 'extras').glob('*')), [])
+            (self.stage / 'in/extra-vpn.tar.gz').unlink(missing_ok=True)
+            self.untouched()
+
+    def test_the_directory_for_pushed_files_is_a_link(self):
+        # in/ itself points somewhere else: nothing is taken out of that place, and nothing is made or removed in it
+        name, digest = self.full_zip()
+        shutil.move(self.stage / 'in' / name, self.victim / name)
+        (self.victim / 'answers.conf').write_text('MU300_LANG=en\n')
+        self.before = self.snapshot()
+        shutil.rmtree(self.stage / 'in')
+        (self.stage / 'in').symlink_to(self.victim)
+        self.assertIn('MU300-WEB-ERROR no-file', self.web('take', name, digest).stdout)
+        self.assertIn('MU300-WEB-ERROR no-file', self.web('answers').stdout)
+        self.untouched('take and answers')
+        self.assertEqual(self.web('clean').stdout.strip(), 'MU300-WEB-CLEAN ok')
+        self.web('clean', 'all')
+        self.untouched('clean')
+        self.assertTrue((self.stage / 'in').is_symlink())
+        # the device's own download does not go there either
+        w = self.stubs / 'fake-wget'
+        self.stub('fake-wget', Fetch.SAYS + Fetch.OUT + 'printf 12345678 > "$out"')
+        self.web('run', 'fetch', Fetch.NAME, 8, MU300_WGET=w)
+        self.assertEqual(self.follow()[0], '0')
+        self.assertEqual((self.root() / 'dl' / Fetch.NAME).read_text(), '12345678')
+        self.untouched('fetch')
+
+    def test_a_link_where_the_backup_and_the_download_would_be_written(self):
+        self.small_emmc(fs_mib=0)
+        (self.stage / 'out').symlink_to(self.victim)
+        r = self.web('backup')
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.untouched('backup')
+        self.assertEqual(sorted(p.name for p in self.victim.iterdir()), ['keep', 'secret'])
+        self.assertTrue((self.root() / 'out/boot_b.img').is_file())
+        self.web('clean')
+        self.untouched('clean')
+        self.assertTrue((self.stage / 'out').is_symlink())
+        # a link planted in root's own download directory cannot be planted by the adb user; one left there by
+        # anything is not written through
+        (self.root() / 'dl').mkdir(exist_ok=True)
+        (self.root() / 'dl' / Fetch.NAME).symlink_to(self.victim / 'keep')
+        self.stub('fake-wget', Fetch.SAYS + Fetch.OUT + 'printf 12345678 > "$out"')
+        self.web('run', 'fetch', Fetch.NAME, 8, MU300_WGET=self.stubs / 'fake-wget')
+        self.follow()
+        self.untouched('fetch')
+
+    def test_roots_directory_is_roots_or_nothing_runs(self):
+        # the name of root's directory is there as a link, or as a directory of another mode that cannot be made 700
+        self.root().parent.mkdir(parents=True, exist_ok=True)
+        if self.root().exists():
+            shutil.rmtree(self.root())
+        self.root().symlink_to(self.victim)
+        name, digest = self.full_zip()
+        for cmd in (['take', name, digest], ['answers'], ['backup'], ['run', 'uninstall', 'quick', 'keep'], ['net']):
+            self.assertIn('MU300-WEB-ERROR no-root-dir', self.web(*cmd).stdout, cmd)
+        self.assertEqual(self.web('clean').stdout.strip(), 'MU300-WEB-CLEAN ok')
+        self.untouched()
+        self.assertEqual(sorted(p.name for p in self.victim.iterdir()), ['keep', 'secret'])
+
+    def test_uninstall_removes_single_names_in_the_adb_users_tmp_and_walks_no_tree(self):
+        off, size = self.small_emmc()
+        tmp = self.fake.root / 'tmp'
+        tmp.mkdir(exist_ok=True)
+        (tmp / 'mu300root').symlink_to(self.victim)              # where install.sh mounts: a link to a directory
+        (tmp / 'mu300-rootfs.tar.gz').symlink_to(self.victim / 'keep')
+        (tmp / 'mu300-dir').mkdir()
+        (tmp / 'mu300-dir/inside').write_text('not ours to walk')
+        (tmp / 'android-install.sh').symlink_to(self.victim / 'secret')
+        (tmp / 'mu300-kernel.tar.gz').write_text('left by the installer')
+        self.web('run', 'uninstall', 'quick', 'keep')
+        rc, out = self.follow()
+        self.assertEqual(rc, '0', out)
+        self.untouched()
+        self.assertFalse((tmp / 'mu300root').is_symlink())       # the links went, as links
+        self.assertFalse((tmp / 'mu300-rootfs.tar.gz').is_symlink())
+        self.assertFalse((tmp / 'android-install.sh').is_symlink())
+        self.assertFalse((tmp / 'mu300-kernel.tar.gz').exists())
+        self.assertEqual((tmp / 'mu300-dir/inside').read_text(), 'not ours to walk')
+
+    def test_nothing_in_the_script_writes_into_the_adb_users_directory(self):
+        # every use of $S is a script that is read or run, or the one rename out of it
+        import re
+        uses = [l.strip() for l in WEB.read_text().splitlines() if re.search(r'\$S(/|"|\b)', l) and not l.lstrip().startswith('#')]
+        for l in uses:
+            ok = (re.search(r'\. "\$S/[a-z-]+\.sh"', l) or re.search(r'"\$S/(android-mount-mu300root|switch)\.sh"', l) or
+                  l.startswith('S=${MU300_WEB_STAGE') or l.startswith('[ ! -L "$S" ] && [ ! -L "$S/in" ]') or
+                  l.startswith('mv "$S/in/$1" "$_b"'))
+            self.assertTrue(ok, l)
+        for never in ('> "$S', '>> "$S', 'rm -rf "$S', 'rm -f "$S', 'mkdir -p "$S', 'chmod 755 "$S', 'chmod 644 "$S', '-O "$S', 'of="$S', 'chown "$(stat'):
+            self.assertNotIn(never, WEB.read_text(), never)
 
 
 NODE = shutil.which('node')

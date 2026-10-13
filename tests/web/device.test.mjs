@@ -162,28 +162,51 @@ test("follow: the job's lines as events, its exit status as the result; a lost c
   assert.deepEqual(seen, [{ type: "step", n: 6, of: 9, name: "systems" }]);
 });
 
-test("backup: every file pulled, hashed while it comes, compared with what the device said", async () => {
+// what "android-web.sh cat NAME" prints for the copies of a backup: base64, in lines, as busybox does
+const b64 = (buf) => Buffer.from(buf).toString("base64").replace(/(.{76})/g, "$1\n") + "\n";
+const cats = (files) => ([name]) => (files[name] ? b64(files[name]) : "MU300-WEB-ERROR no-file\n");
+
+test("backup: every file read out of root's directory, hashed while it comes, compared with what the device said", async () => {
   const boot = new Uint8Array(crypto.randomBytes(200000)), misc = new Uint8Array(crypto.randomBytes(4096));
-  const files = new Map([[`${STAGE}/out/boot_b.img`, boot], [`${STAGE}/out/misc-head.bin`, misc]]);
+  const files = { "boot_b.img": boot, "misc-head.bin": misc };
   const list = `MU300-WEB-FILE boot_b.img ${boot.length} ${sha(boot)}\nMU300-WEB-FILE misc-head.bin ${misc.length} ${sha(misc)}\nMU300-WEB-BACKUP android_slot=a linux_slot=b\n`;
-  const { a, calls } = await android({ backup: list, clean: "MU300-WEB-CLEAN ok\n" }, { files });
+  const { a, calls, dev } = await android({ backup: list, cat: cats(files), clean: "MU300-WEB-CLEAN ok\n" });
   const store = new Map();
   const prog = [];
   const r = await a.backup(memorySink(store), (done, total, name) => prog.push([done, total, name]));
   assert.deepEqual(r, { files: [{ name: "boot_b.img", size: boot.length, sha256: sha(boot) }, { name: "misc-head.bin", size: 4096, sha256: sha(misc) }], androidSlot: "a", linuxSlot: "b" });
   assert.deepEqual(Buffer.from(await store.get("boot_b.img").arrayBuffer()), Buffer.from(boot));
   assert.deepEqual(prog.at(-1), [boot.length + 4096, boot.length + 4096, "misc-head.bin"]);
-  assert.deepEqual(calls.map((c) => c[0]), ["backup", "clean"]);
+  assert.deepEqual(calls, [["backup"], ["cat", "boot_b.img"], ["cat", "misc-head.bin"], ["clean"]]);
+  // root cleans root's directory; the page's own directory is cleaned without root
+  const last = dev.shellCalls.at(-1).cmd;
+  assert.ok(last.startsWith("rm -rf /data/local/tmp/mu300-web/in") && !last.includes("su "), last);
+  // a terminal in the way (CR before LF) changes nothing
+  const cr = await android({ backup: list, cat: ([n]) => b64(files[n]).replace(/\n/g, "\r\n"), clean: "MU300-WEB-CLEAN ok\n" });
+  const store1 = new Map();
+  await cr.a.backup(memorySink(store1));
+  assert.equal(sha(Buffer.from(await store1.get("boot_b.img").arrayBuffer())), sha(boot));
 
   // the device says one checksum and sends other bytes: no file is kept, and the copies on the device still go
-  const lie = await android({ backup: list.replace(sha(boot), "f".repeat(64)), clean: "MU300-WEB-CLEAN ok\n" }, { files });
+  const lie = await android({ backup: list.replace(sha(boot), "f".repeat(64)), cat: cats(files), clean: "MU300-WEB-CLEAN ok\n" });
   const store2 = new Map();
   await assert.rejects(lie.a.backup(memorySink(store2)), code("backup-mismatch"));
   assert.equal(store2.size, 0);
-  assert.deepEqual(lie.calls.map((c) => c[0]), ["backup", "clean"]);
-  // a size that is not the file's
-  const short = await android({ backup: list.replace(` ${boot.length} `, ` ${boot.length + 1} `), clean: "MU300-WEB-CLEAN ok\n" }, { files });
-  await assert.rejects(short.a.backup(memorySink(new Map())), (e) => e.code === "protocol");
+  assert.deepEqual(lie.calls.map((c) => c[0]), ["backup", "cat", "clean"]);
+  // a size that is not the file's: more than was said, less than was said
+  for (const d of [1, -1]) {
+    const off = await android({ backup: list.replace(` ${boot.length} `, ` ${boot.length + d} `), cat: cats(files), clean: "MU300-WEB-CLEAN ok\n" });
+    const st = new Map();
+    await assert.rejects(off.a.backup(memorySink(st)), code("bad-answer"));
+    assert.equal(st.size, 0);
+  }
+  // what is not base64 is not a file: the script's refusal, a shell's complaint, a text cut in the middle
+  for (const answer of ["MU300-WEB-ERROR no-file\n", "sh: base64: not found\n", b64(boot).slice(0, 1001), b64(boot) + "!!\n"]) {
+    const x = await android({ backup: list, cat: () => answer, clean: "MU300-WEB-CLEAN ok\n" });
+    const st = new Map();
+    await assert.rejects(x.a.backup(memorySink(st)), (e) => e instanceof DeviceError && ["no-file", "bad-answer"].includes(e.code), answer.slice(0, 30));
+    assert.equal(st.size, 0);
+  }
   // names that are not file names, and an empty list
   for (const bad of ["MU300-WEB-FILE ../x 1 " + "a".repeat(64) + "\nMU300-WEB-BACKUP android_slot=a linux_slot=b\n", "MU300-WEB-FILE a b c\nMU300-WEB-BACKUP x\n"]) {
     await assert.rejects((await android({ backup: bad, clean: "" })).a.backup(memorySink(new Map())), code("bad-answer"));
@@ -362,11 +385,11 @@ test("a backup pulls only the copies the device script makes, by their exact nam
   const names = ["..", ".", "../../../data/adb/magisk.db", "/data/system/users/0/accounts.db", "boot_b.img/../x", "prodnv.img", "nr_fixnv1_a.img", "persist.img",
     "userdata.img", "boot_c.img", "boot_b.img;reboot", "$(id)", "a b", "misc.bin", "boot_b.IMG", "x'y", "boot_b.img\\"];
   for (const name of names) {
-    const files = new Map([[`${STAGE}/out/boot_b.img`, Buffer.from("boot")], [`${STAGE}/out/${name}`, Buffer.from("evil")]]);
-    const x = await android({ backup: `${good}MU300-WEB-FILE ${name} 4 ${sha(Buffer.from("evil"))}\n${end}`, clean: "MU300-WEB-CLEAN ok\n" }, { files });
+    const x = await android({ backup: `${good}MU300-WEB-FILE ${name} 4 ${sha(Buffer.from("evil"))}\n${end}`, cat: () => b64(Buffer.from("evil")), clean: "MU300-WEB-CLEAN ok\n" });
     const store = new Map();
     await assert.rejects(x.a.backup(memorySink(store)), code("bad-answer"), name);
     assert.equal(store.size, 0, `${name}: nothing is written on this computer`);
+    assert.ok(!x.calls.some((c) => c[0] === "cat"), `${name}: the device is not asked for it`);
   }
   // sizes and checksums that are not what they must be, and a name given twice
   for (const line of [`MU300-WEB-FILE boot_b.img -4 ${"a".repeat(64)}`, `MU300-WEB-FILE boot_b.img 4e3 ${"a".repeat(64)}`, `MU300-WEB-FILE boot_b.img 99999999999 ${"a".repeat(64)}`,
@@ -396,9 +419,50 @@ test("the device downloads a zip itself: a job, then the same check; nothing but
   assert.deepEqual(await ok.a.fetchZip(name, 1000, digest, (d, t) => prog.push([d, t])), { web: 1 });
   assert.deepEqual(prog, [[500, 1000], [1000, 1000]]);
   assert.deepEqual(ok.calls, [["run", "fetch", name, "1000"], ["follow"], ["take", name, digest]]);
-  const bad = await android({ run: "MU300-WEB-JOB started fetch\n", follow: "! the download failed (wget status 4)\n\nMU300-WEB-EXIT 1\n" });
-  await assert.rejects(bad.a.fetchZip(name, 1000, digest), (e) => e.code === "download-failed" && /wget status 4/.test(e.detail));
-  assert.ok(!bad.calls.some((c) => c[0] === "take"));
+  // the job's exit status says why: no connection, sent on to another host, failed, not the release's size
+  for (const [rc, why] of [[10, "fetch-no-network"], [11, "fetch-host"], [12, "download-failed"], [13, "fetch-size"], [1, "download-failed"], ["interrupted", "download-failed"]]) {
+    const bad = await android({ run: "MU300-WEB-JOB started fetch\n", follow: `! the download failed: wget: 324950664950111 said no\n\nMU300-WEB-EXIT ${rc}\n` });
+    await assert.rejects(bad.a.fetchZip(name, 1000, digest), (e) => e.code === why && /the download failed/.test(e.detail) && !/324950664950111/.test(e.detail), String(rc));
+    assert.ok(!bad.calls.some((c) => c[0] === "take"), "a download that failed is never taken");
+  }
+  // a download that is larger than asked for is not shown as more than the whole
+  const big = await android({ run: "MU300-WEB-JOB started fetch\n", follow: "MU300-PROGRESS 5000 1000\n\nMU300-WEB-EXIT 13\n" });
+  const seen = [];
+  await assert.rejects(big.a.fetchZip(name, 1000, digest, (d, t) => seen.push([d, t])), code("fetch-size"));
+  assert.deepEqual(seen, [[1000, 1000]]);
+  // the digest the release names is what the device is asked to check, and a mismatch is the device's word
+  const wrong = await android({ run: "MU300-WEB-JOB started fetch\n", follow: "MU300-PROGRESS 1000 1000\n\nMU300-WEB-EXIT 0\n", take: "MU300-WEB-ERROR sha-mismatch " + "c".repeat(64) + "\n" });
+  await assert.rejects(wrong.a.fetchZip(name, 1000, digest), code("sha-mismatch"));
+  assert.deepEqual(wrong.calls[wrong.calls.length - 1], ["take", name, digest]);
   for (const n of HOSTILE) await assert.rejects(ok.a.fetchZip(n, 1000, digest), code("bad-argument"), JSON.stringify(n));
   for (const size of [0, -1, 1.5, "10", NaN]) await assert.rejects(ok.a.fetchZip(name, size, digest), code("bad-argument"));
+});
+
+test("cancelling a download the device is doing ends the job there", async () => {
+  const name = "mu300-magisk-v2026.11.01-openwrt-k6.18.zip";
+  const ac = new AbortController();
+  const d = await android({ run: "MU300-WEB-JOB started fetch\n", cancel: "MU300-WEB-JOB cancelled\n",
+    follow: async function* () { yield { out: "MU300-PROGRESS 100 1000\n" }; await new Promise((r) => setTimeout(r, 5000)); return 0; } });
+  const p = d.a.fetchZip(name, 1000, "b".repeat(64), () => ac.abort(), ac.signal);
+  await assert.rejects(p, (e) => e.code === "aborted");
+  assert.deepEqual(d.calls.map((c) => c[0]), ["run", "follow", "cancel"]);
+});
+
+test("net: whether the device can reach GitHub, and over what; only shapes the page knows come through", async () => {
+  const name = "mu300-magisk-v2026.11.01-openwrt-k6.18.zip";
+  const d = await android({ net: 'MU300-WEB-NET {"ok":1,"why":"","uplink":"mobile","detail":""}\n' });
+  assert.deepEqual(await d.a.net(name), { ok: true, why: "", uplink: "mobile", detail: "" });
+  assert.deepEqual(d.calls, [["net", name]]);
+  await d.a.net();
+  assert.deepEqual(d.calls[1], ["net"]);
+  const none = await android({ net: `MU300-WEB-NET {"ok":0,"why":"no-network","uplink":"none","detail":"wget: bad address 'github.com'"}\n` });
+  assert.deepEqual(await none.a.net(name), { ok: false, why: "no-network", uplink: "none", detail: "wget: bad address 'github.com'" });
+  // a device's words are masked and cut, and a kind of connection the page has no word for is "none"
+  const odd = await android({ net: `MU300-WEB-NET {"ok":"yes","why":"<script>","uplink":"satellite","detail":"IMEI 867530012345678 ${"x".repeat(400)}"}\n` });
+  const o = await odd.a.net(name);
+  assert.deepEqual([o.ok, o.why, o.uplink], [false, "", "none"]);
+  assert.ok(!o.detail.includes("867530012345678") && o.detail.length <= 160);
+  await assert.rejects((await android({ net: "MU300-WEB-NET not json\n" })).a.net(name), code("bad-answer"));
+  await assert.rejects((await android({ net: "nothing\n" })).a.net(name), code("no-answer"));
+  for (const n of HOSTILE) await assert.rejects(d.a.net(n), code("bad-argument"), JSON.stringify(n));
 });

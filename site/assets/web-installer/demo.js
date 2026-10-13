@@ -47,13 +47,19 @@ function baseStatus(kind) {
 class DemoAndroid {
   constructor(kind, log) { this.kind = "android"; this.variant = kind; this.log = log; this.serial = "324950664950"; this.st = baseStatus(kind); this.job = null; }
   async probe() {
-    return { props: { "ro.product.model": "ZTE F50", "ro.product.device": "mu300", "ro.build.version.release": "13", "ro.build.display.id": "MU300_ZYV1.0.0B09", "ro.boot.slot_suffix": "_a" }, lock: "unknown", su: true };
+    return { props: { "ro.product.model": "ZTE F50", "ro.product.device": "mu300", "ro.build.version.release": "13", "ro.build.display.id": "MU300_ZYV1.0.0B09", "ro.boot.slot_suffix": "_a" }, lock: this.variant === "installed" ? "locked" : "unknown", su: true };
   }
   async root() { await wait(700); return "granted"; }
   async stage() { await wait(300); }
   async status() { await wait(250); return JSON.parse(JSON.stringify(this.st)); }
   async takeZip(file, name, sha, o = {}) {
     for (let i = 0; i <= 20; i++) { if (o.onProgress) o.onProgress(file.size * i / 20, file.size); await wait(80); }
+    this.log(`MU300-WEB-ZIP {"name":"${name}","web":1}`);
+    return { name, web: 1 };
+  }
+  async net() { await wait(600); return this.variant === "small" ? { ok: false, why: "no-network", uplink: "none", detail: "wget: bad address 'github.com'" } : { ok: true, why: "", uplink: "mobile", detail: "" }; }
+  async fetchZip(name, size, sha, onProgress = () => {}) {
+    for (let i = 0; i <= 30; i++) { onProgress(size * i / 30, size); await wait(120); }
     this.log(`MU300-WEB-ZIP {"name":"${name}","web":1}`);
     return { name, web: 1 };
   }

@@ -69,9 +69,10 @@ changes, and where to read on:
   shell**, also after you set passwords. A device that never touched adb becomes open with this update; one where
   you ran `mu300-usb adb off`, or turned adb on with a key, stays as it was. To close it: `mu300-usb adb auth keys`
   (only authorised keys) or `mu300-usb adb off`. [Installation](Installation#adb-to-linux), [FAQ](FAQ)
-* **A web installer (beta):** [kaandikec.com/mu300-linux/web-installer](https://kaandikec.com/mu300-linux/web-installer/)
-  installs from Chrome or Edge over USB, with nothing to install on the computer. It has not been run against a
-  device yet by us; the text installer stays the supported way. [Installation](Installation)
+* **A web installer:** [kaandikec.com/mu300-linux/web-installer](https://kaandikec.com/mu300-linux/web-installer/)
+  installs from Chrome or Edge over USB, with nothing to install on the computer: you choose the system and the
+  kernel, and the device downloads the release itself. Run end to end on an F50 from Chrome on macOS; Windows, a
+  Linux computer and the U30 Air are not tested with it yet. [Installation](Installation)
 * **SMS forwarding: a service's own error counts.** "The answer must contain" (`errcode=0`, `code=0`, `ok=true`...)
   makes an HTTP 200 with an error in it a failed delivery, and the delivery log has a Clear button (issue #171).
   [SMS](SMS)

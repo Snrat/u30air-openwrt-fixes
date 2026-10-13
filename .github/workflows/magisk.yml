@@ -68,3 +68,46 @@ jobs:
           [ -n "$TELEGRAM_BOT_TOKEN" ] || { echo "no TELEGRAM_BOT_TOKEN secret: not announced"; exit 0; }
           gh api "repos/$GITHUB_REPOSITORY/contents/tools/telegram-announce.sh" -H 'Accept: application/vnd.github.raw' > /tmp/announce.sh
           sh /tmp/announce.sh zips "$TAG"
+      # The release's mirror for the web installer: the zips in parts of at most 45 MiB and a manifest, as the branch
+      # <tag> of another repository, where raw.githubusercontent.com lets a page read them (a release's own files
+      # cannot be read by a page, FINDINGS 72). Only when this repository names a mirror: the variable MIRROR_REPO
+      # (owner/name of a public repository) and the secret MIRROR_DEPLOY_KEY (the private half of a deploy key of
+      # that repository with write access: it can push there and nowhere else). Without them nothing happens, and
+      # the web installer has the device download the zip, or takes a file. The push goes over ssh with that key
+      # alone, to a host whose keys are the ones GitHub publishes (api.github.com/meta), never ones learned from
+      # the connection itself. The branches of the newest release and of the newest prerelease are kept; older
+      # ones are deleted (a release is ~900 MB). Last, and after the announcement: a mirror that cannot be written
+      # fails this job visibly, with the zips attached all the same. The script of main, not of the tag: older
+      # tags do not have it. The key is never printed, and its file goes when the step ends.
+      - name: Mirror for the web installer
+        env:
+          MIRROR_REPO: ${{ vars.MIRROR_REPO }}
+          MIRROR_DEPLOY_KEY: ${{ secrets.MIRROR_DEPLOY_KEY }}
+        run: |
+          [ -n "$MIRROR_REPO" ] && [ -n "$MIRROR_DEPLOY_KEY" ] || { echo "no MIRROR_REPO variable or MIRROR_DEPLOY_KEY secret: no mirror"; exit 0; }
+          case "$MIRROR_REPO" in *[!0-9A-Za-z._/-]*|*..*|/*|*/|*/*/*) echo "MIRROR_REPO is not owner/name"; exit 1 ;; esac
+          case "$MIRROR_REPO" in */*) ;; *) echo "MIRROR_REPO is not owner/name"; exit 1 ;; esac
+          key=$RUNNER_TEMP/mirror-key; hosts=$RUNNER_TEMP/mirror-known-hosts
+          trap 'rm -f "$key"' EXIT
+          ( umask 077; printf '%s\n' "$MIRROR_DEPLOY_KEY" > "$key" )
+          chmod 600 "$key"
+          gh api meta --jq '.ssh_keys[]' | sed 's/^/github.com /' > "$hosts"
+          [ -s "$hosts" ] || { echo "GitHub's host keys could not be read"; exit 1; }
+          export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$hosts"
+          remote=git@github.com:$MIRROR_REPO.git
+          gh api "repos/$GITHUB_REPOSITORY/contents/tools/make-release-mirror.sh" -H 'Accept: application/vnd.github.raw' > /tmp/make-release-mirror.sh
+          sh /tmp/make-release-mirror.sh out /tmp/mirror "$TAG"
+          cd /tmp/mirror
+          git init -q -b "$TAG"
+          git add -A
+          git -c user.name='mu300-linux release' -c user.email='noreply@github.com' commit -q -m "Mirror of $GITHUB_REPOSITORY $TAG"
+          git push -q --force "$remote" "HEAD:refs/heads/$TAG"
+          echo "pushed: https://raw.githubusercontent.com/$MIRROR_REPO/$TAG/manifest.json"
+          keep=$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=30" --jq '[.[] | select(.draft | not) | select(.tag_name | startswith("v"))] | [(map(select(.prerelease | not)) | .[0].tag_name), (map(select(.prerelease)) | .[0].tag_name)] | .[] | select(. != null)')
+          for b in $(git ls-remote --heads "$remote" | awk '{ sub("^refs/heads/", "", $2); print $2 }'); do
+            case "$b" in v[0-9]*) ;; *) continue ;; esac
+            case "$b" in *[!0-9A-Za-z._-]*) continue ;; esac
+            [ "$b" != "$TAG" ] || continue
+            echo "$keep" | grep -qxF "$b" && continue
+            git push -q "$remote" --delete "$b" && echo "removed the mirror of $b"
+          done

@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- This page talks to a device over USB. Its policy: scripts and styles from this site only, and no connection
-     to anything but this site and GitHub's API. (The hash is the theme script below; no web fonts here.) -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-OMJkqZr7SKqxdIEl/JawS5rmqBdCOZaNDw1i12YqLwg='; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.github.com; base-uri 'none'; form-action 'none'">
+     to anything but this site, GitHub's API and the project's release mirror on raw.githubusercontent.com. (The hash is the theme script below; no web fonts here.) -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-OMJkqZr7SKqxdIEl/JawS5rmqBdCOZaNDw1i12YqLwg='; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.github.com https://raw.githubusercontent.com; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <script>try{var t=localStorage.getItem("mu300-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-<title>Web installer: install and manage Linux on the ZTE F50 / U30 Air from the browser (beta)</title>
-<meta name="description" content="Experimental: install Ubuntu or OpenWrt on a rooted ZTE F50 / MU300 or U30 Air from Chrome or Edge over USB, with no adb, Python or script on the computer.">
+<title>Web installer: install and manage Linux on the ZTE F50 / U30 Air from the browser</title>
+<meta name="description" content="Install Ubuntu or OpenWrt on a rooted ZTE F50 / MU300 or U30 Air from Chrome or Edge over USB, with no adb, Python or script on the computer.">
 <link rel="canonical" href="https://kaandikec.com/mu300-linux/web-installer/">
 <link rel="alternate" hreflang="en" href="https://kaandikec.com/mu300-linux/web-installer/">
 <link rel="alternate" hreflang="tr" href="https://kaandikec.com/mu300-linux/tr/web-installer/">
@@ -17,8 +17,8 @@
 <link rel="alternate" hreflang="x-default" href="https://kaandikec.com/mu300-linux/web-installer/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MU300 Linux">
-<meta property="og:title" content="Web installer: install and manage Linux on the ZTE F50 / U30 Air from the browser (beta)">
-<meta property="og:description" content="Experimental: install Ubuntu or OpenWrt on a rooted ZTE F50 / MU300 or U30 Air from Chrome or Edge over USB, with no adb, Python or script on the computer.">
+<meta property="og:title" content="Web installer: install and manage Linux on the ZTE F50 / U30 Air from the browser">
+<meta property="og:description" content="Install Ubuntu or OpenWrt on a rooted ZTE F50 / MU300 or U30 Air from Chrome or Edge over USB, with no adb, Python or script on the computer.">
 <meta property="og:url" content="https://kaandikec.com/mu300-linux/web-installer/">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://kaandikec.com/mu300-linux/assets/img/og-image.png">
@@ -64,11 +64,12 @@
 <header class="page-head">
 <div class="prose">
 <nav class="crumbs" aria-label="Breadcrumb"><a href="../">Home</a> <span aria-hidden="true">/</span> <span aria-current="page">Web installer</span></nav>
-<h1>Web installer <span class="wi-beta">beta</span></h1>
+<h1>Web installer</h1>
 <p class="lede">Install, update and remove Linux from this page, over USB, in Chrome or Edge. Nothing to install on the computer.</p>
-<div class="callout warn">
-<strong>Experimental: not yet the supported way</strong>
-<p>This page is new. Its parts are tested without a device, and against the real device scripts on a simulated device, but the project has not yet run it from start to finish on an F50 or U30 Air. Until that is done, the <a href="../install/">installer for computers</a> and the <a href="../install/#magisk">Magisk zips</a> are the supported ways. If you try it, keep the log (the page can save it) and <a href="https://github.com/dikeckaan/mu300-linux/issues">tell us</a> what happened.</p>
+<div class="callout wi-tested">
+<strong>Tested on an F50, from Chrome on macOS</strong>
+<p>On 2026-10-13 this page was run from start to finish on a ZTE F50 (64 GB, Android 13, Magisk 30.6) from Chrome 155 on macOS, with release v2026.10.25: installing one system and two, with the device downloading the release itself and with a file chosen by hand, a tab closed in the middle of an installation, starting Linux, managing it, going back to Android, and uninstalling.</p>
+<p><strong>Not tested yet:</strong> Windows (the adb interface needs the WinUSB driver there) and Linux as the computer's system (it needs the udev rule shown below); a U30 Air; an SD card as the target; a root manager other than Magisk; and the device's own download over real mobile data (the test device's Android had no internet, so its download reached GitHub through the test computer). For those, the <a href="../install/">installer for computers</a> and the <a href="../install/#magisk">Magisk zips</a> are the tested ways. If something goes wrong here, keep the log (the page can save it) and <a href="https://github.com/dikeckaan/mu300-linux/issues">tell us</a>.</p>
 </div>
 </div>
 </header>
@@ -97,7 +98,8 @@
 <ul>
 <li>A ZTE F50 / MU300 or U30 Air that is <strong>already rooted with Magisk 26 or newer</strong>. The page shows whether the device is rooted and what its bootloader says about its lock, and changes neither: it does not root a device and does not unlock a bootloader.</li>
 <li><strong>Chrome, Edge or another Chromium browser on Windows, macOS or Linux.</strong> Firefox and Safari have no WebUSB.</li>
-<li>USB debugging on in Android, the device plugged in, and no other program holding it. A running adb server holds it: stop it with <code>adb kill-server</code>.</li>
+<li>USB debugging on in Android, the device plugged in, and no other program holding it. A running adb server holds it (stop it with <code>adb kill-server</code>), and so does another browser window that has this page open and is connected.</li>
+<li>Best with an internet connection on the device (a SIM with mobile data): the device then downloads the release itself. Without one, you download a file and hand it to the page.</li>
 <li>A release from after <code>v2026.10.23</code>: the Magisk zips of older releases do not know this page.</li>
 </ul>
 
@@ -109,12 +111,13 @@
 <li><strong>Back up</strong> what an installation writes, and <strong>uninstall</strong>.</li>
 </ul>
 <p>It does not shrink Android's data partition on the 32 GB variant (it shows the figures and points to the <a href="../install/#variant-32gb">installer for computers</a>), and it does not grow it back.</p>
-<p>The release files are downloaded by the browser as ordinary downloads and then handed to the page: GitHub does not let a web page read them. The device checks each file against the checksum GitHub publishes for it.</p>
+<p>You choose the system, the kernel and the release; the page names the file that belongs to that choice and its size, and gets it onto the device without you downloading anything: it asks the <strong>device to download the file itself</strong> from the project's releases on GitHub, over the device's own internet connection, and shows how far it is. A download that breaks continues where it stopped. That costs the file's size (39 to 124 MB per system) of the device's mobile data, which an operator may charge by volume. When the device has no connection, the page says so and <strong>this computer downloads the file</strong> from the project's mirror of the release on GitHub and sends it over the cable (GitHub does not let a web page read a release's own files, so the project keeps a copy where a page can). As a last way you download the file yourself and choose it.</p>
+<p>Whichever way a file comes, the device uses it only when it has the checksum GitHub publishes for the release, which the browser reads from GitHub directly. A file's integrity comes from that pinned checksum, not from the connection it travelled over: the downloader on the device (Magisk's busybox) cannot verify GitHub's certificate, so nothing is believed because of where it seems to come from. The page also holds a download to the size the release names and stops one that is sent anywhere but GitHub.</p>
 
 <h2 id="cannot-open">If the browser cannot open the device</h2>
 <div class="qa"><p><strong>Everywhere</strong></p>
-<p>A running adb server (Android Studio, <code>adb</code> on a terminal, some phone tools) has claimed the device.</p>
-<div><code>adb kill-server</code>, close those programs, connect again.</div></div>
+<p>A running adb server (Android Studio, <code>adb</code> on a terminal, scrcpy, some phone tools) has claimed the device, or another browser window has this page open and is connected to it. Only one program at a time can talk to the device.</p>
+<div><code>adb kill-server</code>, close those programs and that other window or tab, connect again. The page says “another program is using the device” when this is the reason.</div></div>
 <div class="qa"><p><strong>Windows</strong></p>
 <p>The browser can only use an interface that has the <strong>WinUSB</strong> driver. Android's adb interface asks Windows for it by itself on most devices; whether the F50 and U30 Air do has not been measured. A maker's own adb driver in its place blocks the browser.</p>
 <div>In Device Manager, look at the device's “ADB Interface”. If it has another driver or none, install Google's USB driver (it is WinUSB) or bind WinUSB to that interface with Zadig. Change only the adb interface, not the network or modem ones.</div></div>
@@ -149,7 +152,7 @@ sudo mu300-usb adb on</code></pre>
 
 <h2 id="privacy">What the page sees and keeps</h2>
 <ul>
-<li>It contacts <strong>GitHub's API</strong> for the list of releases, and this site for its own files. Nothing else: no analytics, no fonts or scripts from other sites.</li>
+<li>It contacts <strong>GitHub's API</strong> for the list of releases, and this site for its own files. Nothing else: no analytics, no fonts or scripts from other sites. The release itself is downloaded by the device from GitHub, or by the browser from the project's mirror on <code>raw.githubusercontent.com</code>, whichever you choose.</li>
 <li>It never asks the device for its IMEI, IMSI, ICCID or phone number, and never reads the partitions that hold the device's identity and radio calibration.</li>
 <li>Serial numbers are shown masked. The log, on screen and in the file you can save, has serial numbers, identity numbers, phone numbers, MAC addresses, passwords and keys masked.</li>
 <li>It keeps one thing in the browser's storage for this site: this browser's adb key.</li>

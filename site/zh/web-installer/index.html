@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- This page talks to a device over USB. Its policy: scripts and styles from this site only, and no connection
      to anything but this site and GitHub's API. (The hash is the theme script below; no web fonts here.) -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-OMJkqZr7SKqxdIEl/JawS5rmqBdCOZaNDw1i12YqLwg='; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.github.com; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-OMJkqZr7SKqxdIEl/JawS5rmqBdCOZaNDw1i12YqLwg='; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.github.com https://raw.githubusercontent.com; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <script>try{var t=localStorage.getItem("mu300-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-<title>网页安装器：在浏览器中为 ZTE F50 / U30 Air 安装和管理 Linux（测试版）</title>
-<meta name="description" content="实验性功能：在 Chrome 或 Edge 中通过 USB 为已 root 的 ZTE F50 / MU300 或 U30 Air 安装 Ubuntu 或 OpenWrt，电脑上无需 adb、Python 或脚本。">
+<title>网页安装器：在浏览器中为 ZTE F50 / U30 Air 安装和管理 Linux</title>
+<meta name="description" content="在 Chrome 或 Edge 中通过 USB 为已 root 的 ZTE F50 / MU300 或 U30 Air 安装 Ubuntu 或 OpenWrt，电脑上无需 adb、Python 或脚本。">
 <link rel="canonical" href="https://kaandikec.com/mu300-linux/zh/web-installer/">
 <link rel="alternate" hreflang="en" href="https://kaandikec.com/mu300-linux/web-installer/">
 <link rel="alternate" hreflang="tr" href="https://kaandikec.com/mu300-linux/tr/web-installer/">
@@ -17,8 +17,8 @@
 <link rel="alternate" hreflang="x-default" href="https://kaandikec.com/mu300-linux/web-installer/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MU300 Linux">
-<meta property="og:title" content="网页安装器：在浏览器中为 ZTE F50 / U30 Air 安装和管理 Linux（测试版）">
-<meta property="og:description" content="实验性功能：在 Chrome 或 Edge 中通过 USB 为已 root 的 ZTE F50 / MU300 或 U30 Air 安装 Ubuntu 或 OpenWrt，电脑上无需 adb、Python 或脚本。">
+<meta property="og:title" content="网页安装器：在浏览器中为 ZTE F50 / U30 Air 安装和管理 Linux">
+<meta property="og:description" content="在 Chrome 或 Edge 中通过 USB 为已 root 的 ZTE F50 / MU300 或 U30 Air 安装 Ubuntu 或 OpenWrt，电脑上无需 adb、Python 或脚本。">
 <meta property="og:url" content="https://kaandikec.com/mu300-linux/zh/web-installer/">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://kaandikec.com/mu300-linux/assets/img/og-image.png">
@@ -64,11 +64,12 @@
 <header class="page-head">
 <div class="prose">
 <nav class="crumbs" aria-label="Breadcrumb"><a href="../">首页</a> <span aria-hidden="true">/</span> <span aria-current="page">网页安装器</span></nav>
-<h1>网页安装器 <span class="wi-beta">测试版</span></h1>
+<h1>网页安装器</h1>
 <p class="lede">在本页面通过 USB，用 Chrome 或 Edge 安装、更新和移除 Linux。电脑上无需安装任何东西。</p>
-<div class="callout warn">
-<strong>实验性：还不是受支持的方式</strong>
-<p>这个页面是新的。它的各个部分已在没有设备的情况下测试过，并在模拟设备上用真实的设备脚本测试过，但项目还没有在 F50 或 U30 Air 上把它从头到尾跑一遍。在那之前，受支持的方式是<a href="../install/">电脑安装器</a>和 <a href="../install/#magisk">Magisk zip</a>。如果您尝试使用，请保留日志（页面可以保存），并<a href="https://github.com/dikeckaan/mu300-linux/issues">告诉我们</a>结果。</p>
+<div class="callout wi-tested">
+<strong>已在一台 F50 上用 macOS 的 Chrome 测试</strong>
+<p>2026-10-13，本页面在一台 ZTE F50（64 GB，Android 13，Magisk 30.6）上用 macOS 的 Chrome 155 和版本 v2026.10.25 从头到尾运行过：安装一个系统和两个系统（由设备自行下载版本，以及手动选择文件两种方式）、安装中途关闭标签页、启动 Linux、管理它、回到 Android，以及卸载。</p>
+<p><strong>尚未测试：</strong>Windows（那里 adb 接口需要 WinUSB 驱动）和以 Linux 作为电脑系统（需要下文的 udev 规则）；U30 Air；以 SD 卡为安装目标；Magisk 以外的 root 管理器；以及设备通过真实移动数据自行下载（测试设备的 Android 没有网络，它的下载是经由测试电脑到达 GitHub 的）。这些情况下，经过测试的方式是<a href="../install/">电脑安装器</a>和 <a href="../install/#magisk">Magisk zip</a>。如果这里出了问题，请保留日志（页面可以保存），并<a href="https://github.com/dikeckaan/mu300-linux/issues">告诉我们</a>。</p>
 </div>
 </div>
 </header>
@@ -97,7 +98,8 @@
 <ul>
 <li>一台<strong>已用 Magisk 26 或更新版本 root</strong> 的 ZTE F50 / MU300 或 U30 Air。页面会显示设备是否已 root，以及 bootloader 对其锁定状态的说明，但两者都不改动：它不给设备 root，也不解锁 bootloader。</li>
 <li><strong>Windows、macOS 或 Linux 上的 Chrome、Edge 或其他 Chromium 浏览器。</strong>Firefox 和 Safari 没有 WebUSB。</li>
-<li>Android 中已打开 USB 调试，设备已接好，且没有其他程序占用它。正在运行的 adb 服务会占用它：用 <code>adb kill-server</code> 停止。</li>
+<li>Android 中已打开 USB 调试，设备已接好，且没有其他程序占用它。正在运行的 adb 服务会占用它（用 <code>adb kill-server</code> 停止），另一个打开了本页面并已连接设备的浏览器窗口也会。</li>
+<li>设备最好能上网（装有带移动数据的 SIM 卡）：这样设备会自行下载版本。否则由您下载文件再交给页面。</li>
 <li><code>v2026.10.23</code> 之后的版本：更早版本的 Magisk zip 不认识本页面。</li>
 </ul>
 
@@ -109,12 +111,13 @@
 <li><strong>备份</strong>安装会写入的内容，以及<strong>卸载</strong>。</li>
 </ul>
 <p>它不会在 32 GB 型号上缩小 Android 的数据分区（只显示数字并指向<a href="../install/#variant-32gb">电脑安装器</a>），也不会把它扩回去。</p>
-<p>版本文件由浏览器作为普通下载来下载，再交给页面：GitHub 不允许网页读取它们。设备会用 GitHub 为每个文件发布的校验和逐一检查。</p>
+<p>您选择系统、内核和版本；页面会说明这一选择对应的文件及其大小，并在您不必下载任何东西的情况下把它送到设备上：它让<strong>设备自行下载该文件</strong>（从本项目在 GitHub 上的版本，通过设备自己的网络连接），并显示进度。中断的下载会从断点继续。这会消耗设备与文件大小相当的移动数据（每个系统 39 到 124 MB），运营商可能按流量计费。如果设备没有网络，页面会如实说明，并改由<strong>这台电脑下载文件</strong>：从本项目在 GitHub 上的版本镜像获取，再通过数据线发送（GitHub 不允许网页读取版本自身的文件，所以项目在网页可以读取的地方保留了一份副本）。最后的办法是您自己下载文件并选择它。</p>
+<p>无论文件通过哪种方式到来，设备只在它与 GitHub 为该版本公布的校验和一致时才使用它；这个校验和由浏览器直接从 GitHub 读取。文件的完整性来自这个固定的校验和，而不是它所经过的连接：设备上的下载工具（Magisk 的 busybox）无法验证 GitHub 的证书，因此不会因为文件“看起来来自哪里”而信任它。页面还会把下载限制在版本所标明的大小之内，并中止被转到 GitHub 以外地址的下载。</p>
 
 <h2 id="cannot-open">如果浏览器无法打开设备</h2>
 <div class="qa"><p><strong>所有系统</strong></p>
-<p>正在运行的 adb 服务（Android Studio、终端里的 <code>adb</code>、某些手机工具）占用了设备。</p>
-<div><code>adb kill-server</code>，关闭这些程序，然后重新连接。</div></div>
+<p>正在运行的 adb 服务（Android Studio、终端里的 <code>adb</code>、scrcpy、某些手机工具）占用了设备，或者另一个浏览器窗口打开了本页面并连接着设备。同一时间只能有一个程序与设备通信。</p>
+<div><code>adb kill-server</code>，关闭这些程序以及那个窗口或标签页，然后重新连接。如果原因在此，页面会提示“有别的程序正在使用设备”。</div></div>
 <div class="qa"><p><strong>Windows</strong></p>
 <p>浏览器只能使用装有 <strong>WinUSB</strong> 驱动的接口。在多数设备上，Android 的 adb 接口会自行向 Windows 请求它；F50 和 U30 Air 是否如此尚未实测。如果那里装的是厂商自己的 adb 驱动，浏览器就会被挡住。</p>
 <div>在设备管理器中查看设备的“ADB Interface”。如果它用的是其他驱动或没有驱动，请安装 Google 的 USB 驱动（它就是 WinUSB），或用 Zadig 给该接口绑定 WinUSB。只改 adb 接口，不要改网络或调制解调器接口。</div></div>
@@ -149,7 +152,7 @@ sudo mu300-usb adb on</code></pre>
 
 <h2 id="privacy">页面能看到和保存什么</h2>
 <ul>
-<li>它访问 <strong>GitHub 的 API</strong> 获取版本列表，访问本站获取自己的文件。除此之外没有别的：没有统计分析，没有来自其他网站的字体或脚本。</li>
+<li>它访问 <strong>GitHub 的 API</strong> 获取版本列表，访问本站获取自己的文件。除此之外没有别的：没有统计分析，没有来自其他网站的字体或脚本。版本本身按您的选择，由设备从 GitHub 下载，或由浏览器从本项目在 <code>raw.githubusercontent.com</code> 上的镜像下载。</li>
 <li>它从不向设备索取 IMEI、IMSI、ICCID 或电话号码，也从不读取存有设备身份和射频校准的分区。</li>
 <li>序列号以遮盖形式显示。日志中，无论在屏幕上还是在可保存的文件里，序列号、身份号码、电话号码、MAC 地址、密码和密钥都会被遮盖。</li>
 <li>它在浏览器为本站提供的存储中只保存一样东西：此浏览器的 adb 密钥。</li>

@@ -87,6 +87,10 @@ export async function openUsbTransport(device, platform) {
   try {
     if (found.alternate.alternateSetting) await device.selectAlternateInterface(found.interface.interfaceNumber, found.alternate.alternateSetting);
   } catch (e) { /* the default alternate setting is the adb one on every adbd seen so far */ }
+  // The endpoints are NOT cleared here (adb's own client does that on macOS, ClearPipeStallBothEnds). Measured on an
+  // F50 from this client: clearHalt() sets the host's side of the bulk endpoint back to its first packet while the
+  // device's side stays where it was, and the next packet the device sends - the header of its answer to CNXN - is
+  // then dropped as a repeat. connection.js copes with an answer whose header was lost; nothing here causes one.
   return new UsbTransport(device, found);
 }
 

@@ -1,5 +1,6 @@
 // The releases, from GitHub's API (api.github.com answers cross-origin requests; the release files themselves do
-// not - FINDINGS 72 - so the page never downloads them: the user does, and picks the file). What the API says is
+// not - FINDINGS 72 - so the page never reads them from there: the device downloads its zip, or the browser gets it
+// from a mirror, or the user downloads it and picks the file). What the API says is
 // data from the network: every tag, name, size and checksum is checked for its shape before it is used, and a
 // download link is only ever one into this project's releases.
 export const REPO = "dikeckaan/mu300-linux";

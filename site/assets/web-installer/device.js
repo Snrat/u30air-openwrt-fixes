@@ -10,7 +10,7 @@
 // a scripted device.
 import { AdbError } from "./adb/errors.js";
 import { shell } from "./adb/shell.js";
-import { pull, push } from "./adb/sync.js";
+import { push } from "./adb/sync.js";
 import { classifyLine } from "./flow.js";
 import { mask as pageMask } from "./privacy.js";
 import { Sha256, sha256Hex } from "./sha256.js";
@@ -36,6 +36,8 @@ const EXTRA_FILE = { vpn: "extra-vpn.tar.gz", panel: "extra-panel.tar.gz" };
 // ... and the files it ever reads back: the copies android-web.sh makes for a backup, by their exact names
 const BACKUP_FILE = /^(?:(?:boot|uboot|sml|teecfg|trustos|vbmeta)_[ab]\.img|misc-head\.bin|gpt-head\.bin|gpt-tail\.bin|partitions\.txt)$/;
 const lines = (s) => s.split("\n").map((l) => l.replace(/\r+$/, ""));
+// why the device's own download of a release file failed: the exit status of android-web.sh's fetch job
+export const FETCH_FAILURES = { 10: "fetch-no-network", 11: "fetch-host", 12: "download-failed", 13: "fetch-size", 14: "fetch-space" };
 
 // ---- which kind of device is this?
 
@@ -177,15 +179,37 @@ export class AndroidDevice {
     try { return JSON.parse(r.marks.ZIP[0]); } catch (e) { throw new DeviceError("bad-answer", "take"); }
   }
 
-  // The other way to get a release zip onto the device: the device downloads it itself (android-web.sh makes the
-  // address from the name; it uses the device's own internet connection). Then the same check as for a pushed one.
+  // Can the device download from GitHub right now, and over what? `name`: the release zip that would be asked for
+  // (its headers are requested), or nothing for github.com itself.
+  // -> { ok, why: "" | "no-network" | "host" | "tool" | "failed", uplink: "mobile" | "wifi" | "ethernet" | "other" | "none", detail }
+  async net(name) {
+    if (name !== undefined && (typeof name !== "string" || !ZIP_NAME.test(name) || name.includes(".."))) throw new DeviceError("bad-argument", "zip name");
+    const r = await this.web(name ? ["net", name] : ["net"], { timeoutMs: 60000 });
+    if (!r.marks.NET) throw new DeviceError("no-answer", "net");
+    let n;
+    try { n = JSON.parse(r.marks.NET[0]); } catch (e) { throw new DeviceError("bad-answer", "net"); }
+    if (!n || typeof n !== "object") throw new DeviceError("bad-answer", "net");
+    return { ok: n.ok === 1, why: ["no-network", "host", "tool", "failed"].includes(n.why) ? n.why : "",
+      uplink: ["mobile", "wifi", "ethernet", "other"].includes(n.uplink) ? n.uplink : "none", detail: this.mask(String(n.detail || "")).slice(0, 160) };
+  }
+
+  // The device downloads a release zip itself (android-web.sh makes the address from the name; it uses the device's
+  // own internet connection), then the same check as for a pushed one: the release's SHA-256, on the device, of the
+  // file only root can change. onProgress(done, total). An aborted signal cancels the download on the device; what
+  // has arrived stays there and the next call continues it.
   async fetchZip(name, size, sha256, onProgress = () => {}, signal) {
     if (typeof name !== "string" || !ZIP_NAME.test(name) || name.includes("..")) throw new DeviceError("bad-argument", "zip name");
     if (!/^[0-9a-f]{64}$/.test(sha256 || "") || !Number.isSafeInteger(size) || size <= 0) throw new DeviceError("bad-argument", "checksum");
     await this.web(["run", "fetch", name, String(size)], { timeoutMs: 60000 });
     const errors = [];
-    const rc = await this.follow((e) => { if (e.type === "progress") onProgress(e.done, size); else if (e.type === "error") errors.push(e.text); }, signal);
-    if (rc !== 0) throw new DeviceError("download-failed", errors.join(" "));
+    let rc;
+    try {
+      rc = await this.follow((e) => { if (e.type === "progress") onProgress(Math.min(e.done, size), size); else if (e.type === "error") errors.push(e.text); }, signal);
+    } catch (e) {
+      if (e instanceof AdbError && e.code === "aborted") { try { await this.cancel(); } catch (e2) { /* it ended by itself */ } }
+      throw e;
+    }
+    if (rc !== 0) throw new DeviceError(FETCH_FAILURES[rc] || "download-failed", errors.join(" "));
     const r = await this.web(["take", name, sha256], { timeoutMs: 600000 });
     if (!r.marks.ZIP) throw new DeviceError("no-answer", "take");
     try { return JSON.parse(r.marks.ZIP[0]); } catch (e) { throw new DeviceError("bad-answer", "take"); }
@@ -222,7 +246,45 @@ export class AndroidDevice {
   }
 
   async cancel() { await this.web(["cancel"], { timeoutMs: 30000 }); }
-  async clean(all = false) { await this.web(all ? ["clean", "all"] : ["clean"], { timeoutMs: 120000 }); }
+  // Root removes what is in root's directory. What the page pushed into its own directory (the adb user's) the
+  // page removes itself, without root: root never deletes anything where someone else can put a name.
+  async clean(all = false) {
+    await this.web(all ? ["clean", "all"] : ["clean"], { timeoutMs: 120000 });
+    try { await shell(this.conn, `rm -rf ${STAGE}/in ${STAGE}/out`, { timeoutMs: 30000 }); } catch (e) { if (!(e instanceof AdbError) || e.code !== "timeout") throw e; }
+  }
+  // One copy of the backup out of root's directory: "cat NAME" prints it as base64 (the adb user cannot read that
+  // directory, so adb's file service cannot fetch it; and root puts nothing where the adb user can write). The
+  // text is decoded as it comes; `sink(bytes)` is awaited for every piece. -> the number of bytes
+  async _cat(name, sink, options = {}) {
+    if (!BACKUP_FILE.test(name)) throw new DeviceError("bad-argument", "backup file");
+    let text = "", got = 0, head = "", odd = false;
+    let chain = Promise.resolve(), failed = null;
+    const feed = (t) => {
+      if (head.length < 200) head += t.slice(0, 200 - head.length);
+      const clean = t.replace(/[\r\n]/g, "");
+      // anything that is not base64 is not the file: the script's refusal (a marked line), a shell's complaint
+      if (/[^A-Za-z0-9+/=]/.test(clean)) odd = true;
+      if (odd || failed) return;
+      text += clean;
+      const n = text.length - (text.length % 4);
+      if (!n) return;
+      const part = text.slice(0, n); text = text.slice(n);
+      let bytes;
+      try { bytes = Uint8Array.from(atob(part), (c) => c.charCodeAt(0)); } catch (e) { failed = new DeviceError("bad-answer", "backup"); return; }
+      got += bytes.length;
+      if (options.expectedSize !== undefined && got > options.expectedSize) { failed = new DeviceError("bad-answer", "backup"); return; }
+      const at = got;
+      chain = chain.then(() => sink(bytes)).then(() => { if (options.onProgress) options.onProgress(at); }, (e) => { failed = failed || e; });
+    };
+    const r = await shell(this.conn, `su -c 'sh ${STAGE}/android-web.sh cat ${name}'`, { onStdout: feed, onStderr: () => {}, signal: options.signal, timeoutMs: 900000 });
+    await chain;
+    const refused = /MU300-WEB-ERROR ([a-z-]{1,40})/.exec(head);
+    if (refused) throw new DeviceError(refused[1]);
+    if (failed) throw failed;
+    if (odd || text || r.exitCode !== 0) throw new DeviceError("bad-answer", "backup");
+    if (options.expectedSize !== undefined && got !== options.expectedSize) throw new DeviceError("bad-answer", "backup");
+    return got;
+  }
 
   // Arms Linux for one boot and restarts. The connection ends with the device: that is the success.
   async bootLinux() {
@@ -235,7 +297,7 @@ export class AndroidDevice {
     }
   }
 
-  // Copies of what an installation writes, pulled and checked. `open(name, size)` returns a sink
+  // Copies of what an installation writes, read out of root's directory and checked. `open(name, size)` returns a sink
   // { write(chunk), close(), abort() } for one file (a file in a folder the user chose, or memory).
   // -> { files: [{ name, size, sha256 }], androidSlot, linuxSlot }
   async backup(open, onProgress = () => {}, signal) {
@@ -258,7 +320,7 @@ export class AndroidDevice {
         const sink = await open(f.name, f.size);
         const h = new Sha256();
         try {
-          await pull(this.conn, `${STAGE}/out/${f.name}`, async (c) => { h.update(c); await sink.write(c); },
+          await this._cat(f.name, async (c) => { h.update(c); await sink.write(c); },
             { expectedSize: f.size, signal, onProgress: (got) => onProgress(before + got, total, f.name) });
           if (h.hex() !== f.sha256) throw new DeviceError("backup-mismatch", f.name);
           await sink.close();
@@ -270,7 +332,7 @@ export class AndroidDevice {
       }
     } finally {
       // the copies on the device go, whether the pull worked or not (not when the device is gone)
-      try { await this.web(["clean"], { timeoutMs: 60000 }); } catch (e) { /* the next clean takes them */ }
+      try { await this.clean(); } catch (e) { /* the next clean takes them */ }
     }
     const m = /android_slot=([ab]) linux_slot=([ab])/.exec(r.marks.BACKUP[0]) || [];
     return { files, androidSlot: m[1] || "", linuxSlot: m[2] || "" };

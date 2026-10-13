@@ -159,6 +159,42 @@ test("what is left of an earlier session before CNXN is skipped; endless garbage
   await rejects(new AdbConnection(flood.transport(), { key: KEY }).connect(), "protocol");
 });
 
+test("an answer whose header was lost on the way: the device is asked once more, and the session works", async () => {
+  // over USB the first packet of a session can be dropped when the session before ended without a goodbye (the two
+  // ends of the endpoint are out of step by one packet): the payload of the device's CNXN arrives without its
+  // header, and both sides would wait for each other for ever
+  const asks = (dev) => dev.log.filter((l) => l[0] === "host" && l[1] === 0x4e584e43).length;
+  const quick = { strayWaitMs: 20 };
+  let dropped = 0;
+  const lost = { mutate: (p, n) => (n === 0 && p.name === "CNXN" ? (dropped++, packet(p.cmd, p.arg0, p.arg1, p.payload).slice(1)) : undefined) };
+  const { conn, dev } = await connected({ ...lost, shell: () => ({ stdout: "hi\n", exitCode: 0 }) }, quick);
+  assert.equal(dropped, 1);
+  assert.equal(conn.banner.state, "device");
+  assert.equal(asks(dev), 2, "CNXN was asked twice, not more");
+  assert.equal((await shell(conn, "echo hi")).stdout, "hi\n");
+  // the same for a device that asks for a key: the token came without its header, the second challenge is signed
+  const keys = await connected({ auth: "keys", authorized: [FIX.pub + " someone"], mutate: (p, n) => (n === 0 && p.name === "AUTH" ? packet(p.cmd, p.arg0, p.arg1, p.payload).slice(1) : undefined),
+    shell: () => ({ stdout: "ok\n", exitCode: 0 }) }, quick);
+  assert.equal(asks(keys.dev), 2);
+  assert.equal(keys.dev.keysSeen.length, 0, "an authorised key is not offered again as a new one");
+  assert.equal((await shell(keys.conn, "true")).stdout, "ok\n");
+  // what an earlier session left behind is not a lost header: the real answer follows it at once, and nothing is
+  // asked twice (a second question would make a device with keys issue a new challenge for ever)
+  for (const auth of [{}, { auth: "keys", authorized: [FIX.pub + " someone"] }]) {
+    const junk = await connected({ ...auth, mutate: (p, n) => (n === 0 ? [Buffer.from("payload of the session before"), ...packet(p.cmd, p.arg0, p.arg1, p.payload)] : undefined),
+      shell: () => ({ stdout: "still here\n", exitCode: 0 }) }, quick);
+    await new Promise((r) => setTimeout(r, 60));
+    assert.equal(asks(junk.dev), 1);
+    assert.equal(junk.dev.keysSeen.length, 0);
+    assert.equal((await shell(junk.conn, "true")).stdout, "still here\n");
+  }
+  // a device that restarts the connection later, unasked, is still an error
+  const later = await connected({ shell: () => ({ stdout: "x\n", exitCode: 0 }) });
+  later.dev.send(0x4e584e43, 0x01000001, 4096, Buffer.from("device::"));
+  await new Promise((r) => setTimeout(r, 20));
+  await rejects(later.conn.open("shell:id"), "protocol");
+});
+
 test("an impossible packet size in CNXN, and a payload longer than the limit, end the connection", async () => {
   await rejects(new AdbConnection(new FakeAdbd({ maxPayload: 100 }).transport(), { key: KEY }).connect(), "protocol");
   const big = new FakeAdbd({ mutate: (p, n) => { if (n !== 0) return undefined; const t = packet(p.cmd, p.arg0, p.arg1, p.payload); t[0].writeUInt32LE(MAX_PAYLOAD + 1, 12); return t; } });

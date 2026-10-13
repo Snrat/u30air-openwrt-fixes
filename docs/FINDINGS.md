@@ -130,7 +130,7 @@ what replaced it. The table below gives each section's state.
 | 65 | An APN with a user name and a password (`AT+CGPCO`), and what else kanoqwq's APN page does | current (unit tests only; never sent to a modem) |
 | 66 | The OpenWrt image build tries a package download again | current (unit tests only; no image built with it) |
 | 70 | adb to Linux on by default and open to every computer: the owner's decision, the exposure, and the state that decides it | current (unit tests; nothing of it measured on a device: the checklist is in the section) |
-| 72 | The web installer: adb over WebUSB, how the release files reach the device, WebUSB per platform, and what a closed tab leaves | current; nothing of it has run on a device yet (protocol: docs/web-installer.md) |
+| 72 | The web installer: adb over WebUSB, how the release files reach the device, WebUSB per platform, and what a closed tab leaves | current; run end to end on an F50 from Chrome on macOS on 2026-10-13 (docs/web-installer.md); Windows, a Linux host, the U30 Air, KernelSU/APatch and a download over a carrier's network not measured |
 | 74 | The U30 Air's second SIM: what two units showed, and the selector built on it (PR #73/#166, #194) | current (the maintainer's U30 Air on 7.2.10 and the contributor's on 7.2.9); two working cards, kernel 5.4 and an F50 not run |
 | 80 | WPA3 on the U30 Air's access point: the SC2355 firmware does SAE itself (PR #74, Snrat) | experimental, opt-in build recipe (7.2.9; 7.2.10 without a client); PMK provenance open; the WPA2 fallback measured on the U30 Air |
 | 81 | An update that brought another mu300-update ended with "another mu300-update is running": the lock was held by the first half's own keep-alive | current (fixed; found on the F50 updating v2026.10.23 to v2026.10.24) |
@@ -5281,9 +5281,12 @@ mobile data up. Not measured: OpenWrt on 6.18 and on 5.4, the U30 Air.
 ### 72. The web installer: adb over WebUSB, how the release files reach the device, WebUSB per platform, and what a closed tab leaves
 
 `site/web-installer/` installs, manages and removes Linux from Chrome or Edge over USB, with nothing on the computer
-but the browser. The design is in `docs/web-installer.md`; this section is what was measured for it on 2026-10-13, and
-what was not. **None of it has run on a device**: every test device was in use, and a browser's USB chooser cannot be
-driven by a script. The page says so (beta), and the protocol for the first run on an F50 is in that document.
+but the browser. The design is in `docs/web-installer.md`; this section is what was measured for it. On 2026-10-13
+it was **run from start to finish on an F50** (64 GB, Android 13 `F50_FLYMODEM_ZYV1.0.0B09`, Magisk 30.6, release
+v2026.10.25) from a Mac: the page's own modules from Node over the `usb` package's WebUSB object, and the real page
+in Chrome 155 (headless, a throwaway profile). The table of what ran is in that document; what the run found is
+here, marked *measured on the F50*. **Not measured:** Windows, Linux as the computer's system, a U30 Air, an SD
+card as the target, KernelSU/APatch, an Android that is not rooted, a download over a carrier's network.
 
 **1. The adb client: our own, about 900 lines, no dependency.** The candidate was ya-webadb / Tango (`@yume-chan/adb`
 2.6.4 with `adb-daemon-webusb`, MIT, maintained). It is TypeScript in a dozen packages with bare imports
@@ -5301,76 +5304,161 @@ followed by a zero-length packet.
   numbers in IndexedDB, not as a non-extractable CryptoKey; it is not constant time. Checked: the public key line
   our code derives from a key made by `adb keygen` (platform-tools 37) is byte for byte the `adbkey.pub` adb wrote
   for it, and Node's OpenSSL accepts the signature as adbd would (`tests/web/adb.test.mjs`).
-* *Against a real adbd.* Ubuntu 26.04's `adbd` package (AOSP 34.0.5; it needs no key and listens on TCP 5555, which
-  is why §43 could not use it) in a container, the client over a TCP transport: handshake and features, shell v2 with
-  stdout, stderr and the exit status apart, stdin, a timeout that ends the command, push/pull/stat of 0 to 5 MB with
-  equal SHA-256 at the 64 KiB chunk boundaries, refused files, an abort in the middle of a push
-  (`tests/web/interop.test.mjs`, 3 tests, run by hand: `MU300_ADBD_TCP=host:port`). Stock adbd gives a pushed file
-  the owner's mode bits for group and others too (0640 arrived as 0666): the page never relies on the mode of a
-  pushed file, and a password does not travel in a file (below).
-* *Not measured:* the USB transport against a device (framing and the zero-length packet are tested against a fake
-  USBDevice only), authentication against an adbd that asks for a key, the Android "allow USB debugging" prompt
-  with a browser's key, the adbd of MU300 Linux. The WebUSB transport takes a `USBDevice` as the WebUSB API defines
-  it, so the same client runs in Node with the `usb` package's `webusb` object (`docs/web-installer.md`); that is the
-  way to try it on a device without a browser.
+* *Against a real adbd over TCP.* Ubuntu 26.04's `adbd` package (AOSP 34.0.5) in a container: handshake and
+  features, shell v2, stdin, timeouts, push/pull/stat of 0 to 5 MB with equal SHA-256, refused files, an aborted
+  push (`tests/web/interop.test.mjs`, run by hand: `MU300_ADBD_TCP=host:port`). Stock adbd gives a pushed file the
+  owner's mode bits for group and others too (0644 arrived as 0666, on the F50 as well): the page never relies on
+  the mode of a pushed file, and a password does not travel in a file (below).
+* *Over USB, measured on the F50.* The transport, framing and sync work as written: connected in 2 to 100 ms, the
+  device scripts staged in 60 ms, a 41 MiB zip pushed at 20 to 27 MiB/s and a 112 MiB one at 20 MiB/s (including the
+  device's SHA-256), a 78 MiB backup read back in 14 s (as base64 through the shell, 5.5 MiB/s; 9 MiB/s with adb's
+  file service, which root's directory rules out, below) with every file's checksum equal to the device's.
+* *Android's adbd on the F50 asks for no key.* `ro.adb.secure` is 1 and `/data/misc/adb` is empty, yet a key the
+  device had never seen got `CNXN` at once: no `AUTH` packet, no question (there is no screen to ask on). So a
+  browser's own key needs nothing there. The adbd of MU300 Linux does authenticate when it is set to keys: after an
+  installation with "only this browser" the page's key was accepted by its signature (`AUTH` once, then `CNXN`),
+  and the Mac's own adb was `unauthorized`.
+* *The first packet of a session can be lost, and the device then waits for a host that waits for the device.*
+  Seen from Chrome after a session that ended without a goodbye (the browser quit, a tab closed or reloaded): the
+  next connection sent `CNXN` and heard nothing, for as long as it waited, and every later attempt the same. A probe
+  at the transfer level showed why: when the two ends of the bulk IN endpoint are out of step, exactly one transfer
+  is dropped - the 24-byte header of the device's answer - and its 303-byte payload arrives alone. `clearHalt()` on
+  the endpoints, which adb's own client does on macOS, makes this happen every time on this device (the host's side
+  goes back to its first packet, the device's does not: header lost on 3 of 3 tries, 0 of 6 without), so the page
+  does not call it. The client now takes a payload-without-header during the handshake, followed by 0.7 s of
+  nothing, as "the header was lost" and sends `CNXN` once more (adbd answers a second `CNXN` like the first); what
+  an earlier session left in the pipe looks the same for a moment but is followed by the real answer, and then
+  nothing is asked twice (a second `CNXN` to a device with keys makes it issue a new challenge every time). On top
+  of that the page tries a handshake up to three times and gives a silent device six seconds. After the change: 18
+  of 18 connections after a quit browser, a closed tab and a reload (6 each); before it the page hung at "Opening
+  the device" with no message.
+* *Just after a start* Android sets its USB functions up a second time, and a connection made in those seconds is
+  cut (`LIBUSB_TRANSFER_ERROR` in Node, "the connection to the device ended" in the page). The page waits 2.5 s
+  before it reconnects to a device that came back, and says "connect again" otherwise.
 
-**2. How the release files reach the device: the user downloads, the page pushes; or the device downloads.**
-A page cannot read a release asset. Measured with `curl -I -H 'Origin: https://kaandikec.com'`:
+**2. How the release files reach the device: the device downloads; or the browser, from a mirror; or the user.**
+A page cannot read a release asset. Measured with `curl -H 'Origin: https://kaandikec.com'`, again on 2026-10-13:
 
 | request | answer | CORS |
 |---|---|---|
-| `github.com/.../releases/download/v2026.10.23/SHA256SUMS` | 302 to `release-assets.githubusercontent.com` | no `Access-Control-Allow-Origin` on the 302 |
-| the redirect target | 200, `application/octet-stream` | none |
-| `api.github.com/repos/.../releases/latest` | 200 | `Access-Control-Allow-Origin: *` (60 requests an hour without an account) |
+| `github.com/.../releases/download/<tag>/<file>` | 302 to `release-assets.githubusercontent.com` | no `Access-Control-Allow-Origin` on the 302 |
+| the redirect target | 200 (206 for a range), `application/octet-stream` | none |
+| `api.github.com/repos/.../releases` | 200 | `Access-Control-Allow-Origin: *` (60 requests an hour without an account) |
 | `api.github.com/repos/.../releases/assets/ID` with `Accept: application/octet-stream` | 302 with `Access-Control-Allow-Origin: *` | the target it redirects to has none, so `fetch()` fails at the second hop |
+| `raw.githubusercontent.com/<owner>/<repo>/<ref>/<file>` | 200, 206 for a range | `Access-Control-Allow-Origin: *`; a preflight (`OPTIONS`) is answered 403, so only requests that need none: a plain `GET` without a `Range` header |
+| a GitHub Pages site | 200 | `*` (and this site is the page's own origin) |
+| `api.github.com/repos/.../git/blobs/SHA` or `/contents/PATH` with `Accept: application/vnd.github.raw` | 200 | `*`, but every request counts against the 60 an hour, and 100 MB per blob |
+| `media.githubusercontent.com` (LFS) | - | `*`, but LFS has a bandwidth quota (1 GB a month free) |
+| `codeload.github.com` (archives) | 200 | `Access-Control-Allow-Origin: https://render.githubusercontent.com` only |
+| `ghcr.io` (the token endpoint, `/v2/`) | 403 / 401 | none |
 
-So `fetch()` gets the release *list* and nothing of the files. The list is enough for integrity: since 2025 the API
-gives every asset a `digest` (`sha256:...`); all 24 assets of v2026.10.23 have one. Publishing the files a second
-time with CORS was ruled out: GitHub Pages allows 1 GB per site and the 11 zips of one release are 890 MB (41 to
-130 MB each).
-* *Primary:* the page links the zip (an ordinary download, which no CORS rule stops), the user picks the downloaded
-  file, the page reads the zip's directory and `mu300/manifest` in the browser (right system, kernel and release, and
-  an installer that knows this caller), pushes it with adb sync, and the **device** computes its SHA-256 after root
-  has moved it to `/data/adb/mu300-web` - compared with the digest from the API. What is checked is the file the
-  installer will read, after the transfer.
-* *Fallback:* `android-web.sh run fetch NAME SIZE`: the device downloads the zip itself with the root manager's
-  busybox `wget`, from an address the script builds from the zip's name (this project's release of the tag in the
-  name; the page cannot name another), then the same check. It costs the device's mobile data. *Not measured:*
-  whether Magisk's busybox `wget` does TLS and follows GitHub's redirect on these devices (toybox has no `wget`).
-  The page offers it as "let the device download it" and says that not every device's tools can.
+So `fetch()` gets the release *list* and nothing of the files, and the list is enough for integrity: the API gives
+every asset a `digest` (`sha256:...`). The files themselves can only come to a page from a *repository*
+(`raw.githubusercontent.com`, at most 100 MB a file) or a Pages site (1 GB a site); one release's 11 zips are
+890 MB, 39 to 124 MB each.
+* *First: the device downloads the zip itself* (`android-web.sh net`, `run fetch NAME SIZE`), from an address the
+  script builds from the zip's name (this project's release of the tag in the name; the page cannot name another).
+  *Measured on the F50:* Android has no `curl`, no `openssl` and no `wget` of its own (toybox has `nc` only); the
+  root manager's busybox (1.36.1; every Magisk zip carries a busybox too) has `wget` with TLS and follows GitHub's
+  302 to the object store - and prints `wget: note: TLS certificate validation not implemented`. It took
+  `self-signed.badssl.com` and `wrong.host.badssl.com` without a word. There is no verifying downloader on these
+  devices and the project builds none, so the download is not trusted for what it is: the file must have exactly
+  the size the release names; it is used only with the SHA-256 that the *browser* read from GitHub's API over its
+  own verified TLS, computed on the device over the file only root can change; and since `wget` follows redirects
+  by itself, what it prints is watched (`Connecting to HOST (ADDRESS:PORT)`): a connection to anything but
+  `github.com` or `*.githubusercontent.com` on port 443 ends the download and nothing is kept. A man in the middle
+  can make a download fail and can see which public file is asked for; he cannot get a file installed.
+  **Accepted by the owner (2026-10-13):** the device downloads over a transport that cannot verify certificates,
+  because integrity is by the pinned digest, not by the transport - the SHA-256 comes from `api.github.com` over the
+  browser's verified TLS and is checked on the device, over the file only root can change, before anything is
+  used, with the size and host limits above. `wget -c`
+  continues a broken download: cut after 15 MB of 41.4, the second run fetched the other 28.5 MB and the checksum
+  was the release's. A try that brings nothing ends with "no connection" (exit status 10 of the job; 11 another
+  host, 12 failed, 13 not the release's size); a try that brought something is continued up to five times, and the
+  start of a file is kept for the next run.
+  - *The uplink, measured on the F50:* this unit's Android had **none**. Its SIM was registered (LTE, in service)
+    with mobile data on, but no data bearer (`mDataConnectionState=-1`, "Active default network: none"), and
+    Android on an F50 has no Wi-Fi client (it is the hotspot). `wget` there says `bad address 'github.com'`, the
+    probe answers `{"ok":0,"why":"no-network"}` in under a second, and the page says so and proposes the next way.
+    To measure the downloader all the same, the device's name lookups were pointed at the test computer, where a
+    relay read only the server name of each TLS hello and connected to that host (TLS end to end between busybox
+    and GitHub): 41 MiB in about 4 s and 112 MiB in about 8 s, which is the cable's and the relay's speed, not a
+    carrier's. *Not measured:* a real bearer - its speed, what a carrier's proxy or sign-in page does, and the
+    words `dumpsys connectivity` uses for an active network (the script reads `CELLULAR`/`WIFI`/`ETHERNET` from the
+    line of the default network, as Android 13 prints it; on this unit there was no such line to read).
+  - *A defect this found:* the script took the tag out of the zip's name with a `sed` whose basic expression used
+    `\|`. Busybox built for Android uses bionic's regex, which has no `\|` there, so on a device **every** release
+    zip was "not the name of a release zip" (`bad-name`), while the tests, under a computer's busybox, passed. The
+    name is now taken apart with the shell's own patterns. And a directory `in/` that root made for the download
+    in the adb user's directory refused the page's next push ("couldn't create file: Permission denied"): the
+    download now goes to root's own directory.
+* *Second: the browser downloads the zip from a mirror* (`mirror.js`; on since 2026-10-13, the repository is
+  `dikeckaan/mu300-linux-mirror`): a branch `<tag>` of that repository with every zip in parts of at most 45 MiB and
+  a manifest (`tools/make-release-mirror.sh`; the last step of `magisk.yml` pushes it with a deploy key of the
+  mirror repository, over ssh to GitHub's published host keys, no token), read from `raw.githubusercontent.com` with plain
+  `GET`s (`redirect: "error"`, no credentials). A part must have the manifest's size and SHA-256, the parts must add
+  up to the size the release names, and the whole must have the release's checksum - the mirror's word counts for
+  nothing. *Measured on the F50, in Chrome, against a stand-in server for that host:* a device without internet was
+  told apart and this way proposed; a part cut after 5 MB gave "the download broke off", and the second try
+  downloaded 41 MiB, pushed it and got the device's plan. *Not measured:* the real host with real files (the mirror is empty until the
+  first push of a release to it; the page then finds no copy and offers the next way), and GitHub's limits on
+  such use.
+* *Last: the user downloads the zip* (an ordinary download, which no CORS rule stops) and picks it; the page reads
+  the zip's directory and `mu300/manifest` in the browser and refuses a wrong one before anything is sent.
 * The Magisk zip is the unit, not the separate assets: it holds the installer of its own release, and its payload is
   stored uncompressed, so nothing is unpacked twice. Two systems are two zips, one after the other, as in the Magisk
-  app.
+  app (measured: Ubuntu 24.04 and OpenWrt with the panel, two downloads and two runs, 92 s).
 
 **3. WebUSB per platform.** Chromium only (Chrome, Edge, Opera, Brave; not Firefox, not Safari), on https or
-localhost. In a headless Chromium the page finds `navigator.usb` and runs under its Content-Security-Policy with
-no violation; `fetch()` to another host than `api.github.com` is refused by that policy (checked).
-* *Any system:* one program at a time can claim the adb interface. A running adb server has it: `claimInterface`
-  fails with `NetworkError`, which the page reports as "another program is using the device" with `adb kill-server`.
+localhost. The page runs under its Content-Security-Policy with no violation; `fetch()` to another host than
+`api.github.com` is refused by that policy (checked).
+* *Any system:* one program at a time can claim the adb interface. A running adb server has it, and so has a second
+  browser window or tab with the page connected - during the run the owner's own Chrome had the page open, and
+  every other client failed. `claimInterface` fails (`NetworkError` in Chrome, `LIBUSB_ERROR_ACCESS` in Node), which
+  the page reports as "another program is using the device's adb interface: an adb server, or another browser
+  window" within 0.3 s (measured in Chrome with an adb server running).
+* *macOS:* nothing to install (measured: Chrome 155). Chrome's device chooser cannot be driven by a script: the
+  DevTools protocol's `DeviceAccess` domain raised no event for `navigator.usb.requestDevice`, headful or headless.
+  A permission a profile holds is in its `Preferences` (`usb_chooser_data`) and can be written there for a test;
+  `navigator.usb.getDevices()` then returns the device, and the page offers it as "Connect to F50" without a
+  chooser - the same way a user's second visit goes. The chooser lists the unit as "F50" in Android (`19d2:1353`)
+  and as "MU300 Linux USB Ethernet" in Linux (`0525:a4a1`): two devices to the browser, each allowed once.
 * *Windows:* WebUSB needs the interface bound to WinUSB. AOSP's adbd carries the Microsoft OS descriptor that asks
   for it (compatible ID `WINUSB` in its FunctionFS descriptors), and our Linux adbd announces the same (§43), so a
   stock Windows 10/11 should bind it without a driver. **Unknown:** whether ZTE's firmware leaves OS descriptors on
-  in its gadget, and whether a ZTE driver package claims the interface first; no Windows host was available.
+  in its gadget, and whether a ZTE driver package claims the interface first; no Windows host was used.
   Google's USB driver is WinUSB and works with WebUSB; Zadig can bind WinUSB to the one interface. `open()` then
   fails with `SecurityError`/`NetworkError`, which the page explains per platform.
 * *Linux:* the device node is root's unless a udev rule says otherwise (distributions' `android-udev` rules cover
   known vendor ids, not necessarily this one). The page shows a rule that matches the adb interface by class
-  (ff/42) with `uaccess`. A snap or flatpak browser may need its own USB permission.
-* *macOS:* nothing to install; only another program holding the device is in the way.
+  (ff/42) with `uaccess`. A snap or flatpak browser may need its own USB permission. Not measured.
 * *Android Chrome* has WebUSB as well, so a phone with an OTG adapter could run the page. Not built for and not
   tried: the phone would have to power a battery-less F50 for the whole installation.
-* *Not measured anywhere:* the chooser listing an F50 or U30 Air, and what their Android answers to a browser's key.
-  Whether these devices' bootloaders set `ro.boot.verifiedbootstate`, `ro.boot.flash.locked` or
-  `ro.boot.vbmeta.device_state` is not known either: the page shows "not reported" when none is set.
+* *The bootloader's word, measured on the F50:* `ro.boot.verifiedbootstate=orange`, `ro.boot.flash.locked=0`,
+  `ro.boot.vbmeta.device_state=unlocked`: the page shows "unlocked". Whether a U30 Air sets them is not known: the
+  page shows "not reported" when none is set. **A locked bootloader is not an obstacle** (the owner's correction,
+  2026-10-13): a device with a patched TrustOS starts the modified image with the bootloader locked. The page showed
+  "locked" in red; it now shows it in the warning colour with the question "Did you patch TrustOS?" (with it Linux
+  boots; without it the device goes back to Android by itself after the install), beside the device's facts and
+  beside the plan, and blocks nothing. Not measured: a locked device (the test unit is unlocked).
+* *Root on a device without a screen, measured on the F50:* with Magisk's grant for "Shell" (uid 2000) in place,
+  `su -c 'id -u'` answers in 50 ms. With the grant taken away, Magisk asks on a screen nobody sees, waits 10 s and
+  says "Permission denied"; the page then shows "not granted" and how to allow Shell (the Magisk app through scrcpy,
+  which needs adb, so `adb kill-server` afterwards). Magisk keeps its last answer for a uid for about three seconds
+  *from the last request*: asking again every 3 s got the old "no" for a minute after the grant was back, so the
+  page says to wait a few seconds before "Try again". Not rooted at all (no `su`): reasoned from the code only.
 
 **4. What a closed tab or a pulled cable leaves.** The installation is not the page's: it is the Magisk zip's own
 installer (`mu300/install.sh`), started by `tools/android-web.sh` as a job in a session of its own (`setsid`, output
 to a file, HUP ignored). The page only watches (`follow`), and a watcher that goes away - tab closed, cable pulled on
-a U30 Air, computer asleep - changes nothing; a new connection reads the same log from its start
-(`tests/test_android_web.py`: a job whose watcher is killed finishes; `tests/web/e2e-android.mjs`: the page's own
-code loses its connection at "systems" and a second connection sees the job end). On an F50 a pulled cable is a
-power cut, as it is for the installer for computers. What is left, by stage (the installer prints the stage,
-`MU300-STEP n/9 name`, and the page shows this sentence beside it):
+a U30 Air, computer asleep - changes nothing; a new connection reads the same log from its start. *Measured on the
+F50, under Magisk's `su`:* the Node client ended (nothing closed) 4 s into "systems" of an OpenWrt installation,
+and 5 s into it for Ubuntu; in Chrome the tab was closed during "Collecting the Wi-Fi and modem files". Each time
+the job went on: a new connection found it `running` at step 6 and followed it to the end, or found it `done` with
+status 0, and the log was there from its first line (`MU300-INSTALL-OK`, "Writing and verifying boot_b"). The device
+then started the installed Linux. On an F50 a pulled cable is a power cut, as it is for the installer for
+computers. What is left, by stage (the installer prints the stage, `MU300-STEP n/9 name`, and the page shows this
+sentence beside it):
 
 | stage | written so far | the device then |
 |---|---|---|
@@ -5381,34 +5469,76 @@ power cut, as it is for the installer for computers. What is left, by stage (the
 | done | Linux armed for a trial | a Linux that does not finish starting falls back to Android (§17) |
 
 The order and the checks are the Magisk installer's, unchanged; the page adds no write of its own to a block
-device (it composes no `dd`: `tests/test_web_installer.py`). The window in which a cut matters is the installer's
-own, and shorter than install.sh's in one respect: nothing between "boot image verified" and "misc armed" crosses
-the cable. Cancelling is offered only before "systems". The uninstaller (`android-web.sh`, in uninstall.sh's order:
-misc, then the boot partition, then the erase) is safe to cut anywhere for the same reason. *Not measured:* that a
-job really outlives its adb connection under Magisk's `su` on the device (it is its own session; `su`'s daemon may
-still end it), and the stall guards of §50 through this path.
+device (it composes no `dd`: `tests/test_web_installer.py`). Cancelling is offered only before "systems". The
+uninstaller (`android-web.sh`, in uninstall.sh's order: misc, then the boot partition, then the erase) is safe to
+cut anywhere for the same reason (measured: a quick uninstall, 7 steps in 5 s, `boot_b` a copy of `boot_a`).
+* *Two systems and a closed tab.* The second zip is the page's to send, so a page closed during the first run
+  leaves one system installed, completely. The first run is started with `more`, and a page that finds the job
+  says "the second system was not installed" instead of only "Linux is installed".
+* *A finished run nobody watched* is shown once at the next connection (its log, then "Linux is installed" with the
+  restart button), and its files (the zip in `zips/`, 39 to 124 MB, with `x/` and `job/`) are removed then.
+* *Not measured:* the stall guards of §50 through this path, a cable pulled from a U30 Air, a power cut.
 
-**The device side, for a caller that is not Magisk** (in every zip from the next release on): `MU300_ANSWERS=FILE`
+**Where root writes on Android, and how much.** `android-web.sh` runs as root and is handed files by the adb
+user, in `/data/local/tmp/mu300-web`. The first version wrote there as root too: the download (`wget -O`), the
+copies of a backup (`out/`, made readable for adb's file service), `rm -rf` of both, a `chown`. Whoever can write a
+directory can put a link at any name in it, and root then writes, truncates, chmods or deletes the link's target.
+Now root touches nothing there. A pushed file is moved into `/data/adb/mu300-web` (mode 700, root's; a rename takes
+the name as it is and follows no link) and judged there, where nobody else can change it: a regular file, not a
+link, not larger than its kind can be, with the checksum that was asked for. The download, the backup's copies, the
+answers, logs and the job's state live in root's directory only; the page reads a copy of the backup as base64
+from `android-web.sh cat NAME` and removes what it pushed itself, unprivileged. The uninstaller, which tidies
+`/data/local/tmp` after the installer for computers, removes single names (a link goes as a link) and walks no
+tree. *Measured on the F50 after the change:* a backup (ten files, checksums equal), a plan from a pushed zip and
+one from a zip the device downloaded, and nothing owned by root in the adb user's directory afterwards. What
+stays: the device scripts are run from that directory (the page checks them against the site's checksums before it
+pushes them); the adb user is the one who asks `su` for root, so this is its own power.
+* *Bounds.* `/data` is Android's own; a full `/data` can stop Android from starting. The first version checked a
+  download's size after `wget` had ended, so a server that sent more, or never stopped, filled the storage first.
+  Now: nothing starts unless the rest of the file leaves 512 MiB free (the reserve the Magisk installer insists
+  on); the downloader runs under a file size limit of the release's size (`ulimit -f`: the kernel refuses the
+  write that would cross it) and a watch that ends it when the file is larger; it ends after an hour whatever the
+  other end does, and the question "can you reach GitHub" after 30 s; a pushed zip may have 300 MiB, an extra 100,
+  the answers 64 KiB; a zip is unpacked only when the files it is asked for say they hold at most 64 MiB and leave
+  the reserve; a job's log stops growing at 8 MiB while the job goes on. Tested with a downloader that writes 5 MB
+  for a file of 100 000 bytes (the file stopped at that size rounded up to a block), one that never ends, one that stalls, and a full
+  storage (`tests/test_android_web.py`, `Bounds`; the links: `Links`).
+
+**The device side, for a caller that is not Magisk** (in every zip from v2026.10.24 on): `MU300_ANSWERS=FILE`
 (the settings of the run from that file alone, which must be root's), `MU300_PROGRESS=1` (`MU300-STEP`, `MU300-PLAN
 key=value`), `mu300/extras/` (the VPN module), `MU300_ADB_KEY` (trusted only). Zips of v2026.10.23 and older do not
-have them, and the page refuses those releases. For Linux the page needs no key since §70 (adb on and open by
-default); it reads `mu300-device --json` (docs/ADB-INTERFACE.md) and offers "only this browser" as a choice, off by
-default, which sets the installed system to authorised keys with the browser's key.
+have them, and the page refuses those releases. *Measured on the F50:* a password given on the stdin of
+`su -c '... android-web.sh password'` arrived (the plan said `password=given`, root's entry in the installed
+OpenWrt's `shadow` held a hash) and was in no line of the log; without one, Ubuntu has `ubuntu` and OpenWrt's root
+none. For Linux the page needs no key since §70 (adb on and open by default); it reads `mu300-device --json`
+(docs/ADB-INTERFACE.md) and offers "only this browser" as a choice, off by default, which sets the installed
+system to authorised keys with the browser's key (per system: a second system added without the choice was open).
+* *"Restart into Android" is `mu300-next-boot android`*, which makes Android the default boot from then on, not
+  for one start. The page said "the next system to start"; it now says what it does and has "Make Linux the default
+  again" (`mu300-next-boot linux`) in its Linux view, and the wizard proposes Linux as the default every time
+  instead of taking over an "Android" that only the way to the wizard had set.
 
 **Privacy.** The page reads ten named properties and never a serial number property; serials come from the USB
 descriptor and are shown masked. Every line a device prints is masked where it enters the page (`device.js`,
 `privacy.js`: serials, 14-20 digit numbers, phone numbers, MAC addresses, values named password/PSK/SSID/IMEI,
-password hashes, keys), on screen and in the saved log. The backup takes the Linux slot's boot image and boot chain,
-misc and the partition table; `android-web.sh` refuses NV, calibration and identity partitions by name. A password
-goes to the device on the stdin of a root command, never in a command line or a file the adb user can read. The
-page's policy (CSP) allows connections to this site and `api.github.com` only, and it loads no web fonts.
-* **Tested** (no device): `tests/web/*.test.mjs` (88 tests: the adb client against a scripted adbd with garbled
-  packets, refused files and a pulled cable; the wizard's rules; the device classes with a device that prints
-  serials, IMEIs and passwords, and with hostile names), `tests/test_android_web.py` (42: android-web.sh on the fake
-  device under busybox, and the page's code end to end through a scripted adbd), `tests/test_magisk_installer.py`
-  (`WebCaller`, 11), `tests/test_web_installer.py` (strings in three languages, the pages' policy, the staged site).
-  In a browser without a device: the three pages and the whole wizard with made-up answers (`?demo=android`,
-  `installed`, `small`, `linux`).
+password hashes, keys), on screen and in the saved log. *Measured on the F50:* 508 lines of kernel and system log
+read through the page had no MAC address and no 14-20 digit number left; the page's log of an installation (160 to
+290 lines) had the serial masked. The backup takes the Linux slot's boot image and boot chain, misc and the
+partition table (measured: ten files, none of them an NV, calibration or identity partition; `partitions.txt`
+holds their names only); `android-web.sh` refuses those partitions by name. A password goes to the device on the
+stdin of a root command, never in a command line or a file the adb user can read. The page's policy (CSP) allows
+connections to this site and `api.github.com` only (and `raw.githubusercontent.com` once a mirror is configured),
+and it loads no web fonts. The device's own download goes from the device to GitHub.
+* **Tested** (no device): `tests/web/*.test.mjs` (the adb client against a scripted adbd with garbled packets,
+  refused files, a pulled cable and a lost header; the wizard's rules; the device classes with a device that
+  prints serials, IMEIs and passwords, and with hostile names; the mirror with changed, short and missing parts, a
+  hostile manifest and a redirect), `tests/test_android_web.py` (android-web.sh on the fake device under busybox:
+  the download with a `wget` that breaks, is sent elsewhere, brings another size or has no network; and the page's
+  code end to end through a scripted adbd), `tests/test_magisk_installer.py` (`WebCaller`),
+  `tests/test_web_installer.py` (strings in three languages, the pages' policy and the mirror's switch, the staged
+  site, the mirror tool and the page's reader on the same files). In a browser without a device: the three pages
+  and the whole wizard with made-up answers (`?demo=android`, `installed`, `small`, `linux`).
+
 ### 74. The U30 Air's second SIM: what two units showed, and the selector built on it (PR #73/#166, issue #194)
 
 PR #73 (Snrat) brought a cold start of either card and a live switch between them, worked out on one U30 Air with

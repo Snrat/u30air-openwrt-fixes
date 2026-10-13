@@ -168,6 +168,9 @@ export class AdbConnection {
     this.nextId = 1;
     this.closed = false;
     this.closeError = null;
+    this.spareAnswers = 0;
+    this._onStray = null;
+    this.strayWaitMs = options.strayWaitMs === undefined ? 700 : options.strayWaitMs;
     this.sendChain = Promise.resolve();
     this.onClose = options.onClose || (() => {});
     this.connected = false;
@@ -215,6 +218,7 @@ export class AdbConnection {
       header = decodeHeader(raw);
       if (header && CMD_NAME[header.command]) break;
       if (!handshake || skipped >= 64) throw new AdbError("protocol", "the device sent something that is not an adb packet");
+      if (this._onStray) this._onStray(raw);
     }
     if (header.length > MAX_PAYLOAD) {
       throw new AdbError("protocol", `the device announced a packet of ${header.length} bytes; the limit is ${MAX_PAYLOAD}`);
@@ -230,11 +234,31 @@ export class AdbConnection {
   // to accept the key, this waits too (close() ends it).
   async connect(hostName = "mu300-web") {
     const banner = utf8(`host::features=${FEATURES.join(",")}`);
-    let signed = false, keySent = false;
+    let signs = 0, keySent = false;
+    // A payload that comes where a header is due, and then nothing: the header of the device's answer was lost on
+    // the way. That happens over USB when the two ends of the bulk endpoint are out of step at the start of a
+    // session (the session before ended without a goodbye: a closed tab, a browser that was quit; measured on an
+    // F50, FINDINGS 72): exactly one packet is dropped, and the device then waits for a host that waits for the
+    // device. The device has taken our CNXN, so it is asked once more; adbd answers a second CNXN like the first,
+    // and this time the answer arrives whole. What an earlier session left behind looks the same for a moment, but
+    // the real answer follows it at once: so the question is repeated only after a pause in which nothing came.
+    let asked = 1, stray = null;
+    const settle = () => { if (stray) { clearTimeout(stray); stray = null; } };
+    this._onStray = () => {
+      if (asked >= 2 || signs || stray) return;
+      stray = setTimeout(() => {
+        stray = null;
+        if (this.closed || this.connected || asked >= 2 || signs) return;
+        asked++;
+        this.log("the device's answer came without its header: asking again");
+        this._send(CMD.CNXN, A_VERSION, MAX_PAYLOAD, banner).catch(() => {});
+      }, this.strayWaitMs);
+    };
     try {
       await this._send(CMD.CNXN, A_VERSION, MAX_PAYLOAD, banner);
       for (;;) {
         const p = await this._readPacket(true);
+        settle();
         if (p.command === CMD.CNXN) {
           this.version = Math.min(p.arg0, A_VERSION);
           if (p.arg1 < MIN_PAYLOAD) throw new AdbError("protocol", "the device announced an impossible packet size");
@@ -247,8 +271,8 @@ export class AdbConnection {
         if (p.command !== CMD.AUTH) continue;          // anything else before CNXN belongs to an earlier session
         if (p.arg0 !== AUTH_TOKEN) continue;
         if (!this.key) throw new AdbError("auth", "the device asks for a key and this page has none");
-        if (!signed) {
-          signed = true;
+        if (signs < asked) {
+          signs++;
           this.onAuth("signature");
           await this._send(CMD.AUTH, AUTH_SIGNATURE, 0, signToken(this.key, p.payload));
         } else if (!keySent) {
@@ -259,10 +283,14 @@ export class AdbConnection {
         // a token after the public key: the device is still waiting for someone to accept it
       }
     } catch (e) {
+      settle();
       const err = e instanceof AdbError ? e : new AdbError("disconnected", "the device stopped answering", e);
       this._fail(err);
       throw err;
     }
+    settle();
+    this._onStray = null;
+    this.spareAnswers = asked - 1;
     this.connected = true;
     this._loop();
     return this.banner;
@@ -303,7 +331,11 @@ export class AdbConnection {
             if (!s.localClosed && s.remoteId) await this._send(CMD.CLSE, s.localId, s.remoteId);
             s._end(null);
             break;
-          case CMD.CNXN: case CMD.AUTH: case CMD.STLS:
+          case CMD.CNXN:
+            // the answer to a CNXN that was asked twice during the handshake (connect()): expected once
+            if (this.spareAnswers > 0) { this.spareAnswers--; break; }
+            throw new AdbError("protocol", "the device restarted the connection");
+          case CMD.AUTH: case CMD.STLS:
             throw new AdbError("protocol", "the device restarted the connection");
           case CMD.OPEN:
             await this._send(CMD.CLSE, 0, p.arg0);       // this client offers no services to the device
