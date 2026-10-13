@@ -280,3 +280,39 @@ above are on 7.2.9; the 5.4-kernel unit offered in Issue #194, two cards both wi
 data service, empty/PIN-locked slots, physical power removal and fresh-image
 assembly still need their own evidence. Keep the code and test records in #73/#166
 for the maintainer's public integration and guarded test build.
+
+## v2026.10.24 integration follow-up (2026-10-13)
+
+This branch merges main `1d1b919` (v2026.10.24). FINDINGS keeps the upstream
+numbering and now records the U30 facts as §81 (the SAE integration uses §80).
+The new APN authentication code and its fail-closed checks are retained: APN
+credentials are removed from the environment before the shared selector or
+any other child runs, and credential-bearing AT commands use stdin.
+
+For native U30 SIM2, those commands go to its selected persistent data owner
+(`mu300-at5`), or its command owner (`mu300-at4`) if the data FIFO is absent.
+They do not go to SIM1's owners, and the native path never opens a raw SIPC tty.
+U30 SIM2 retains the simple context definition rather than taking the F50
+internal-SIM extended-context/QoS sequence. Tests check both selected-owner
+paths, stdin-only credential delivery and the absence of credentials in child
+arguments, environment and script output. Upstream's per-card authentication
+markers and isolation of SIM1's WAN credentials from SIM2 remain in place.
+
+Both the updater and the installer's OpenWrt preservation lists now keep the
+legacy U30 SIM preferences alongside upstream's `etc/unisoc-modem` lock state.
+The ACL also keeps both the new forwarding-log clear operation and the U30
+SIM operations. Regression tests check the preservation-list parity.
+
+Local regression: 412 tests completed successfully (411 passed, one optional
+real-jsonfilter check skipped), covering the same selector, cold/hot startup,
+netifd, rpcd, dashboard, translations, updater and device-script areas as the
+previous revision, plus the APN authentication cases. JavaScript checks ran
+with Node. This is not a GitHub CI or private-APN hardware validation result.
+
+The connected 7.2.9 device was checked over USB after isolated SAE recovery
+tests: active/default SIM2, RF ready, WAN up and OpenWrt-first with five failed
+boots before Android fallback. No new SIM switch or reboot was performed for
+this revision; its live-switch/startup evidence is the earlier record above.
+Kernel 5.4, an authenticated private APN, both cards with data service, empty/
+PIN-locked slots, physical power removal and fresh-image assembly still need
+separate validation.

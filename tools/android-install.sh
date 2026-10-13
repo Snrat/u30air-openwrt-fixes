@@ -19,8 +19,9 @@
 #                      without a password, as the image ships it); 0 or not set (install.sh): as above
 #   IMPORT_HOTSPOT=0|1 copy Android's hotspot SSID/passphrase into each system
 #   KERNEL=5.4|6.18|7.2  the kernel in the new boot image; mu300-update keeps installing that one (boot/kernel)
-#   ADB=0|1 ADB_KEY    adb over USB to each system on (etc/mu300/adb), for the adb public key ADB_KEY ("BASE64 name",
-#                      etc/mu300/adb_keys)
+#   ADB=0|1 ADB_KEY    adb over USB to each system: 1 lets in only the adb public key ADB_KEY ("BASE64 name",
+#                      etc/mu300/adb_keys; "keys" in etc/mu300/adb_auth); 0 writes nothing, and a system that was
+#                      never told otherwise has adb on for every computer (mu300-adbd)
 # Extras pushed as $T/mu300-extra-<name>.tar.gz (the work directory, see below) go to extra/<name> on the Linux partition
 # (the VPN module, github.com/dikeckaan/mu300-linux-vpn, as mu300-extra-vpn.tar.gz; each system links it into itself
 # at its first boot: mu300-extra link runs the module's hooks/link).
@@ -674,7 +675,7 @@ for os in $OSES; do
         image_own_save "$M/$os.new"
         case $os in
             ubuntu) keep="etc/mu300 etc/ssh etc/hostname etc/localtime etc/timezone etc/fstab home root srv usr/local var/lib/bluetooth" ;;
-            openwrt|openwrt-*) keep="etc/config etc/mu300 etc/dropbear etc/rc.local root" ;;
+            openwrt|openwrt-*) keep="etc/config etc/mu300 etc/unisoc-modem etc/mu300-sim-slot etc/mu300-sim-hot etc/mu300-sim-fallback etc/dropbear etc/rc.local root" ;;
         esac
         kept=
         for k in $keep; do
@@ -769,15 +770,18 @@ for os in $OSES; do
         umask 022
     fi
     if [ "$DEFAULT_LINUX" = 1 ]; then echo linux > $R/etc/mu300/default-boot; else rm -f $R/etc/mu300/default-boot; fi
-    # adb over USB to Linux, for the installing computer's key (whoever holds it gets a root shell); ADB=0 changes
-    # nothing (an update keeps etc/mu300 and with it the setting and the keys)
+    # adb over USB to Linux for the installing computer's key only (whoever holds it gets a root shell); ADB=0
+    # changes nothing (an update keeps etc/mu300 and with it the setting and the keys), and a system with nothing
+    # set has adb on for every computer
     if [ "${ADB:-0}" = 1 ] && [ -n "${ADB_KEY:-}" ]; then
+        # keys first: with only one of the two written, the system reads keys either way (mu300-adbd, auth_read)
+        echo keys > $R/etc/mu300/adb_auth
         echo on > $R/etc/mu300/adb
         umask 077
         grep -qF "${ADB_KEY%% *}" $R/etc/mu300/adb_keys 2>/dev/null || echo "$ADB_KEY" >> $R/etc/mu300/adb_keys
         umask 022
         chmod 600 $R/etc/mu300/adb_keys
-        say "$os: adb over USB on, for ${ADB_KEY#* }"
+        say "$os: adb over USB on, only for ${ADB_KEY#* }"
     fi
     rm -f $tarball
 done

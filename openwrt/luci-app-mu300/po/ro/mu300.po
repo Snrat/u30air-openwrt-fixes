@@ -580,6 +580,9 @@ msgstr "Salvat: %s"
 msgid "Remove the saved value"
 msgstr "Eliminați valoarea salvată"
 
+msgid "Presets"
+msgstr "Presetări"
+
 msgid "Received messages are sent on as they reach the SMS pool. A failed delivery is retried after 30 s, then after twice as long each time (an hour at most), ten times in all."
 msgstr "Mesajele primite sunt redirecționate imediat ce ajung în fondul de SMS. O livrare eșuată este reîncercată după 30 s, apoi de fiecare dată după un timp de două ori mai lung (cel mult o oră), de zece ori în total."
 
@@ -636,6 +639,12 @@ msgstr "Gol: câmpurile standard (text simplu: mesajul). Substituenți: {sender}
 
 msgid "Extra headers (one \"Name: value\" per line)"
 msgstr "Antete suplimentare (un \"Nume: valoare\" pe linie)"
+
+msgid "The answer must contain"
+msgstr "Răspunsul trebuie să conțină"
+
+msgid "Empty: every HTTP 2xx answer counts as delivered. With key=value (for example errcode=0), the answer must also be a JSON object that has this value under this key at its top level; otherwise the delivery fails. Only the result of the check is logged, never the answer."
+msgstr "Gol: orice răspuns HTTP 2xx contează ca livrat. Cu cheie=valoare (de exemplu errcode=0), răspunsul trebuie să fie în plus un obiect JSON care are această valoare sub această cheie la nivelul său superior; altfel livrarea eșuează. În jurnal ajunge doar rezultatul verificării, niciodată răspunsul."
 
 msgid "Bot token"
 msgstr "Tokenul botului"
@@ -702,6 +711,9 @@ msgstr "Filtrat"
 
 msgid "Dropped"
 msgstr "Abandonat"
+
+msgid "Clear"
+msgstr "Golire"
 
 msgid "Test"
 msgstr "Test"
@@ -1804,9 +1816,6 @@ msgstr "Golire pool SMS local"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
 msgstr "Vor fi șterse doar fișierele locale; mesajele de pe SIM rămân."
-
-msgid "Clear"
-msgstr "Golire"
 
 msgid "Delete this SMS"
 msgstr "Ștergeți acest SMS"
@@ -3074,6 +3083,9 @@ msgstr "Adresa webhookului trebuie să fie un URL http:// sau https://"
 msgid "The webhook body is too long or contains a control character"
 msgstr "Corpul webhook-ului este prea lung sau conține un caracter de control"
 
+msgid "The answer check must be key=value, like errcode=0 or ok=true (the value a whole number or lowercase letters, 16 at most)"
+msgstr "Verificarea răspunsului trebuie să fie cheie=valoare, ca errcode=0 sau ok=true (valoarea un număr întreg sau litere mici, cel mult 16)"
+
 msgid "Invalid header (one \"Name: value\" per line; Host, Content-Type, Content-Length, Transfer-Encoding and Connection are set by the device)"
 msgstr "Antet nevalid (un \"Nume: valoare\" pe linie; Host, Content-Type, Content-Length, Transfer-Encoding și Connection sunt setate de dispozitiv)"
 
@@ -3103,6 +3115,12 @@ msgstr "Setările de redirecționare nu au putut fi salvate"
 
 msgid "SMS forwarding is not installed"
 msgstr "Redirecționarea SMS nu este instalată"
+
+msgid "A test was started a moment ago; wait a few seconds"
+msgstr "Un test tocmai a fost pornit; așteptați câteva secunde"
+
+msgid "The delivery log could not be cleared"
+msgstr "Jurnalul de livrare nu a putut fi golit"
 
 msgid "Unknown forwarding operation"
 msgstr "Operațiune de redirecționare necunoscută"

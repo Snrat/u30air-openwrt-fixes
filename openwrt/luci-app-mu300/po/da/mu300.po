@@ -580,6 +580,9 @@ msgstr "Gemt: %s"
 msgid "Remove the saved value"
 msgstr "Fjern den gemte værdi"
 
+msgid "Presets"
+msgstr "Forudindstillinger"
+
 msgid "Received messages are sent on as they reach the SMS pool. A failed delivery is retried after 30 s, then after twice as long each time (an hour at most), ten times in all."
 msgstr "Modtagne beskeder videresendes, så snart de når SMS-puljen. En mislykket levering forsøges igen efter 30 s og derefter hver gang efter dobbelt så lang tid (højst en time), ti gange i alt."
 
@@ -636,6 +639,12 @@ msgstr "Tom: standardfelterne (almindelig tekst: beskeden). Pladsholdere: {sende
 
 msgid "Extra headers (one \"Name: value\" per line)"
 msgstr "Ekstra headere (én \"Navn: værdi\" pr. linje)"
+
+msgid "The answer must contain"
+msgstr "Svaret skal indeholde"
+
+msgid "Empty: every HTTP 2xx answer counts as delivered. With key=value (for example errcode=0), the answer must also be a JSON object that has this value under this key at its top level; otherwise the delivery fails. Only the result of the check is logged, never the answer."
+msgstr "Tom: ethvert HTTP 2xx-svar tæller som leveret. Med nøgle=værdi (for eksempel errcode=0) skal svaret desuden være et JSON-objekt, der har denne værdi under denne nøgle på øverste niveau; ellers mislykkes leveringen. Kun resultatet af kontrollen logges, aldrig svaret."
 
 msgid "Bot token"
 msgstr "Bot-token"
@@ -702,6 +711,9 @@ msgstr "Frafiltreret"
 
 msgid "Dropped"
 msgstr "Kasseret"
+
+msgid "Clear"
+msgstr "Ryd"
 
 msgid "Test"
 msgstr "Test"
@@ -1804,9 +1816,6 @@ msgstr "Ryd lokal SMS-pulje"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
 msgstr "Kun lokale filer slettes; beskeder på SIM-kortet bevares."
-
-msgid "Clear"
-msgstr "Ryd"
 
 msgid "Delete this SMS"
 msgstr "Slet denne SMS"
@@ -3074,6 +3083,9 @@ msgstr "Webhookens adresse skal være en http://- eller https://-URL"
 msgid "The webhook body is too long or contains a control character"
 msgstr "Webhookens indhold er for langt eller indeholder et kontroltegn"
 
+msgid "The answer check must be key=value, like errcode=0 or ok=true (the value a whole number or lowercase letters, 16 at most)"
+msgstr "Svarkontrollen skal være nøgle=værdi, som errcode=0 eller ok=true (værdien et heltal eller små bogstaver, højst 16)"
+
 msgid "Invalid header (one \"Name: value\" per line; Host, Content-Type, Content-Length, Transfer-Encoding and Connection are set by the device)"
 msgstr "Ugyldig header (én \"Navn: værdi\" pr. linje; Host, Content-Type, Content-Length, Transfer-Encoding og Connection sættes af enheden)"
 
@@ -3103,6 +3115,12 @@ msgstr "Indstillingerne for videresendelse kunne ikke gemmes"
 
 msgid "SMS forwarding is not installed"
 msgstr "Videresendelse af SMS er ikke installeret"
+
+msgid "A test was started a moment ago; wait a few seconds"
+msgstr "En test blev startet for et øjeblik siden; vent et par sekunder"
+
+msgid "The delivery log could not be cleared"
+msgstr "Leveringsloggen kunne ikke ryddes"
 
 msgid "Unknown forwarding operation"
 msgstr "Ukendt handling for videresendelse"

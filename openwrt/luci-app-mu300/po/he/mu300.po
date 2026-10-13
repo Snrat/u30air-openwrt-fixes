@@ -580,6 +580,9 @@ msgstr "נשמר: %s"
 msgid "Remove the saved value"
 msgstr "הסרת הערך השמור"
 
+msgid "Presets"
+msgstr "הגדרות מוכנות"
+
 msgid "Received messages are sent on as they reach the SMS pool. A failed delivery is retried after 30 s, then after twice as long each time (an hour at most), ten times in all."
 msgstr "הודעות שהתקבלו מועברות ברגע שהן מגיעות למאגר ה-SMS. מסירה שנכשלה מנוסה שוב אחרי 30 שניות, ואז בכל פעם אחרי זמן כפול (שעה לכל היותר), עשר פעמים בסך הכול."
 
@@ -636,6 +639,12 @@ msgstr "ריק: השדות הרגילים (טקסט פשוט: ההודעה). מ�
 
 msgid "Extra headers (one \"Name: value\" per line)"
 msgstr "כותרות נוספות (\"Name: value\" אחת בכל שורה)"
+
+msgid "The answer must contain"
+msgstr "התשובה חייבת להכיל"
+
+msgid "Empty: every HTTP 2xx answer counts as delivered. With key=value (for example errcode=0), the answer must also be a JSON object that has this value under this key at its top level; otherwise the delivery fails. Only the result of the check is logged, never the answer."
+msgstr "ריק: כל תשובת HTTP 2xx נחשבת כמסירה. עם מפתח=ערך (למשל errcode=0) התשובה חייבת בנוסף להיות אובייקט JSON שברמה העליונה שלו יש את הערך הזה תחת המפתח הזה; אחרת המסירה נכשלת. ביומן נרשמת רק תוצאת הבדיקה, ולעולם לא התשובה עצמה."
 
 msgid "Bot token"
 msgstr "אסימון בוט"
@@ -702,6 +711,9 @@ msgstr "סונן"
 
 msgid "Dropped"
 msgstr "נזרק"
+
+msgid "Clear"
+msgstr "ניקוי"
 
 msgid "Test"
 msgstr "בדיקה"
@@ -1804,9 +1816,6 @@ msgstr "ניקוי מאגר ה-SMS המקומי"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
 msgstr "רק קבצים מקומיים יימחקו; ההודעות ב-SIM יישארו."
-
-msgid "Clear"
-msgstr "ניקוי"
 
 msgid "Delete this SMS"
 msgstr "מחיקת SMS זה"
@@ -3074,6 +3083,9 @@ msgstr "כתובת ה-webhook חייבת להיות כתובת URL של http:// 
 msgid "The webhook body is too long or contains a control character"
 msgstr "גוף ה-webhook ארוך מדי או מכיל תו בקרה"
 
+msgid "The answer check must be key=value, like errcode=0 or ok=true (the value a whole number or lowercase letters, 16 at most)"
+msgstr "בדיקת התשובה חייבת להיות בצורת מפתח=ערך, כמו errcode=0 או ok=true (הערך מספר שלם או אותיות קטנות, 16 לכל היותר)"
+
 msgid "Invalid header (one \"Name: value\" per line; Host, Content-Type, Content-Length, Transfer-Encoding and Connection are set by the device)"
 msgstr "כותרת לא תקינה (\"Name: value\" אחת בכל שורה; את Host, Content-Type, Content-Length, Transfer-Encoding ו-Connection המכשיר קובע)"
 
@@ -3103,6 +3115,12 @@ msgstr "לא ניתן היה לשמור את הגדרות ההעברה"
 
 msgid "SMS forwarding is not installed"
 msgstr "העברת SMS אינה מותקנת"
+
+msgid "A test was started a moment ago; wait a few seconds"
+msgstr "בדיקה הופעלה לפני רגע; המתינו כמה שניות"
+
+msgid "The delivery log could not be cleared"
+msgstr "לא ניתן היה לנקות את יומן המסירה"
 
 msgid "Unknown forwarding operation"
 msgstr "פעולת העברה לא ידועה"

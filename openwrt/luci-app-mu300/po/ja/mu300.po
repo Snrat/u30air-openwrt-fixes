@@ -580,6 +580,9 @@ msgstr "保存済み: %s"
 msgid "Remove the saved value"
 msgstr "保存済みの値を削除"
 
+msgid "Presets"
+msgstr "プリセット"
+
 msgid "Received messages are sent on as they reach the SMS pool. A failed delivery is retried after 30 s, then after twice as long each time (an hour at most), ten times in all."
 msgstr "受信したメッセージは SMS プールに届きしだい転送されます。送信に失敗すると 30 秒後に再試行し、その後は毎回 2 倍の間隔（最大 1 時間）で、合計 10 回試みます。"
 
@@ -636,6 +639,12 @@ msgstr "空欄: 標準のフィールド（プレーンテキスト: メッセ�
 
 msgid "Extra headers (one \"Name: value\" per line)"
 msgstr "追加ヘッダー（1 行に 1 つの \"Name: value\"）"
+
+msgid "The answer must contain"
+msgstr "応答に含まれるべき内容"
+
+msgid "Empty: every HTTP 2xx answer counts as delivered. With key=value (for example errcode=0), the answer must also be a JSON object that has this value under this key at its top level; otherwise the delivery fails. Only the result of the check is logged, never the answer."
+msgstr "空欄: HTTP 2xx の応答はすべて配信済みとみなします。キー=値（例: errcode=0）を指定すると、応答はさらに、最上位のそのキーにその値を持つ JSON オブジェクトでなければならず、そうでない場合は配信失敗になります。ログに記録されるのは確認の結果だけで、応答そのものは記録されません。"
 
 msgid "Bot token"
 msgstr "ボットトークン"
@@ -702,6 +711,9 @@ msgstr "フィルターで除外"
 
 msgid "Dropped"
 msgstr "破棄"
+
+msgid "Clear"
+msgstr "クリア"
 
 msgid "Test"
 msgstr "テスト"
@@ -1804,9 +1816,6 @@ msgstr "ローカル SMS プールをクリア"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
 msgstr "ローカルファイルのみ削除されます。SIM 上のメッセージは残ります。"
-
-msgid "Clear"
-msgstr "クリア"
 
 msgid "Delete this SMS"
 msgstr "この SMS を削除"
@@ -3074,6 +3083,9 @@ msgstr "Webhook のアドレスは http:// または https:// の URL である�
 msgid "The webhook body is too long or contains a control character"
 msgstr "Webhook の本文が長すぎるか、制御文字を含んでいます"
 
+msgid "The answer check must be key=value, like errcode=0 or ok=true (the value a whole number or lowercase letters, 16 at most)"
+msgstr "応答の確認は キー=値 の形式（例: errcode=0 や ok=true）で指定してください（値は整数または英小文字、16 文字まで）"
+
 msgid "Invalid header (one \"Name: value\" per line; Host, Content-Type, Content-Length, Transfer-Encoding and Connection are set by the device)"
 msgstr "無効なヘッダー（1 行に 1 つの \"Name: value\"。Host、Content-Type、Content-Length、Transfer-Encoding、Connection はデバイスが設定します）"
 
@@ -3103,6 +3115,12 @@ msgstr "転送設定を保存できませんでした"
 
 msgid "SMS forwarding is not installed"
 msgstr "SMS 転送はインストールされていません"
+
+msgid "A test was started a moment ago; wait a few seconds"
+msgstr "テストを開始したばかりです。数秒待ってください"
+
+msgid "The delivery log could not be cleared"
+msgstr "配信ログを消去できませんでした"
 
 msgid "Unknown forwarding operation"
 msgstr "不明な転送操作"

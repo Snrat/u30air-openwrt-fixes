@@ -580,6 +580,9 @@ msgstr "Sparat: %s"
 msgid "Remove the saved value"
 msgstr "Ta bort det sparade värdet"
 
+msgid "Presets"
+msgstr "Förval"
+
 msgid "Received messages are sent on as they reach the SMS pool. A failed delivery is retried after 30 s, then after twice as long each time (an hour at most), ten times in all."
 msgstr "Mottagna meddelanden vidarebefordras när de når SMS-poolen. En misslyckad leverans försöks igen efter 30 s och sedan efter dubbelt så lång tid varje gång (högst en timme), tio gånger totalt."
 
@@ -636,6 +639,12 @@ msgstr "Tomt: standardfälten (oformaterad text: meddelandet). Platshållare: {s
 
 msgid "Extra headers (one \"Name: value\" per line)"
 msgstr "Extra rubriker (en \"Namn: värde\" per rad)"
+
+msgid "The answer must contain"
+msgstr "Svaret måste innehålla"
+
+msgid "Empty: every HTTP 2xx answer counts as delivered. With key=value (for example errcode=0), the answer must also be a JSON object that has this value under this key at its top level; otherwise the delivery fails. Only the result of the check is logged, never the answer."
+msgstr "Tomt: varje HTTP 2xx-svar räknas som levererat. Med nyckel=värde (till exempel errcode=0) måste svaret dessutom vara ett JSON-objekt som har detta värde under denna nyckel på översta nivån; annars misslyckas leveransen. Bara resultatet av kontrollen loggas, aldrig svaret."
 
 msgid "Bot token"
 msgstr "Bottoken"
@@ -702,6 +711,9 @@ msgstr "Bortfiltrerat"
 
 msgid "Dropped"
 msgstr "Kasserat"
+
+msgid "Clear"
+msgstr "Rensa"
 
 msgid "Test"
 msgstr "Test"
@@ -1804,9 +1816,6 @@ msgstr "Rensa lokal SMS-pool"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
 msgstr "Endast lokala filer raderas; meddelanden på SIM-kortet finns kvar."
-
-msgid "Clear"
-msgstr "Rensa"
 
 msgid "Delete this SMS"
 msgstr "Radera detta SMS"
@@ -3074,6 +3083,9 @@ msgstr "Webhookens adress måste vara en http://- eller https://-URL"
 msgid "The webhook body is too long or contains a control character"
 msgstr "Webhookens kropp är för lång eller innehåller ett styrtecken"
 
+msgid "The answer check must be key=value, like errcode=0 or ok=true (the value a whole number or lowercase letters, 16 at most)"
+msgstr "Svarskontrollen måste vara nyckel=värde, som errcode=0 eller ok=true (värdet ett heltal eller små bokstäver, högst 16)"
+
 msgid "Invalid header (one \"Name: value\" per line; Host, Content-Type, Content-Length, Transfer-Encoding and Connection are set by the device)"
 msgstr "Ogiltig rubrik (en \"Namn: värde\" per rad; Host, Content-Type, Content-Length, Transfer-Encoding och Connection sätts av enheten)"
 
@@ -3103,6 +3115,12 @@ msgstr "Inställningarna för vidarebefordran kunde inte sparas"
 
 msgid "SMS forwarding is not installed"
 msgstr "Vidarebefordran av SMS är inte installerad"
+
+msgid "A test was started a moment ago; wait a few seconds"
+msgstr "Ett test startades nyss; vänta några sekunder"
+
+msgid "The delivery log could not be cleared"
+msgstr "Leveransloggen kunde inte rensas"
 
 msgid "Unknown forwarding operation"
 msgstr "Okänd åtgärd för vidarebefordran"

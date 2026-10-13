@@ -580,6 +580,9 @@ msgstr "Uloženo: %s"
 msgid "Remove the saved value"
 msgstr "Odebrat uloženou hodnotu"
 
+msgid "Presets"
+msgstr "Předvolby"
+
 msgid "Received messages are sent on as they reach the SMS pool. A failed delivery is retried after 30 s, then after twice as long each time (an hour at most), ten times in all."
 msgstr "Přijaté zprávy se přeposílají, jakmile dorazí do fondu SMS. Neúspěšné doručení se zopakuje po 30 s a pak pokaždé po dvojnásobné době (nejvýše hodina), celkem desetkrát."
 
@@ -636,6 +639,12 @@ msgstr "Prázdné: standardní pole (prostý text: zpráva). Zástupné symboly:
 
 msgid "Extra headers (one \"Name: value\" per line)"
 msgstr "Další hlavičky (jedna \"Název: hodnota\" na řádek)"
+
+msgid "The answer must contain"
+msgstr "Odpověď musí obsahovat"
+
+msgid "Empty: every HTTP 2xx answer counts as delivered. With key=value (for example errcode=0), the answer must also be a JSON object that has this value under this key at its top level; otherwise the delivery fails. Only the result of the check is logged, never the answer."
+msgstr "Prázdné: každá odpověď HTTP 2xx se počítá jako doručení. S klíč=hodnota (například errcode=0) musí být odpověď navíc objekt JSON, který má na nejvyšší úrovni pod tímto klíčem tuto hodnotu; jinak doručení selže. Do protokolu se zapisuje jen výsledek kontroly, nikdy odpověď."
 
 msgid "Bot token"
 msgstr "Token bota"
@@ -702,6 +711,9 @@ msgstr "Odfiltrováno"
 
 msgid "Dropped"
 msgstr "Zahozeno"
+
+msgid "Clear"
+msgstr "Vymazat"
 
 msgid "Test"
 msgstr "Test"
@@ -1804,9 +1816,6 @@ msgstr "Vymazat místní fond SMS"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
 msgstr "Smazány budou pouze místní soubory; zprávy na SIM zůstanou."
-
-msgid "Clear"
-msgstr "Vymazat"
 
 msgid "Delete this SMS"
 msgstr "Smazat tuto SMS"
@@ -3074,6 +3083,9 @@ msgstr "Adresa webhooku musí být URL http:// nebo https://"
 msgid "The webhook body is too long or contains a control character"
 msgstr "Tělo webhooku je příliš dlouhé nebo obsahuje řídicí znak"
 
+msgid "The answer check must be key=value, like errcode=0 or ok=true (the value a whole number or lowercase letters, 16 at most)"
+msgstr "Kontrola odpovědi musí mít tvar klíč=hodnota, například errcode=0 nebo ok=true (hodnota celé číslo nebo malá písmena, nejvýše 16)"
+
 msgid "Invalid header (one \"Name: value\" per line; Host, Content-Type, Content-Length, Transfer-Encoding and Connection are set by the device)"
 msgstr "Neplatná hlavička (jedna \"Název: hodnota\" na řádek; Host, Content-Type, Content-Length, Transfer-Encoding a Connection nastavuje zařízení)"
 
@@ -3103,6 +3115,12 @@ msgstr "Nastavení přeposílání se nepodařilo uložit"
 
 msgid "SMS forwarding is not installed"
 msgstr "Přeposílání SMS není nainstalováno"
+
+msgid "A test was started a moment ago; wait a few seconds"
+msgstr "Test byl spuštěn před okamžikem; počkejte několik sekund"
+
+msgid "The delivery log could not be cleared"
+msgstr "Protokol doručení se nepodařilo vymazat"
 
 msgid "Unknown forwarding operation"
 msgstr "Neznámá operace přeposílání"

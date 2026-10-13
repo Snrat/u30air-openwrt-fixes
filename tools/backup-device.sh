@@ -39,6 +39,8 @@ su_do() { adb shell "su -c '$1'" </dev/null | tr -d '\r'; }
 
 command -v adb >/dev/null || die "adb not found"
 [ "$(adb get-state 2>/dev/null)" = device ] || die "no adb device (boot Android, enable USB debugging)"
+# a device running MU300 Linux answers adb too (MU300LINUX-...), with a root shell and none of Android's partitions
+case $(adb get-serialno 2>/dev/null) in MU300LINUX*) die "this adb device runs MU300 Linux, not Android: boot Android first (sudo mu300-next-boot android && sudo reboot)" ;; esac
 [ "$(su_do 'id -u')" = 0 ] || die "su does not work on the device"
 
 mkdir -p "$OUT"

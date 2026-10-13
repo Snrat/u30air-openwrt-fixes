@@ -225,11 +225,12 @@ Install the VPN module (about 40 MB more to download, 120 MB on the device)? (ye
 Downloading the VPN module	VPN modülü indiriliyor
 extras:         {1}	eklentiler:     {1}
 none	yok
-Allow adb (adb shell, push, pull) to Linux over USB from this computer? Its adb key (~/.android/adbkey.pub) gets a root shell (yes/no)	Bu bilgisayardan USB üzerinden Linux'a adb (adb shell, push, pull) açılsın mı? Bu bilgisayarın adb anahtarı (~/.android/adbkey.pub) root kabuğu alır (evet/hayır)
+adb to Linux over USB is on and lets every computer in: a root shell without a password for anyone who plugs in a cable. Let in only this computer's adb key (~/.android/adbkey.pub) instead? (yes/no)	USB üzerinden Linux'a adb açık ve her bilgisayarı kabul ediyor: kablo takan herkes parolasız root kabuğu alır. Bunun yerine yalnızca bu bilgisayarın adb anahtarı (~/.android/adbkey.pub) kabul edilsin mi? (evet/hayır)
 no adb key of this computer to authorise ({1})	bu bilgisayarın yetkilendirilecek bir adb anahtarı yok ({1})
 adb to Linux:   {1}	Linux'a adb:    {1}
-on, for this computer	açık, bu bilgisayar için
-off	kapalı
+on, only for the adb key of this computer	açık, yalnızca bu bilgisayarın adb anahtarı için
+on, for every computer: a root shell without a password (on the device: mu300-usb adb auth keys, or mu300-usb adb off)	açık, her bilgisayar için: parolasız root kabuğu (cihazda: mu300-usb adb auth keys ya da mu300-usb adb off)
+asking it over adb ({1})	adb üzerinden isteniyor ({1})
 Android runs from slot {1}; Linux goes to slot {2} (boot_{2})	Android {1} yuvasından çalışıyor; Linux {2} yuvasına kurulacak (boot_{2})
 CREATE new ext4 (erases what is there)	yeni ext4 OLUŞTURULACAK (oradakiler silinir)
 Dry run: nothing was written.	Deneme çalıştırması: hiçbir şey yazılmadı.
@@ -343,3 +344,8 @@ boot chain:     not synced (the model is not recognised)	boot zinciri:   eşitle
 An earlier run of this installer timed out in this Android boot ({1}); the SD card request it waited on is still stuck in the kernel. Reboot Android, then install the zip again. Nothing was changed; the lock is {2}.	Bu kurucunun önceki bir çalışması bu Android açılışında zaman aşımına uğradı ({1}); beklediği SD kart isteği çekirdekte hâlâ takılı. Android'i yeniden başlatın, sonra zip'i yeniden kurun. Hiçbir şey değiştirilmedi; kilit: {2}.
 the device log was kept at {1}	cihaz günlüğü şurada saklandı: {1}
 boot_{1} read back from the eMMC is not the image that was written ({2}); Linux was not armed: misc was not changed, so Android keeps booting	eMMC'den geri okunan boot_{1}, yazılan görüntü değil ({2}); Linux etkinleştirilmedi: misc değiştirilmedi, Android açılmaya devam eder
+eMMC: {1} ({2} sectors); the partitions end at sector {3}; free after them: {4} MiB	eMMC: {1} ({2} sektör); bölümler {3}. sektörde bitiyor; sonrasında boş: {4} MiB
+needed behind the partitions: {1} MiB; missing: {2} MiB	bölümlerin arkasında gereken: {1} MiB; eksik: {2} MiB
+to share by shrinking it: {1} MiB up to sector {2}; needed: {3} MiB ({4} MiB Android + {5} MiB Linux); missing: {6} MiB	küçültülerek paylaşılabilecek: {2}. sektöre kadar {1} MiB; gereken: {3} MiB ({4} MiB Android + {5} MiB Linux); eksik: {6} MiB
+-Check writes nothing. Run the installer without it to make room.	-Check hiçbir şey yazmaz. Yer açmak için yükleyiciyi onsuz çalıştırın.
+the new partition table did not arrive on the device as it was made; nothing is changed	yeni bölüm tablosu cihaza oluşturulduğu gibi ulaşmadı; hiçbir şey değiştirilmedi

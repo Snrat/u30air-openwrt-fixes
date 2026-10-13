@@ -580,6 +580,9 @@ msgstr "ذخیره‌شده: %s"
 msgid "Remove the saved value"
 msgstr "حذف مقدار ذخیره‌شده"
 
+msgid "Presets"
+msgstr "پیش‌تنظیم‌ها"
+
 msgid "Received messages are sent on as they reach the SMS pool. A failed delivery is retried after 30 s, then after twice as long each time (an hour at most), ten times in all."
 msgstr "پیام‌های دریافتی به‌محض رسیدن به مخزن پیامک بازارسال می‌شوند. ارسال ناموفق پس از ۳۰ ثانیه و سپس هر بار پس از دو برابر زمان قبل (حداکثر یک ساعت) دوباره تلاش می‌شود، در مجموع ده بار."
 
@@ -636,6 +639,12 @@ msgstr "خالی: فیلدهای استاندارد (متن ساده: پیام).
 
 msgid "Extra headers (one \"Name: value\" per line)"
 msgstr "سرآیندهای اضافی (هر سطر یک \"Name: value\")"
+
+msgid "The answer must contain"
+msgstr "پاسخ باید شامل این باشد"
+
+msgid "Empty: every HTTP 2xx answer counts as delivered. With key=value (for example errcode=0), the answer must also be a JSON object that has this value under this key at its top level; otherwise the delivery fails. Only the result of the check is logged, never the answer."
+msgstr "خالی: هر پاسخ HTTP 2xx تحویل‌شده به شمار می‌آید. با کلید=مقدار (برای نمونه errcode=0) پاسخ باید افزون بر آن یک شیء JSON باشد که در بالاترین سطح خود زیر این کلید همین مقدار را دارد؛ وگرنه تحویل ناموفق است. تنها نتیجهٔ بررسی در گزارش ثبت می‌شود، خودِ پاسخ هرگز."
 
 msgid "Bot token"
 msgstr "توکن ربات"
@@ -702,6 +711,9 @@ msgstr "فیلتر شد"
 
 msgid "Dropped"
 msgstr "کنار گذاشته شد"
+
+msgid "Clear"
+msgstr "پاک کردن"
 
 msgid "Test"
 msgstr "آزمایش"
@@ -1804,9 +1816,6 @@ msgstr "پاک کردن مخزن محلی SMS"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
 msgstr "فقط فایل‌های محلی حذف می‌شوند؛ پیام‌های روی SIM باقی می‌مانند."
-
-msgid "Clear"
-msgstr "پاک کردن"
 
 msgid "Delete this SMS"
 msgstr "حذف این SMS"
@@ -3074,6 +3083,9 @@ msgstr "نشانی webhook باید یک URL با http:// یا https:// باشد
 msgid "The webhook body is too long or contains a control character"
 msgstr "بدنهٔ webhook بیش از حد طولانی است یا نویسهٔ کنترلی دارد"
 
+msgid "The answer check must be key=value, like errcode=0 or ok=true (the value a whole number or lowercase letters, 16 at most)"
+msgstr "بررسی پاسخ باید به شکل کلید=مقدار باشد، مانند errcode=0 یا ok=true (مقدار یک عدد صحیح یا حروف کوچک، حداکثر ۱۶)"
+
 msgid "Invalid header (one \"Name: value\" per line; Host, Content-Type, Content-Length, Transfer-Encoding and Connection are set by the device)"
 msgstr "سرآیند نامعتبر (هر سطر یک \"Name: value\"؛ Host، Content-Type، Content-Length، Transfer-Encoding و Connection را دستگاه تنظیم می‌کند)"
 
@@ -3103,6 +3115,12 @@ msgstr "تنظیمات بازارسال ذخیره نشد"
 
 msgid "SMS forwarding is not installed"
 msgstr "بازارسال پیامک نصب نشده است"
+
+msgid "A test was started a moment ago; wait a few seconds"
+msgstr "لحظه‌ای پیش یک آزمایش آغاز شد؛ چند ثانیه صبر کنید"
+
+msgid "The delivery log could not be cleared"
+msgstr "گزارش تحویل پاک نشد"
 
 msgid "Unknown forwarding operation"
 msgstr "عملیات بازارسال ناشناخته"

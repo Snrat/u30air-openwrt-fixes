@@ -458,14 +458,17 @@ class Systems(ShellTest):
             shutil.rmtree(self.M / 'openwrt-luci', ignore_errors=True)
             self.tarball('openwrt-luci')
             self.run_install(shell, PWHASH='$6$salt$hash')
-            self.assertFalse((etc / 'adb').exists())         # off unless asked for
+            # nothing set: the system has adb on for every computer (mu300-adbd's default)
+            self.assertFalse((etc / 'adb').exists())
+            self.assertFalse((etc / 'adb_auth').exists())
             self.assertFalse((etc / 'adb_keys').exists())
             self.tarball('openwrt-luci')
             r = self.run_install(shell, PWHASH='$6$salt$hash', ADB='1', ADB_KEY=key)
             self.assertEqual('on\n', (etc / 'adb').read_text())
+            self.assertEqual('keys\n', (etc / 'adb_auth').read_text())      # only this computer, from the first boot
             self.assertEqual(key + '\n', (etc / 'adb_keys').read_text())
             self.assertEqual(0o600, (etc / 'adb_keys').stat().st_mode & 0o777)
-            self.assertIn('adb over USB on, for me@my-pc', r.stdout)
+            self.assertIn('adb over USB on, only for me@my-pc', r.stdout)
             # an update: the key once, and ADB=0 takes nothing away
             self.tarball('openwrt-luci')
             self.run_install(shell, UPDATE='1', PWHASH='$6$salt$hash', ADB='1', ADB_KEY=key)
@@ -473,6 +476,7 @@ class Systems(ShellTest):
             self.tarball('openwrt-luci')
             self.run_install(shell, UPDATE='1', PWHASH='$6$salt$hash', ADB='0', ADB_KEY='')
             self.assertEqual('on\n', (etc / 'adb').read_text())
+            self.assertEqual('keys\n', (etc / 'adb_auth').read_text())
             self.assertEqual(key + '\n', (etc / 'adb_keys').read_text())
 
     def test_update_adds_the_config_files_of_the_images_new_packages(self):

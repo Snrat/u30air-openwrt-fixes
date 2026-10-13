@@ -56,8 +56,31 @@ in). Each value is escaped for the type - in JSON as the inside of a string, so 
 In a form body the values are percent-encoded (`title={sender}&body={text}`); in plain text they are put in as they
 are, and an empty body is the message alone (enough for ntfy). The body may be 2000 bytes long. Unlike the address
 and the headers it is shown again in the panel, so keep keys and tokens in the address or in a header. "Send test"
-sends the same body. A delivery still counts as delivered on any HTTP 2xx: the service's own error inside a 200
-answer is not read.
+sends the same body.
+
+A delivery counts as delivered on any HTTP 2xx. From the release after v2026.10.23 the webhook can also check the
+answer: many chat services answer 200 even when they refuse the message and
+say so in the body; for those, fill in "The answer must contain" with the key and the value a good answer has:
+
+| Service | The answer must contain |
+|---|---|
+| DingTalk, WeCom | `errcode=0` |
+| Feishu / Lark | `code=0` |
+| Slack Web API, Telegram Bot API | `ok=true` |
+| Bark | not needed (it answers HTTP 400/500 on failure); `code=200` works |
+| Slack incoming webhook, Discord, ntfy | leave empty: they answer with the HTTP status, not with JSON |
+
+The answer must then be a JSON object with that value under that key at its top level. If the key has another value,
+the delivery fails and is retried like any other failure, and the log shows it (`HTTP 200, the service answered
+errcode=310000`; a value that is not a whole number, `true`, `false` or `null` is not shown, only that it is
+another one). If the answer has no such value (`no errcode in the answer`), the delivery fails and is **not** sent
+again, because the message may well have arrived: check the rule with "Send test", which applies it too (one test
+every 5 seconds at most). The device reads at most the first 4096 bytes of the answer, in memory, and keeps only
+the result: the answer itself is never logged or shown. The key is a name of letters, digits and `_` (32 at most);
+the value is a whole number or lowercase letters (16 at most).
+
+The delivery log is kept in memory (the last 100 lines, gone after a reboot); "Clear" under it empties it. Messages
+that still wait to be delivered are not affected.
 
 Since v2026.10.18 a message leaves the SIM only once its copy is on the disk, so a power cut loses none, and a long
 message whose other parts never arrive is shown after an hour, marked incomplete.

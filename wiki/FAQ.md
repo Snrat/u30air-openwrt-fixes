@@ -58,9 +58,20 @@ for the modem, SMS, VPN, power, Wi-Fi and updates, at `https://192.168.77.1:9090
 [Control Panel (LuCI)](Control-Panel-(LuCI)#a-web-panel-on-ubuntu-cockpit).
 
 ### Can I use `adb shell` with Linux, like with Android?
-Yes, from v2026.10.20, and it is off by default: authorise your computer's key with `sudo mu300-usb adb key adbkey.pub`,
-then `sudo mu300-usb adb on`. Anyone whose key is authorised gets a root shell, and there is no way in without a key.
-See [Installation](Installation#adb-to-linux).
+Yes. From the release after v2026.10.23 it is on by default and lets every computer in, with a root shell, so the web
+installer and other tools work without setting anything up. See [Installation](Installation#adb-to-linux).
+
+### Can anyone with a USB cable get into my device, then?
+With the default, yes: adb has no password, so whoever plugs a cable into the device gets a root shell, also after
+you set passwords. Only the cable: nothing is reachable over Wi-Fi or the mobile network. To close it, run one of
+these on the device; both stay across reboots and updates:
+
+```sh
+sudo mu300-usb adb auth keys    # only computers whose key you authorised (sudo mu300-usb adb key adbkey.pub)
+sudo mu300-usb adb off          # no adb at all
+```
+
+A device where you turned adb off, or set it up with a key, before this release stays as it was.
 
 ### Can I make calls or play sound?
 No. The board has no speaker or microphone; call audio is work in progress and carries no sound yet.

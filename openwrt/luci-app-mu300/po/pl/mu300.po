@@ -580,6 +580,9 @@ msgstr "Zapisano: %s"
 msgid "Remove the saved value"
 msgstr "Usuń zapisaną wartość"
 
+msgid "Presets"
+msgstr "Gotowe ustawienia"
+
 msgid "Received messages are sent on as they reach the SMS pool. A failed delivery is retried after 30 s, then after twice as long each time (an hour at most), ten times in all."
 msgstr "Odebrane wiadomości są przekazywane, gdy tylko trafią do puli SMS. Nieudane doręczenie jest ponawiane po 30 s, a potem za każdym razem po dwa razy dłuższym czasie (najwyżej godzina), łącznie dziesięć razy."
 
@@ -636,6 +639,12 @@ msgstr "Puste: pola standardowe (zwykły tekst: wiadomość). Symbole zastępcze
 
 msgid "Extra headers (one \"Name: value\" per line)"
 msgstr "Dodatkowe nagłówki (jeden \"Nazwa: wartość\" w wierszu)"
+
+msgid "The answer must contain"
+msgstr "Odpowiedź musi zawierać"
+
+msgid "Empty: every HTTP 2xx answer counts as delivered. With key=value (for example errcode=0), the answer must also be a JSON object that has this value under this key at its top level; otherwise the delivery fails. Only the result of the check is logged, never the answer."
+msgstr "Puste: każda odpowiedź HTTP 2xx liczy się jako doręczenie. Z klucz=wartość (na przykład errcode=0) odpowiedź musi być ponadto obiektem JSON, który na najwyższym poziomie ma pod tym kluczem tę wartość; w przeciwnym razie doręczenie się nie powiedzie. W dzienniku zapisywany jest tylko wynik sprawdzenia, nigdy odpowiedź."
 
 msgid "Bot token"
 msgstr "Token bota"
@@ -702,6 +711,9 @@ msgstr "Odfiltrowano"
 
 msgid "Dropped"
 msgstr "Odrzucono"
+
+msgid "Clear"
+msgstr "Wyczyść"
 
 msgid "Test"
 msgstr "Test"
@@ -1804,9 +1816,6 @@ msgstr "Wyczyść lokalną pulę SMS"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
 msgstr "Usunięte zostaną tylko pliki lokalne; wiadomości na karcie SIM pozostaną."
-
-msgid "Clear"
-msgstr "Wyczyść"
 
 msgid "Delete this SMS"
 msgstr "Usuń ten SMS"
@@ -3074,6 +3083,9 @@ msgstr "Adres webhooka musi być adresem URL http:// lub https://"
 msgid "The webhook body is too long or contains a control character"
 msgstr "Treść webhooka jest zbyt długa lub zawiera znak sterujący"
 
+msgid "The answer check must be key=value, like errcode=0 or ok=true (the value a whole number or lowercase letters, 16 at most)"
+msgstr "Sprawdzenie odpowiedzi musi mieć postać klucz=wartość, jak errcode=0 lub ok=true (wartość: liczba całkowita albo małe litery, najwyżej 16)"
+
 msgid "Invalid header (one \"Name: value\" per line; Host, Content-Type, Content-Length, Transfer-Encoding and Connection are set by the device)"
 msgstr "Nieprawidłowy nagłówek (jeden \"Nazwa: wartość\" w wierszu; Host, Content-Type, Content-Length, Transfer-Encoding i Connection ustawia urządzenie)"
 
@@ -3103,6 +3115,12 @@ msgstr "Nie udało się zapisać ustawień przekazywania"
 
 msgid "SMS forwarding is not installed"
 msgstr "Przekazywanie SMS nie jest zainstalowane"
+
+msgid "A test was started a moment ago; wait a few seconds"
+msgstr "Test został uruchomiony przed chwilą; odczekaj kilka sekund"
+
+msgid "The delivery log could not be cleared"
+msgstr "Nie udało się wyczyścić dziennika doręczeń"
 
 msgid "Unknown forwarding operation"
 msgstr "Nieznana operacja przekazywania"

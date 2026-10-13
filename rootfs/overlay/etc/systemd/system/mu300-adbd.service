@@ -1,5 +1,5 @@
 [Unit]
-Description=MU300 adb over USB (adbd in the USB gadget; mu300-usb adb on|off, off by default; root shell for authorised keys only)
+Description=MU300 adb over USB (adbd in the USB gadget; on by default, a root shell for every computer: mu300-usb adb auth keys, mu300-usb adb off)
 # early: adding adb rebinds the gadget, which the computer sees as a replug; before the LAN's DHCP server it costs nothing
 After=mu300-fixups.service
 Before=mu300-lan.service

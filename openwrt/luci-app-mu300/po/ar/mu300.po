@@ -580,6 +580,9 @@ msgstr "محفوظ: %s"
 msgid "Remove the saved value"
 msgstr "إزالة القيمة المحفوظة"
 
+msgid "Presets"
+msgstr "إعدادات جاهزة"
+
 msgid "Received messages are sent on as they reach the SMS pool. A failed delivery is retried after 30 s, then after twice as long each time (an hour at most), ten times in all."
 msgstr "تُعاد توجيه الرسائل المستلمة فور وصولها إلى مجمّع الرسائل القصيرة. يُعاد إرسال التسليم الفاشل بعد 30 ثانية، ثم في كل مرة بعد ضعف المدة (ساعة على الأكثر)، عشر مرات إجمالًا."
 
@@ -636,6 +639,12 @@ msgstr "فارغ: الحقول القياسية (نص عادي: الرسالة).
 
 msgid "Extra headers (one \"Name: value\" per line)"
 msgstr "ترويسات إضافية (واحدة \"Name: value\" في كل سطر)"
+
+msgid "The answer must contain"
+msgstr "يجب أن يحتوي الرد على"
+
+msgid "Empty: every HTTP 2xx answer counts as delivered. With key=value (for example errcode=0), the answer must also be a JSON object that has this value under this key at its top level; otherwise the delivery fails. Only the result of the check is logged, never the answer."
+msgstr "فارغ: كل رد HTTP 2xx يُعدّ تسليمًا. مع مفتاح=قيمة (مثل errcode=0) يجب أن يكون الرد أيضًا كائن JSON يحمل هذه القيمة تحت هذا المفتاح في مستواه الأعلى؛ وإلا يفشل التسليم. لا يُسجَّل سوى نتيجة الفحص، ولا يُسجَّل الرد نفسه أبدًا."
 
 msgid "Bot token"
 msgstr "رمز البوت"
@@ -702,6 +711,9 @@ msgstr "مُستبعَد بالتصفية"
 
 msgid "Dropped"
 msgstr "مُهمَل"
+
+msgid "Clear"
+msgstr "مسح"
 
 msgid "Test"
 msgstr "تجربة"
@@ -1804,9 +1816,6 @@ msgstr "مسح مخزن SMS المحلي"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
 msgstr "ستُحذف الملفات المحلية فقط؛ تبقى الرسائل على SIM."
-
-msgid "Clear"
-msgstr "مسح"
 
 msgid "Delete this SMS"
 msgstr "حذف هذه الرسالة"
@@ -3074,6 +3083,9 @@ msgstr "يجب أن يكون عنوان webhook عنوان URL يبدأ بـ htt
 msgid "The webhook body is too long or contains a control character"
 msgstr "نص طلب الـ webhook طويل جدًا أو يحتوي على محرف تحكم"
 
+msgid "The answer check must be key=value, like errcode=0 or ok=true (the value a whole number or lowercase letters, 16 at most)"
+msgstr "يجب أن يكون فحص الرد بصيغة مفتاح=قيمة، مثل errcode=0 أو ok=true (القيمة عدد صحيح أو حروف صغيرة، 16 على الأكثر)"
+
 msgid "Invalid header (one \"Name: value\" per line; Host, Content-Type, Content-Length, Transfer-Encoding and Connection are set by the device)"
 msgstr "ترويسة غير صالحة (واحدة \"Name: value\" في كل سطر؛ يضبط الجهاز Host وContent-Type وContent-Length وTransfer-Encoding وConnection)"
 
@@ -3103,6 +3115,12 @@ msgstr "تعذّر حفظ إعدادات إعادة التوجيه"
 
 msgid "SMS forwarding is not installed"
 msgstr "إعادة توجيه الرسائل القصيرة غير مثبّتة"
+
+msgid "A test was started a moment ago; wait a few seconds"
+msgstr "بدأ اختبار قبل لحظة؛ انتظر بضع ثوانٍ"
+
+msgid "The delivery log could not be cleared"
+msgstr "تعذّر مسح سجل التسليم"
 
 msgid "Unknown forwarding operation"
 msgstr "عملية إعادة توجيه غير معروفة"

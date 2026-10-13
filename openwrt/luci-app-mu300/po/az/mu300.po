@@ -580,6 +580,9 @@ msgstr "Saxlanılıb: %s"
 msgid "Remove the saved value"
 msgstr "Saxlanmış dəyəri sil"
 
+msgid "Presets"
+msgstr "Hazır seçimlər"
+
 msgid "Received messages are sent on as they reach the SMS pool. A failed delivery is retried after 30 s, then after twice as long each time (an hour at most), ten times in all."
 msgstr "Alınan mesajlar SMS hovuzuna çatan kimi yönləndirilir. Uğursuz göndəriş 30 san sonra, sonra hər dəfə iki dəfə uzun müddətdən sonra (ən çox bir saat) təkrarlanır, cəmi on dəfə."
 
@@ -636,6 +639,12 @@ msgstr "Boş: standart sahələr (sadə mətn: mesaj). Yertutanlar: {sender}, {t
 
 msgid "Extra headers (one \"Name: value\" per line)"
 msgstr "Əlavə başlıqlar (hər sətirdə bir \"Ad: dəyər\")"
+
+msgid "The answer must contain"
+msgstr "Cavabda olmalıdır"
+
+msgid "Empty: every HTTP 2xx answer counts as delivered. With key=value (for example errcode=0), the answer must also be a JSON object that has this value under this key at its top level; otherwise the delivery fails. Only the result of the check is logged, never the answer."
+msgstr "Boş: hər HTTP 2xx cavabı çatdırılmış sayılır. açar=dəyər ilə (məsələn, errcode=0) cavab həm də ən üst səviyyəsində bu açarın altında bu dəyəri daşıyan JSON obyekti olmalıdır; əks halda çatdırılma uğursuz sayılır. Jurnala yalnız yoxlamanın nəticəsi yazılır, cavabın özü heç vaxt."
 
 msgid "Bot token"
 msgstr "Bot tokeni"
@@ -702,6 +711,9 @@ msgstr "Süzülüb"
 
 msgid "Dropped"
 msgstr "Atılıb"
+
+msgid "Clear"
+msgstr "Təmizlə"
 
 msgid "Test"
 msgstr "Test"
@@ -1804,9 +1816,6 @@ msgstr "Yerli SMS hovuzunu təmizlə"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
 msgstr "Yalnız yerli fayllar silinəcək; SIM-dəki mesajlar qalır."
-
-msgid "Clear"
-msgstr "Təmizlə"
 
 msgid "Delete this SMS"
 msgstr "Bu SMS-i sil"
@@ -3074,6 +3083,9 @@ msgstr "Webhook ünvanı http:// və ya https:// URL olmalıdır"
 msgid "The webhook body is too long or contains a control character"
 msgstr "Webhook gövdəsi çox uzundur və ya idarəetmə simvolu ehtiva edir"
 
+msgid "The answer check must be key=value, like errcode=0 or ok=true (the value a whole number or lowercase letters, 16 at most)"
+msgstr "Cavab yoxlaması açar=dəyər şəklində olmalıdır, məsələn errcode=0 və ya ok=true (dəyər tam ədəd və ya kiçik hərflər, ən çoxu 16)"
+
 msgid "Invalid header (one \"Name: value\" per line; Host, Content-Type, Content-Length, Transfer-Encoding and Connection are set by the device)"
 msgstr "Yanlış başlıq (hər sətirdə bir \"Ad: dəyər\"; Host, Content-Type, Content-Length, Transfer-Encoding və Connection cihaz tərəfindən təyin edilir)"
 
@@ -3103,6 +3115,12 @@ msgstr "Yönləndirmə ayarları saxlanıla bilmədi"
 
 msgid "SMS forwarding is not installed"
 msgstr "SMS yönləndirmə quraşdırılmayıb"
+
+msgid "A test was started a moment ago; wait a few seconds"
+msgstr "Bir az əvvəl sınaq başladılıb; bir neçə saniyə gözləyin"
+
+msgid "The delivery log could not be cleared"
+msgstr "Çatdırılma jurnalını təmizləmək mümkün olmadı"
 
 msgid "Unknown forwarding operation"
 msgstr "Naməlum yönləndirmə əməliyyatı"

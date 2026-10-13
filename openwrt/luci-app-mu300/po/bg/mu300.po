@@ -580,6 +580,9 @@ msgstr "Записано: %s"
 msgid "Remove the saved value"
 msgstr "Премахване на записаната стойност"
 
+msgid "Presets"
+msgstr "Готови настройки"
+
 msgid "Received messages are sent on as they reach the SMS pool. A failed delivery is retried after 30 s, then after twice as long each time (an hour at most), ten times in all."
 msgstr "Получените съобщения се препращат веднага щом стигнат до SMS пула. Неуспешна доставка се повтаря след 30 s, после всеки път след двойно по-дълго време (най-много час), общо десет пъти."
 
@@ -636,6 +639,12 @@ msgstr "Празно: стандартните полета (обикновен 
 
 msgid "Extra headers (one \"Name: value\" per line)"
 msgstr "Допълнителни заглавки (по една \"Име: стойност\" на ред)"
+
+msgid "The answer must contain"
+msgstr "Отговорът трябва да съдържа"
+
+msgid "Empty: every HTTP 2xx answer counts as delivered. With key=value (for example errcode=0), the answer must also be a JSON object that has this value under this key at its top level; otherwise the delivery fails. Only the result of the check is logged, never the answer."
+msgstr "Празно: всеки отговор HTTP 2xx се брои за доставен. С ключ=стойност (например errcode=0) отговорът трябва освен това да е JSON обект, който има тази стойност под този ключ на най-горното си ниво; иначе доставката е неуспешна. В дневника се записва само резултатът от проверката, никога отговорът."
 
 msgid "Bot token"
 msgstr "Токен на бота"
@@ -702,6 +711,9 @@ msgstr "Филтрирано"
 
 msgid "Dropped"
 msgstr "Отхвърлено"
+
+msgid "Clear"
+msgstr "Изчистване"
 
 msgid "Test"
 msgstr "Тест"
@@ -1804,9 +1816,6 @@ msgstr "Изчистване на локалното SMS хранилище"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
 msgstr "Ще бъдат изтрити само локалните файлове; съобщенията в SIM остават."
-
-msgid "Clear"
-msgstr "Изчистване"
 
 msgid "Delete this SMS"
 msgstr "Изтриване на този SMS"
@@ -3074,6 +3083,9 @@ msgstr "Адресът на уебкуката трябва да е URL с http:
 msgid "The webhook body is too long or contains a control character"
 msgstr "Тялото на webhook е твърде дълго или съдържа управляващ знак"
 
+msgid "The answer check must be key=value, like errcode=0 or ok=true (the value a whole number or lowercase letters, 16 at most)"
+msgstr "Проверката на отговора трябва да е ключ=стойност, например errcode=0 или ok=true (стойността е цяло число или малки букви, най-много 16)"
+
 msgid "Invalid header (one \"Name: value\" per line; Host, Content-Type, Content-Length, Transfer-Encoding and Connection are set by the device)"
 msgstr "Невалидна заглавка (по една \"Име: стойност\" на ред; Host, Content-Type, Content-Length, Transfer-Encoding и Connection се задават от устройството)"
 
@@ -3103,6 +3115,12 @@ msgstr "Настройките за препращане не можаха да 
 
 msgid "SMS forwarding is not installed"
 msgstr "Препращането на SMS не е инсталирано"
+
+msgid "A test was started a moment ago; wait a few seconds"
+msgstr "Току-що беше стартиран тест; изчакайте няколко секунди"
+
+msgid "The delivery log could not be cleared"
+msgstr "Дневникът на доставките не можа да бъде изчистен"
 
 msgid "Unknown forwarding operation"
 msgstr "Неизвестна операция за препращане"

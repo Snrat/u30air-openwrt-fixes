@@ -580,6 +580,9 @@ msgstr "Đã lưu: %s"
 msgid "Remove the saved value"
 msgstr "Xóa giá trị đã lưu"
 
+msgid "Presets"
+msgstr "Mẫu có sẵn"
+
 msgid "Received messages are sent on as they reach the SMS pool. A failed delivery is retried after 30 s, then after twice as long each time (an hour at most), ten times in all."
 msgstr "Tin nhắn nhận được sẽ được chuyển tiếp ngay khi vào kho SMS. Lần gửi thất bại được thử lại sau 30 giây, sau đó mỗi lần cách gấp đôi (tối đa một giờ), tổng cộng mười lần."
 
@@ -636,6 +639,12 @@ msgstr "Để trống: các trường chuẩn (văn bản thuần: tin nhắn). 
 
 msgid "Extra headers (one \"Name: value\" per line)"
 msgstr "Tiêu đề bổ sung (mỗi dòng một \"Tên: giá trị\")"
+
+msgid "The answer must contain"
+msgstr "Phản hồi phải chứa"
+
+msgid "Empty: every HTTP 2xx answer counts as delivered. With key=value (for example errcode=0), the answer must also be a JSON object that has this value under this key at its top level; otherwise the delivery fails. Only the result of the check is logged, never the answer."
+msgstr "Để trống: mọi phản hồi HTTP 2xx đều được tính là đã gửi. Với khóa=giá trị (ví dụ errcode=0), phản hồi còn phải là một đối tượng JSON có giá trị này dưới khóa này ở cấp cao nhất; nếu không, lần gửi thất bại. Chỉ kết quả kiểm tra được ghi vào nhật ký, không bao giờ ghi phản hồi."
 
 msgid "Bot token"
 msgstr "Token bot"
@@ -702,6 +711,9 @@ msgstr "Bị lọc"
 
 msgid "Dropped"
 msgstr "Bị bỏ"
+
+msgid "Clear"
+msgstr "Xóa sạch"
 
 msgid "Test"
 msgstr "Thử nghiệm"
@@ -1804,9 +1816,6 @@ msgstr "Xóa kho SMS cục bộ"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
 msgstr "Chỉ xóa các tệp cục bộ; tin nhắn trên SIM vẫn được giữ."
-
-msgid "Clear"
-msgstr "Xóa sạch"
 
 msgid "Delete this SMS"
 msgstr "Xóa SMS này"
@@ -3074,6 +3083,9 @@ msgstr "Địa chỉ webhook phải là URL http:// hoặc https://"
 msgid "The webhook body is too long or contains a control character"
 msgstr "Nội dung webhook quá dài hoặc chứa ký tự điều khiển"
 
+msgid "The answer check must be key=value, like errcode=0 or ok=true (the value a whole number or lowercase letters, 16 at most)"
+msgstr "Kiểm tra phản hồi phải có dạng khóa=giá trị, như errcode=0 hoặc ok=true (giá trị là một số nguyên hoặc chữ thường, tối đa 16)"
+
 msgid "Invalid header (one \"Name: value\" per line; Host, Content-Type, Content-Length, Transfer-Encoding and Connection are set by the device)"
 msgstr "Tiêu đề không hợp lệ (mỗi dòng một \"Tên: giá trị\"; Host, Content-Type, Content-Length, Transfer-Encoding và Connection do thiết bị đặt)"
 
@@ -3103,6 +3115,12 @@ msgstr "Không thể lưu cài đặt chuyển tiếp"
 
 msgid "SMS forwarding is not installed"
 msgstr "Chưa cài đặt chuyển tiếp SMS"
+
+msgid "A test was started a moment ago; wait a few seconds"
+msgstr "Một lần thử vừa được bắt đầu; hãy đợi vài giây"
+
+msgid "The delivery log could not be cleared"
+msgstr "Không thể xóa nhật ký gửi"
 
 msgid "Unknown forwarding operation"
 msgstr "Thao tác chuyển tiếp không xác định"

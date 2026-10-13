@@ -22,6 +22,9 @@ concurrency:
 
 jobs:
   zips:
+    # only the project's releases (vYYYY.MM.DD): a test build for an issue, published as a pre-release under another
+    # tag (test-issue-102), is neither announced nor given Magisk zips
+    if: startsWith(github.event.release.tag_name || github.event.inputs.tag, 'v')
     runs-on: ubuntu-latest
     env:
       TAG: ${{ github.event.release.tag_name || github.event.inputs.tag }}

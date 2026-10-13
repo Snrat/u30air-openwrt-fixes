@@ -580,6 +580,9 @@ msgstr "Opgeslagen: %s"
 msgid "Remove the saved value"
 msgstr "Opgeslagen waarde verwijderen"
 
+msgid "Presets"
+msgstr "Voorinstellingen"
+
 msgid "Received messages are sent on as they reach the SMS pool. A failed delivery is retried after 30 s, then after twice as long each time (an hour at most), ten times in all."
 msgstr "Ontvangen berichten worden doorgestuurd zodra ze in de SMS-pool aankomen. Een mislukte levering wordt na 30 s opnieuw geprobeerd, daarna telkens na twee keer zo lang (hooguit een uur), in totaal tien keer."
 
@@ -636,6 +639,12 @@ msgstr "Leeg: de standaardvelden (platte tekst: het bericht). Plaatshouders: {se
 
 msgid "Extra headers (one \"Name: value\" per line)"
 msgstr "Extra headers (één \"Naam: waarde\" per regel)"
+
+msgid "The answer must contain"
+msgstr "Het antwoord moet bevatten"
+
+msgid "Empty: every HTTP 2xx answer counts as delivered. With key=value (for example errcode=0), the answer must also be a JSON object that has this value under this key at its top level; otherwise the delivery fails. Only the result of the check is logged, never the answer."
+msgstr "Leeg: elk HTTP 2xx-antwoord telt als afgeleverd. Met sleutel=waarde (bijvoorbeeld errcode=0) moet het antwoord bovendien een JSON-object zijn dat op het hoogste niveau onder deze sleutel deze waarde heeft; anders mislukt de aflevering. Alleen de uitkomst van de controle wordt gelogd, nooit het antwoord."
 
 msgid "Bot token"
 msgstr "Bot-token"
@@ -702,6 +711,9 @@ msgstr "Weggefilterd"
 
 msgid "Dropped"
 msgstr "Verworpen"
+
+msgid "Clear"
+msgstr "Wissen"
 
 msgid "Test"
 msgstr "Test"
@@ -1804,9 +1816,6 @@ msgstr "Lokale SMS-pool wissen"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
 msgstr "Alleen lokale bestanden worden verwijderd; berichten op de SIM blijven bewaard."
-
-msgid "Clear"
-msgstr "Wissen"
 
 msgid "Delete this SMS"
 msgstr "Deze SMS verwijderen"
@@ -3074,6 +3083,9 @@ msgstr "Het webhookadres moet een http://- of https://-URL zijn"
 msgid "The webhook body is too long or contains a control character"
 msgstr "De webhook-body is te lang of bevat een stuurteken"
 
+msgid "The answer check must be key=value, like errcode=0 or ok=true (the value a whole number or lowercase letters, 16 at most)"
+msgstr "De antwoordcontrole moet sleutel=waarde zijn, zoals errcode=0 of ok=true (de waarde een geheel getal of kleine letters, hooguit 16)"
+
 msgid "Invalid header (one \"Name: value\" per line; Host, Content-Type, Content-Length, Transfer-Encoding and Connection are set by the device)"
 msgstr "Ongeldige header (één \"Naam: waarde\" per regel; Host, Content-Type, Content-Length, Transfer-Encoding en Connection stelt het apparaat in)"
 
@@ -3103,6 +3115,12 @@ msgstr "De doorstuurinstellingen konden niet worden opgeslagen"
 
 msgid "SMS forwarding is not installed"
 msgstr "SMS doorsturen is niet geïnstalleerd"
+
+msgid "A test was started a moment ago; wait a few seconds"
+msgstr "Er is zojuist een test gestart; wacht een paar seconden"
+
+msgid "The delivery log could not be cleared"
+msgstr "Het afleverlog kon niet worden gewist"
 
 msgid "Unknown forwarding operation"
 msgstr "Onbekende doorstuurbewerking"

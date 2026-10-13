@@ -114,7 +114,7 @@ for a in mu300-kernel mu300-kernel-6.18 mu300-kernel-7.2 mu300-ubuntu-rootfs mu3
         -e '(^|/)lib/firmware/(wcnmodem|gnssmodem|wifi_board_config|bt_configure)' \
         -e '^opt/mu300/android/.+' -e '__properties__|dev-properties' \
         -e '(^|/)(libmali|libOpenCL|libGLES|libEGL|libvulkan)[^/]*\.so' \
-        -e '^etc/ssh/ssh_host_' -e '^etc/mu300/(hotspot|vpn|toolkit)\.conf$' -e '^etc/dropbear/dropbear_.*_host_key' \
+        -e '^etc/ssh/ssh_host_' -e '^etc/mu300/(hotspot|vpn|toolkit|mobile-data)\.conf$' -e '^etc/dropbear/dropbear_.*_host_key' \
         -e '^opt/mu300/bin/(xray|sing-box|hev-socks5-tunnel|mihomo|mu300-vpn)$' -e '^opt/mu300/lib/vpn(/|$)' \
         -e '^etc/systemd/system/mu300-vpn\.service$' -e '^etc/init\.d/mu300-vpn$' -e '^etc/mu300/vpn\.conf\.example$' \
         | grep -vE '^opt/mu300/android/system/?$|^opt/mu300/android/system/bin/?$|^opt/mu300/android/system/bin/cltest$' || true)
@@ -223,13 +223,17 @@ first with \`./install.sh --check\`.
 
 The images contain **no proprietary files**: the installer pulls the Wi-Fi/Bluetooth firmware and the Android
 modem/GPU userspace from your own device and adds them during installation. They carry a static adbd (AOSP
-platform-tools, built by \`tools/adbd/build.sh\`) for \`mu300-usb adb on\`, off by default and key-authorised only.
+platform-tools, built by \`tools/adbd/build.sh\`) for adb to Linux over USB, which is **on by default and lets every
+computer in**: whoever can plug a cable into the device gets a root shell without a password. To close it:
+\`sudo mu300-usb adb auth keys\` (only the keys authorised with \`sudo mu300-usb adb key FILE\`) or
+\`sudo mu300-usb adb off\`. A device where adb was turned off, or set up with a key, before this release stays as it was.
 
 Built from $REPO@$commit with \`kernel/build-all.sh\` and \`tools/make-release.sh\`.
 Corresponding source (GPL): kernel https://github.com/Enceka/android_kernel_zte_ums9620_mifi_u30air/tree/$kernel_rev ,
 Wi-Fi/Bluetooth/Mali modules https://github.com/realme-kernel-opensource/realme_C51_C53_Narzo-N53-AndroidT-kernel-source/tree/$modules_rev ,
 patches in \`kernel/patches\`. Ubuntu, OpenWrt and busybox packages come from their distributions' archives;
 Aurora (luci-theme-aurora 1.4.0) from https://github.com/eamonxg/luci-theme-aurora/releases/tag/v1.4.0.
+News and releases: the Telegram channel https://t.me/mu300project
 EOF
 if gh release view "$TAG" -R "$REPO" >/dev/null 2>&1; then
     gh release upload "$TAG" -R "$REPO" --clobber "$D"/*.tar.gz "$D/mu300-update" "$D/SHA256SUMS"

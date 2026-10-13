@@ -521,10 +521,12 @@ fi
 ask vx "$(t 'Install the VPN module (about 40 MB more to download, 120 MB on the device)? (yes/no)')" $vx_default
 # its kill switch on too: without the module nothing would enforce it (android-install.sh refuses the same, later)
 [ "$vx" = yes ] || [ -z "$vpn_ks" ] || die "$(t 'The VPN is on with its kill switch in {1}: an update without the VPN module would leave it to nothing. Answer yes to install the module, or turn the VPN off there first (ENABLE=0 in /etc/mu300/vpn.conf).' "${vpn_ks% }")"
-# adb over USB to Linux (mu300-usb adb on|off on the device): off unless wanted; this computer's adb key, which the
-# installer runs with anyway, is the one authorised. Whoever has an authorised key gets a root shell.
+# adb over USB to Linux is on in every system and lets every computer in, with a root shell and no password (the
+# owner's decision of 2026-10-13, FINDINGS 70; on the device: mu300-usb adb auth open|keys, mu300-usb adb off). The
+# one thing to choose here is to close it to all but this computer from the first boot on: its adb key, which the
+# installer runs with anyway, is then the one authorised, and adb takes authorised keys only.
 ADB=0 ADB_KEY=
-ask ab "$(t "Allow adb (adb shell, push, pull) to Linux over USB from this computer? Its adb key (~/.android/adbkey.pub) gets a root shell (yes/no)")" no
+ask ab "$(t "adb to Linux over USB is on and lets every computer in: a root shell without a password for anyone who plugs in a cable. Let in only this computer's adb key (~/.android/adbkey.pub) instead? (yes/no)")" no
 if [ "$ab" = yes ]; then
     ADB_KEY=$(adb_pubkey "${ANDROID_USER_HOME:-$HOME/.android}/adbkey.pub") ||
         die "$(t 'no adb key of this computer to authorise ({1})' "$HOME/.android/adbkey.pub")"
@@ -699,8 +701,8 @@ rm -rf "$WORK/out/modules" && cp -R "$KOUT/modules" "$WORK/out/modules"
 cp "$KOUT/modules.builtin" "$KOUT/modules.builtin.modinfo" "$WORK/out/" 2>/dev/null || true
 docker build -q -t mu300-ubuntu:24.04 "$TOP/rootfs" >/dev/null
 docker run --rm mu300-ubuntu:24.04 cat /bin/busybox > "$WORK/busybox"; chmod +x "$WORK/busybox"
-# adbd, only when adb is wanted (it is in the release images; a build here takes a few minutes)
-[ "$ADB" = 0 ] || sh "$TOP/tools/adbd/build.sh" "$WORK/tools/adbd/adbd" >/dev/null
+# adbd (adb to Linux is on by default; a build here takes a few minutes)
+sh "$TOP/tools/adbd/build.sh" "$WORK/tools/adbd/adbd" >/dev/null
 docker run --rm -v "$TOP/tools":/src:ro -v "$WORK/tools":/o mu300-kbuild sh -c '
   gcc -O2 -static -o /o/logdw/logdw /src/logdw/logdw.c &&
   gcc -O2 -static -o /o/bt-init/mu300-bt-init /src/bt-init/mu300-bt-init.c &&
@@ -764,7 +766,7 @@ echo "  $(t 'source:         {1}' "$([ $MODE = prebuilt ] && t 'prebuilt release
 echo "  $(t 'systems:        {1} (boots: {2})' "$OSES$(case " $OSES " in (*" ubuntu "*) echo " (Ubuntu $UBUNTU)" ;; esac)" "$BOOT_OS")"
 echo "  $(t 'kernel:         {1}' "$KERNEL$([ -n "$KMAIN" ] && echo " (mainline, $(cat "$KMAIN/kernel.release"))")")"
 echo "  $(t 'extras:         {1}' "$(x=; [ -z "$EXTRA_VPN" ] || x=vpn; [ -z "$EXTRA_PANEL" ] || x="${x:+$x }panel"; [ -n "$x" ] && echo "$x" || t 'none')")"
-echo "  $(t 'adb to Linux:   {1}' "$([ "$ADB" = 1 ] && t 'on, for this computer' || t 'off')")"
+echo "  $(t 'adb to Linux:   {1}' "$([ "$ADB" = 1 ] && t 'on, only for the adb key of this computer' || t 'on, for every computer: a root shell without a password (on the device: mu300-usb adb auth keys, or mu300-usb adb off)')")"
 echo "  $(t 'default boot:   {1}' "$([ $DEFAULT_LINUX = 1 ] && t 'Linux (Android after {1} failed boots in a row)' "$BOOT_ATTEMPTS" || t 'Android, Linux on demand')")"
 echo "  $(t 'filesystem:     {1}' "$([ $FORMAT = 0 ] && t 'keep existing' || { [ $SD_MODE = 1 ] && t 'CREATE new ext4 (erases the SD card)' || t 'CREATE new ext4 (erases the Linux region)'; })")"
 [ $UPDATE = 1 ] && echo "  $(t 'update:         settings and user data of the chosen systems are kept, everything else is replaced')"

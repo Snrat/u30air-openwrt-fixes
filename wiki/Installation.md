@@ -148,7 +148,7 @@ First it brings your copy of the project up to date from GitHub and restarts its
 | *Include the Mali GPU (OpenCL) userspace (~90 MiB)?* | GPU compute support | yes |
 | *Install the VPN module?* | the optional [VPN](VPN) (about 40 MB to download) | no, add it later if needed |
 | *Install the web panel for Ubuntu?* (Ubuntu only) | Cockpit with the MU300 page, from the release's offline file (about 24 MB more; see [Control Panel (LuCI)](Control-Panel-(LuCI)#a-web-panel-on-ubuntu-cockpit)) | no, add it later with `mu300-extra install panel` |
-| *Turn on adb to Linux for this computer?* | `adb shell` to Linux over the cable, for the key of the computer you install from (see [adb to Linux](#adb-to-linux)) | no (it is off by default) |
+| *adb to Linux is on and lets every computer in ... Let in only this computer's adb key instead?* | adb to Linux over the cable is on by default, with a root shell and no password for anyone who plugs in a cable; `yes` closes it to all but the computer you install from (see [adb to Linux](#adb-to-linux)) | no (every computer; change it later with `mu300-usb adb auth keys` or `mu300-usb adb off`) |
 | *Which kernel?* 1) 5.4 2) 6.18 3) 7.2 | the core of Linux; see [Kernels](Kernels) | 1 (5.4), or 2 (6.18) for Ubuntu 26.04 |
 | *update or wipe* (only when Linux is already there) | `update` keeps settings and data, `wipe` starts fresh | update |
 | *Password for the "ubuntu" user (Ubuntu) and "root" (OpenWrt)* | your login password, at least 6 characters | choose a good one |
@@ -177,7 +177,8 @@ Type `INSTALL` (in capitals) to go ahead; anything else cancels. It also install
 so you can start Linux from Android later, then reboots into Linux.
 
 If the device is running Linux rather than Android when you start, the installer notices and offers to reboot it into
-Android for you over SSH.
+Android for you: over adb where the device lets the computer in (the default; no password to type), else over SSH.
+A device in Linux is in `adb devices` too, as `MU300LINUX-...`, and is never installed to as it is.
 
 ## Step 3: log in
 
@@ -198,22 +199,40 @@ the first time you plug the device in.
 
 ### adb to Linux
 
-From v2026.10.20 Linux can offer `adb` over the same cable, next to the USB network and the serial console, as
-Android does: `adb shell` (a root shell), `adb push`/`pull`, `adb forward`. It is **off by default**, and adb has no
-password: **anyone whose adb key is authorised gets a root shell**, so authorise only your own computers.
+Linux offers `adb` over the same cable, next to the USB network and the serial console, as Android does: `adb shell`
+(a root shell), `adb push`/`pull`, `adb forward`. From the release after v2026.10.23 it is **on by default and lets
+every computer in**, so that the web installer (a browser) or a GUI can talk to the device without a key having been
+put on it first.
+
+**What that means:** adb has no password. With the default, **anyone who can plug a USB cable into the device gets
+a root shell**, also after you set passwords, and can read and change everything on it. It is on the cable only:
+nothing is reachable over Wi-Fi, the LAN or mobile data. If the device is ever out of your hands, close it:
 
 ```sh
-scp ~/.android/adbkey.pub ubuntu@192.168.77.1:      # the computer's key (root@ on OpenWrt; .78.1 on a U30 Air)
-sudo mu300-usb adb key ~/adbkey.pub                 # authorise it (/etc/mu300/adb_keys)
-sudo mu300-usb adb on                               # the USB connection drops for a moment and comes back with adb
-sudo mu300-usb adb keys                             # the authorised keys
-sudo mu300-usb adb off
+sudo mu300-usb adb auth keys                        # only computers whose key you authorised get in
+sudo mu300-usb adb off                              # no adb at all
 ```
 
-The installers ask whether to turn it on for the computer they run on. The device shows up in `adb devices` as
-`MU300LINUX-...`; a computer whose key is not authorised sees `unauthorized` and gets nothing (no prompt on the device,
-no TCP port, no setting that turns the check off). The setting survives reboots and updates. It needs a kernel with
-FunctionFS: 5.4, or the mainline kernels of v2026.10.20 or newer.
+Both stay across reboots and updates. The rest:
+
+```sh
+mu300-usb adb status                                # on or off, whom it lets in
+scp ~/.android/adbkey.pub ubuntu@192.168.77.1:      # a computer's key (root@ on OpenWrt; .78.1 on a U30 Air)
+sudo mu300-usb adb key ~/adbkey.pub                 # authorise it (/etc/mu300/adb_keys), for "auth keys"
+sudo mu300-usb adb keys                             # the authorised keys
+sudo mu300-usb adb auth open                        # every computer again
+sudo mu300-usb adb on                               # after "off"
+```
+
+A device that was set up before keeps what it had: `adb off` stays off, and a device where adb was turned on or a
+key was authorised under v2026.10.20-23 stays keys-only until `sudo mu300-usb adb auth open`. Every other device has
+adb on and open after an update. The installers ask whether to let in only the computer they run on; the Magisk zip
+does not ask, its systems start open.
+
+The device shows up in `adb devices` as `MU300LINUX-...`. In keys mode a computer whose key is not authorised sees
+`unauthorized` and gets nothing (no prompt on the device). There is no TCP port in either mode. adb needs a kernel
+with FunctionFS: 5.4, or the mainline kernels of v2026.10.20 or newer; it is not there while a U30 Air's port is a
+USB host.
 
 ## Installing from Android with a Magisk zip (no computer)
 

@@ -20,7 +20,8 @@
     windows-source.tar.gz, and the tools that build the images take the subset from that file.
     Only the Linux region (or the SD card), the boot partition of the slot Android does not run from (boot_b, or
     boot_a when Android runs from b) and 32 bytes of misc are written; Android's boot partition, the GPT and
-    userdata stay untouched. With an SD card in the slot it asks where the Linux filesystem goes ($env:MU300_STORAGE =
+    userdata stay untouched. The one exception is asked for first and needs ERASE typed: where userdata fills the
+    disk (the 32 GB variant), the installer offers to shrink it, which rewrites the GPT and erases Android's data. With an SD card in the slot it asks where the Linux filesystem goes ($env:MU300_STORAGE =
     'internal' or 'sd' answers without asking).
     The VPN, when wanted, is the module of github.com/dikeckaan/mu300-linux-vpn: its latest release
     ($env:MU300_VPN_URL: another place with its files and SHA256SUMS; $env:MU300_VPN_MODULE: a copy on this computer).
@@ -214,13 +215,24 @@ function Die($m) { Write-Host ("`n" + (T 'ERROR:') + " $m") -ForegroundColor Red
 # it runs, names are case-insensitive, and with it called $Cmd, SuDo's { adb shell "su -c '$cmd'" } ran
 # `su -c '<the text of the block>'` - so "su does not work on the device" on every Windows machine (issue #4).
 function Quiet([scriptblock]$QuietBlock_) { $ErrorActionPreference = 'Continue'; & $QuietBlock_ 2>$null }
+# A device running MU300 Linux is an adb device too: adb is on by default there (FINDINGS 70), and its USB serial
+# number says which system answers: MU300LINUX-... in Linux (boot/init), the bare number in Android. It is never a
+# device to install to, and nothing else would stop it: "su -c id -u" says 0 there as well (the adb shell is root).
+# AndroidLines: the "adb devices -l" lines of the devices in Android that answer.
+function AndroidLines($lines) { @($lines | Where-Object { $_ -match '^\S+\s+device\b' -and $_ -notmatch '^MU300LINUX' }) }
+# LinuxAdbSerials: the serial numbers of the devices in Linux among them; -Open: only those that let this computer
+# in (state "device"; "unauthorized" is an adb that takes authorised keys only)
+function LinuxAdbSerials($lines, [switch]$Open) {
+    @($lines | Where-Object { $_ -match '^MU300LINUX\S*\s+\S+' -and (-not $Open -or $_ -match '^\S+\s+device\b') } |
+        ForEach-Object { ($_ -split '\s+')[0] })
+}
 # With more than one adb device attached (a phone, an emulator, a device over the network) every plain adb command
 # fails with "more than one device/emulator", which read as "no adb device". Pick the F50 and point adb at it with
 # ANDROID_SERIAL: the only device, else the only one that says it is an F50/MU300 or a U30 Air, else ask (-Quiet
 # never asks).
 function SelectDevice([switch]$Quiet) {
     if ($env:ANDROID_SERIAL) { return }
-    $all = @((Quiet { adb devices -l }) | Where-Object { $_ -match '^\S+\s+device\b' })
+    $all = @(AndroidLines (Quiet { adb devices -l }))
     if ($all.Count -eq 0) { return }
     $f50 = @($all | Where-Object { $_ -match 'model:F50|product:MU300|device:MU300|device:U30Air' })
     # the only adb device, and an F50/U30 Air: nothing to ask
@@ -243,7 +255,13 @@ function SelectDevice([switch]$Quiet) {
     $env:ANDROID_SERIAL = ($all[$n - 1] -split '\s+')[0]
 }
 # [string]: with no device adb prints nothing, and `-notmatch` on that empty result is falsy, not true
-function AdbState { SelectDevice -Quiet; [string](Quiet { adb get-state }) }
+# nothing either when the only adb devices are in Linux; "linux" when ANDROID_SERIAL names one of those
+function AdbState {
+    SelectDevice -Quiet
+    if ($env:ANDROID_SERIAL -like 'MU300LINUX*') { return 'linux' }
+    if (-not $env:ANDROID_SERIAL -and @(AndroidLines (Quiet { adb devices -l })).Count -eq 0) { return '' }
+    [string](Quiet { adb get-state })
+}
 function Ask($question, $default) {
     $a = if ($script:AnswerQueue) { NextAnswer $question } else { Read-Host "$question [$(T $default)]" }
     if ([string]::IsNullOrWhiteSpace($a)) { return $default } else { return (NormalizeAnswer $a.Trim()) }
@@ -431,19 +449,42 @@ if (-not $Check) {
 Quiet { adb start-server } | Out-Null
 # The device in Linux, and only a phone or tablet in Android: that is not the one to install to - offer to send the
 # device back to Android first
-$target = @((Quiet { adb devices -l }) | Where-Object { $_ -match '^\S+\s+device\b' -and $_ -match 'model:F50|product:MU300|device:MU300|device:U30Air' })
-$linuxFirst = (-not $env:ANDROID_SERIAL) -and $target.Count -eq 0 -and (LinuxRunning)
+# (ANDROID_SERIAL naming the device in Linux: that is the one to send back to Android, not one to work on)
+if ($env:ANDROID_SERIAL -like 'MU300LINUX*') { Remove-Item Env:ANDROID_SERIAL }
+$devs = @(Quiet { adb devices -l })
+$target = @(AndroidLines $devs | Where-Object { $_ -match 'model:F50|product:MU300|device:MU300|device:U30Air' })
+$linuxAdb = @(LinuxAdbSerials $devs)
+$linuxFirst = (-not $env:ANDROID_SERIAL) -and $target.Count -eq 0 -and ($linuxAdb.Count -gt 0 -or (LinuxRunning))
 if (-not $linuxFirst) { SelectDevice }
 if ($linuxFirst -or (AdbState) -notmatch 'device') {
-    # the device may be running MU300 Linux right now: then only SSH on the USB network answers
-    $linux = $linuxFirst -or (LinuxRunning)
+    # the device may be running MU300 Linux right now: then it is on the USB network (SSH) and, with adb on
+    # there, among the adb devices as MU300LINUX-...
+    $linux = $linuxFirst -or $linuxAdb.Count -gt 0 -or (LinuxRunning)
     if (-not $linux) { Die (T 'no adb device (boot Android, enable USB debugging)') }
     Say (T 'The device is running MU300 Linux, not Android')
     Write-Host ('  ' + (T 'Installing and uninstalling happen from Android, so the device has to reboot first.'))
     Write-Host ('  ' + (T 'I can ask it over SSH; you will be prompted for its password.'))
     if ((Ask (T 'Reboot the device into Android now? (yes/no)') 'yes') -ne 'yes') { Die (T 'boot Android yourself (on the device: sudo mu300-next-boot android && sudo reboot)') }
+    # Over adb where the Linux lets this computer in (every computer, by default): a root shell, no password to
+    # type, and it works where the USB network does not. The marker file first: only our Linux is told to reboot.
+    $gone = $false; $sshTried = $false
+    $open = @(LinuxAdbSerials (Quiet { adb devices -l }) -Open)
+    if ($open.Count -eq 1) {
+        $s = $open[0]
+        if (([string](Quiet { adb -s $s shell 'test -x /opt/mu300/bin/mu300-next-boot && echo mu300' })).Trim() -eq 'mu300') {
+            Write-Host ('  ' + (T 'asking it over adb ({1})' $s))
+            Quiet { adb -s $s shell '/opt/mu300/bin/mu300-next-boot android && sync && reboot' } | Out-Null
+            for ($i = 0; $i -lt 8; $i++) {
+                if (@(LinuxAdbSerials (Quiet { adb devices -l })) -notcontains $s) { $gone = $true; break }
+                Start-Sleep 5
+            }
+            if ($gone) { Write-Host ('  ' + (T 'rebooting')) }
+        }
+    }
     # -t: sudo needs a terminal to ask for the device password; reboot cuts the connection, so watch the port
     foreach ($u in 'ubuntu', 'root') {
+        if ($gone -or -not (LinuxRunning)) { break }
+        $sshTried = $true
         Write-Host ('  ' + (T '{1} - enter the device password when asked (Ctrl-C to skip)' "$u@$MU300_IP"))
         & ssh -t -o StrictHostKeyChecking=no -o UserKnownHostsFile=NUL -o LogLevel=ERROR -o ConnectTimeout=8 "$u@$MU300_IP" `
             'if [ "$(id -u)" = 0 ]; then S=; else S=sudo; fi; $S sh -c "/opt/mu300/bin/mu300-next-boot android && sync && reboot"'
@@ -454,6 +495,10 @@ if ($linuxFirst -or (AdbState) -notmatch 'device') {
         }
         if ($gone) { Write-Host ('  ' + (T 'rebooting')); break }
     }
+    # no way in at all: no SSH on this cable, and an adb that takes authorised keys only or would not reboot
+    if (-not $gone -and -not $sshTried -and @(LinuxAdbSerials (Quiet { adb devices -l })).Count -gt 0) {
+        Die (T 'boot Android yourself (on the device: sudo mu300-next-boot android && sudo reboot)')
+    }
     Write-Host ('  ' + (T 'waiting for Android'))
     for ($i = 0; $i -lt 60; $i++) {
         if ((AdbState) -match 'device') { break }
@@ -461,6 +506,10 @@ if ($linuxFirst -or (AdbState) -notmatch 'device') {
     }
     if ((AdbState) -notmatch 'device') { Die (T 'the device did not come back as Android; boot it yourself (mu300-next-boot android)') }
     Write-Host ('  ' + (T 'Android is up'))
+}
+# whatever its serial number says: a root shell of our Linux must never be taken for a rooted Android
+if (([string](Quiet { adb shell 'ls -d /opt/mu300/bin 2>/dev/null' })).Trim()) {
+    Die ((T 'The device is running MU300 Linux, not Android') + ': ' + (T 'boot Android yourself (on the device: sudo mu300-next-boot android && sudo reboot)'))
 }
 # an Android that is still starting answers adb before su and storage are ready: the pulls then failed
 for ($i = 0; $i -lt 60 -and (SuDo 'getprop sys.boot_completed') -ne '1'; $i++) {
@@ -517,13 +566,21 @@ Say (T 'Locating free eMMC space after the last partition')
 $parts = (SuDo 'e=0; for p in /sys/block/mmcblk0/mmcblk0p*; do x=$(( $(cat $p/start) + $(cat $p/size) )); [ $x -gt $e ] && e=$x; done; echo $e $(cat /sys/block/mmcblk0/size)').Split(' ')
 if ($parts.Count -ne 2) { Die (T 'could not read the partition table from the device (is su granted? try again)') }
 [int64]$lastEnd = $parts[0]; [int64]$disk = $parts[1]
-[int64]$start = [math]::Floor($lastEnd / 4096 + 1) * 4096
-[int64]$end = [math]::Floor(($disk - 34) / 4096 - 1) * 4096
-# A partition table that ends at the end of the eMMC (issue #65): the boundaries cross, and a negative size is not
-# a region but an empty one (the card is offered instead), whose start is never read (RegionOnDisk).
-if ($end -le $start) { $end = $start }
-[int64]$OFF = $start * 512
-[int64]$SIZE = ($end - $start) * 512
+# The free region behind the last partition, in sectors (tools/storage.sh's region_probe): from the first 4096-sector
+# (2 MiB) boundary behind the last partition - the next one even when the partition ends on one - to the last
+# boundary but one before the backup GPT. Each end gives up to one block away, so a partition table that ends at the
+# end of the eMMC (issues #32, #65) makes them cross: with userdata up to the last usable sector of the 64 GB eMMC
+# the start is the end of the disk and the end 4 MiB before it, the "-4 MiB" of issue #32. A negative size is not a
+# region but an empty one (the card is offered, or room is made), whose start is never read (RegionOnDisk).
+function FreeRegion([int64]$LastEnd, [int64]$Disk) {
+    [int64]$start = [math]::Floor($LastEnd / 4096 + 1) * 4096
+    [int64]$end = [math]::Floor(($Disk - 34) / 4096 - 1) * 4096
+    if ($end -le $start) { $end = $start }
+    return @{ Start = $start; End = $end }
+}
+$region = FreeRegion $lastEnd $disk
+[int64]$OFF = $region.Start * 512
+[int64]$SIZE = ($region.End - $region.Start) * 512
 function Gib([int64]$b) { '{0:N1} GiB' -f ($b / 1GB) }
 # Where the Linux filesystem goes (tools/storage.sh's choose_storage). The caller asks; an empty answer is the
 # default (StorageDefault): internal storage; the card when there is too little room inside (the way that needs no
@@ -615,6 +672,186 @@ function SdExisting {
     $l = (SuDo "dd if=$SD_DEV bs=1 skip=1144 count=16 2>/dev/null") -replace '\0', ''
     SdState $m $l
 }
+# ---------------------------------------------------------------- making room on a small eMMC (EXPERIMENTAL)
+# install.sh's offer_repartition, the same questions and the same commands on the device. userdata fills the disk on
+# the 32 GB variant, and on a 64 GB unit whose partition table a vendor firmware flash replaced (issue #32): there is
+# no gap behind it and nothing to install into. Space can be made by shrinking userdata, and only userdata: it is
+# the **last** partition, so its end moves and nothing else does - every other partition keeps its offset, and the
+# AVB descriptors and the boot chain stay valid. That is the entire safety argument, and it is why this refuses to
+# touch anything else: only the two copies of the partition table and the first 32 MiB of userdata are written, and
+# only the partition table is read.
+#
+# It is still the most dangerous thing this installer can do. It rewrites the partition table and it erases
+# everything in Android. Reported and first done by hand in issue #2; treat it as experimental.
+#
+# GptShow: the userdata entry from the lines of resize-last-partition.py --show, $null when one is missing.
+function GptShow([string[]]$Lines) {
+    $v = @{}
+    foreach ($l in @($Lines)) { if ("$l" -match '^(LAST_FIRST|LAST_END|USABLE_END)=([0-9]+)\s*$') { $v[$Matches[1]] = [int64]$Matches[2] } }
+    if ($v.Count -ne 3) { return $null }
+    return @{ First = $v['LAST_FIRST']; End = $v['LAST_END']; UsableEnd = $v['USABLE_END'] }
+}
+# RepartitionPlan: what userdata and Linux have to share, in sectors, and whether it can be split at all.
+function RepartitionPlan([int64]$First, [int64]$End, [int64]$UsableEnd) {
+    [int64]$total = $UsableEnd - $First + 1
+    [int64]$minAndroid = 4GB / 512      # below this Android has nowhere to put apps or updates
+    [int64]$minLinux = 800MB / 512      # OpenWrt alone, with room for one update
+    [int64]$missing = $minAndroid + $minLinux - $total
+    if ($missing -lt 0) { $missing = 0 }
+    return @{ Total = $total; MinAndroid = $minAndroid; MinLinux = $minLinux; MaxLinux = ($total - $minAndroid)
+        Free = ($UsableEnd - $End); Ok = (($total - $minAndroid) -ge $minLinux); Missing = $missing }
+}
+# RepartitionSectors: the answer to "How many GiB for Linux?" as sectors, a multiple of 4096 of them (2 MiB). State
+# is nan for anything but a number like 4 or 2.5 (written with a point in every language), small, large or ok.
+function RepartitionSectors([string]$Gib, [int64]$MinLinux, [int64]$MaxLinux) {
+    if ($Gib -notmatch '^([0-9]+\.?[0-9]*|\.[0-9]+)$') { return @{ State = 'nan'; Sectors = [int64]0 } }
+    $g = [double]::Parse($Gib, [Globalization.CultureInfo]::InvariantCulture)
+    if ($g -gt 1048576) { return @{ State = 'large'; Sectors = [int64]0 } }   # more than the numbers below hold
+    [int64]$s = [math]::Truncate($g * 1073741824 / 512)
+    $s = $s - ($s % 4096)
+    $state = if ($s -lt $MinLinux) { 'small' } elseif ($s -gt $MaxLinux) { 'large' } else { 'ok' }
+    return @{ State = $state; Sectors = $s }
+}
+# LayoutFigures: the numbers a refusal has to say (issue #32: "a different layout" alone identifies nothing) - the
+# eMMC, where its partitions end, what is free and what the smallest installation lacks; with the userdata entry
+# ($Info, GptShow) and its plan, userdata's own sectors and what a split lacks.
+function LayoutFigures([int64]$Disk, [int64]$LastEnd, [int64]$Size, $Info, $Plan) {
+    [int64]$need = 700MB
+    [int64]$short = $need - $Size
+    if ($short -lt 0) { $short = 0 }
+    $mib = { param([int64]$b) [int64][math]::Floor($b / 1MB) }
+    $up = { param([int64]$b) [int64][math]::Ceiling($b / 1MB) }
+    $lines = @((T 'eMMC: {1} ({2} sectors); the partitions end at sector {3}; free after them: {4} MiB' (Gib ($Disk * 512)) $Disk $LastEnd (& $mib $Size)))
+    $lines += (T 'needed behind the partitions: {1} MiB; missing: {2} MiB' (& $mib $need) (& $up $short))
+    if ($Info -and $Plan) {
+        $lines += (T 'userdata now:         {1} (sectors {2}..{3})' (Gib (($Info.End - $Info.First + 1) * 512)) $Info.First $Info.End)
+        $lines += (T 'to share by shrinking it: {1} MiB up to sector {2}; needed: {3} MiB ({4} MiB Android + {5} MiB Linux); missing: {6} MiB' (& $mib ($Plan.Total * 512)) $Info.UsableEnd (& $mib (($Plan.MinAndroid + $Plan.MinLinux) * 512)) (& $mib ($Plan.MinAndroid * 512)) (& $mib ($Plan.MinLinux * 512)) (& $up ($Plan.Missing * 512)))
+    }
+    return @($lines | ForEach-Object { "  $_" })
+}
+# resize-last-partition.py in $Dir with these arguments: its lines, what it refuses with among them, and its exit
+# code in $script:GptRc. It validates both GPT copies and every CRC before it says anything. Run from $Dir with file
+# names only: it takes "head,tail" apart at the comma, and a Windows path may hold one.
+function GptTool([string]$Dir, [string[]]$ToolArgs) {
+    $ErrorActionPreference = 'Continue'
+    $argv = @("$Top\tools\resize-last-partition.py") + $ToolArgs
+    $out = @()
+    Push-Location $Dir
+    try { $out = @(Python @argv 2>&1 | ForEach-Object { "$_" }); $script:GptRc = $LASTEXITCODE }
+    finally { Pop-Location }
+    return $out
+}
+# The partition table as the tool wants it: the first 34 sectors of the eMMC and the last 33, as $Prefix.head and
+# $Prefix.tail. A file from an earlier run never stands in for one that could not be read.
+function GptDump([int64]$Disk, [string]$Prefix) {
+    Remove-Item -Force "$Prefix.head", "$Prefix.tail" -ErrorAction SilentlyContinue
+    SuDoToFile 'dd if=/dev/block/mmcblk0 bs=512 count=34 2>/dev/null' "$Prefix.head"
+    SuDoToFile "dd if=/dev/block/mmcblk0 bs=512 skip=$($Disk - 33) count=33 2>/dev/null" "$Prefix.tail"
+    if (-not (Test-Path "$Prefix.head") -or -not (Test-Path "$Prefix.tail")) { return $false }
+    return ((Get-Item "$Prefix.head").Length -eq 34 * 512 -and (Get-Item "$Prefix.tail").Length -eq 33 * 512)
+}
+function OfferRepartition([int64]$Disk, [int64]$LastEnd, [int64]$Size) {
+    Say (T 'Not enough free space - this looks like the 32 GB variant')
+    $g = Join-Path $Work 'gpt'
+    New-Item -ItemType Directory -Force -Path $g | Out-Null
+    $report = T 'Please report the numbers above (eMMC size and where the partitions end); they identify the variant.'
+    $refused = T 'only {1} MiB of free space after the last partition: this device has a different layout, nothing is changed.' ([int64][math]::Floor($Size / 1MB))
+    if (-not (GptDump $Disk "$g\gpt")) {
+        Die ((@((T 'could not read the partition table')) + @(LayoutFigures $Disk $LastEnd $Size $null $null) + @($report)) -join "`n")
+    }
+
+    $shown = @(GptTool $g @('gpt.head,gpt.tail', '--disk-sectors', "$Disk", '--name', 'userdata', '--show'))
+    if ($script:GptRc -ne 0) {
+        # not a table this path knows (userdata is not the last partition, a CRC does not match, ...): the tool's
+        # reason, and the numbers
+        Die ((@($refused) + @($shown | ForEach-Object { "  $_" }) + @(LayoutFigures $Disk $LastEnd $Size $null $null) + @($report)) -join "`n")
+    }
+    $info = GptShow $shown
+    if (-not $info) {
+        Die ((@((T 'could not read the userdata entry from the partition table')) + @(LayoutFigures $Disk $LastEnd $Size $null $null) + @($report)) -join "`n")
+    }
+
+    $plan = RepartitionPlan $info.First $info.End $info.UsableEnd   # sectors that userdata and Linux have to share
+    if (-not $plan.Ok) {
+        Die ((@((T 'there is not enough room to split: {1} in total,' (Gib ($plan.Total * 512))), (T 'and Android needs at least {1} of it. Nothing is changed.' (Gib ($plan.MinAndroid * 512)))) + @(LayoutFigures $Disk $LastEnd $Size $info $plan)) -join "`n")
+    }
+
+    Write-Host ''
+    Write-Host "  eMMC:                 $(Gib ($Disk * 512))"
+    Write-Host ('  ' + (T 'userdata now:         {1} (sectors {2}..{3})' (Gib (($info.End - $info.First + 1) * 512)) $info.First $info.End))
+    Write-Host ('  ' + (T 'free behind it:       {1}' (Gib ($plan.Free * 512))))
+    Write-Host ('  ' + (T 'to share:             {1}' (Gib ($plan.Total * 512))))
+    Write-Host ''
+    Write-Host ('  ' + (T 'Linux needs at least  {1} (OpenWrt) / 1.6 GiB (Ubuntu) / 2.4 GiB (both)' (Gib ($plan.MinLinux * 512))))
+    Write-Host ('  ' + (T 'Android keeps at least {1}' (Gib ($plan.MinAndroid * 512))))
+    Write-Host ''
+    Write-Host ('  ' + (T 'THIS IS EXPERIMENTAL. It rewrites the partition table and ERASES everything in Android -'))
+    Write-Host ('  ' + (T 'apps, photos, accounts, settings. Take a full backup first:  sh tools/backup-device.sh'))
+    Write-Host ('  ' + (T 'Only userdata changes size; it is the last partition, so nothing else moves.'))
+    Write-Host ''
+    if ($Check) {
+        Write-Host ('  ' + (T '-Check writes nothing. Run the installer without it to make room.'))
+        return
+    }
+    if ((Ask (T 'Make room by shrinking userdata? (yes/no)') 'no') -ne 'yes') { Die (T 'nothing was changed.') }
+
+    while ($true) {
+        $lin = RepartitionSectors (Ask (T 'How many GiB for Linux? (the rest stays with Android)') '4') $plan.MinLinux $plan.MaxLinux
+        if ($lin.State -eq 'ok') { break }
+        if ($lin.State -eq 'nan') { Write-Host ('  ' + (T 'give a number, like 4 or 2.5')) }
+        elseif ($lin.State -eq 'small') { Write-Host ('  ' + (T 'too small: Linux needs at least {1}' (Gib ($plan.MinLinux * 512)))) }
+        else { Write-Host ('  ' + (T 'too large: Android would be left with less than {1}' (Gib ($plan.MinAndroid * 512)))) }
+    }
+    [int64]$newEnd = $info.UsableEnd - $lin.Sectors
+    Write-Host ''
+    Write-Host ('  ' + (T 'userdata (Android):   {1}' (Gib (($newEnd - $info.First + 1) * 512))))
+    Write-Host ('  ' + (T 'Linux region:         {1}' (Gib ($lin.Sectors * 512))))
+    Write-Host ''
+    # the word itself, in capitals, in every language
+    if ((Ask (T 'Type ERASE to rewrite the partition table and wipe Android''s data') '') -cne 'ERASE') { Die (T 'nothing was changed.') }
+
+    Say (T 'Rewriting the partition table')
+    Remove-Item -Force "$g\new.head", "$g\new.tail" -ErrorAction SilentlyContinue
+    GptTool $g @('gpt.head,gpt.tail', '--disk-sectors', "$Disk", '--name', 'userdata', '--end-sector', "$newEnd", '--out', 'new') | ForEach-Object { Write-Host "  $_" }
+    $made = $script:GptRc -eq 0 -and (Test-Path "$g\new.head") -and (Test-Path "$g\new.tail")
+    if ($made) { $made = (Get-Item "$g\new.head").Length -eq 34 * 512 -and (Get-Item "$g\new.tail").Length -eq 33 * 512 }
+    if (-not $made) { Die (T 'the resize was refused; nothing is changed') }
+    # What goes into the partition table is what the tool made, byte for byte: a push that failed or stopped halfway
+    # leaves no file or a short one on the device, and dd would write that (install.sh does not look).
+    foreach ($n in 'head', 'tail') {
+        Quiet { adb push "$g\new.$n" "$T/new.$n" } | Out-Null
+        $sum = (([string](SuDo "sha256sum $T/new.$n")).Trim() -split '\s+')[0]
+        if ($sum -ne (Get-FileHash "$g\new.$n" -Algorithm SHA256).Hash.ToLower()) {
+            SuDo "rm -f $T/new.head $T/new.tail" | Out-Null
+            Die (T 'the new partition table did not arrive on the device as it was made; nothing is changed')
+        }
+    }
+    # the backup copy first: if power is lost between the two, the primary is still the old table and the
+    # device boots, which is the recoverable order
+    SuDo "dd if=$T/new.tail of=/dev/block/mmcblk0 bs=512 seek=$($Disk - 33) conv=fsync 2>/dev/null" | Out-Null
+    SuDo "dd if=$T/new.head of=/dev/block/mmcblk0 bs=512 conv=fsync 2>/dev/null" | Out-Null
+    SuDo "sync; rm -f $T/new.head $T/new.tail" | Out-Null
+
+    Say (T 'Verifying')
+    $null = GptDump $Disk "$g\after"
+    $after = GptShow @(GptTool $g @('after.head,after.tail', '--disk-sectors', "$Disk", '--name', 'userdata', '--show'))
+    if ($script:GptRc -ne 0 -or -not $after) {
+        Die ((T 'the table on the device does not read back as valid GPT.') + "`n" + (T 'The backup copy at the end of the disk was written first, so Android''s own repair may still fix this. Do not power off.'))
+    }
+    if ($after.End -ne $newEnd) { Die (T 'the table did not take (userdata still ends at {1}). Nothing else was changed.' $after.End) }
+    Write-Host ('  ' + (T 'userdata now ends at sector {1}' $after.End))
+
+    # Android cannot mount a filesystem that claims to be larger than its partition; clearing the superblocks
+    # is what makes it format /data cleanly on the next boot instead of bootlooping on a repair attempt.
+    Say (T 'Clearing Android''s data filesystem so it is recreated on the next boot')
+    SuDo 'dd if=/dev/zero of=/dev/block/by-name/userdata bs=1M count=32 conv=fsync 2>/dev/null' | Out-Null
+
+    Say (T 'Done - the device has to reboot before the new layout is visible')
+    Write-Host ('  ' + (T 'Android will set up its data partition again on this boot, which takes a few minutes.'))
+    Write-Host ('  ' + (T 'When it is back, run this installer again and it will find the free space.'))
+    if ((Ask (T 'Reboot now? (yes/no)') 'yes') -eq 'yes') { Quiet { adb reboot } | Out-Null }
+}
+
 # What each choice needs: the installed systems measure ~320 MiB (OpenWrt) and ~580 MiB (Ubuntu), and an update
 # keeps the previous one as <os>.old while the new one is unpacked, so allow for two of each plus working room.
 [int64]$NEED_OPENWRT = 800MB; [int64]$NEED_UBUNTU = 1600MB; [int64]$NEED_BOTH = 2400MB
@@ -669,8 +906,8 @@ if ($SD_MODE -eq 0 -and $SIZE -lt 700MB) {
         Write-Host ("`n" + (T 'Nothing was written. Android version: {1}' (SuDo 'getprop ro.build.display.id')))
         exit 0
     }
-    $mib = [int64]($SIZE / 1MB)
-    Die ((T 'only {1} MiB of free space after the last partition: this device has a different layout, nothing is changed.' $mib) + "`n" + (T 'Please report the numbers above (eMMC size and where the partitions end); they identify the variant.'))
+    OfferRepartition $disk $lastEnd $SIZE   # installs nothing: it refuses, or makes room for a second pass
+    exit 0
 }
 
 # Whether the ext4 superblock of a region at BYTES (its second KiB) lies on the eMMC. A read past the end of the disk
@@ -819,10 +1056,12 @@ $vx = Ask (T 'Install the VPN module (about 40 MB more to download, 120 MB on th
 if ($vx -ne 'yes' -and $vpnKs.Count -gt 0) {
     Die (T 'The VPN is on with its kill switch in {1}: an update without the VPN module would leave it to nothing. Answer yes to install the module, or turn the VPN off there first (ENABLE=0 in /etc/mu300/vpn.conf).' ($vpnKs -join ' '))
 }
-# adb over USB to Linux (mu300-usb adb on|off on the device): off unless wanted; this computer's adb key, which the
-# installer runs with anyway, is the one authorised. Whoever has an authorised key gets a root shell.
+# adb over USB to Linux is on in every system and lets every computer in, with a root shell and no password (the
+# owner's decision of 2026-10-13, FINDINGS 70; on the device: mu300-usb adb auth open|keys, mu300-usb adb off). The
+# one thing to choose here is to close it to all but this computer from the first boot on: its adb key, which the
+# installer runs with anyway, is then the one authorised, and adb takes authorised keys only.
 $ADB = 0; $ADB_KEY = ''
-if ((Ask (T 'Allow adb (adb shell, push, pull) to Linux over USB from this computer? Its adb key (~/.android/adbkey.pub) gets a root shell (yes/no)') 'no') -eq 'yes') {
+if ((Ask (T "adb to Linux over USB is on and lets every computer in: a root shell without a password for anyone who plugs in a cable. Let in only this computer's adb key (~/.android/adbkey.pub) instead? (yes/no)") 'no') -eq 'yes') {
     $adbHome = if ($env:ANDROID_USER_HOME) { $env:ANDROID_USER_HOME } else { Join-Path $HOME '.android' }
     $ADB_KEY = AdbPubKey (Join-Path $adbHome 'adbkey.pub')
     if (-not $ADB_KEY) { Die (T 'no adb key of this computer to authorise ({1})' (Join-Path $adbHome 'adbkey.pub')) }
@@ -1028,7 +1267,7 @@ Write-Host ('  ' + (T 'systems:        {1} (boots: {2})' $sysText $BOOT_OS))
 Write-Host ('  ' + (T 'kernel:         {1}' "$KERNEL$(if ($KMAIN) { " (mainline, $((Get-Content "$KMAIN\kernel.release").Trim()))" })"))
 $extras = @($(if ($EXTRA_VPN) { 'vpn' }), $(if ($EXTRA_PANEL) { 'panel' }) | Where-Object { $_ })
 Write-Host ('  ' + (T 'extras:         {1}' $(if ($extras.Count -gt 0) { $extras -join ' ' } else { T 'none' })))
-Write-Host ('  ' + (T 'adb to Linux:   {1}' $(if ($ADB -eq 1) { T 'on, for this computer' } else { T 'off' })))
+Write-Host ('  ' + (T 'adb to Linux:   {1}' $(if ($ADB -eq 1) { T 'on, only for the adb key of this computer' } else { T 'on, for every computer: a root shell without a password (on the device: mu300-usb adb auth keys, or mu300-usb adb off)' })))
 Write-Host ('  ' + (T 'default boot:   {1}' $(if ($DEFAULT_LINUX -eq 1) { T 'Linux (Android after {1} failed boots in a row)' $BOOT_ATTEMPTS } else { T 'Android, Linux on demand' })))
 $fsText = if ($FORMAT -eq 0) { T 'keep existing' } elseif ($SD_MODE -eq 1) { T 'CREATE new ext4 (erases the SD card)' } else { T 'CREATE new ext4 (erases the Linux region)' }
 Write-Host ('  ' + (T 'filesystem:     {1}' $fsText))

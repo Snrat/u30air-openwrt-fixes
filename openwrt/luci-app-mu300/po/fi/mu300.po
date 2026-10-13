@@ -580,6 +580,9 @@ msgstr "Tallennettu: %s"
 msgid "Remove the saved value"
 msgstr "Poista tallennettu arvo"
 
+msgid "Presets"
+msgstr "Esiasetukset"
+
 msgid "Received messages are sent on as they reach the SMS pool. A failed delivery is retried after 30 s, then after twice as long each time (an hour at most), ten times in all."
 msgstr "Vastaanotetut viestit lähetetään edelleen heti, kun ne saapuvat SMS-pooliin. Epäonnistunut toimitus yritetään uudelleen 30 s kuluttua ja sen jälkeen aina kaksinkertaisen ajan päästä (enintään tunti), yhteensä kymmenen kertaa."
 
@@ -636,6 +639,12 @@ msgstr "Tyhjä: vakiokentät (pelkkä teksti: viesti). Paikkamerkit: {sender}, {
 
 msgid "Extra headers (one \"Name: value\" per line)"
 msgstr "Lisäotsakkeet (yksi \"Nimi: arvo\" riviä kohden)"
+
+msgid "The answer must contain"
+msgstr "Vastauksessa on oltava"
+
+msgid "Empty: every HTTP 2xx answer counts as delivered. With key=value (for example errcode=0), the answer must also be a JSON object that has this value under this key at its top level; otherwise the delivery fails. Only the result of the check is logged, never the answer."
+msgstr "Tyhjä: jokainen HTTP 2xx -vastaus lasketaan toimitetuksi. Kun annetaan avain=arvo (esimerkiksi errcode=0), vastauksen on lisäksi oltava JSON-objekti, jonka ylimmällä tasolla tällä avaimella on tämä arvo; muuten toimitus epäonnistuu. Lokiin kirjataan vain tarkistuksen tulos, ei koskaan vastausta."
 
 msgid "Bot token"
 msgstr "Botin tunnus"
@@ -702,6 +711,9 @@ msgstr "Suodatettu pois"
 
 msgid "Dropped"
 msgstr "Hylätty"
+
+msgid "Clear"
+msgstr "Tyhjennä"
 
 msgid "Test"
 msgstr "Testi"
@@ -1804,9 +1816,6 @@ msgstr "Tyhjennä paikallinen SMS-varasto"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
 msgstr "Vain paikalliset tiedostot poistetaan; SIM-kortin viestit säilyvät."
-
-msgid "Clear"
-msgstr "Tyhjennä"
 
 msgid "Delete this SMS"
 msgstr "Poista tämä SMS"
@@ -3074,6 +3083,9 @@ msgstr "Webhookin osoitteen on oltava http://- tai https://-URL"
 msgid "The webhook body is too long or contains a control character"
 msgstr "Webhookin runko on liian pitkä tai sisältää ohjausmerkin"
 
+msgid "The answer check must be key=value, like errcode=0 or ok=true (the value a whole number or lowercase letters, 16 at most)"
+msgstr "Vastauksen tarkistuksen on oltava muotoa avain=arvo, kuten errcode=0 tai ok=true (arvo kokonaisluku tai pieniä kirjaimia, enintään 16)"
+
 msgid "Invalid header (one \"Name: value\" per line; Host, Content-Type, Content-Length, Transfer-Encoding and Connection are set by the device)"
 msgstr "Virheellinen otsake (yksi \"Nimi: arvo\" riviä kohden; laite asettaa Host-, Content-Type-, Content-Length-, Transfer-Encoding- ja Connection-otsakkeet)"
 
@@ -3103,6 +3115,12 @@ msgstr "Edelleenlähetyksen asetuksia ei voitu tallentaa"
 
 msgid "SMS forwarding is not installed"
 msgstr "Tekstiviestien edelleenlähetystä ei ole asennettu"
+
+msgid "A test was started a moment ago; wait a few seconds"
+msgstr "Testi käynnistettiin hetki sitten; odota muutama sekunti"
+
+msgid "The delivery log could not be cleared"
+msgstr "Toimituslokia ei voitu tyhjentää"
 
 msgid "Unknown forwarding operation"
 msgstr "Tuntematon edelleenlähetyksen toiminto"

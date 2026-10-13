@@ -103,7 +103,8 @@ python3 boot/build-boot-image.py --stock-boot dumps/boot_a.img --misc-head dumps
 cid=$(docker create mu300-ubuntu:24.04); docker export $cid > rootfs/base.tar; docker rm $cid
 # the VPN is not part of the image: it is the module of github.com/dikeckaan/mu300-linux-vpn (built there with
 # tools/make-module.sh); on the device: sudo mu300-extra install vpn [--from mu300-linux-vpn.tar.gz]
-# adbd (adb over USB to Linux, mu300-usb adb on): static aarch64, a couple of minutes; optional
+# adbd (adb over USB to Linux, on by default: mu300-usb adb): static aarch64, a couple of minutes; without it the
+# image has no adb
 sh tools/adbd/build.sh tools/adbd/adbd
 docker run --rm -v "$PWD/rootfs":/w -v "$PWD/out/modules":/kmods:ro -v "$PWD/out":/kout:ro \
   -v "$PWD/firmware":/firmware:ro -v "$PWD/android-subset":/android-subset:ro -v "$PWD/tools/logdw/logdw":/logdw:ro \

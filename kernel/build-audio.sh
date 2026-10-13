@@ -68,6 +68,19 @@ if ! grep -q dummy_on_defer $A/sprd/machine/sprd_card/sprd-asoc-card-utils.c; th
     find $A/sprd/machine/sprd_card -name "*.o" -delete 2>/dev/null || true
     rm -f $A/sprd/machine/sprd_card/*.ko
 fi
+# Three fixes from the Rongyue E5 port of the same drivers (kanoqwq/e5-linux, same SoC family, measured there):
+# period events from an hrtimer because the AGCP DMA interrupt never arrives, no DMA position read while the
+# AGCP domain is asleep, and the DSP front ends offered only the formats and layouts the DSP takes.
+for p in audio-pcm-period-timer:sprd_pcm_period_tick:sprd/platform/dmaengine_pcm \
+         audio-pcm-pointer-agcp-access:last_pointer:sprd/platform/dmaengine_pcm \
+         audio-fe-dai-formats:fe_dai_uses_mcdt:sprd/dai/vbc/v4/fe_dai; do
+    name=${p%%:*}; rest=${p#*:}; mark=${rest%%:*}; dir=${rest#*:}
+    if ! grep -rq "$mark" $A/$dir; then
+        (cd $A && patch -p1 -s -f < /work/patches/$name.patch)
+        find $A/$dir $A/sprd_audio/agdsp_access -name "*.o" -delete 2>/dev/null || true
+        rm -f $A/$dir/*.ko $A/sprd_audio/agdsp_access/*.ko
+    fi
+done
 cd /src/zte-u30air
 
 # headers these Kbuilds include by name without putting the directory on their own path

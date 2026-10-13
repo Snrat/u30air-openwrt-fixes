@@ -580,6 +580,9 @@ msgstr "Tersimpan: %s"
 msgid "Remove the saved value"
 msgstr "Hapus nilai yang tersimpan"
 
+msgid "Presets"
+msgstr "Prasetel"
+
 msgid "Received messages are sent on as they reach the SMS pool. A failed delivery is retried after 30 s, then after twice as long each time (an hour at most), ten times in all."
 msgstr "Pesan yang diterima diteruskan begitu sampai di pool SMS. Pengiriman yang gagal dicoba lagi setelah 30 dtk, lalu setiap kali setelah waktu dua kali lebih lama (paling lama satu jam), sepuluh kali seluruhnya."
 
@@ -636,6 +639,12 @@ msgstr "Kosong: bidang standar (teks biasa: pesannya). Placeholder: {sender}, {t
 
 msgid "Extra headers (one \"Name: value\" per line)"
 msgstr "Header tambahan (satu \"Nama: nilai\" per baris)"
+
+msgid "The answer must contain"
+msgstr "Jawaban harus memuat"
+
+msgid "Empty: every HTTP 2xx answer counts as delivered. With key=value (for example errcode=0), the answer must also be a JSON object that has this value under this key at its top level; otherwise the delivery fails. Only the result of the check is logged, never the answer."
+msgstr "Kosong: setiap jawaban HTTP 2xx dihitung sebagai terkirim. Dengan kunci=nilai (misalnya errcode=0), jawaban juga harus berupa objek JSON yang memiliki nilai ini di bawah kunci ini pada tingkat teratasnya; jika tidak, pengiriman gagal. Hanya hasil pemeriksaan yang dicatat, jawabannya tidak pernah."
 
 msgid "Bot token"
 msgstr "Token bot"
@@ -702,6 +711,9 @@ msgstr "Tersaring"
 
 msgid "Dropped"
 msgstr "Dibuang"
+
+msgid "Clear"
+msgstr "Kosongkan"
 
 msgid "Test"
 msgstr "Uji"
@@ -1804,9 +1816,6 @@ msgstr "Kosongkan pool SMS lokal"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
 msgstr "Hanya berkas lokal yang akan dihapus; pesan di SIM tetap ada."
-
-msgid "Clear"
-msgstr "Kosongkan"
 
 msgid "Delete this SMS"
 msgstr "Hapus SMS ini"
@@ -3074,6 +3083,9 @@ msgstr "Alamat webhook harus berupa URL http:// atau https://"
 msgid "The webhook body is too long or contains a control character"
 msgstr "Isi webhook terlalu panjang atau mengandung karakter kontrol"
 
+msgid "The answer check must be key=value, like errcode=0 or ok=true (the value a whole number or lowercase letters, 16 at most)"
+msgstr "Pemeriksaan jawaban harus berbentuk kunci=nilai, seperti errcode=0 atau ok=true (nilainya bilangan bulat atau huruf kecil, paling banyak 16)"
+
 msgid "Invalid header (one \"Name: value\" per line; Host, Content-Type, Content-Length, Transfer-Encoding and Connection are set by the device)"
 msgstr "Header tidak valid (satu \"Nama: nilai\" per baris; Host, Content-Type, Content-Length, Transfer-Encoding, dan Connection diatur oleh perangkat)"
 
@@ -3103,6 +3115,12 @@ msgstr "Pengaturan penerusan tidak dapat disimpan"
 
 msgid "SMS forwarding is not installed"
 msgstr "Penerusan SMS tidak terpasang"
+
+msgid "A test was started a moment ago; wait a few seconds"
+msgstr "Sebuah uji baru saja dimulai; tunggu beberapa detik"
+
+msgid "The delivery log could not be cleared"
+msgstr "Log pengiriman tidak dapat dikosongkan"
 
 msgid "Unknown forwarding operation"
 msgstr "Operasi penerusan tidak dikenal"

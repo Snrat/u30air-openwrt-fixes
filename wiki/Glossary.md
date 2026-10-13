@@ -58,7 +58,7 @@ Every word in plain language first, then what it means for this device. Grouped 
 
 **Magisk:** A popular tool that gives Android root and can install "modules". *Here:* the installer adds a module whose Action button (or `su -c mu300-linux`) starts Linux; releases also ship Magisk zips that install Linux from the device.
 
-**adb:** Android Debug Bridge, a computer program that talks to an Android device over USB. *Here:* the installer uses it; from v2026.10.20 Linux can offer it too (`sudo mu300-usb adb on`, off by default, only for computers whose key you authorised).
+**adb:** Android Debug Bridge, a computer program that talks to an Android device over USB. *Here:* the installer uses it; Linux offers it too, on by default and for every computer, with a root shell and no password (`sudo mu300-usb adb auth keys` lets in only computers whose key you authorised, `sudo mu300-usb adb off` turns it off).
 
 **USB debugging:** The Android setting that lets `adb` connect. *Here:* must be on.
 

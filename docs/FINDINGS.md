@@ -61,6 +61,7 @@ what replaced it. The table below gives each section's state.
 | 30 | Installer notes | current |
 | 24 | No internal audio hardware | open |
 | 24b | A second board, from a clean install: where the stall actually is | open |
+| 24c | What the Rongyue E5 (kanoqwq/e5-linux) did, and what of it applies here | ported; untested with firmware |
 | 25 | SC2355 Bluetooth on BlueZ | current |
 | 31 | Ubuntu on 6.18, and what it takes | current (kernel now 6.18.56) |
 | 31a | Wi-Fi RX: sync_for_device stopped invalidating | current |
@@ -107,7 +108,7 @@ what replaced it. The table below gives each section's state.
 | 40 | One stuck AT command wedged the control panel; a second per AT command on OpenWrt | current (fixed) |
 | 41 | The vendor daemons' own account | current |
 | 42 | No access point on a DFS channel (user report, 2026-10-11) | current |
-| 43 | adb over USB to Linux: adbd in the gadget, and what FunctionFS does to the rest of it | current |
+| 43 | adb over USB to Linux: adbd in the gadget, and what FunctionFS does to the rest of it | current; the default (off) and who is let in (keys only): superseded by §70 |
 | 44 | Network namespaces on 5.4: the vendor's fragment sysctl, torn down by the wrong namespace (#103) | current (fixed) |
 | 45 | `rmmod sprd_wlan_combo` panicked in `__run_timers` (issue #146) | current (fixed) |
 | 46 | SMS sends failed with IMS "Busy Everywhere" until the SMSC was written back; the panel lost slow sends (#176) | current (fixed) |
@@ -121,7 +122,16 @@ what replaced it. The table below gives each section's state.
 | 54 | A webhook body of the user's own for SMS forwarding: values escaped for the type, never evaluated (#171) | current (unit tests; not sent from a device to a real service) |
 | 55 | Imported Android files nobody but root could read: the CP was never loaded (#127, #135, #170) | current (fixed; what differed between #170's boots is not known) |
 | 56 | The VPN page showed a refused config without its reason; the engines' own defects are in the VPN module's FINDINGS 26i-26m | current (fixed; measured on the U30 Air) |
-| 57 | The U30 Air's second SIM: hardware facts and the reconciled selector behind PR #73/#166 | current (U30 Air, OpenWrt 25.12.5/7.2.9; other kernels untested) |
+| 57 | A 64 GB unit whose partition table has `userdata` filling the disk, and no way to make room from Windows (#32) | current (fixed; unit tests against a table built from #9's figures, not measured on a device) |
+| 58 | A service's own error in an HTTP 200 answer to the SMS webhook: a KEY=VALUE check of the answer; a button that clears the delivery log (#171) | current (unit tests; measured on the U30 Air against a fake webhook, not against the real services) |
+| 60 | `/run` takes files from every user: the daemons' directories there are checked, and a squatted name is put out of the way (review of #145/#149) | current (fixed for mu300-atd and mu300-voice, F50-B on 5.4 and 7.2.10); `/run` itself is still 1777 |
+| 63 | A reused SMS reference number mixed long messages, or kept them from ever being joined; a part delivered again | current (fixed; unit tests only, not measured on a device) |
+| 64 | An update dropped the panel's saved locks (`/etc/unisoc-modem`) | current (fixed; unit tests only, not reproduced on a device) |
+| 65 | An APN with a user name and a password (`AT+CGPCO`), and what else kanoqwq's APN page does | current (unit tests only; never sent to a modem) |
+| 66 | The OpenWrt image build tries a package download again | current (unit tests only; no image built with it) |
+| 70 | adb to Linux on by default and open to every computer: the owner's decision, the exposure, and the state that decides it | current (unit tests; nothing of it measured on a device: the checklist is in the section) |
+
+| 81 | The U30 Air's second SIM: hardware facts and the reconciled selector behind PR #73/#166 | current (U30 Air, OpenWrt 25.12.5/7.2.9; other kernels untested) |
 
 ## Hardware and firmware facts
 
@@ -262,8 +272,8 @@ Asked for often, because a smaller eMMC variant leaves less free space behind `u
   * Why only `userdata`: it is the **last** partition, so its end moves and nothing else does. Every other
     partition keeps its offset and the AVB descriptors and the boot chain stay valid. That is the entire
     safety argument, and it does not transfer to any other partition on these devices.
-  * `install.sh` offers it when there is no room, asks how many GiB to give Linux and keeps at least 4 GiB for
-    Android and 800 MiB for Linux, and requires ERASE to be typed. `uninstall.sh` offers to grow it back, off
+  * `install.sh` (and `install.ps1`, #57) offers it when there is no room, asks how many GiB to give Linux and
+    keeps at least 4 GiB for Android and 800 MiB for Linux, and requires ERASE to be typed. `uninstall.sh` offers to grow it back, off
     by default because on the 64 GB variant that would hand the factory gap to Android.
     `tools/resize-last-partition.py` does the edit: it validates both GPT copies and every CRC first, refuses
     if the named partition is not the last one, and re-reads what it produced before handing it over. The
@@ -1671,6 +1681,81 @@ offset directly from the AP at `0x56510000 + 0xe7c` - outside the 1 KiB AP VBC w
 drops off USB and the network. To change a DSP-side register, write `"<reg> <val>"` in hex to that proc file
 instead (`vbc_proc_write` -> `dsp_vbc_reg_write`, e.g. `echo 1700eb0 1`); never map it from the AP.
 
+### 24c. What the Rongyue E5 (kanoqwq/e5-linux) did, and what of it applies here
+kano's [e5-linux](https://github.com/kanoqwq/e5-linux) (MIT) runs Linux on the Rongyue E5, a UMS9621 handset with the
+same AGDSP, VBC v4, MCDT and UMP9620 codec drivers. It started from this project's bring-up (its `e5-audio-dsp` is
+`mu300-audio-dsp` adapted) and got further: the speaker plays (2026-09-25), the microphone records, and a cellular
+call's downlink was heard on the receiver and the speaker (2026-10-02, e5-linux FINDINGS 55). Read against 24 and
+24b, the differences fall in three groups.
+
+**The board, which does not carry over.** The E5 has its own AGDSP image (`l_agdsp_a`, mmcblk0p26, header
+`SharkL5_AUDCP_2023Y_VER_3029`) and a complete device tree (`memory-region` present), a speaker behind an aw87xxx,
+an earpiece and microphones. Its audible call goes DSP -> codec DAC0 -> receiver / AO; this board has nothing on the
+codec, so that output does not exist here.
+
+**The kernel, which does.** Five of its 5.15 patches touch the same drivers this project builds for 5.4, and the
+symptoms they fix are the ones in 24:
+* `0013` period events from an hrtimer. The E5 measured what 24 measured - both `sprd_dma` lines at 0 for a whole
+  stream, with or without the DSP - and concluded that nothing will ever call `snd_pcm_period_elapsed()`: the
+  completion interrupt is the DSP's or nobody's. Its answer is the one Android's HAL gets by opening with
+  `PCM_NOIRQ`: program the DMA without interrupts and tick the period from a timer.
+  `kernel/patches/audio-pcm-period-timer.patch`.
+* `0016` the position read only while `agdsp_can_access()` says the AGCP domain is reachable - the bus hang of 24,
+  hit on the E5 after six idle hours. `audio-pcm-pointer-agcp-access.patch`.
+* `0017`, `0019`, `0020` the DSP front ends limited to S16_LE where the DSP writes S16 whatever was asked, and to
+  interleaved access on every MCDT front end. `audio-fe-dai-formats.patch`.
+`kernel/build-audio.sh` applies all three; the 23 modules build with them (2026-10-11). Its other patches are E5
+board matters (aw87xxx, a headset IMPD oops, the agdsp_pd module order of its tree, which is built in here).
+
+Its notes also contradict one line of 24: there `agdsp_access_en` "changed nothing"; on the E5 it is the control
+that turned "the DMA runs one burst and stops" into "the VBC FIFO drains" (e5-linux FINDINGS 24.2), with
+`VBC DAC0 DG Set` non-zero (Linux leaves it 0, which is digital silence). With the period timer both need
+re-measuring here before either reading is trusted.
+
+**The call sequence, which does.** What the E5 changed between "both PCMs RUNNING, silence" and "heard" (`402fde1`,
+`8e9b8a4`, `2c726fc`), against what `mu300-voice` did:
+
+| | mu300-voice until now | e5-linux |
+|---|---|---|
+| call scene | `FE_VOICE` playback only, 16 kHz | `FE_ST_VOICE` playback **and** capture, 8 kHz mono, both prepared before either starts |
+| profile select | `(mode << 24) \| (0x5e << 16)`, through amixer | `(mode << 24) \| (mode << 16) \| 5` (param id = mode, low byte the voice DAI), raw, before and after the start |
+| voice volume | not set | `VBC_VOLUME` = volume + 1, raw (the control declares max -1, amixer clamps) |
+| downlink mute | not touched | `VBC_DL_MUTE` enable during routing, then `VBC DAC1 DSP MDG` 0,1024 and `VBC_DL_MUTE` disable after the start - the change that made it audible |
+| bandwidth | none | `/dev/audio_pipe_voice` command 0 channel 2 gives NB/WB/SWB/FB; the profile follows it |
+
+Two of these are bugs here on their own: amixer clamps every profile select from mode 16 up - the Bluetooth modes
+(BTHS, 28 and up) included - to `0x0fffffff`, and a capture-less scene leaves the DSP without an uplink, which is
+the VoLTE ~20 s drop of 24b. `mu300-voice audio start` now does the E5's sequence; the undo log puts every control
+back on `audio stop`.
+
+**Bluetooth, which is the output this board has.** kano reports that the F50 under Android, with the AGDSP image of
+a ZTE Voyage 41S (the donor of 24), connects a Bluetooth headset and carries calls on it. That fits: this board's
+PSKey has `g_sys_sco_transmit_mode = 0`, and on the E5's identical controller mode 0 sends SCO audio over the
+controller's PCM pins into VBC IIS3, not over HCI (e5-linux FINDINGS 58-59: no HCI SCO RX, nonzero samples on the
+IIS3 capture once the pin matrix was switched). The vendor route (`audio_route.xml`, `bt_sco` and `btsco_p/_c`)
+is `SYS_IIS0 = vbc_iis3`, `S_VOICE_P_BT` / `S_VOICE_C_BT`, `VBC_SRC_BT_DAC/ADC`, and the E5 found the BT rate must
+be set again after the scene is RUNNING. Two of its findings matter here: on mainline `SYS_IIS0` was a no-op without
+the pin controller (the 5.4 kernel has `pinctrl-sprd-qogirn6pro`), and BlueZ's own SCO path stays silent with this
+PSKey, so the AP must not try to carry SCO audio itself.
+
+What a call on a headset needs from the AP is therefore only the links: the DSP scene (`mu300-voice audio start bt`)
+and an HFP audio gateway holding the service level connection and the SCO link. BlueZ has no AG of its own (oFono
+would want the modem), so `tools/hfp` (`mu300-hfp`) is a minimal one on raw kernel sockets: it connects to the paired
+headset, answers the AT setup, opens CVSD SCO when told, and turns the headset's buttons into `ATA` / `AT+CHUP`.
+`mu300-voice watch` follows `AT+CLCC` and drives both. The AGDSP image stays the user's to supply:
+`mu300-audio-dsp install FILE` checks size and the `AUDCP` header and records the sha256 on the device.
+
+Not measured yet, for want of the firmware on any test board: whether the 41S image runs the BT call scene under
+Linux, and whether the period timer moves `FE_VOICE_PCM_P` / `FE_VOICE_C`.
+
+2026-10-13, against v2026.10.23: the seven audio patches apply to the pristine realme tree in `build-audio.sh`'s
+order and all 23 modules build against the 5.4 tree (`sprd-dmaengine-pcm` with its `period_timer` parameter); they
+were not loaded on a board - the released 5.4 kernel has no audio modules, and no test board has the firmware. On
+F50-B the userspace was run on the released 5.4 and on 7.2.10: without the drivers `mu300-voice` says that this
+kernel has no call audio (it used to say "run mu300-audio-dsp load", which cannot work there), `mu300-hfp` refuses
+an address that is not bonded, and nothing is left running. The call itself, on a headset or through the taps, is
+still unmeasured.
+
 ## Bluetooth
 
 ### 25. SC2355 Bluetooth on BlueZ
@@ -2818,6 +2903,72 @@ sets `I2C_NACK_EN | I2C_TRANS_EN` in I2C_CTL where mainline sets `I2C_EN | I2C_I
 On our (SSV) unit the pin controller must change nothing: the log shows the pads' state, and the fixup only writes
 when the function select is not func1.
 
+The reporter's boot of that kernel settled the pads: SCL6/SDA6 were on func1 already (`ctl 0x00000000 (func1) misc
+0x00083088, iic_inf6_sel 6` for both), the four clients `6-0030`, `6-0034`, `6-0063`, `6-006b` exist, and the
+charger still fails its first read (`no charger: -5`). So the pads are not the difference.
+
+**What reading ZTE's charger driver gives instead: the chip may not be at 0x6b at all.** The U30 Air's 5.4 kernel
+builds `drivers/vendor/common/sqc_v8/sqc_bq2560x.c` (`CONFIG_VENDOR_SQC_BQ2560X=m` in `kernel/u30air.fragment`;
+its `bq2560x:bq2560x_charger_probe enter` is the line in the reporter's 5.4 log), not
+`drivers/power/supply/bq2560x-charger.c`. Its `bq2560x_get_chip_vendor_id()` reads REG0B at the node's address
+and, when that read fails, sets `info->client->addr = SGM41513_I2C_ADDR` (0x1a) and reads again; part 0 there is
+an `sgm41513`, part 1 an `sgm41513A`. The client keeps its name, so sysfs shows `6-006b` whichever chip the board
+has. For the chip at 0x1a the driver codes two fields differently (`info->client->addr == SGM41513_I2C_ADDR` in
+`bq2560x_charger_set_current()` and `bq2560x_charger_set_termina_cur()`): the fast charge current in eight ranges
+of eight steps (5, 10, 20, 30, 60, 60, 120, 120 mA from 0, 40, 130, 300, 540, 1020, 1500, 2460 mA) and the
+termination current in sixteen steps (5 ... 240 mA, or six times each with REG0D bit 0 clear); every other
+register it uses is the same for both chips.
+
+That fits everything the reporter measured, which a dead bus does not:
+
+- mainline gets a NACK (-5, in the log 2 ms after the I2C core's first line), not a timeout (-110): the controller
+  ran the transfer and nothing acknowledged 0x6b. Patch 0009 gave up there, as it should on the F50, which has the
+  node and no chip;
+- `i2cget -f -y 6 0x6b 0x00` fails on Android and on 5.4 on that unit while the vendor driver charges through the
+  same bus: what a driver that went on at 0x1a looks like from outside;
+- the other three devices (`ptn38003a` redriver 0x30, `aw883xx` amplifier 0x34, flash 0x63) have no driver under
+  mainline, and whether they answer was only ever tried with i2cget, on a unit where i2cget also fails for the
+  charger that works. "Bus 6 is dead to every device" was never shown; one failed read at 0x6b was.
+
+What is not measured: that the ABSSV unit's chip is at 0x1a. Its 5.4 log decides without any new kernel
+(`dmesg | grep bq2560x_get_chip_vendor_id`: `failed to get vendor id ret=-5` followed by `chg_IC_name=sgm41513`
+for a chip at 0x1a; `pn=0x2` with `chg_IC_name=sgm41511` or `bq25601` and no "failed" line for one at 0x6b).
+Our SSV unit has an SGM41511 at 0x6b (part 2 in REG0B, FINDINGS 33d).
+
+Patch 0015 does what ZTE's driver does, for the `ti,bq2560x_chg` node only: when the read at the node's address
+fails, the same read at 0x1a through a client of its own (`devm_i2c_new_dummy_device`), and when that answers,
+the regmap on that client, the SGM41513's two tables (Android's 1.98 A is code 52 there; the bq25601's 60 mA
+steps would have written 33, which is 600 mA on that chip; the battery node's 300 mA termination current is code
+6 in the times-six range), the precharge current left as the chip has it (ZTE's driver has no code for it),
+`model_name` `sgm41513`, and `nothing at 0x6b (-5): the SGM41513 at 0x1a` in the log. A failure now names both
+reads (`no charger: -5 (and -5 at 0x1a)`), so one boot on the ABSSV unit also says when the idea is wrong. Compiled
+only (the one object, `W=1`, on 6.18.56 and 7.2.10 with the other patches applied); not booted on any device, and
+no SGM41513 was available to test against. What the patch takes to be the same on that chip without ZTE's driver
+showing it: OTG_CONFIG, VBUS_STAT, PG_STAT and IINDET_EN. `mu300-usb` still addresses 0x6b for host mode and would
+have to follow once the chip is confirmed.
+
+What else was compared, in case the chip is not at 0x1a either:
+
+- `sprd-i2c 22240000.i2c: probe ... failed with error -22` is the camera's bus (i2c0, one child,
+  `sensor-main@20`), not the charger's: its node says `clock-frequency = <1000000>` (read on our unit:
+  `000f4240`), mainline's `i2c-sprd.c` takes 100 kHz and 400 kHz only and returns -EINVAL for anything else, the
+  vendor driver also takes 1 MHz. Our SSV unit has no `i2c-0` under 7.2.10 either. Harmless for the charger.
+- Clocks and supplies: the forced command line (`CONFIG_CMDLINE_FORCE`) carries `clk_ignore_unused
+  pd_ignore_unused regulator_ignore_unused` on every unit, so mainline switches off nothing the bootloader left
+  on; the i2c6 clocks are the same three on both units (`ext-26m` source, `i2c6-eb` enable, `ap-i2c6`, 26 MHz;
+  `i2c6-eb` counts 0 on the reporter's unit only because nothing was using the bus when it was read, 1 on ours
+  where the charger is polled).
+- Bus timing at 400 kHz (i2c6's `clock-frequency`, `00061a80` on our unit), from the two `sprd_i2c_set_clk()`:
+  mainline divides SCL 40 % high / 60 % low and writes a start hold of `6 * 26 MHz / 10^7` = 15 source clocks
+  (0.58 us); ZTE's 5.4 driver has "ZTE modify 400K&100K duty 20200827", 31 % / 69 %, and a start hold of
+  `18 * 26 MHz / 10^7` = 46 (1.8 us). A board with slower edges could NACK under mainline's and not under ZTE's;
+  nothing measured says this unit does, and our SSV unit and the NFC bus of the ABSSV unit (also 400 kHz) work
+  with mainline's. This is the next thing to try if 0x1a does not answer.
+- I2C_CTL: the vendor driver also sets `I2C_NACK_EN | I2C_TRANS_EN` (bits 22, 21) and resets the controller
+  (`i2c_rst`) after a transfer timeout. Mainline sets neither bit and still sees a NACK as -5 at once and not as
+  a timeout on this unit, and bus 2 works on the same unit with the same driver, so these are unlikely to
+  be the cause; the reset only ever runs after a timeout, which mainline did not have.
+
 ### 34. LEDs, and the defects from a second board's test
 A second F50 (restored from F50 #1's backup, with its own eMMC and factory Wi-Fi address) was tested from a user's
 point of view; what came out of it, measured on 2026-10-05:
@@ -3666,6 +3817,10 @@ channel 149 works.
 `mu300-usb adb on|off` (off by default) puts AOSP's adbd into the USB gadget next to the network function and the
 ACM console: `adb shell`, `push`, `pull`, `forward` from a computer, as with Android.
 
+**Update 2026-10-13:** adb is on by default now, and adbd lets every computer in unless it is told to take keys
+only (`mu300-usb adb auth open|keys`): §70. What this section says about the daemon, the gadget and FunctionFS
+stands; "off by default", "`auth_required = true` on Linux, always" and "no setting that turns the check off" do not.
+
 **Which adbd.** Ubuntu 26.04 (not 24.04) packages Debian's `adbd` 34.0.5, but Debian patches it to require no
 authorisation at all on Linux (`adbd-don-t-require-authorization-on-Linux.patch`) and it listens on TCP 5555 when it
 finds no FunctionFS: a root shell for anyone on the LAN and the hotspot. It is also glibc-only. Alpine's and nmeum's
@@ -4348,7 +4503,7 @@ and dash with busybox 1.37 as awk in a Debian container); not sent from a device
 Open, from the same issue: a service that answers HTTP 200 with its own error inside (DingTalk `errcode`, Feishu
 `code`) is logged as delivered - the HTTP helper passes on the status and nothing of the reply's body
 (`sms-forward-http.uc`), so that no reply reaches a log; and the delivery log (RAM, the last 100 lines) has no clear
-button. Section 53 is PR #195's (the carrier name); this branch does not have it.
+button. Both are §58. Section 53 is PR #195's (the carrier name); this branch does not have it.
 
 ### 55. Imported Android files nobody but root could read: the CP was never loaded (#127, #135, #170)
 
@@ -4480,8 +4635,602 @@ as sing-box), `profile_check`, `use`, `status` with the exit address, `logs` per
 all as the page expects. `sub_add` takes https only, which could not be served on the test link (the CLI's
 `--insecure` did the subscriptions there). Not looked at in a browser: the pages themselves.
 
+### 57. A 64 GB unit whose partition table has userdata filling the disk, and no way to make room from Windows (#32)
 
-### 57. The U30 Air's second SIM: the hardware facts behind PR #73 (Snrat)
+Reported in issue #32, in three lines and without a number from the device: on a 64 GB unit a vendor firmware image
+replaced the partition table by one in which `userdata` "fills the entire disk"; `install.ps1` refused it as a layout
+it does not know; and a 4096-sector alignment computation came out as -4 MiB. **Nothing here was measured on a
+device.** We have no unit with that table, and the issue has no `-Check` output, no sector and no name of the image.
+Not known: which image it was, where `userdata` begins in that table, whether it is the last entry, whether the other
+partitions are where the factory table has them, and whether the GPT's last usable LBA is the factory one.
+
+What the code says about it:
+
+* **The -4 MiB is the region arithmetic, and it is what a table that ends at the end of the eMMC gives.** Both
+  installers take the free region from the first 4096-sector (2 MiB) boundary behind the last partition - the next
+  one even when the partition ends on one - to the last boundary but one before the backup GPT (`region_probe` in
+  `tools/storage.sh`, the same two lines in `install.ps1`). With the figures of #9 (122159104 sectors, last usable
+  LBA 122155007) and `userdata` up to the last usable LBA, the partitions end at sector 122155008 = 29823 x 4096:
+  the start is 29824 x 4096 = 122159104, the end of the disk, and the end is 29822 x 4096 = 122150912, which is
+  8192 sectors or 4 MiB before it. Any table whose last partition ends in the last 2 MiB of this eMMC gives the
+  same -4 MiB, so the number fits the report and does not tell where exactly `userdata` ends.
+* When the issue was written, `install.ps1` printed that number ("only -4 MiB of free space after the last
+  partition: this device has a different layout") and `install.sh` went on to `offer_repartition`. Since the fix
+  for #65 a crossed region is an empty one in both, so Windows said "only 0 MiB" - and still had nothing to offer.
+  The arithmetic is now a function there (`FreeRegion`) with the layout above among its tests.
+* **`install.ps1` had no make-room path at all**; `offer_repartition` (#9b) existed in `install.sh` only. It now has
+  `OfferRepartition`, the same steps in the same order: the first 34 and the last 33 sectors of the eMMC are copied
+  to `work\gpt\gpt.head` and `gpt.tail` (that copy is the backup of the table) and nothing else is read;
+  `tools/resize-last-partition.py --show` checks both GPT copies and refuses when `userdata` is not the last
+  partition; at least 4 GiB stay with Android and Linux gets at least 800 MiB; the questions are the same (yes/no
+  with no as the default, the GiB for Linux, the word `ERASE` typed as it is); the backup GPT is written before the
+  primary; the table is read back and compared; the first 32 MiB of `userdata` are cleared so that Android formats
+  it; the device reboots and the installer is run again. Only those three writes exist: the two copies of the table
+  and the start of `userdata`. `-Check` prints the figures and writes nothing.
+* Two things the Windows path does that `install.sh` does not: it compares the SHA-256 of the two pushed files on
+  the device with the ones the tool made before `dd` writes them (a push that failed or stopped halfway would be
+  written as it is), and it deletes the table files of an earlier run before it reads the table, so one of them
+  cannot stand in for a read that failed. Neither was seen to go wrong; both are cheap.
+* A refusal now carries its figures: the eMMC's size in GiB and sectors, the sector the partitions end at, the free
+  MiB behind them, the 700 MiB needed there and what is missing; the tool's own reason when it refuses the table
+  ("the last partition is 'x', not 'userdata'", a CRC that does not match); and, when there is too little to
+  split, `userdata`'s sectors, the 4096 + 800 MiB needed and what is missing.
+
+What is tested, and what is not: `tests/fakegpt.py` builds the table of #9 with `userdata` extended to the last
+usable LBA (the other partitions' sizes are made up; only `userdata`'s sectors and the order matter), and the real
+tool edits it. `tests/test_resize_last_partition.py` checks that the edit changes `userdata`'s last sector and the
+CRCs and no other byte, and what is refused; `tests/installer.Tests.ps1` runs `OfferRepartition` under Windows
+PowerShell 5.1 and PowerShell 7 against three stubs for the device and checks every answer that must change
+nothing, the order of the writes, and the refusals. **Not run: `install.ps1` on a Windows machine against a
+device, and either installer on a unit with this table.** The shrink itself has been done on one 32 GB unit (#9b,
+issue #2); whether Android formats a 64 GB `userdata` that was shrunk this way after a vendor flash is not known.
+`uninstall.ps1` does not offer to grow `userdata` back; `uninstall.sh` does.
+
+### 60. `/run` takes files from every user: the daemons' directories there are checked, and a squatted name is put out of the way (review of #145/#149)
+
+Found while reviewing the call audio and voice API branches on F50-B (2026-10-13).
+
+* `boot/init` mounts `/run` as a plain tmpfs, which is mode 1777 - like `/tmp`, not the 0755 systemd would give it.
+  Any local user (a service account, the vendor daemons' own account of 41) can make `/run/<name>` before the
+  daemon that expects to own it: measured, an unprivileged user created a file there.
+* `mu300-voice` moved its state from `/tmp/mu300-voice` to `/run/mu300-voice`, which was the same exposure under
+  another name: pid files it kills, the mixer undo log it writes back, files root writes there. `mu300-atd` did
+  `mkdir -p /run/mu300-at` and looked no further: in a stranger's directory, or behind his symlink, the command
+  fifo is his to write (AT commands, as root's daemon) and every answer his to read.
+* `rootfs/overlay/opt/mu300/lib/run-dir.sh`, one helper for both so the two cannot drift: `run_dir_ours` (a real
+  directory, not a symlink; the daemon's own uid; not writable by group or others) and `run_dir_take`, which makes
+  the directory that - a plain `mkdir`, never `mkdir -p` (through a symlink that makes the directory where it
+  points). The first version of the check refused a foreign directory and stayed down until somebody removed it,
+  which turned the squat into a denial of service; the second removed it with `rm -rf`, which is a race - whoever
+  squatted can still write `/run`, and busybox's recursive remove walks by path. Now nothing depends on what was
+  seen and nothing is deleted recursively: a non-directory goes with `rm -f --`, an empty directory with `rmdir`
+  (neither follows a symlink at that name, each fails harmlessly on the other kind), a directory with contents is
+  moved whole into `/run/.<name>.foreign.<pid>` (made by `mkdir`: ours and 0700, or nothing is moved) and left
+  there to be looked at, and what counts in the end is the check again. A caller who is not the owner (a member
+  of the voice group running `mu300-voice events`) gets the check alone and never creates the directory.
+* The headset's control fifo moved from `/run/mu300-hfp.ctl` into `/run/mu300-voice`, and
+  `/etc/tmpfiles.d/mu300-run.conf` makes both directories at boot.
+* `/run/mu300-at/urc` is 0700 now: with caller id on (`AT+CLIP=1`, which `mu300-voice` sets) every ring writes
+  the caller's number into that log, which was world-readable. Every reader is root.
+
+Measured on F50-B as root under dash, bash and busybox ash: a directory made first by another user (with a fifo
+named `cmd` in it) and a symlink to `/etc` were both put out of the way, `/etc` untouched, the second call silent;
+`mu300-voice status` then answered. Open: `/run` is still 1777 - `mount -t tmpfs -o mode=755` in `boot/init` is
+the real fix, and it is a boot change that wants its own device test. `/run/mu300-at/answer.<pid>` and
+`/run/mu300/` are as they were.
+### 58. A service's own error in an HTTP 200 answer to the SMS webhook, and a button that clears the delivery log (#171)
+
+The two points §54 left open. The webhook counted any 2xx as "Delivered"; chat services answer 200 and put their
+refusal in the body. Measured on the U30 Air (openwrt-luci v2026.10.23, kernel 7.2.10) against a fake webhook on the
+LAN that answers like the services; **not sent to any real service**.
+
+* **One rule the user sets, not a table of services.** "The answer must contain": `KEY=VALUE` (`webhook_expect` in
+  `/etc/mu300/sms-forward.conf`). With it, a 2xx is a delivery only when the answer is a JSON object whose
+  **top-level** `KEY` is the scalar `VALUE`. Empty (the default, and what a page from before the field sends): any
+  2xx, exactly as before - the helper is not even asked for the answer then. The page's presets (`errcode=0`,
+  `code=0`, `code=200`, `ok=true`) only fill the field in. A table of services in the code would be wrong the day
+  one of them changes; none of the answers below needs more than a top-level key.
+* **What the services answer** (read from their documentation on 2026-10-13, not from a real request):
+
+  | Service | Answer | Rule | Source |
+  |---|---|---|---|
+  | WeCom group robot | `errcode` 0 is success, "judge by errcode, not errmsg"; 93000 invalid webhook, 45009 rate limit, -1 busy | `errcode=0` | developer.work.weixin.qq.com/document/path/90313 (the send page, /path/91770, shows no reply) |
+  | Feishu / Lark custom bot | `{"code":0,"msg":"success","data":{}}` (`StatusCode`/`StatusMessage` kept for old clients); 9499 bad request, 19021 signature, 19022 IP, 19024 keyword, 11232 rate limit. The page gives no HTTP status | `code=0` | open.feishu.cn/document/client-docs/bot-v3/add-custom-bot |
+  | Bark | `{"code":200,"message":"success","timestamp":N}`; a failure is `code` 400 or 500 **and the same HTTP status**, so the status alone already catches it. A batch push answers 200 with a code per device inside `data`, which a top-level rule cannot see | none needed (`code=200` is harmless) | bark-server `router.go` (`CommonResp`), `route_push.go` |
+  | Slack incoming webhook | 200 with the plain text `ok`; errors are HTTP 400/403/404 with a word (`invalid_payload`) | none: with a rule set every delivery fails | docs.slack.dev/messaging/sending-messages-using-incoming-webhooks |
+  | Slack Web API | a top-level boolean `ok`, `error` with a short code; the page gives no HTTP status | `ok=true` | docs.slack.dev/apis/web-api |
+  | Telegram Bot API | `ok` (boolean), `description`, `error_code`; the page gives no HTTP status. The Telegram target here is unchanged (status only) | `ok=true` for a webhook pointed at it | core.telegram.org/bots/api, "Making requests" |
+  | DingTalk custom robot | **not read from its own documentation**: open.dingtalk.com renders its pages by script and gave navigation only. Alibaba Cloud's help page quotes the reply `310000: sign not match`; `{"errcode":0,"errmsg":"ok"}` is what every third-party write-up shows | `errcode=0` | help.aliyun.com/document_detail/421895.html |
+
+* **Where the answer is read, and what leaves that place.** `sms-forward-http.uc` still prints the status and nothing
+  of the reply. Only when the caller sets `MU300_FWD_ANSWER=4096` in its environment (never the request, which the
+  user writes) does it add the first 4096 bytes of a **2xx** reply's body after the status line; the rest is read and
+  dropped as before. Those bytes go down a pipe into one awk (`answer_verdict` in `mu300-sms-forward`), which keeps at
+  most 4096 bytes in memory and prints one line: `answer ok`, `answer differs [TOKEN]` or `answer none`. Nothing
+  else of an answer exists outside that pipe: no file, no shell variable, no log.
+* **Why awk and not `jsonfilter` or ucode's `json()`.** A parser refuses an answer cut at 4096 bytes, and a delivery
+  wrongly called failed is sent again. `answer_verdict` walks the text once, counting brackets and skipping strings,
+  so a long answer whose key comes first still gives its verdict; a value the cut may have shortened is not looked
+  at. It also runs in the tests under the shells and the awk the device has, which a ucode function would not
+  (no ucode on the CI runner). The key and the value reach awk in its environment and are compared as text - a
+  string by its content, anything else as written, so `0` is not `0.0` and `"0"` is `0` - never as a pattern, never
+  through a shell. A key that is there twice must be right both times.
+* **What a panel user can learn of an answer, and why it is kept this small.** Before this, nothing of a reply came
+  back: only the HTTP status. Whoever may open this page (the write ACL: the panel's administrator) could already
+  make the device send a POST to any address it reaches, its own loopback and the LAN included, and see the status;
+  that is unchanged, and there is no private-address blocklist, here or before - a webhook to a LAN service is a
+  normal use. What is new is that a test, or a delivery, now says something about a **JSON** reply of that address.
+  It is held to what a status check needs:
+  * The rule: `KEY` is a name (a letter or `_`, then letters, digits, `_`; 32 at most), `VALUE` a whole number of
+    16 digits at most (a `-` before it allowed) or 1 to 16 lowercase letters. The adapter and the forwarder both
+    check it. Only a **top-level scalar** is compared; an object or a list under the key counts as no value.
+  * The log shows the value the service put there only when it is a whole number of 16 digits at most or a bare
+    `true`, `false` or `null`: `the service answered errcode=310000`. Any other value - a text, a fraction, a longer
+    number - is `the service answered another errcode`, without it.
+  * One message, `no errcode in the answer`, for a missing key, an object or list under it, an empty answer,
+    something that is no JSON object, and a key beyond the first 4096 bytes: no length, no type, no excerpt.
+  * "Send test" from the panel is refused when another was started under 5 s ago (`mu300-sms-forward test-gate`,
+    asked by the adapter; the command line's own `test` is root's and is not gated). The page's other actions have
+    no such limit; this one is the only way to ask about an answer at will, and one test at a time was already the
+    rule (the `test` lock).
+
+  **What remains**, for the owner to judge: an administrator of the panel can point the webhook at an address only
+  the device reaches and learn, per test (one in 5 s) or per forwarded SMS, about a reply that is a JSON object:
+  whether it has a given top-level key with a scalar under it; whether that scalar equals a number or a lowercase
+  word of the administrator's choosing; and, when the scalar is a whole number of up to 16 digits or
+  `true`/`false`/`null`, that value itself. A numeric secret at the top level of a JSON reply (a PIN, a counter)
+  could be read that way; a text secret could only be guessed at, a lowercase word of up to 16 letters per try.
+  Nothing of a reply that is not a JSON object, and nothing below the top level, comes back at all. The same
+  administrator can already read and change every setting of the device from the same panel.
+* **Retried or not.** The HTTP status decides first, as before. With a 2xx: another value under the key is the
+  service saying it did not take the message, so it is retried like a 5xx (30 s, doubling, ten times) - another try
+  cannot deliver twice, and rate limits (WeCom 45009, Feishu 11232) pass by themselves. No such value at all fails
+  **without** a retry: nothing says the message was not taken, the rule most likely does not fit the service, and
+  ten retries would then be ten copies of every SMS. A rule in the file that is not such a `KEY=VALUE` (the panel
+  never writes one) sends nothing: `the answer check is not KEY=VALUE`.
+* **"Send test"** goes through the same `deliver`, so it shows the same verdict.
+* **Clear.** `forward_log_clear` (write ACL, no argument) -> `forward logclear` -> `mu300-sms-forward log-clear`,
+  which unlinks `/run/mu300-sms-forward/log` (and `log.part`) and never opens it: a link at that name goes, what it
+  points to stays. The queue and the retry state are not touched.
+
+Measured on the device, through `ubus call mu300dash forward_set` / `forward_test` / `forward_get` (forwarding
+itself left off; the device has no `timeout` command, so the helper ran without one):
+
+| The fake service answered | Rule | Log |
+|---|---|---|
+| `{"errcode":310000,...}` | none | Delivered, `HTTP 200` |
+| `{"errcode":0,"errmsg":"ok"}` | `errcode=0` | Delivered, `HTTP 200, errcode=0` |
+| `{"errcode":310000,...}` / `{"errcode":93000,...}` | `errcode=0` | Failed, `HTTP 200, the service answered errcode=310000` / `=93000` |
+| Feishu's success body | `code=0`, `StatusCode=0` | Delivered |
+| `{"code":19024,...}` | `code=0` | Failed, `the service answered code=19024` |
+| Bark's success / HTTP 400 failure | `code=200` | Delivered / Failed, `HTTP 400` |
+| `{"ok":false,"error":"invalid_auth"}` | `ok=true` | Failed, `the service answered ok=false` |
+| `{"errcode":0,"errcode":7}` | `errcode=0` | Failed, `the service answered errcode=7` |
+| `errcode` the text `hunter2`; `errcode` a text of `$(touch ...)`, backticks, quotes, a line break, an escape sequence | `errcode=0` | Failed, `the service answered another errcode`; no file was made |
+| `ok` as text; an HTML page; 1 MB of every byte value; the key one level down only; an object under the key; 2 MB with the key last | `ok=true`, `errcode=0` | Failed, `HTTP 200, no ok in the answer` / `no errcode in the answer` |
+| HTTP 204, no body | `errcode=0` | Failed, `HTTP 204, no errcode in the answer` |
+| 500 objects deep, then the key at the top; 2 MB with the key first | `errcode=0` | Delivered |
+| HTTP 500, 401 with `{"errcode":0}` | `errcode=0` | Failed, `HTTP 500`, `HTTP 401` |
+
+The page refused `errcode`, `errcode=0;id`, `errcode=$(touch ...)`, `a=b=c` and `err code=0`. A second
+`forward_test` right after one was refused ("A test was started a moment ago; wait a few seconds"), a third 5 s later
+started. Through the queue (the installed forwarder on a pool, configuration and log of its own, first wait 2 s): a
+service that answers `errcode=-1` once and then `errcode=0` gave "Will retry", then "Delivered" after 2 s;
+`errcode=310000` every time gave two retries and "gave up after 3 attempts"; a missing key gave one "Failed" and one
+request. After all of it neither the answers' marker text nor `hunter2` was in any regular file under `/run`,
+`/tmp`, `/var` or `/etc/mu300`, nor in `logread`. `forward_log_clear` emptied a log of 29 lines; with a link at the
+log's name, the link went and its target kept its content; the next test wrote a new 0600 file. In a headless
+browser (Playwright) the page showed the field, a preset filled it in, Save kept it and Clear emptied the table
+(looked at before the rule and the messages were narrowed; the page's script did not change after).
+
+Not measured: any real service; the translations on a device (the test unit ran the changed files over an image
+built without them, so the page's new strings were English); what uclient does with an answer whose `Content-Length`
+is wrong or that never ends (the helper's 15 s timeout is unchanged). The unit tests (`tests/test_sms_forward.py`)
+ran under dash and bash on macOS and under busybox ash with busybox 1.37 as awk in a Debian container.
+
+### 66. The OpenWrt image build tries a package download again
+
+`openwrt/build-rootfs.sh` installs the image's packages from the OpenWrt feed inside the build container, one
+`apk update`, one `apk upgrade` and a handful of `apk add`. Each was run once under `sh -e`: a mirror that cut one
+connection in the middle of one package failed the whole image, and in CI the release with it.
+
+kanoqwq's fork wraps its `apk` calls in a function that tries three times (clean-tf-7.2 `33640d01`, "retry
+interrupted OpenWrt package downloads"). Taken: that idea. Ours is a function named `apk` in the container's
+script, so that every call goes through it without being rewritten and a call added later cannot be forgotten;
+`update`, `upgrade` and `add` are tried three times, ten seconds apart, with a line on stderr for each new try;
+`del` and anything else run once. A package the feed does not have fails three times and then fails the build as
+before, half a minute later.
+
+The same fork's `0886ee00` ("create block-mount metadata directory in fresh rootfs") repairs the build of its own
+patched `block-mount`, which we do not have (section 65).
+
+Unit tests only (`tests/test_static.py` `ApkRetry`: the function cut out of the script and run under each shell
+with a stub `apk` that fails a number of times), and the same function once in busybox ash with a real `apk` (Alpine in a container: update, add, del, and a package that does not exist). Not run: an image build. To check, on the build machine and not on
+a device:
+
+    sh openwrt/build-rootfs.sh ...                  # as the release does: the image builds as before
+    # and once with the network cut for a few seconds during "apk add": a "trying again (2 of 3)" line, then the image
+### 64. An update dropped the panel's saved locks (`/etc/unisoc-modem`)
+
+The control panel of openwrt-luci keeps its state in `/etc/unisoc-modem`: `lock-state.d` (the network mode, band
+and cell locks it applied, which `boot-replay` applies again at boot), the SIM identity cache and the operations
+log. `mu300-update` builds the new system from the release's image and copies over what `keep_list` names; for
+OpenWrt that was `etc/config etc/mu300 etc/dropbear etc/rc.local root`, and `tools/android-install.sh` has its own
+copy of the list for an update from the computer. `/etc/unisoc-modem` was in neither, so every update left it
+behind in `<os>.old`.
+
+What that does, from reading the code (not reproduced on a device): a mode or band lock lives in the modem's NV and
+stays in force (measured on an F50, #96), so after an update the modem is still locked while the panel's lock page shows
+nothing saved; a cell lock does not live in the NV and is kept only by the replay at boot, so it is gone.
+
+Found in kanoqwq's fork, whose `keep_list` has `etc/unisoc-modem` since clean-tf-7.2 `33869287` ("add voltage and
+forwarding controls; fix Wi-Fi log flood"; the line is one word of that commit). Taken: that word, in both of our
+lists. Nothing else of the commit.
+
+Unit tests only (`tests/test_update.py`: `apply_one` on a fake disk carries `etc/unisoc-modem/lock-state.d` over;
+the two lists are the same). To check on a device with openwrt-luci:
+
+    # before the update: a band lock and a cell lock saved from the panel (Cellular -> Network locks)
+    ls -l /etc/unisoc-modem/lock-state.d; /usr/libexec/unisoc-modem/lock get
+    mu300-update apply && reboot
+    # after: the same files, the lock page shows the locks, and the log has the boot replay
+    ls -l /etc/unisoc-modem/lock-state.d; /usr/libexec/unisoc-modem/lock get; logread -e unisoc-modem
+    # the same once from the computer: install.sh --update (tools/android-install.sh's list)
+
+### 63. A reused SMS reference number mixed long messages, or kept them from ever being joined
+
+The parts of a long (concatenated) message carry a reference number, a total and a part number in their user data
+header. Both `sms` (every system) and `mu300-sms` (the panel's pool on openwrt-luci, the SIM path and the +CMT path
+of section 51 alike) took **sender and reference number** as the identity of a message. The reference is eight bits
+wide in most headers; senders count it up, draw it at random, or send every long message under the same one. So the
+same sender and reference come round again, and two things went wrong, both found by reading and reproduced in unit
+tests, not on a device (no device was available for this work):
+
+- **Two messages under one reference at the same time were mixed.** A later part overwrote the earlier one with the
+  same part number, the totals were merged to the larger one, and all the slots were deleted together. With `sms`
+  this needs nothing unusual, since the SIM keeps messages until somebody deletes them: of two two-part messages
+  from one sender under one reference, `sms list` showed one, made of the newer parts. In the pool it needed a part
+  still waiting for its siblings (up to an hour) when the next message came.
+- **Every later message under the reference of one pooled incomplete was never joined.** A message whose parts did
+  not all come within the hour is pooled with `[...]` and a header `partial: <md5 of its key>`, so that a part
+  arriving after that is pooled at once. The key was sender, reference and total, with nothing that ends its
+  validity: the next long message under that reference, a day or a year later, had each of its parts pooled (and
+  forwarded) the moment it arrived, as "1/3", "1/3", "1/3".
+
+kanoqwq's fork fixed the same class of fault in its own importer (clean-tf-7.2 `a5bd3e06`, "reassemble multipart
+messages before inbox and forwarding"; its importer did not reassemble at all before that, which ours did). Taken
+from it are three ideas, none of its code: a group is keyed by more than the reference (it uses the reference's
+width, the total, coding, PID, language tables and SMSC as well); a reference used again is told apart by the
+distance between the service centre timestamps, ten minutes; and a long message remembers the PDUs of its parts so
+that a part delivered again is recognised. Changed against it:
+
+- Grouping is one place for both tools, `sms-pdu.awk -v mode=group`: decode's records in, the same records out with
+  the key of their message added (`multi:SENDER:REF:TOTAL@TIMESTAMP`). Parts are one message when sender, reference
+  and total agree, their timestamps are within 600 s of the first part seen, and the part number is not already
+  there with another text. Coding, PID and SMSC are not part of the key: the decoder's records do not carry them,
+  and two messages that agree in everything above and differ only there were not thought worth a change to a format
+  two programs parse. The reference's width (8 or 16 bit) is not in it either, for the same reason.
+- Two messages of one sender, reference, total and second (a sender that numbers everything 0 and sends twice in a
+  second) are told apart by a part number that is taken with another text; the parts go to the messages in the order
+  they came. The fork refuses such a part and does not acknowledge it. Here a refused import is never acknowledged,
+  the network delivers it again, and three failed rounds make `mu300-smsd` give direct delivery up (section 51), so
+  one hostile or unlucky sender could switch +CMT off; a best guess that loses nothing was preferred.
+- A concatenation header that says nothing usable (part 0, part 5 of 3, no parts, an element of the wrong length or
+  cut off by the header's end) makes the fork's decoder refuse the PDU. Ours now shows the text as a message of its
+  own, for the reason above; before, such a part waited an hour for siblings that cannot exist, or (part beyond the
+  total) lost its text.
+- The key of a waiting message keeps its name while its parts come in (the waiting state is handed to the grouping
+  as `known`), so a part with an earlier timestamp arriving later does not start the hour over. The state file of
+  the version before (keys without a time) is understood.
+- "The rest of a message pooled incomplete" is now a part with that `partial:` header **and** a timestamp within
+  the same ten minutes of the pooled message's (`sms-pdu.awk -v mode=near`).
+- `part_ids: <md5 of each part's PDU>` on every long message in the pool, also on one pooled incomplete, and among
+  the tombstones when it is deleted. A part delivered again (the acknowledgement of the last part did not reach the
+  network: `mu300-smsd` keeps the spool file and imports it once more, section 51) used to be parked alone, wait
+  its hour and be pooled and forwarded as an incomplete message of its own; it is now dropped as known.
+- The listings `mu300-sms` keeps in `/tmp` while it works hold message text; they are now made with umask 077 (the
+  first of them always was, by mktemp; the others took the caller's umask).
+
+What the fork does and this does not: it holds waiting parts in a directory of their own with one file per part and
+never shows an incomplete message. Ours pools what arrived after an hour, marked incomplete, which is section 39's
+decision (a lost part must not hold the others back for ever) and stays.
+
+Unit tests only (`tests/test_sms_pool.py`: `Codec`, `Listing`, and in `Pool` the tests under "a reference number
+used again"), under dash, bash and busybox ash, the grouping also under busybox awk in a container. Not measured:
+any of it on a device with a real long message. To check on a device with openwrt-luci, with a second phone:
+
+    logread -f | grep -i sms &                       # must never show a number or text
+    # 1. a long message (three parts or more) from the phone: one message in the pool, whole
+    mu300-sms list; mu300-sms show ID
+    grep -c . /etc/mu300/sms-pool/partial 2>/dev/null; ls /etc/mu300/sms-pool/parts    # nothing left waiting
+    sed -n '1,/^$/p' /etc/mu300/sms-pool/msg/ID      # a part_ids line with one hash per part
+    # 2. the same long message twice within a minute, then again after 15 minutes: three messages, each whole
+    # 3. with the panel's forwarding on: each of them forwarded once, whole
+    # 4. Ubuntu, or any system: sms list  with those still on the SIM (AT+CNMI=2,1 path): each shown whole
+
+### 65. An APN with a user name and a password (`AT+CGPCO`), and what else kanoqwq's APN page does
+
+Until now the dial knew an APN and a PDP type and nothing else: `network.wan.apn` / `pdptype` on OpenWrt (LuCI,
+Network -> Interfaces -> wan), `MU300_APN` / `MU300_PDP_TYPE` in `/etc/mu300/mobile-data.conf` on Ubuntu, both kept
+across updates. An APN that asks for credentials (a private APN, some MVNOs) could not be used at all.
+
+kanoqwq's fork added an APN page to its dashboard (clean-tf-7.2 `3826be8b`, "add persistent APN management and safe
+mount discovery"): up to 32 saved profiles, a profile bound to a SIM by its ICCID, an automatic choice for a few
+Chinese carriers by IMSI, credentials, an optional initial-attach setting (`AT+SPCGAPNCFG`). With it comes a note on
+what ZTE's B09 RIL does (`docs/F50-ANDROID-APN-RIL-RESEARCH.zh-CN.md` there, from reading `librilcore.so`): the
+ordinary data call sends the credentials **after `AT+CGDCONT` and before `AT+CGDATA`** as
+
+    AT+CGPCO=0,"<user>","<password>",<cid>,<auth>          auth: 0 none, 1 PAP, 2 CHAP, 3 PAP or CHAP
+
+and not with the `AT+CGAUTH` other modems use. That agrees with what this tree already sent for the F50's internal
+SIM, taken from the stock RIL's trace: `AT+CGPCO=0,"","",1,0` between its `AT+CGDCONT` and `AT+CGEQREQ`.
+
+Taken: that command and its place in the dial. Not his code: his dialer part is bash regular expressions in
+`mobile-data` and a ucode profile store behind his dashboard's RPC. Ours:
+
+- `mobile-data`'s context definition is a function of its own, `define_context`. With `MU300_APN_USER`,
+  `MU300_APN_PASSWORD` and `MU300_APN_AUTH` (`none`, `pap`, `chap`, `both`; left out with a user name or a
+  password: `both`, as Android does) it sends the command above after `AT+CGDCONT` and requires `OK`.
+- OpenWrt: `username`, `password`, `auth` on the wan interface, on the interface's page next to the APN, for the
+  external SIM (the internal one dials its own APN, and is never offered another carrier's credentials). Ubuntu:
+  three lines in `mobile-data.conf`.
+- Without credentials the dial sends exactly what it sent before (the external SIM: `AT+CGDCONT` alone; the internal
+  one: its four commands, byte for byte, an `ERROR` to its empty form ignored as it always was).
+
+**Where the password is, and where it is not.** Checked by the tests for every path (both systems, both cards):
+
+| | |
+|---|---|
+| command lines | never. `mu300-at -` (new) takes the command on its stdin, and `mobile-data` uses that for this one command; `mu300cell.sh` hands the settings to `mobile-data` in its environment. As an argument it would be in `ps` for every user of the system. |
+| environment of other processes | `mobile-data` takes the credentials out of its environment before it starts anything, so `mu300-at`, `mu300-sim`, the LED, the VPN guard inherit none. `/proc/<pid>/environ` of the services is root's. |
+| logs, stderr, traces | never printed. Every refusal says what, not with what. `set -x` is off while the credentials are read and while `define_context` runs. `/tmp/mu300cell.err` and the system log get `mobile-data`'s stderr, which never holds them. |
+| the AT daemon | `mu300-atd` writes its answer files mode 600 now (a modem that echoes commands would put the command there, and the file of a client that gave up stays behind), and throws a late echo (a line that starts with `AT`) away instead of appending it to the URC log. Whether this modem echoes at all is not measured. |
+| settings files | `/etc/config/network` (OpenWrt) and `/etc/mu300/mobile-data.conf` (Ubuntu), written by the user, uci or LuCI, never by these scripts. One function for both, `settings_private`: before credentials are used the file is made mode 600, and unless it then is the owner's alone there is **no dial**. A link is not followed to change anything; what it leads to must be private already. OpenWrt's first boot makes `/etc/config/network` 600 (uci keeps the mode), so it is private before anybody types a password; the example file says `install -m 600`. A release tarball that holds `mobile-data.conf` is refused by `make-release.sh`. |
+| who can read it on OpenWrt | root; and a LuCI login that was granted the network settings (rpcd's `uci` ACL on `network`), the same as a PPPoE password or a WireGuard key. The panel's own ACL (`luci-app-mu300`) grants `uci` on `unisoc_modem` only. `ubus call network.interface.wan status` and `ifstatus wan` show no protocol options, by reading netifd and the handler, which adds no data to them (the commands below check it on a device). A password typed into the panel's AT terminal by hand is in that terminal's history, like anything typed there. |
+| the modem | holds them once given (`AT+CGPCO?` would show them to root). `/etc/mu300/apn-auth-set.sim0` (`.sim1` for the internal card), an empty file, says so: one per card, since each has its own context. |
+
+**Nothing falls back to a dial without them, and nothing stays behind.** Credentials that cannot be used (a quote,
+a control character, 65 characters, an unknown authentication), credentials without an APN, a settings file others
+can read, a modem that does not answer `OK`: each ends the bring-up with a line saying which, and netifd or the
+watchdog tries again. The mark is written (a new file renamed into place, so a link there is replaced and never
+written through) *before* the credentials go out, and if it cannot be written they do not go out. It is removed
+only when the modem has answered `OK` to the empty form. So credentials taken out of the settings, or an APN changed
+to one without any, are taken back from the modem before the next dial; and a modem that does not let go of them
+gets no dial, rather than one that presents the old user name and password to the new APN's network.
+
+One fault of the old code came out on the way: `mu300-power`'s `mobile-data resume` and a `mobile-data up` run by
+hand have no environment from systemd, so on Ubuntu they dialled without `MU300_APN` (the modem usually still had
+the context, which hid it). With credentials that would have been a dial without them. `mobile-data` now reads what
+its environment does not say from `mobile-data.conf` itself, on every run (parsed as `KEY=VALUE`, never executed).
+
+Not taken, and why:
+
+- Profiles, the binding to an ICCID and the carrier list: our APN is one setting per interface (and per card:
+  `apn_internal`), kept across updates; nobody has asked for more. A per-SIM APN becomes worth it with dual SIM,
+  which is being reworked (#166). It follows that the credentials belong to the settings, not to a card: a
+  different card put into the device is offered them too, as it is offered the APN.
+- `AT+SPCGAPNCFG` (the initial attach APN): off by default in his tree too; nothing here needs it.
+- "An empty APN clears the modem's": his dial sends `AT+CGDCONT=1,"IP",""` whenever netifd passes no APN, so that
+  removing an APN in the settings also removes it from the modem. Ours sends nothing for an empty APN, on purpose
+  ("the modem keeps the context the SIM already defines"); whether a context once defined by `AT+CGDCONT` outlives
+  the setting (it is in the modem's NV on other Unisoc firmware) has not been measured here. If it does, an APN
+  taken out of the settings stays in force until something else defines the context. To measure before changing
+  anything: `mu300-at 'AT+CGDCONT?'` before setting an APN, with it, after removing it and redialling, and after a
+  reboot.
+- The patched `block-mount` of the same commit (and `0886ee00`, which fixes its build): fstools' `block info`
+  opens everything that matches `/dev/sd*`, which on this SoC includes the SIPC channel nodes (`sdiag_*` and the
+  like), and an open and close of one of those desynchronises the channel (13b). His patch skips character devices
+  that are not UBI before the probe. Our images do not ship `block-mount`, so nothing here runs `block`; a user who
+  installs it (LuCI's Mount Points) would. Not taken now: it needs a package built with the OpenWrt SDK in the
+  image build and a device to see both the fault and the fix, neither of which this work had. Worth doing before
+  anybody documents mount points on a card. His guard header is LGPL-2.1-or-later (fstools' own licence).
+
+Unit tests only: `tests/test_mu300cell.py` (`MobileDataContext`: the commands and their order for both cards; in
+every run the password on `mu300-at`'s stdin and in no argument, no child's environment, no output and no trace;
+the refusals; the settings file gate for both systems; the mark; the file read by a run without an environment;
+and the protocol handler), `tests/test_device_scripts.py` (`mu300-at -`; `mu300-atd` on a pty with a modem that
+echoes), `tests/test_sim_selection.py`. **No part of this has been sent to a modem**: neither that the F50/U30 Air
+firmware answers `OK` to the command with credentials on the external SIM's context, nor that it answers `OK` to
+the empty form there (if it does not, removing credentials ends in "did not take back the earlier APN credentials"
+and no dial, until `rm /etc/mu300/apn-auth-set.sim0`), nor that a network then accepts them. To check, with a SIM whose
+APN checks credentials (or any SIM: most public APNs accept any user name and password, which shows the command is
+taken, not that it is used):
+
+    # OpenWrt
+    uci set network.wan.apn='<apn>'; uci set network.wan.username='<user>'; uci set network.wan.password='<password>'
+    uci set network.wan.auth='chap'; uci commit network; ifup wan
+    logread -e mu300cell; cat /tmp/mu300cell.err      # no "refused the APN credentials", and never the password
+    ifstatus wan | grep -m1 '"address"'; ping -c 3 1.1.1.1
+    ifstatus wan | grep -c '<password>'; ubus call network.interface dump | grep -c '<password>'    # 0 and 0
+    grep -rl '<password>' /run /tmp /var/log 2>/dev/null     # nothing (logread | grep -c '<password>': 0)
+    mu300-at 'AT+CGDCONT?'; mu300-at 'AT+CGPCO?'      # what the modem holds (CGPCO? may not be answered)
+    mu300-at 'ATE?'; cat /run/mu300-at*/urc/*.log     # does the modem echo; nothing of the command in the log
+    ls -l /etc/mu300/apn-auth-set.sim0 /etc/config/network # the mark; network is -rw-------
+    # while it dials, from a second shell: no AT+CGPCO in any command line or environment
+    while :; do grep -a -l CGPCO /proc/[0-9]*/cmdline 2>/dev/null; done
+    # take them out again: the next dial sends AT+CGPCO=0,"","",1,0 once, the mark is gone, data still comes up
+    uci delete network.wan.username; uci delete network.wan.password; uci delete network.wan.auth
+    uci commit network; ifup wan; ls /etc/mu300/apn-auth-set.sim0; logread -e mu300cell | tail -3
+    # refusals: chmod 644 /etc/config/network is put right by the dial (600 again); a user name without an APN
+    #   gives "set without an APN" in the log and no address
+    # a wrong password on an APN that checks it: the dial fails at the network (no address), nothing in the log
+    # Ubuntu: the same three as MU300_APN_USER, MU300_APN_PASSWORD, MU300_APN_AUTH in /etc/mu300/mobile-data.conf,
+    #   systemctl restart mu300-mobile-data; journalctl -u mu300-mobile-data -n 30; stat -c %a /etc/mu300/mobile-data.conf
+    #   then: mu300-power's suspend and resume (or  mobile-data down; mobile-data up  by hand): the APN and the
+    #   credentials are used again (AT+CGDCONT? shows the APN)
+    # the F50's internal SIM (sim_slot 1) once without credentials: it dials as before
+### 70. adb to Linux on by default and open to every computer: the owner's decision, the exposure, and the state that decides it
+
+**The decision.** On 2026-10-13 the owner of the project decided that adb to the Linux systems over USB is on by
+default and accepts every computer without key authorisation. The reason: a browser-based installer and manager
+(WebUSB) and a GUI are being built, and they must be able to talk to a device running Linux without the user first
+getting a key onto it; a browser makes its own adb key, which nobody could have authorised beforehand. Importing a
+key and confirming with a button on the device were offered as alternatives; the owner chose "accept everyone". It
+follows the project's standing rule: bootability and usability over lockdown, and the exposure written down
+instead.
+
+**The exposure.** With the default, anyone who can plug a USB cable into the device gets a root shell without a
+password - also after passwords were set for `ubuntu` and `root` - and with it everything on the device: the
+hotspot key, the VPN profiles, the SMS pool, the SSH host keys, the modem. It is the cable only: adbd has no TCP or
+vsock listener in either mode (below), so nothing changes for the LAN, the hotspot's clients or the mobile network.
+Before this change physical access already gave the same to someone with time (the serial console asks for a
+password, but the boot image and the filesystem are not encrypted or verified); what changes is that it now takes a
+cable and a second. The two commands that close it are in the README, the wiki (Installation, FAQ, Home, Glossary),
+the release notes' body, the installers' question and summary, and in the output of `mu300-usb adb on|auth|status`:
+`sudo mu300-usb adb auth keys` (only authorised keys) and `sudo mu300-usb adb off`.
+
+**How adbd decides.** `mu300-adbd.patch` set `auth_required = true` on Linux unconditionally (§43). AOSP's own switch
+is the property `ro.adb.secure` (0: `handle_new_connection` answers a `CNXN` with "authentication not required" and
+the transport is online at once; 1: it sends an `AUTH` token and waits for a signature of an authorised key). There
+are no Android properties on our systems, so the patch reads one environment variable instead:
+`MU300_ADB_AUTH=open` is `ro.adb.secure=0`, and a missing variable or any other value is `ro.adb.secure=1`.
+`mu300-adbd run` sets it when it starts adbd, from the state below. Nothing else in the patch assigns
+`auth_required`, and the listeners are untouched: adbd still returns before `setup_adb` on Linux, the `tcpip:`
+service (Android's `service.adb.tcp.port`) is inside `#if defined(__ANDROID__)` and `restart_service.cpp` is not in
+`CMakeLists.txt`. Checked on the binary built from this patch (2,493,480 bytes): `strings` finds `MU300_ADB_AUTH`
+and "authentication not required", and none of `service.adb.tcp.port`, `ADBD_PORT`, `adbd listening on`.
+
+**The state, and which reading wins.** Two files in `/etc/mu300`, written by `mu300-usb`: `adb` (`on`/`off`) and
+`adb_auth` (`open`/`keys`). `/etc/mu300` is part of the root filesystem, so there is no mount to wait for at boot,
+and `mu300-update apply` copies the directory whole into the new system (`keep_list`, `cp -a`: owner and modes
+stay), so a choice is not lost by an update; `tests/test_update.py` has `off`, `keys` and a key in the system that
+is replaced. The rules (`mu300-adbd`: `adb_on`, `auth_read`):
+
+| What is there | adb | Who is let in |
+|---|---|---|
+| nothing (a new installation; an update of a device that never touched adb) | on | every computer: the decision |
+| `adb` = `off` | off | - |
+| `adb` = `on`, no `adb_auth` (turned on under v2026.10.20-23, when on meant keys only) | on | keys |
+| no `adb_auth`, a key in `adb_keys` or `/root/.android/adb_keys` (authorised then) | as `adb` says | keys |
+| `adb_auth` = `open`, a regular file of root's that nobody else can write | as `adb` says | every computer |
+| `adb_auth` = `keys` | as `adb` says | keys |
+| `adb_auth` empty, cut short, unreadable, a symlink, writable by group or others, or any other word | as `adb` says | keys, and the log and `adb status` say why |
+| `adb` there and neither `on` nor `off` (empty, cut short) | **off**, and the log says why | - |
+| `/etc/mu300` missing, not root's, or writable by group or others | on | keys, and the log says why |
+| keys, and no key in either file | on | **nobody** (adbd has nothing a signature could match and no socket through which a key could be approved; measured in §43: `unauthorized` with the key file taken away) |
+
+So "open" has exactly two sources: no state at all, or the word `open` in a whole file that only root can write.
+A state that somebody set and that was damaged afterwards is never read as the default.
+
+* **Existing installations.** The old state file can tell "never set" (no file) from "set to off" (`off`), so a
+  device where `mu300-usb adb off` was run stays off. A device that never touched adb turns on, and open, with the
+  update: that is what the decision asks for, and the release notes must say it. A device where adb was turned on,
+  or a key authorised, under v2026.10.20-23 chose keys-only adb, and keeps it: `mu300-usb` writes `adb_auth` with
+  every `adb on`, `off`, `key` and `auth` since, so "no `adb_auth`, but `on` or a key" can only be such a device.
+  It becomes open with `sudo mu300-usb adb auth open`.
+* **Written whole.** `mu300-usb` writes both files as a new file renamed over the old one (`adb_write`): a power cut
+  leaves the old word or the new one. A new file that the filesystem did not get to fill would be empty, which
+  reads as keys (or off). The rename also replaces a symlink instead of writing through it; the new file is
+  created with noclobber, mode 644 (anyone may read whom adb lets in), and the key file stays 600.
+* **Authorising a key does not close an open device**: `adb key` writes the mode in force into `adb_auth` first.
+* **The installers.** The question is now "let in only this computer's adb key instead?" (default no). Yes writes
+  `keys` into `adb_auth`, then `on`, then the key: keys-only from the first boot. The Magisk zip has no question;
+  its systems start open. A build of one's own (`install.sh --build`) builds adbd always.
+
+**Where adb cannot be on.** A mainline kernel from before v2026.10.20 (no `CONFIG_USB_CONFIGFS_F_FS`; a system
+updated without its kernel: `mu300-update kernel` brings one); an image without `/opt/mu300/bin/adbd` (built without
+`tools/adbd/adbd`, or older than v2026.10.20); the U30 Air while its port is a USB host (`mu300-usb host`: there is
+no gadget, `mu300-adbd` leaves it alone and binds again in the device role); and the seconds before the system's
+`mu300-adbd` service starts (boot/init makes the gadget without adb, so the fallback to Android and init's own
+recovery shell are as they were). In each case the network and the console are untouched and `mu300-usb adb
+status` says which it is. The vendor 5.4 kernel has FunctionFS (`CONFIG_USB_CONFIGFS_F_FS=y` in the stock config),
+so adb is expected to work there; it has not been tried (§43).
+
+**What the default-on changes for a computer, from what §43 measured and what it did not.** Every boot now rebinds
+the gadget once, early (before the LAN's DHCP server): the computer sees a replug. The network function and the
+console keep their interface numbers and the VID:PID stays; `bcdDevice` goes from 0x0301 to 0x0303 (0x0302 to
+0x0304 with RNDIS), which is what makes Windows ask for the MS OS descriptors again, and the MS OS descriptors are
+then on with NCM too. On macOS (measured in §43, F50-B, 7.2): NCM and the console came back after the rebind, adb
+worked next to them, and with RNDIS a Mac has no network but has adb. A Mac keeps the interface it knows (the MAC
+address does not change), which matters while its screen is locked. A host without adb sees one more vendor
+interface and ignores it. **Not measured: any Windows host** - whether Windows re-installs the drivers of the
+network and serial interfaces once for the new `bcdDevice`, whether the adb interface gets WinUSB by itself, and
+whether NCM is disturbed by the descriptors being on. Until that is measured, default-on is a change every Windows
+user meets at the first boot after the update, and `sudo mu300-usb adb off` is the way back to the gadget as
+boot/init makes it.
+
+**The installers meet a device in Linux in `adb devices` now.** Its shell is root, so `su -c 'id -u'` says 0 there
+too: nothing but the installer's own check keeps it from being taken for a rooted Android (read from the code, not seen happen: it would wait two
+minutes for `sys.boot_completed`, ask "this does not look like an F50, continue?" and go on after a yes). Now
+(`tools/linux-mode.sh`, shared by `install.sh`, `uninstall.sh` and `tools/reset-password.sh`; the same in
+`install.ps1` and `uninstall.ps1`): a serial that starts with `MU300LINUX` (boot/init) is a device in Linux; it is
+never on the list of devices to choose from, never the answer to "is an Android up", and `ANDROID_SERIAL` naming it
+is dropped. The installer says "The device is running MU300 Linux, not Android" and offers to reboot it into
+Android: over adb where the device lets the computer in (`/opt/mu300/bin/mu300-next-boot android && sync &&
+reboot`, after checking that `mu300-next-boot` is there; no password, and it works where SSH does not, e.g. RNDIS
+on a Mac), else over SSH as before; with neither (keys-only adb, no USB network) it stops with the two commands to
+run on the device. After a device was selected, `ls -d /opt/mu300/bin` on it must print nothing, whatever its serial
+says. `tools/backup-device.sh` refuses a `MU300LINUX` serial. `backup-full.sh`, `collect-logs.sh` and
+`boot/android-boot-linux.sh` take the device adb gives them and were not changed: the first two only read, the
+third compares `boot_b` first and stops.
+
+**For tools:** `adb shell /opt/mu300/bin/mu300-device --json`, one line with the device, the system, its release,
+the kernel, whether the caller is root and what adb does; the contract is `docs/ADB-INTERFACE.md`.
+
+**Tested** (`tests/test_adb.py`, `test_installer.py`, `test_device_scripts.py`, `test_android_install.py`,
+`test_update.py`, `installer.Tests.ps1`; dash and bash here, busybox ash in CI): the patch's one switch and that
+nothing else assigns `auth_required` or reads the environment; every row of the table above; the state written
+whole and not through a symlink; the fake gadget joined with `MU300_ADB_AUTH` as the state says; the installers'
+device selection with a device in Linux alone, next to an F50 in Android, next to a tablet, in keys mode, with and
+without SSH, with a reboot that does not happen, and a Linux behind an Android-looking serial; the JSON line
+parsed, with values that try to break out of their quotes. The patched adbd was built (`tools/adbd/build.sh`,
+Alpine 3.20, arm64) and its strings checked; it was not run, because it needs FunctionFS.
+
+**Not measured on a device** (all test boards were in use; this is the checklist, to be run before a release
+carries the change). `S` is the device's serial in `adb devices`, the computer a Mac unless it says Windows:
+
+1. *Fresh boot, each of Ubuntu 24.04 and OpenWrt (`openwrt-luci`) on 5.4, 6.18 and 7.2, with no `/etc/mu300/adb*`
+   files:* `adb devices` shows `MU300LINUX-... device` within a minute of power-on. On the device
+   `mu300-usb adb status` prints `adb: on`, `auth: open (...)`, `gadget: adb is in it (25100000.dwc3)`;
+   `cat /sys/kernel/config/usb_gadget/linux/bcdDevice` is `0x0303`; `journalctl -u mu300-adbd` (OpenWrt: `logread
+   -e mu300-adbd`) has `auth open: every computer on the USB cable gets a root shell` and `gadget bound on ... with
+   adb`. On 5.4 this is the first run of adbd on that kernel at all: if `adb devices` stays empty, the status line
+   `adbd: cannot run: ...` or the log says why, and the network must be up regardless.
+2. *A root shell from a Mac whose key was never on the device* (`mv ~/.android ~/.android.bak; adb kill-server`
+   first): `adb -s S shell id -u` prints `0`; `adb -s S shell /opt/mu300/bin/mu300-device --json` prints one line
+   such as `{"mu300":1,"device":"f50","system":"ubuntu","version_id":"24.04","release":"v...","kernel":"7.2.10","root":true,"adb":"open"}`;
+   `adb -s S push` and `pull` of a 20 MB file, checksums equal.
+3. *No network listener:* on the device `ss -ltnp | grep -c adbd` (OpenWrt: `netstat -ltnp | grep -c adbd`) prints
+   `0`; from the computer `adb connect 192.168.77.1:5555` says `Connection refused`; `adb -s S tcpip 5555` does not
+   make it listen (the same `0` afterwards).
+4. *Keys:* `sudo mu300-usb adb auth keys` (prints `no key is authorised yet` on a device without keys); after the
+   replug `adb devices` shows `S unauthorized` and `adb -s S shell id` says `device unauthorized`, for as long as
+   one waits. `adb auth keys` with `/etc/mu300/adb_keys` deleted: the same. Then `scp ~/.android/adbkey.pub` to the
+   device, `sudo mu300-usb adb key adbkey.pub`: `adb -s S shell id -u` prints `0` without a replug (after
+   `adb kill-server` at most). A second computer, or the first with a new key (`rm ~/.android/adbkey*; adb
+   kill-server`): `unauthorized`. `sudo mu300-usb adb auth open`: both get in.
+5. *Damaged state:* `: > /etc/mu300/adb_auth; reboot` - `mu300-usb adb status` says `auth: keys (...; ... is
+   empty, unreadable or says neither open nor keys)` and the computer sees `unauthorized`. `chmod 666
+   /etc/mu300/adb_auth` with `open` in it: keys as well. `: > /etc/mu300/adb; reboot`: no adb device, `adb: off
+   (... says neither on nor off)`.
+6. *Off:* `sudo mu300-usb adb off` - the device leaves `adb devices`, `bcdDevice` is `0x0301` again, SSH and the
+   console come back. Still off after `reboot`, and after `mu300-update apply` and the reboot into the new system
+   (`cat /etc/mu300/adb` prints `off`). The same for `adb auth keys` with a key: after an update, still `keys`,
+   the key still gets in, another computer does not.
+7. *An existing installation:* a device on v2026.10.23 that never touched adb, `mu300-update apply`, reboot: as 1.
+   A device where `mu300-usb adb on` was run with a key under v2026.10.23, updated: `auth: keys (...; adb was turned
+   on when it took keys only ...)`, the key gets in, another computer sees `unauthorized`.
+8. *The USB network next to it, macOS:* with adb in the gadget, `ifconfig` shows the device's interface with an
+   address in 192.168.77.0/24 (U30 Air: .78), `ping 192.168.77.1` and `ssh` work, `ls /dev/cu.usbmodem*` has the
+   console; the same when the Mac's screen was locked during the device's boot; the same after ten `adb shell true`
+   in a row (each ends a connection: FunctionFS unbinds the gadget and the loop binds it again after 5 s - the
+   network is away for 6-8 s each time, §43; count them).
+9. *The USB network next to it, Windows 10 and 11, NCM (the default) and RNDIS (`MU300_USBNET`):* after the first
+   boot with adb, Device Manager shows the network adapter and the COM port working, and "ADB Interface" under
+   WinUSB devices without a driver having been installed by hand; `ping 192.168.77.1`; `adb devices` lists the
+   device. Note whether Windows shows "setting up a device" for the network or the COM port again (the new
+   `bcdDevice`), and whether it does so at every boot or once.
+10. *The U30 Air's host role:* `sudo mu300-usb host` with adb on, a flash drive on an OTG adapter mounts; `sudo
+    mu300-usb device`: network, console and adb are back within ten seconds.
+11. *The boot fallback:* a trial boot image that does not reach `mu300-boot-ok` falls back to Android as before
+    (adb plays no part before the system's service starts).
+12. *The installers:* with the device in Linux and adb open, `./install.sh --check` says "The device is running
+    MU300 Linux, not Android", asks, prints `asking it over adb (MU300LINUX-...)`, and goes on once Android is up;
+    the same with `install.ps1 -Check` on Windows. With `adb auth keys` and no key of that computer: over SSH as
+    before.
+
+
+### 81. The U30 Air's second SIM: the hardware facts behind PR #73 (Snrat)
 What one U30 Air (OpenWrt 25.12.5, Linux 7.2.9, modem firmware `s_modemConfig=7`) showed; `docs/U30AIR-SIM2.md`
 has the sequences and the rules built on them. Not verified on an F50 or a U30 Pro, and on the maintainer's U30
 Air (one SIM) only the SIM1 side could be repeated.

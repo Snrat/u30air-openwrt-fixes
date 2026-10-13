@@ -580,6 +580,9 @@ msgstr "Guardado: %s"
 msgid "Remove the saved value"
 msgstr "Eliminar el valor guardado"
 
+msgid "Presets"
+msgstr "Preajustes"
+
 msgid "Received messages are sent on as they reach the SMS pool. A failed delivery is retried after 30 s, then after twice as long each time (an hour at most), ten times in all."
 msgstr "Los mensajes recibidos se reenvían en cuanto llegan al pool de SMS. Un envío fallido se reintenta tras 30 s y después cada vez tras el doble de tiempo (una hora como máximo), diez veces en total."
 
@@ -636,6 +639,12 @@ msgstr "Vacío: los campos estándar (texto sin formato: el mensaje). Marcadores
 
 msgid "Extra headers (one \"Name: value\" per line)"
 msgstr "Cabeceras adicionales (un \"Nombre: valor\" por línea)"
+
+msgid "The answer must contain"
+msgstr "La respuesta debe contener"
+
+msgid "Empty: every HTTP 2xx answer counts as delivered. With key=value (for example errcode=0), the answer must also be a JSON object that has this value under this key at its top level; otherwise the delivery fails. Only the result of the check is logged, never the answer."
+msgstr "Vacío: toda respuesta HTTP 2xx cuenta como entregada. Con clave=valor (por ejemplo errcode=0), la respuesta debe ser además un objeto JSON que tenga ese valor bajo esa clave en su nivel superior; de lo contrario, el envío falla. Solo se registra el resultado de la comprobación, nunca la respuesta."
 
 msgid "Bot token"
 msgstr "Token del bot"
@@ -702,6 +711,9 @@ msgstr "Filtrado"
 
 msgid "Dropped"
 msgstr "Descartado"
+
+msgid "Clear"
+msgstr "Vaciar"
 
 msgid "Test"
 msgstr "Prueba"
@@ -1804,9 +1816,6 @@ msgstr "Vaciar el almacén local de SMS"
 
 msgid "Only local files will be deleted; messages on the SIM remain."
 msgstr "Solo se eliminarán los archivos locales; los mensajes de la SIM se conservan."
-
-msgid "Clear"
-msgstr "Vaciar"
 
 msgid "Delete this SMS"
 msgstr "Eliminar este SMS"
@@ -3074,6 +3083,9 @@ msgstr "La dirección del webhook debe ser una URL http:// o https://"
 msgid "The webhook body is too long or contains a control character"
 msgstr "El cuerpo del webhook es demasiado largo o contiene un carácter de control"
 
+msgid "The answer check must be key=value, like errcode=0 or ok=true (the value a whole number or lowercase letters, 16 at most)"
+msgstr "La comprobación de la respuesta debe ser clave=valor, como errcode=0 u ok=true (el valor, un número entero o letras minúsculas, 16 como máximo)"
+
 msgid "Invalid header (one \"Name: value\" per line; Host, Content-Type, Content-Length, Transfer-Encoding and Connection are set by the device)"
 msgstr "Cabecera no válida (un \"Nombre: valor\" por línea; Host, Content-Type, Content-Length, Transfer-Encoding y Connection los pone el dispositivo)"
 
@@ -3103,6 +3115,12 @@ msgstr "No se pudieron guardar los ajustes de reenvío"
 
 msgid "SMS forwarding is not installed"
 msgstr "El reenvío de SMS no está instalado"
+
+msgid "A test was started a moment ago; wait a few seconds"
+msgstr "Se acaba de iniciar una prueba; espere unos segundos"
+
+msgid "The delivery log could not be cleared"
+msgstr "No se pudo vaciar el registro de envíos"
 
 msgid "Unknown forwarding operation"
 msgstr "Operación de reenvío desconocida"

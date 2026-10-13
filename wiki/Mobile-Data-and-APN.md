@@ -38,6 +38,20 @@ which is what most carriers expect.
 | Ubuntu | `/etc/mu300/mobile-data.conf`: `MU300_APN` and `MU300_PDP_TYPE` (an example is in `/etc/mu300/mobile-data.conf.example`) |
 | OpenWrt | LuCI -> Network -> Interfaces -> wan, or `uci set network.wan.apn='…'; uci commit network; ifup wan` |
 
+**An APN with a user name and a password** (a private APN, some MVNOs): set them next to the APN. They need an APN;
+printable ASCII, at most 64 characters each, no quotes or backslashes. The authentication is `pap`, `chap`, `both`
+(the network picks, and the default) or `none`.
+
+| System | Where |
+|---|---|
+| Ubuntu | `MU300_APN_USER`, `MU300_APN_PASSWORD`, `MU300_APN_AUTH` in `/etc/mu300/mobile-data.conf` |
+| OpenWrt | the same page (APN user name, APN password, APN authentication), or `uci set network.wan.username='…'; uci set network.wan.password='…'; uci set network.wan.auth='chap'; uci commit network; ifup wan` |
+
+The file that holds the password must be readable by root alone; the dial makes it so (`chmod 600`) and does not
+start otherwise, and a user name or password without an APN is refused rather than left out. This is new and has
+not yet been tried against a network that checks the credentials; if your carrier needs it, a report either way is
+welcome.
+
 ## Data usage
 
 The device counts its mobile data per day and per billing cycle, both ways, the way the operator counts it. The count

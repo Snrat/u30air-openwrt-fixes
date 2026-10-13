@@ -66,7 +66,7 @@ if [ -e /cltest ]; then install -D -m755 /cltest $R/opt/mu300/android/system/bin
 if [ -e /bt-init ]; then cp /bt-init $R/opt/mu300/bin/mu300-bt-init; fi
 # tools/keys build (static arm64): the buttons (mu300-buttons)
 if [ -e /keys ]; then install -m755 /keys $R/opt/mu300/bin/mu300-keys; fi
-# tools/adbd build (static arm64, musl): adb over USB, off until mu300-usb adb on
+# tools/adbd build (static arm64, musl): adb over USB, on unless mu300-usb adb off
 if [ -e /adbd ]; then install -m755 /adbd $R/opt/mu300/bin/adbd; fi
 # the VPN engines (Xray, hev-socks5-tunnel, sing-box) are not part of the image: they are the vpn extra
 # (tools/make-extra.sh, installed with mu300-extra install vpn)
