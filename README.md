@@ -202,6 +202,11 @@ and it asks first. Back the device up with `tools/backup-device.sh` before sayin
 neither case, stop and open an issue with what `--check` printed; they identify the variant. With an SD card in the
 slot there is a way that erases nothing: `--check` says so, and the installer offers the card instead.
 
+For an already enabled rooted wireless adb connection, the desktop installer now has an explicit
+[wireless installation mode](docs/WIRELESS-ADB-INSTALL.md): `--adb-address IP:PORT` / `-AdbAddress IP:PORT`,
+with device binding, reconnection/status checks and Wi-Fi/battery warnings. Connect a charger; Wi-Fi does not
+power the device. The original USB workflow remains available.
+
 For U30 Air/M3 with the matching 32 GB F2FS layout, an optional [rooted TCP adb and data-preserving preparation
 tool](docs/PRESERVE-DATA-INSTALL.md) can make 4 GiB before running the installer. It is experimental, measured on
 M3/B18, and separate from the reset workflow above; the existing backup and installation steps still apply.

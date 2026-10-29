@@ -1,13 +1,14 @@
 # Rooted TCP adb and preserving Android data while making room (experimental)
 
-The regular desktop installers can already use an authorized TCP adb device: run
+The desktop installers have an explicit [wireless installation mode](WIRELESS-ADB-INSTALL.md) with connection,
+identity, job-status and Wi-Fi/power handling. Independently of that new mode, they can already use an authorized
+TCP adb device: run
 `adb connect <Android-IP>:5555` first and select that target with `ANDROID_SERIAL`. This does not enable adb or
 root the device. The hotspot and adb address can change when switching between Android and Linux. On Linux,
 use its SSH/LuCI address; do not assume that Android's TCP adb daemon is available there.
 
 The normal make-room workflow can reset Android. `tools/preserve-space.py` is a separate, opt-in preparation
-tool for the shared U30 Air/M3 software, using the data-preserving workflow measured on an M3. It leaves the
-existing F50/U30 Air/V50 installation,
+tool for the shared U30 Air/M3 software, using the data-preserving workflow measured on an M3. It leaves the existing USB backup/install,
 reset/resume, command names and hardware handling unchanged. M3 recognition in the normal installer is a separate
 change ([PR #456](https://github.com/dikeckaan/mu300-linux/pull/456)); this tool does not require that PR to prepare
 space, but an installer without M3 recognition will still refuse the later M3 installation.
@@ -66,7 +67,7 @@ python3 tools/preserve-space.py --adb-address 192.168.0.1:5555 --state backup/m3
 ```
 
 Binary recovery copies use device-side staging and `adb pull`, following the existing backup transfer logic;
-`su` stdout is used for text only. Existing backup/install scripts are not modified.
+`su` stdout is used for text only. The original backup and USB installation logic is retained.
 
 Verification checks root adb access, the same eMMC, the kernel's new userdata size, both F2FS superblocks, both
 planned GPT copies, and unchanged boot/TrustOS hashes. Only after this succeeds use the regular installer; its

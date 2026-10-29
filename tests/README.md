@@ -13,6 +13,7 @@ macOS and Windows (`.github/workflows/tests.yml`).
 
 | file | what |
 |---|---|
+| `test_adb_network.py` | main installer TCP entry and shim against fake U30 Air; reconnect/identity/slot checks, Wi-Fi and power notices, ambiguous-command refusal, staging-only retries, detached workers and PowerShell warning/output separation |
 | `test_preserve_space.py` | shared U30 Air/M3 preparation: explicit TCP adb targets, binary stage/pull, recovery-copy validation, detached workers and duplicate-launch refusal; independent host/native GPT plans, CRC/layout rejection, bounded commits and partial GPT state; synthetic files only |
 | `test_static.py` | every script parses under each shell that runs it; device programs are executable; rules from past bugs (no double quotes in `install.ps1`'s device commands, ASCII-only PowerShell, init looks for partitions after the modules, every function `install.ps1` calls at its top level defined above the call) |
 | `test_i18n.py` | `tools/i18n.sh`: every translation with every placeholder, arguments passed through untouched, answers in all three languages |
