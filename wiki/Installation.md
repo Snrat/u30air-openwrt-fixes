@@ -25,6 +25,11 @@ flowchart TD
 
 ## What you need
 
+The **ZTE M3 (MU5352)** is recognized by its exact Android model/device and `ums9620` platform, using the
+U30 Air profile and `192.168.78.1` LAN. One M3 has been tested with OpenWrt and kernel 7.3.0; other hardware
+features and kernels are not implied. Read [the device notes](https://github.com/dikeckaan/mu300-linux/blob/main/docs/M3-MU5352.md)
+and keep the Root, bootloader/TrustOS and backup prerequisites below.
+
 * A **ZTE F50 / MU300** or **ZTE U30 Air** that is already **rooted, and able to boot a modified boot image**: an
   unlocked bootloader, or a locked one with a patched TrustOS. Getting there is not part of this project: it does
   not root, unlock or patch devices and gives no guide for it.

@@ -43,6 +43,18 @@ T=${MU300_DEVICE_WORK:-/data/local/tmp}
 . $T/mu300-install.env
 M=$T/mu300root
 say() { echo "[device] $*"; }
+# --- device model begin
+install_device_model() {
+    mkdir -p "$1/etc/mu300"
+    # A carried-over label can be a symlink: unlink it before writing this device's identity.
+    rm -f "$1/etc/mu300/device-model"
+    if [ "$(getprop ro.product.model)" = MU5352 ] &&
+       [ "$(getprop ro.product.device)" = MU5352 ] &&
+       [ "$(getprop ro.board.platform)" = ums9620 ]; then
+        printf 'm3\n' > "$1/etc/mu300/device-model"
+    fi
+}
+# --- device model end
 # --- stage begin
 # The long stages on an SD card run bounded (FINDINGS 50). A card, or the SD host, that stops answering leaves a
 # request in the kernel that never completes: the command sits in D state, kill -9 does nothing, and every retry adds
@@ -997,6 +1009,7 @@ for os in $OSES; do
     R=$M/$os
     if [ "${SD_MODE:-0}" = 1 ]; then sd_fstab $R; fi
     mkdir -p $R/etc/mu300
+    install_device_model "$R"
     if [ -n "$ssid" ] && ! { [ "${UPDATE:-0}" = 1 ] && [ -s $R/etc/mu300/hotspot.conf ]; }; then
         umask 077
         printf 'SSID=%s\nPSK=%s\nBAND=5\nCHANNEL=auto\nCOUNTRY=TR\n' "$ssid" "$psk" > $R/etc/mu300/hotspot.conf

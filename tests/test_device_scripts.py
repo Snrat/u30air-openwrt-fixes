@@ -101,7 +101,7 @@ class Device(ShellTest):
                    MU300_ADB_ROOT_KEYS=self.tmp / 'none', MU300_ADB_OWNER=os.getuid(),
                    MU300_ADBD_BIN=shutil.which('true'), MU300_MODULES_BUILTIN=self.tmp / 'builtin')
         (self.tmp / 'builtin').write_text('kernel/drivers/usb/gadget/function/usb_f_fs.ko\n')
-        want = {'mu300': 1, 'device': 'u30air', 'system': 'ubuntu', 'version_id': '24.04',
+        want = {'mu300': 1, 'device': 'u30air', 'model': 'u30air', 'system': 'ubuntu', 'version_id': '24.04',
                 'release': 'v2026.10.23', 'kernel': '7.2.10', 'root': True, 'adb': 'open'}
         for shell in self.each_shell():
             out = self.script(shell, BIN / 'mu300-device', '--json', **env)
@@ -110,6 +110,11 @@ class Device(ShellTest):
             self.assertEqual(want, json.loads(out.stdout))
             # the order of the fields is not part of the contract, their names and kinds are
             self.assertEqual(list(want), list(json.loads(out.stdout)))
+        (r / 'etc/mu300/device-model').write_text('m3\n')
+        for shell in self.each_shell():
+            got = json.loads(self.script(shell, BIN / 'mu300-device', '--json', **env).stdout)
+            self.assertEqual(('u30air', 'm3'), (got['device'], got['model']))
+        (r / 'etc/mu300/device-model').unlink()
         # adb as the device has it set; not root; the copy kept by an update (ubuntu.old) is still "ubuntu"
         (r / 'etc/mu300/adb_auth').write_text('keys\n')
         (disk / 'ubuntu').unlink()
@@ -145,6 +150,17 @@ class Device(ShellTest):
         for shell in self.each_shell():
             got = json.loads(self.script(shell, BIN / 'mu300-device', '--json', **env).stdout)
             self.assertEqual(('openwrt-luci', 'unknown'), (got['system'], got['release']))
+
+    def test_model_variant_never_changes_hardware_profile(self):
+        for profile in ('u30air', 'f50', 'v50'):
+            r = self.root(profile)
+            (r / 'etc/mu300').mkdir(parents=True, exist_ok=True)
+            for marker in ('m3\n', 'M3Pro\n', 'm3\nother\n', ''):
+                (r / 'etc/mu300/device-model').write_text(marker)
+                expected = 'm3' if profile == 'u30air' and marker == 'm3\n' else profile
+                for shell in self.each_shell():
+                    self.assertEqual(profile, self.script(shell, BIN / 'mu300-device', MU300_SYSROOT=r).stdout.strip())
+                    self.assertEqual(expected, self.script(shell, BIN / 'mu300-device', '--model', MU300_SYSROOT=r).stdout.strip())
 
     def test_lan_ip(self):
         for device, want in (('f50', '192.168.77.1'), ('u30air', '192.168.78.1'), ('', '192.168.77.1'),
