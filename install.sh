@@ -86,15 +86,15 @@ OWRT_VER=25.12.6
 # empty: the newest published release, looked up when it is needed. It used to be a fixed tag that nobody
 # remembered to move, so new installs kept getting an old release long after fixes were published.
 T=/data/local/tmp
-MODE=prebuilt; CHECK_ONLY=0; BACKUP_ONLY=0; ADB_PATH_ONLY=0; ANSWERS_FILE=; NETWORK_STATUS=0; NETWORK_RESTART=0; _opt=
+MODE=prebuilt; CHECK_ONLY=0; BACKUP_ONLY=0; ADB_PATH_ONLY=0; ANSWERS_FILE=; NETWORK_STATUS=0; NETWORK_RESTART=0; NETWORK_ADDRESS_SET=0; _opt=
 for a in "$@"; do
-    if [ "$_opt" = adb_address ]; then MU300_ADB_ADDRESS=$a; export MU300_ADB_ADDRESS; _opt=; continue; fi
+    if [ "$_opt" = adb_address ]; then MU300_ADB_ADDRESS=$a; NETWORK_ADDRESS_SET=1; export MU300_ADB_ADDRESS; _opt=; continue; fi
     if [ "$_opt" = answers ]; then ANSWERS_FILE=$a; _opt=; continue; fi
     if [ "$_opt" = transaction ]; then MU300_TRANSACTION=$a; export MU300_TRANSACTION; _opt=; continue; fi
     if [ "$_opt" = package ]; then MU300_PACKAGE=$a; export MU300_PACKAGE; _opt=; continue; fi
     case $a in
         --adb-address) _opt=adb_address ;;
-        --adb-address=*) MU300_ADB_ADDRESS=${a#--adb-address=}; export MU300_ADB_ADDRESS ;;
+        --adb-address=*) MU300_ADB_ADDRESS=${a#--adb-address=}; NETWORK_ADDRESS_SET=1; export MU300_ADB_ADDRESS ;;
         --adb-status) NETWORK_STATUS=1; CHECK_ONLY=1 ;;
         --adb-restart) NETWORK_RESTART=1 ;;
         --check) CHECK_ONLY=1 ;;
@@ -334,7 +334,11 @@ if [ -n "${MU300_ADB_ADDRESS:-}" ] || [ "$NETWORK_STATUS" = 1 ]; then
             python3 "$MU300_NETWORK_TOOL" --adb "$MU300_NETWORK_ADB" --state "$MU300_NETWORK_STATE" --timeout "${MU300_ADB_TIMEOUT:-120}" "$@"
         fi
     }
-    if [ "$NETWORK_STATUS" = 1 ]; then network_call status; exit $?; fi
+    if [ "$NETWORK_STATUS" = 1 ]; then
+        if [ "$NETWORK_ADDRESS_SET" = 1 ]; then network_call status
+        else python3 "$MU300_NETWORK_TOOL" --adb "$MU300_NETWORK_ADB" --state "$MU300_NETWORK_STATE" --timeout "${MU300_ADB_TIMEOUT:-120}" status; fi
+        exit $?
+    fi
     if [ "$NETWORK_RESTART" = 1 ]; then network_call --restart connect; else network_call connect; fi
     ANDROID_SERIAL=$MU300_ADB_ADDRESS; export ANDROID_SERIAL
     T=$(network_call work)

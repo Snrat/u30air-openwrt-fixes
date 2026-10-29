@@ -81,7 +81,7 @@ $Top = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocat
 # so it is read before anything looks at one
 . (Join-Path (Join-Path $Top 'tools') 'answers.ps1')
 AnswersSetup $AnswersFile ([bool]$NonInteractive)
-if (-not $AdbAddress) { $AdbAddress = [string]$env:MU300_ADB_ADDRESS }
+if (-not $AdbAddress -and -not $AdbStatus) { $AdbAddress = [string]$env:MU300_ADB_ADDRESS }
 if ($AdbRestart -and -not $AdbAddress) { throw '-AdbRestart requires -AdbAddress' }
 if ($AdbAddress -or $AdbStatus) {
     $env:MU300_GUI = '0'; $env:MU300_NO_SELF_UPDATE = '1'

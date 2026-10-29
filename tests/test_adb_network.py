@@ -300,6 +300,11 @@ class EntryPoint(Device):
             self.assertIn('stable charger', r.stderr)
             saved = json.loads((self.tmp / 'work/wireless-install.json').read_text())
             self.assertEqual(saved['identity']['MODEL'], 'U30_Air')
+            status = self.run_script(shell, 'install.sh', '--adb-status', MU300_NONINTERACTIVE=1,
+                                     MU300_ADB_ADDRESS='192.168.99.1:5555', MU300_ADB_TIMEOUT=2)
+            self.assertEqual(status.returncode, 0, status.stdout + status.stderr)
+            self.assertIn('Session phase: ready', status.stdout)
+            self.assertIn('No detached device installation', status.stdout)
             calls = self.calls('network-call')
             self.assertTrue(calls)
             self.assertTrue(all(c['argv'][:2] in (['connect', '192.168.0.1:5555'], ['-s', '192.168.0.1:5555']) for c in calls))
