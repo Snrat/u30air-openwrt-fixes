@@ -9,12 +9,14 @@ class Model(ShellTest):
         block = re.search(r'# --- device model begin\n(.*?)# --- device model end', source, re.S)[1]
         root = self.tmp / 'root'
         marker = root / 'etc/mu300/device-model'
-        cases = [('MU5352', 'MU5352', 'ums9620', True),
-                 ('MU5352', 'MU5352', 'ums9632', False),
-                 ('M3Pro', 'MU5352', 'ums9620', False),
-                 ('MU5352', 'other', 'ums9620', False),
-                 ('U30Air', 'U30Air', 'ums9620', False)]
-        for model, device, platform, expected in cases:
+        cases = [('MU5352', 'MU5352', 'ums9620', 'old-label\n', 'm3\n'),
+                 ('MU5352', 'MU5352', 'ums9632', 'old-label\n', 'old-label\n'),
+                 ('M3Pro', 'MU5352', 'ums9620', 'old-label\n', 'old-label\n'),
+                 ('MU5352', 'other', 'ums9620', 'old-label\n', 'old-label\n'),
+                 ('U30Air', 'U30Air', 'ums9620', 'm3\n', None),
+                 ('F50', 'MU300', 'ums9620', 'custom\n', 'custom\n'),
+                 ('V50', 'MU3351', 'ums9620', 'custom\n', 'custom\n')]
+        for model, device, platform, initial, expected in cases:
             self.stub('getprop', f'''case "$1" in
 ro.product.model) echo '{model}' ;;
 ro.product.device) echo '{device}' ;;
@@ -22,12 +24,10 @@ ro.board.platform) echo '{platform}' ;;
 esac''')
             for shell in self.each_shell():
                 marker.parent.mkdir(parents=True, exist_ok=True)
-                marker.write_text('m3\n')
+                marker.write_text(initial)
                 result = self.sh(shell, block + f'\ninstall_device_model "{root}"\n')
                 self.assertEqual(result.returncode, 0, result.stderr)
-                self.assertEqual(marker.exists(), expected, (model, device, platform))
-                if expected:
-                    self.assertEqual(marker.read_text(), 'm3\n')
+                self.assertEqual(marker.read_text() if marker.exists() else None, expected, (model, device, platform))
 
     def test_openwrt_model_label_does_not_override_device_tree_or_driver_dispatch(self):
         source = (TOP / 'openwrt/overlay/etc/init.d/mu300-hw').read_text()

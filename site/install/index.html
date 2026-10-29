@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>try{var t=localStorage.getItem("mu300-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <title>Install Linux on the ZTE F50 / MU300, U30 Air and M3: step-by-step guide</title>
-<meta name="description" content="Beginner's guide: install Linux on the ZTE F50 / MU300, U30 Air or M3 (MU5352) from Windows, macOS or Linux, with every installer question explained.">
+<meta name="description" content="Beginner's guide: install Ubuntu or OpenWrt on the ZTE F50 / MU300, U30 Air or M3 (MU5352) from Windows, macOS or Linux, with every installer question explained.">
 <link rel="canonical" href="https://kaandikec.com/mu300-linux/install/">
 <link rel="alternate" hreflang="en" href="https://kaandikec.com/mu300-linux/install/">
 <link rel="alternate" hreflang="tr" href="https://kaandikec.com/mu300-linux/tr/install/">
@@ -14,7 +14,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MU300 Linux">
 <meta property="og:title" content="Install Linux on the ZTE F50 / MU300, U30 Air and M3: step-by-step guide">
-<meta property="og:description" content="Beginner's guide: install Linux on the ZTE F50 / MU300, U30 Air or M3 (MU5352) from Windows, macOS or Linux, with every installer question explained.">
+<meta property="og:description" content="Beginner's guide: install Ubuntu or OpenWrt on the ZTE F50 / MU300, U30 Air or M3 (MU5352) from Windows, macOS or Linux, with every installer question explained.">
 <meta property="og:url" content="https://kaandikec.com/mu300-linux/install/">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://kaandikec.com/mu300-linux/assets/img/og-image.png">
@@ -23,7 +23,7 @@
 <meta property="og:image:alt" content="A 5G pocket hotspot with two rooms, one for Android and one for Linux">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Install Linux on the ZTE F50 / MU300, U30 Air and M3: step-by-step guide">
-<meta name="twitter:description" content="Beginner's guide: install Linux on the ZTE F50 / MU300, U30 Air or M3 (MU5352) from Windows, macOS or Linux, with every installer question explained.">
+<meta name="twitter:description" content="Beginner's guide: install Ubuntu or OpenWrt on the ZTE F50 / MU300, U30 Air or M3 (MU5352) from Windows, macOS or Linux, with every installer question explained.">
 <meta name="twitter:image" content="https://kaandikec.com/mu300-linux/assets/img/og-image.png">
 <meta name="theme-color" content="#f3f6fa" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0d1520" media="(prefers-color-scheme: dark)">
@@ -38,7 +38,7 @@
  "@context": "https://schema.org",
  "@type": "HowTo",
  "name": "Install Linux on the ZTE F50 / MU300, U30 Air or M3",
- "description": "Beginner's guide: install Linux on the ZTE F50 / MU300, U30 Air or M3 (MU5352) from Windows, macOS or Linux, with every installer question explained.",
+ "description": "Beginner's guide: install Ubuntu or OpenWrt on the ZTE F50 / MU300, U30 Air or M3 (MU5352) from Windows, macOS or Linux, with every installer question explained.",
  "totalTime": "PT15M",
  "tool": [
   {
@@ -72,7 +72,7 @@
   {
    "@type": "HowToStep",
    "name": "Log in",
-   "text": "About a minute later, connect over SSH or LuCI: 192.168.77.1 on the F50, 192.168.78.1 on the U30 Air or M3. The OpenWrt login user is root.",
+   "text": "About a minute later, ssh ubuntu@192.168.77.1 (U30 Air or M3: 192.168.78.1), or open http://192.168.77.1 for OpenWrt (U30 Air or M3: http://192.168.78.1).",
    "url": "https://kaandikec.com/mu300-linux/install/#login"
   }
  ]
@@ -169,13 +169,14 @@ not been tested with it yet, and the installer described on this page covers tho
 <h3>The device</h3>
 <ul>
 <li>A ZTE F50 / MU300, ZTE U30 Air or ZTE M3 (MU5352), not the U30 Pro.</li>
-<li><strong>Rooted and able to boot a modified image</strong>: an unlocked bootloader, or a locked one with patched TrustOS. Getting it there is
+<li><strong>Rooted and unlocked</strong>: it must already boot a modified Android boot image. Getting it there is
 not part of this project; you do it at your own risk with those tools' own instructions.</li>
 <li><strong>USB debugging</strong> turned on, and the device connected to your computer by USB.</li>
 </ul>
 
 <p><strong>M3 (MU5352):</strong> follow the same U30 Air desktop installation steps and Root/TrustOS prerequisites.
 M3 and U30 Air are distinct device models sharing the hardware design; M3 has no NFC.
+The tested M3 retained a locked bootloader with patched TrustOS.
 The tested M3 used an already enabled rooted TCP adb connection instead of USB:
 <code>adb connect &lt;Android-IP&gt;:5555</code>. The project does not enable debugging or root the device.
 The installer selects the existing <code>u30air</code> hardware profile automatically; use the same commands below.

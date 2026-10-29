@@ -778,14 +778,20 @@ stale_config_clean() {
 # --- install-os begin
 # --- device model begin
 install_device_model() {
-    mkdir -p "$1/etc/mu300"
-    # A carried-over label can be a symlink: unlink it before writing this device's identity.
-    rm -f "$1/etc/mu300/device-model"
-    if [ "$(getprop ro.product.model 2>/dev/null)" = MU5352 ] &&
-       [ "$(getprop ro.product.device 2>/dev/null)" = MU5352 ] &&
-       [ "$(getprop ro.board.platform 2>/dev/null)" = ums9620 ]; then
-        printf 'm3\n' > "$1/etc/mu300/device-model"
-    fi
+    _dm_model="$(getprop ro.product.model 2>/dev/null || :) / $(getprop ro.product.device 2>/dev/null || :)"
+    case $_dm_model in
+        "MU5352 / MU5352")
+            [ "$(getprop ro.board.platform 2>/dev/null)" = ums9620 ] || return 0
+            mkdir -p "$1/etc/mu300"
+            # A carried-over label can be a symlink: unlink it before writing this device's identity.
+            rm -f "$1/etc/mu300/device-model"
+            printf 'm3\n' > "$1/etc/mu300/device-model" ;;
+        *U30Air*|*U30_Air*|*"U30 Air"*)
+            [ "$(getprop ro.board.platform 2>/dev/null)" = ums9620 ] || return 0
+            # Only clear our own stale M3 label on the shared U30 Air path.
+            [ "$(cat "$1/etc/mu300/device-model" 2>/dev/null)" != m3 ] || rm -f "$1/etc/mu300/device-model" ;;
+    esac
+    return 0
 }
 # --- device model end
 # Accounts are settings too, and etc/shadow is not in keep: an update carries them over the way mu300-update does,

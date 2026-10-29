@@ -101,7 +101,7 @@ class Device(ShellTest):
                    MU300_ADB_ROOT_KEYS=self.tmp / 'none', MU300_ADB_OWNER=os.getuid(),
                    MU300_ADBD_BIN=shutil.which('true'), MU300_MODULES_BUILTIN=self.tmp / 'builtin')
         (self.tmp / 'builtin').write_text('kernel/drivers/usb/gadget/function/usb_f_fs.ko\n')
-        want = {'mu300': 1, 'device': 'u30air', 'model': 'u30air', 'system': 'ubuntu', 'version_id': '24.04',
+        want = {'mu300': 1, 'device': 'u30air', 'system': 'ubuntu', 'version_id': '24.04',
                 'release': 'v2026.10.23', 'kernel': '7.2.10', 'root': True, 'adb': 'open'}
         for shell in self.each_shell():
             out = self.script(shell, BIN / 'mu300-device', '--json', **env)
@@ -144,6 +144,7 @@ class Device(ShellTest):
             got = json.loads(self.script(shell, BIN / 'mu300-device', '--json', **env).stdout)
             self.assertEqual(('f50', 'openwrt', '25.12.5', 'v2026roottruex'),
                              (got['device'], got['system'], got['version_id'], got['release']))
+            self.assertNotIn('model', got)
             self.assertFalse(got['root'])
         (r / 'www' / 'luci-static').mkdir(parents=True)
         (r / 'etc' / 'mu300' / 'image-version').unlink()
