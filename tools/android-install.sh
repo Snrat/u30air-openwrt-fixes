@@ -43,18 +43,6 @@ T=${MU300_DEVICE_WORK:-/data/local/tmp}
 . $T/mu300-install.env
 M=$T/mu300root
 say() { echo "[device] $*"; }
-# --- device model begin
-install_device_model() {
-    mkdir -p "$1/etc/mu300"
-    # A carried-over label can be a symlink: unlink it before writing this device's identity.
-    rm -f "$1/etc/mu300/device-model"
-    if [ "$(getprop ro.product.model)" = MU5352 ] &&
-       [ "$(getprop ro.product.device)" = MU5352 ] &&
-       [ "$(getprop ro.board.platform)" = ums9620 ]; then
-        printf 'm3\n' > "$1/etc/mu300/device-model"
-    fi
-}
-# --- device model end
 # --- stage begin
 # The long stages on an SD card run bounded (FINDINGS 50). A card, or the SD host, that stops answering leaves a
 # request in the kernel that never completes: the command sits in D state, kill -9 does nothing, and every retry adds
@@ -788,6 +776,18 @@ stale_config_clean() {
 }
 # --- user-packages end
 # --- install-os begin
+# --- device model begin
+install_device_model() {
+    mkdir -p "$1/etc/mu300"
+    # A carried-over label can be a symlink: unlink it before writing this device's identity.
+    rm -f "$1/etc/mu300/device-model"
+    if [ "$(getprop ro.product.model 2>/dev/null)" = MU5352 ] &&
+       [ "$(getprop ro.product.device 2>/dev/null)" = MU5352 ] &&
+       [ "$(getprop ro.board.platform 2>/dev/null)" = ums9620 ]; then
+        printf 'm3\n' > "$1/etc/mu300/device-model"
+    fi
+}
+# --- device model end
 # Accounts are settings too, and etc/shadow is not in keep: an update carries them over the way mu300-update does,
 # with its own function (copied here: this runs on Android and cannot source the new system's mu300-update; tests
 # keep the two the same). The old entry of every account both systems have (hashes, group memberships merged), and

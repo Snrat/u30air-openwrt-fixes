@@ -83,11 +83,13 @@ Air's charger and LEDs, which its boot image loads in place of the F50's ([`kern
 Nothing about the device has to be chosen by hand: the installer reads it from Android, and the boot image, the
 LEDs and the default address follow. The U30 **Pro** is a different chip (UMS9632) and is not supported.
 
-### ZTE M3 (MU5352): U30 Air variant
+### ZTE M3 (MU5352): shared U30 Air hardware profile
 
 The **ZTE M3 (MU5352)** is recognized only when Android reports `MU5352 / MU5352` on `ums9620`.
 OpenWrt 25.12.6 with kernel 7.3.0, 5G, the Wi-Fi hotspot, SSH/LuCI and Android/Linux switching have been
 tested on one M3. Linux keeps the `u30air` hardware profile and `.78.1` LAN, with a separate M3 model label.
+M3 and U30 Air are separate models sharing the hardware design: M3 has no NFC, and the owner reports that its
+buttons work like the U30 Air's. The existing command, service, module and path names stay unchanged.
 See [the device run and untested features](docs/M3-MU5352.md).
 
 ### ZTE V50 (MU3351): experimental

@@ -5012,6 +5012,21 @@ elif op.startswith('w'):
             self.assertEqual(self.writes(), [])
 
 
+    def test_m3_without_nfc_keeps_u30air_profile_but_never_drives_the_tag(self):
+        marker = self.root / 'etc/mu300/device-model'
+        marker.parent.mkdir(parents=True, exist_ok=True)
+        for shell in self.each_shell():
+            self.blank()
+            marker.write_text('m3\n')
+            for action in ('supported', 'wifi', 'sync', 'show'):
+                result = self.nfc(shell, action)
+                self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+                self.assertIn('this device has no NFC tag', result.stderr)
+                self.assertEqual(self.writes(), [])
+                self.assertFalse((self.tmp / 'held').exists())
+            marker.unlink()
+            self.assertEqual(self.nfc(shell, 'supported').returncode, 0)
+
     def test_v50(self):
         # the V50's tag: the same chip on reset line 189, from ZTE's node in the device tree (kano's V50, FINDINGS 95)
         (self.tmp / 'line').write_text('189')
