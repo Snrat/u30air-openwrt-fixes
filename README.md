@@ -171,6 +171,10 @@ the Linux boot image and the device goes back to Android by itself after the ins
 
 **You need:**
 * A ZTE F50 / MU300 or U30 Air, rooted, connected by USB, with USB debugging enabled.
+* For the **M3 (MU5352)**, follow the same U30 Air installation path and Root/TrustOS prerequisites. The tested
+  M3 used an already enabled rooted TCP adb connection in place of USB (`adb connect <Android-IP>:5555`).
+  The project does not enable debugging or root it for you. Use the same desktop `--check` and installation
+  commands below; the installer selects `u30air` automatically, with no M3-specific directory or command.
 * A computer with `adb`:
   * **macOS or Linux:** also Python 3, `lz4` and `curl` (usually already installed).
   * **Windows 10/11:** PowerShell. The installer installs Python 3 (for your user, with winget or from
@@ -347,7 +351,7 @@ into Android for you over SSH.
 ssh ubuntu@192.168.77.1        # the password you chose during the install
 ```
 
-For OpenWrt use `ssh root@192.168.77.1`, or open `http://192.168.77.1` in a browser for LuCI. On a U30 Air the
+For OpenWrt use `ssh root@192.168.77.1`, or open `http://192.168.77.1` in a browser for LuCI. On a U30 Air or M3 the
 address is `192.168.78.1` instead.
 
 The Wi-Fi network the device broadcasts is its hotspot; unless you chose otherwise it uses the name and password
