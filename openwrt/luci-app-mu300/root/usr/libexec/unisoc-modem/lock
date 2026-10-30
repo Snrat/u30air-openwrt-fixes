@@ -1087,7 +1087,7 @@ case "${1:-}" in
     job)    job_worker "${2:-}" "${3:-}" "${4:-}" ;;
     reset)
         if "$SIM2_LOCK" supported nr >/dev/null 2>&1; then
-            echo '{"ok":0,"error":"SIM2 reset-all is unvalidated; use NR band/cell unlock"}'
+            echo '{"ok":0,"error":"SIM2 reset-all is not validated; clear NR bands and NR cell locks separately"}'
             exit 1
         fi
         do_reset; rc=$?; reset_status; exit "$rc" ;;
