@@ -205,6 +205,12 @@ class Native(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stderr + r.stdout)
         self.assertEqual(self.state()['cell'], [])
 
+    def test_success_does_not_restart_the_restored_bearer_in_cleanup(self):
+        self.stub('ifup', 'echo up >> "$MODEM.net"')
+        r = self.call('apply', 'nr', '41')
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertEqual(Path(str(self.db) + '.net').read_text().splitlines(), ['up'])
+
     def test_supported_checks_are_explicit(self):
         (self.root / 'run/mu300/sim-slot').write_text('0')
         self.assertNotEqual(self.call('supported', 'nr').returncode, 0)

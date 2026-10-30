@@ -196,7 +196,8 @@ cleanup() {
   MU300_RADIO_LOCK_WAIT=10 /opt/mu300/bin/mobile-data radio-locked "$SELF" --restore || true
  fi
  [[ $(cat "$R/sim-sequence" 2>/dev/null) != $$ ]] || rm -f "$R/sim-sequence"
- ifup "$DATA_IFACE" >/dev/null 2>&1 || true
+ # ifup restarts an already-up netifd interface. Never bounce it after success.
+ if [[ $rc != 0 ]] && ! wan_up;then ifup "$DATA_IFACE" >/dev/null 2>&1 || true;fi
  rm -rf "$WORK"
  exit "$rc"
 }

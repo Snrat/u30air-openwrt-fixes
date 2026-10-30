@@ -32,8 +32,7 @@ hot-switch preference and boot-fallback policy are not changed by locking.
 
 ## Validation
 
-2026-10-30, U30 Air, modem W25.24.1, OpenWrt 25.12.6 / kernel 7.2.11.
-The initial on-device implementation passed:
+2026-10-30, U30 Air, modem W25.24.1, OpenWrt 25.12.6 / kernel 7.2.11:
 
 - SIM2 n41 write/read-back, RF restart and bearer recovery.
 - Current NR cell write/read-back, RF restart and bearer recovery.
@@ -42,9 +41,10 @@ The initial on-device implementation passed:
 - Both NR unlock operations completed; final NR mask automatic, no NR cell lock.
 - Preliminary card-scoped probes left SIM1's NR settings unchanged.
 
-The refactored platform controller also passed the live n41 and current-NR-cell
-jobs. Its follow-up reboot check is pending: the device has not reappeared over
-Wi-Fi or USB. The PR remains draft until that check can be completed.
+The platform controller passed a second full reboot with both locks retained.
+A final consecutive n41 / NR-cell unlock / automatic-NR run also passed. Cleanup
+does not call ifup again after success: doing that restarted the restored
+netifd bearer and made the next job see an offline card.
 
 M3 is included through the shared board profile. These measurements were made
 on a U30 Air; no separate M3 hardware run is claimed. Other modem revisions,
