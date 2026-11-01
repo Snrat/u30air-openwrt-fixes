@@ -139,6 +139,13 @@ need `adb` on your computer. Getting to that point is not part of this project.
 
 **You need:**
 * A ZTE F50 / MU300 or U30 Air, rooted, connected by USB, with USB debugging enabled.
+  * **Root must reach `adb shell`.** The installer's first step is `su -c id -u` over adb; if it does not answer `0`
+    the installer stops at once and says what to do. Without root yet: in the Magisk app choose *Install → Select and
+    Patch a File*, patch the device's boot image, flash it and reboot (rooting itself is not part of this project).
+    Already rooted: in Magisk open *Superuser* and allow **Shell**, and set *Settings → Superuser access* to
+    *Apps and ADB*. Keep the screen on and unlocked while the installer starts, and tap **Grant** when Magisk asks for
+    Superuser rights on the device — an unanswered request is refused after about 10 seconds (just run the installer
+    again).
 * A computer with `adb`:
   * **macOS or Linux:** also Python 3, `lz4` and `curl` (usually already installed).
   * **Windows 10/11:** PowerShell. The installer installs Python 3 (for your user, with winget or from

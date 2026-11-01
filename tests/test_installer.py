@@ -577,5 +577,61 @@ class ChooseSystems(ShellTest):
             self.assertIn('OSES=openwrt-luci', self.run_choose(shell, 2, '2\n', size=1), shell)
 
 
+class RequireRoot(ShellTest):
+    """tools/linux-mode.sh's require_root: a device without root is told how to get it, in the chosen language."""
+
+    def run_root(self, shell, su_answer, lang='en'):
+        code = (f'TOP="{TOP}"; . "$TOP/tools/i18n.sh"; MU300_LANG={lang}; '
+                'die() { printf "DIE %s\\n" "$*"; exit 1; }; '
+                f'su_do() {{ echo "$1" >> "{self.tmp}/su.log"; echo "{su_answer}"; }}; '
+                '. "$TOP/tools/linux-mode.sh"; require_root; echo "rc=$?"')
+        return self.sh(shell, code).stdout
+
+    def test_rooted_device_passes(self):
+        for shell in self.each_shell():
+            out = self.run_root(shell, '0')
+            self.assertIn('rc=0', out, shell)
+            self.assertNotIn('DIE', out, shell)
+            self.assertIn('tap Grant', out, shell)          # the prompt on the device screen is announced up front
+
+    def test_device_without_root_is_told_what_to_do(self):
+        # "su: not found" (never rooted) and "permission denied" (Magisk, adb's shell not allowed) both leave the
+        # command's output without a 0
+        for shell in self.each_shell():
+            for answer in ('', 'Permission denied', '2000'):
+                out = self.run_root(shell, answer)
+                self.assertIn('DIE no root access', out, shell)
+                self.assertNotIn('rc=', out, shell)         # it ended the installer
+                for text in ('Magisk', 'Select and Patch a File', 'Superuser', 'allow Shell', 'Apps and ADB', 'Grant'):
+                    self.assertIn(text, out, f'{shell}: {answer!r}: {text}')
+
+    def test_su_is_asked_once(self):
+        # every ask can raise a Superuser request on the device that has to be answered within seconds
+        for shell in self.each_shell():
+            (self.tmp / 'su.log').write_text('')
+            self.run_root(shell, '')
+            self.assertEqual((self.tmp / 'su.log').read_text().splitlines(), ['id -u'], shell)
+
+    def test_translated(self):
+        for shell in self.each_shell():
+            out = self.run_root(shell, '', lang='zh')
+            self.assertIn('没有 root 权限', out, shell)
+            self.assertIn('Magisk', out, shell)
+            self.assertNotIn('no root access', out, shell)
+            self.assertIn('root erişimi yok', self.run_root(shell, '', lang='tr'), shell)
+
+    def test_both_installers_use_it(self):
+        sh = (TOP / 'install.sh').read_text()
+        ps1 = (TOP / 'install.ps1').read_text()
+        self.assertRegex(sh, r'(?m)^require_root$')
+        self.assertRegex(ps1, r'(?m)^RequireRoot$')
+        # (comments may still quote the old message; what must be gone is the die/Die that showed only that line)
+        for name, text in (('install.sh', sh), ('install.ps1', ps1)):
+            self.assertNotRegex(text, r"""\b[tT] ['"]su does not work on the device""", name)
+        # Windows asked "has Android finished starting" through su, which a device without root never answers: the
+        # installer then waited two minutes before it could say there was no root
+        self.assertNotRegex(ps1, r"SuDo\s+'getprop sys\.boot_completed'")
+
+
 if __name__ == '__main__':
     unittest.main()

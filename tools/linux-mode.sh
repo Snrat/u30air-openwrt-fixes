@@ -1,6 +1,6 @@
 # Shared by install.sh and uninstall.sh: both need the device in rooted Android, but it may be running MU300 Linux
 # right now (then there is no adb device, only SSH on the USB network). Offer to send it back to Android.
-# Uses: say(), die(), ask(), and t() from tools/i18n.sh (loaded here when the caller has not)
+# Uses: say(), die(), ask(), su_do() (only require_root), and t() from tools/i18n.sh (loaded here when the caller has not)
 command -v t >/dev/null 2>&1 || . "$TOP/tools/i18n.sh"
 
 # the USB network of each kind of device: F50 192.168.77.1, U30 Air 192.168.78.1 (MU300_IP: another address)
@@ -101,4 +101,19 @@ require_android() {
     fi
     linux_mode_running && linux_mode_to_android && return 0
     die "$(t 'no adb device (boot Android, enable USB debugging)')"
+}
+
+# Everything the installer does to the device goes through `su`: the partition table, the free region and the boot
+# slots are all read and written as root. A device that was never rooted answers "su: not found"; one with Magisk
+# that has not allowed adb's shell answers "permission denied", or - when nobody taps Grant - its Superuser request
+# times out after about ten seconds. Both used to end in the one line "su does not work on the device", which does
+# not say what to do about it. Say what to do. (install.ps1's RequireRoot is the same text; keep them together.)
+require_root() {
+    echo "  $(t 'checking root (su): if Magisk asks for Superuser rights on the device screen, tap Grant')"
+    [ "$(su_do 'id -u')" = 0 ] && return 0
+    die "$(t 'no root access: su does not work over adb on this device')
+  $(t 'The installer writes to partitions of the device, which only root can do. Fix this on the device, then run the installer again:')
+  1. $(t 'Not rooted yet: in the Magisk app choose Install > Select and Patch a File, patch the boot image of this device, flash the result and reboot (rooting itself is not part of this project)')
+  2. $(t 'Already rooted: open Magisk > Superuser and allow Shell, and in Settings set Superuser access to Apps and ADB')
+  $(t 'Keep the screen on and unlocked: tap Grant when Magisk asks for Superuser rights (a request nobody answers is refused after about 10 seconds)')"
 }

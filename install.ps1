@@ -400,12 +400,26 @@ if ($linuxFirst -or (AdbState) -notmatch 'device') {
     if ((AdbState) -notmatch 'device') { Die (T 'the device did not come back as Android; boot it yourself (mu300-next-boot android)') }
     Write-Host ('  ' + (T 'Android is up'))
 }
-# an Android that is still starting answers adb before su and storage are ready: the pulls then failed
-for ($i = 0; $i -lt 60 -and (SuDo 'getprop sys.boot_completed') -ne '1'; $i++) {
+# an Android that is still starting answers adb before su and storage are ready: the pulls then failed.
+# Asked without su: on a device without root, su never answers, and this loop waited its full two minutes
+# for a "1" it could not get before the root check below could say what is wrong.
+for ($i = 0; $i -lt 60 -and ((Quiet { adb shell getprop sys.boot_completed }) -join "`n" -replace "`r", '') -ne '1'; $i++) {
     if ($i -eq 0) { Write-Host ('  ' + (T 'waiting for Android to finish starting')) }
     Start-Sleep 2
 }
-if ((SuDo 'id -u') -ne '0') { Die (T 'su does not work on the device') }
+# Everything the installer does to the device goes through su, and a device without root (never rooted, or Magisk
+# has not allowed adb's shell) used to end in the one line "su does not work on the device". Say what to do.
+# (tools/linux-mode.sh's require_root is the same text; keep them together.)
+function RequireRoot {
+    Write-Host ('  ' + (T 'checking root (su): if Magisk asks for Superuser rights on the device screen, tap Grant'))
+    if ((SuDo 'id -u') -eq '0') { return }
+    Die ((T 'no root access: su does not work over adb on this device') + "`n  " +
+        (T 'The installer writes to partitions of the device, which only root can do. Fix this on the device, then run the installer again:') + "`n  1. " +
+        (T 'Not rooted yet: in the Magisk app choose Install > Select and Patch a File, patch the boot image of this device, flash the result and reboot (rooting itself is not part of this project)') + "`n  2. " +
+        (T 'Already rooted: open Magisk > Superuser and allow Shell, and in Settings set Superuser access to Apps and ADB') + "`n  " +
+        (T 'Keep the screen on and unlocked: tap Grant when Magisk asks for Superuser rights (a request nobody answers is refused after about 10 seconds)'))
+}
+RequireRoot
 $model = "$(SuDo 'getprop ro.product.model') / $(SuDo 'getprop ro.product.device')"
 Write-Host (T 'device: {1}' $model)
 # The U30 Air is the F50's board with a battery: the same kernel and images, a few modules of its own (init

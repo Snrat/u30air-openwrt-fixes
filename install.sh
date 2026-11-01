@@ -111,7 +111,7 @@ if [ $CHECK_ONLY = 0 ] && [ $MODE = build ]; then
 fi
 . "$TOP/tools/linux-mode.sh"
 require_android
-[ "$(su_do 'id -u')" = 0 ] || die "$(t 'su does not work on the device')"
+require_root
 model="$(su_do 'getprop ro.product.model') / $(su_do 'getprop ro.product.device')"
 echo "$(t 'device: {1}' "$model")"
 # The U30 Air is the F50's board with a battery: the same kernel and images, a few modules of its own (init

@@ -5,7 +5,12 @@ could not read {1} from the device	无法从设备读取 {1}
 Checking host tools and device	正在检查电脑上的工具和设备
 {1} not found	未找到 {1}
 kernel outputs missing in {1} (run kernel/build-all.sh)	{1} 中缺少内核编译输出（请运行 kernel/build-all.sh）
-su does not work on the device	设备上的 su 无法使用
+checking root (su): if Magisk asks for Superuser rights on the device screen, tap Grant	正在检查 root 权限 (su)：如果设备屏幕上弹出 Magisk 的超级用户请求，请点击“授权 (Grant)”
+no root access: su does not work over adb on this device	没有 root 权限：此设备上通过 adb 无法使用 su
+The installer writes to partitions of the device, which only root can do. Fix this on the device, then run the installer again:	安装程序需要写入设备的分区，这只有 root 才能做到。请先在设备上按下面的方法处理，然后重新运行安装程序：
+Not rooted yet: in the Magisk app choose Install > Select and Patch a File, patch the boot image of this device, flash the result and reboot (rooting itself is not part of this project)	尚未 root：在 Magisk 应用中选择“安装 (Install)”>“选择并修补一个文件 (Select and Patch a File)”，修补本设备的 boot 镜像，刷入修补后的镜像并重启（root 本身不属于本项目）
+Already rooted: open Magisk > Superuser and allow Shell, and in Settings set Superuser access to Apps and ADB	已经 root：打开 Magisk > 超级用户 (Superuser)，允许“Shell”；再到设置中把“超级用户权限 (Superuser access)”设为“应用和 ADB (Apps and ADB)”
+Keep the screen on and unlocked: tap Grant when Magisk asks for Superuser rights (a request nobody answers is refused after about 10 seconds)	请保持设备亮屏并解锁：Magisk 请求超级用户权限时点击“授权 (Grant)”（无人响应的请求约 10 秒后会被拒绝）
 device: {1}	设备：{1}
 This does not look like a ZTE F50/MU300 or U30 Air. Continue anyway? (yes/no)	这看起来不是 ZTE F50/MU300 或 U30 Air。仍要继续吗？(是/否)
 Android must be running from slot a	Android 必须从 a 槽 (slot a) 启动
